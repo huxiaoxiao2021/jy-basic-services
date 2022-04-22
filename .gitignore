@@ -1,0 +1,7 @@
+# Default ignored files
+/.idea/
+/JY-MSP.iml
+/jy-msp-adaptor/target/
+/jy-msp-api/target/
+/jy-msp-domain/target/
+/jy-msp-provider/target/
