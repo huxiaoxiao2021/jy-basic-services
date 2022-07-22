@@ -1,7 +1,10 @@
 # Default ignored files
 /.idea/
-/JY-MSP.iml
-/jy-msp-adaptor/target/
-/jy-msp-api/target/
-/jy-msp-domain/target/
-/jy-msp-provider/target/
+/dms-workbench-basic-services.iml
+/workbench-basic-adaptor/target/
+/workbench-basic-api/target/
+/workbench-basic-dao/target/
+/workbench-basic-domain/target/
+/workbench-basic-provider/target/
+/workbench-basic-service/target/
+

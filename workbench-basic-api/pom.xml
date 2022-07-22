@@ -2,14 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>JY-MSP</artifactId>
-        <groupId>com.jd.bluedragon</groupId>
+        <artifactId>dms-workbench-basic-services</artifactId>
+        <groupId>com.jdl.basic</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>jy-msp-api</artifactId>
+    <groupId>com.jdl.basic</groupId>
+    <artifactId>workbench-basic-api</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>workbench-basic-api</name>
+    <description>基础信息服务api</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

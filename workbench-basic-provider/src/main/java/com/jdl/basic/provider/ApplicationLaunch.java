@@ -1,4 +1,4 @@
-package com.jdl.jy.msp.provider;
+package com.jdl.basic.provider;
 
 import com.jd.jsf.spring.boot.annotation.EnableJsf;
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +20,12 @@ import org.springframework.context.annotation.PropertySources;
  * @Since: JDK 1.8
  * @Version： V1.0
  */
-@SpringBootApplication(scanBasePackages = {"com.jdl.jy.msp"})
+@SpringBootApplication(scanBasePackages = {"com.jdl.basic"})
 @PropertySources(
         value = {
                 @PropertySource(value = {
-                        "classpath:jy-msp-jsf-provider.properties",
-                        "classpath:jy-msp-jsf-consumer.properties",
+                        "classpath:basic-jsf-provider.properties",
+                        "classpath:basic-jsf-consumer.properties",
                 }, encoding = "utf-8"),
         }
 )

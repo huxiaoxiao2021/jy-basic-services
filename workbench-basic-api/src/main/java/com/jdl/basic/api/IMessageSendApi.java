@@ -1,4 +1,4 @@
-package com.jdl.jy.msp.api;
+package com.jdl.basic.api;
 
 /**
  * @ProjectName：JY-MSP

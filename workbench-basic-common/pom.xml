@@ -10,10 +10,10 @@
     </parent>
 
     <groupId>com.jdl.basic</groupId>
-    <artifactId>workbench-basic-adaptor</artifactId>
+    <artifactId>workbench-basic-common</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>workbench-basic-adaptor</name>
-    <description>基础信息服务dao</description>
+    <name>workbench-basic-common</name>
+    <description>基础信息服务common</description>
 
 
     <properties>
