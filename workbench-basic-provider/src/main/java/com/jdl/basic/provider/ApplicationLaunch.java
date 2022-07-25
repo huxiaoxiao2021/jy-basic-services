@@ -2,6 +2,7 @@ package com.jdl.basic.provider;
 
 import com.jd.jsf.spring.boot.annotation.EnableJsf;
 import lombok.extern.slf4j.Slf4j;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -14,12 +15,13 @@ import org.springframework.context.annotation.PropertySources;
  * @Package： com.jd.bluedragon.dms.msp.provider
  * @ClassName: ApplicationLaunch
  * @Description:
- * @Author： wuzuxiang
  * @CreateDate 2022/4/21 17:40
  * @Copyright: Copyright (c)2020 JDL.CN All Right Reserved
  * @Since: JDK 1.8
  * @Version： V1.0
  */
+
+@MapperScan(basePackages = {"com.jdl.basic.dao"})
 @SpringBootApplication(scanBasePackages = {"com.jdl.basic"})
 @PropertySources(
         value = {

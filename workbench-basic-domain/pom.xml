@@ -21,48 +21,9 @@
     </properties>
 
     <dependencies>
-
-
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-log4j2</artifactId>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- third tools start -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-        </dependency>
-
-        <!--jsf-->
-        <dependency>
-            <groupId>com.jd.jsf</groupId>
-            <artifactId>jsf-spring-boot-starter</artifactId>
-        </dependency>
-
-        <!--  JSF中间件  -->
-        <dependency>
-            <groupId>com.jd</groupId>
-            <artifactId>jsf</artifactId>
-        </dependency>
-
-
-        <!--ump-->
-        <dependency>
-            <groupId>com.jd.ump</groupId>
-            <artifactId>profiler</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
 
     </dependencies>
