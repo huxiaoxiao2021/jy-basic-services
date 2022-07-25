@@ -1,14 +1,13 @@
 package com.jdl.basic.provider;
 
-import com.jd.jsf.spring.boot.annotation.EnableJsf;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
 
 /**
  * @ProjectName：JY-MSP
@@ -23,16 +22,17 @@ import org.springframework.context.annotation.PropertySources;
 
 @MapperScan(basePackages = {"com.jdl.basic.dao"})
 @SpringBootApplication(scanBasePackages = {"com.jdl.basic"})
-@PropertySources(
-        value = {
-                @PropertySource(value = {
-                        "classpath:basic-jsf-provider.properties",
-                        "classpath:basic-jsf-consumer.properties",
-                }, encoding = "utf-8"),
-        }
+@PropertySource(
+    value = {
+            "classpath:jsf/jsf-provider.properties",
+            "classpath:jsf/jsf-consumer.properties"
+    }
 )
+@ImportResource(value = {
+        "classpath:jsf/jsf-provider.xml",
+        "classpath:jsf/jsf-consumer.xml"
+})
 @ImportAutoConfiguration(value = SpringBootConfiguration.class)
-@EnableJsf
 @Slf4j
 public class ApplicationLaunch {
 

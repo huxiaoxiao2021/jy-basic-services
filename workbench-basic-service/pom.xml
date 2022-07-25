@@ -24,10 +24,17 @@
         <dependency>
             <groupId>com.jdl.basic</groupId>
             <artifactId>workbench-basic-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.jdl.basic</groupId>
             <artifactId>workbench-basic-dao</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jdl.basic</groupId>
+            <artifactId>woekbench-bascie-rpc</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>

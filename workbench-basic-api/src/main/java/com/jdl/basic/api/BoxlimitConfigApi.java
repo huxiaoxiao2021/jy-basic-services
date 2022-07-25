@@ -1,5 +1,7 @@
 package com.jdl.basic.api;
 
+import com.jdl.basic.domain.boxlimit.BoxLimitConfigPO;
+
 /**
  * @Author: chenyaguo@jd.com
  * @Date: 2022/7/24 16:20
@@ -7,5 +9,5 @@ package com.jdl.basic.api;
  */
 public interface BoxlimitConfigApi {
 
-    void insertBoxlimitConfig();
+    void insertBoxlimitConfig(BoxLimitConfigPO po);
 }

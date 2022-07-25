@@ -20,12 +20,8 @@ public class BoxlimitConfigApiImpl implements BoxlimitConfigApi {
     private BoxlimitService boxlimitService;
 
     @Override
-    public void insertBoxlimitConfig() {
-        BoxLimitConfigPO po = new BoxLimitConfigPO();
-        po.setConfigType(1);
-        po.setBoxNumberType("BC");
-        po.setLimitNum(1000);
-        po.setSiteName("测试站点1010");
+    public void insertBoxlimitConfig(BoxLimitConfigPO po) {
+
         boxlimitService.insertBoxlimitConfig(po);
     }
 }
