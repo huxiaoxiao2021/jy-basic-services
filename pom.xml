@@ -5,17 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.jdl.basic</groupId>
-    <artifactId>dms-workbench-basic-services</artifactId>
+    <artifactId>jy-basic-services</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>workbench-basic-provider</module>
-        <module>workbench-basic-api</module>
-        <module>workbench-basic-common</module>
-        <module>workbench-basic-domain</module>
-        <module>workbench-basic-dao</module>
-        <module>workbench-basic-service</module>
-        <module>woekbench-bascie-rpc</module>
+        <module>basic-api</module>
+        <module>basic-common</module>
+        <module>basic-provider</module>
+        <module>basic-rpc</module>
     </modules>
 
     <properties>
@@ -28,41 +25,11 @@
         <mybatis.version>3.4.5</mybatis.version>
         <mybatis.spring.boot.version>2.1.2</mybatis.spring.boot.version>
         <log4j.version>2.17.1</log4j.version>
+        <fastjson.version>1.2.83</fastjson.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>com.jdl.basic</groupId>
-                <artifactId>workbench-basic-common</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.jdl.basic</groupId>
-                <artifactId>workbench-basic-api</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.jdl.basic</groupId>
-                <artifactId>workbench-basic-dao</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.jdl.basic</groupId>
-                <artifactId>workbench-basic-domain</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.jdl.basic</groupId>
-                <artifactId>workbench-basic-provider</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.jd.basic</groupId>
-                <artifactId>workbench-basic-service</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
-
             <dependency>
                 <groupId>com.jd.ump</groupId>
                 <artifactId>profiler</artifactId>
@@ -137,6 +104,11 @@
                         <groupId>org.springframework.boot</groupId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
             </dependency>
 
         </dependencies>
