@@ -24,6 +24,13 @@ public class JDResponse<T> implements Serializable {
     /**部分失败**/
     public static final int HALF_FAIL = -2;
 
+
+    public static final String MSG_SUCCESS ="请求成功!";
+
+    public static final String MSG_FAIL ="请求失败!";
+
+    public static final String MSG_EXCEPTION ="请求异常!";
+
     private T data;
 
     private int code;

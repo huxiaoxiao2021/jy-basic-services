@@ -12,4 +12,6 @@ import com.jdl.basic.api.response.JDResponse;
 public interface BoxlimitConfigApi {
 
     JDResponse insertBoxlimitConfig(BoxLimitConfigDto po);
+
+
 }
