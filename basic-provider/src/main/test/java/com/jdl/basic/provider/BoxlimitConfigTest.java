@@ -2,11 +2,10 @@ package com.jdl.basic.provider;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.jdl.basic.api.domain.po.BoxLimitConfigDto;
+import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigDto;
 import com.jdl.basic.api.response.JDResponse;
 import com.jdl.basic.api.service.BoxlimitConfigApi;
 
-import com.jdl.basic.provider.core.po.BoxLimitConfigPO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

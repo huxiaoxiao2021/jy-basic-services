@@ -10,5 +10,5 @@ import com.jdl.basic.provider.core.po.BoxLimitConfigPO;
  */
 public interface BoxLimitConfigDao {
 
-    void addConfig(BoxLimitConfigPO po);
+    void insert(BoxLimitConfigPO po);
 }

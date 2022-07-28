@@ -1,7 +1,7 @@
 package com.jdl.basic.api.service;
 
 
-import com.jdl.basic.api.domain.po.BoxLimitConfigDto;
+import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigDto;
 import com.jdl.basic.api.response.JDResponse;
 
 /**

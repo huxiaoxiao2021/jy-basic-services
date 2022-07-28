@@ -21,7 +21,7 @@
     operating_time, create_time, update_time, yn, config_type, box_number_type
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from box_limit_config
     where id = #{id,jdbcType=BIGINT}
@@ -32,21 +32,21 @@
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.jdl.basic.provider.core.po.BoxLimitConfigPO" useGeneratedKeys="true">
     insert into box_limit_config (site_name,
-      <if test="siteId != null">
-        site_id,
-      </if>
-      limit_num, operator_erp, operator_site_id, operator_site_name,
-      operating_time, create_time, update_time, 
-      yn, config_type, box_number_type)
+    <if test="siteId != null">
+      site_id,
+    </if>
+    limit_num, operator_erp, operator_site_id, operator_site_name,
+    operating_time, create_time, update_time,
+    yn, config_type, box_number_type)
     values (#{siteName,jdbcType=VARCHAR},
-      <if test="siteId != null">
-        #{siteId,jdbcType=INTEGER},
-      </if>
-      #{limitNum,jdbcType=INTEGER}, #{operatorErp,jdbcType=VARCHAR}, #{operatorSiteId,jdbcType=INTEGER}, #{operatorSiteName,jdbcType=VARCHAR},
-      #{operatingTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{yn,jdbcType=BOOLEAN},#{configType,jdbcType=TINYINT},#{boxNumberType,jdbcType=VARCHAR})
+    <if test="siteId != null">
+      #{siteId,jdbcType=INTEGER},
+    </if>
+    #{limitNum,jdbcType=INTEGER}, #{operatorErp,jdbcType=VARCHAR}, #{operatorSiteId,jdbcType=INTEGER}, #{operatorSiteName,jdbcType=VARCHAR},
+    #{operatingTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+    #{yn,jdbcType=BOOLEAN},#{configType,jdbcType=TINYINT},#{boxNumberType,jdbcType=VARCHAR})
   </insert>
-  <insert id="addConfig" keyColumn="id" keyProperty="id" parameterType="com.jdl.basic.provider.core.po.BoxLimitConfigPO" useGeneratedKeys="true">
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.jdl.basic.provider.core.po.BoxLimitConfigPO" useGeneratedKeys="true">
     insert into box_limit_config
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="siteName != null">
@@ -158,50 +158,50 @@
   <update id="updateByPrimaryKey" parameterType="com.jdl.basic.provider.core.po.BoxLimitConfigPO">
     update box_limit_config
     set site_name = #{siteName,jdbcType=VARCHAR},
-      site_id = #{siteId,jdbcType=INTEGER},
-      limit_num = #{limitNum,jdbcType=INTEGER},
-      operator_erp = #{operatorErp,jdbcType=VARCHAR},
-      operator_site_id = #{operatorSiteId,jdbcType=INTEGER},
-      operator_site_name = #{operatorSiteName,jdbcType=VARCHAR},
-      operating_time = #{operatingTime,jdbcType=TIMESTAMP},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      yn = #{yn,jdbcType=BOOLEAN}
+        site_id = #{siteId,jdbcType=INTEGER},
+        limit_num = #{limitNum,jdbcType=INTEGER},
+        operator_erp = #{operatorErp,jdbcType=VARCHAR},
+        operator_site_id = #{operatorSiteId,jdbcType=INTEGER},
+        operator_site_name = #{operatorSiteName,jdbcType=VARCHAR},
+        operating_time = #{operatingTime,jdbcType=TIMESTAMP},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        yn = #{yn,jdbcType=BOOLEAN}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
   <insert id="batchInsert" useGeneratedKeys="true">
     insert into box_limit_config
     (
-     site_name,
-     site_id,
-     limit_num,
-     operator_erp,
-     operator_site_id,
-     operator_site_name,
-     operating_time,
-     create_time,
-     update_time,
-     yn,
-     config_type,
-     box_number_type
-     )
+    site_name,
+    site_id,
+    limit_num,
+    operator_erp,
+    operator_site_id,
+    operator_site_name,
+    operating_time,
+    create_time,
+    update_time,
+    yn,
+    config_type,
+    box_number_type
+    )
     values
     <foreach collection="list" item="item" separator=",">
       (
-       #{item.siteName,jdbcType=VARCHAR},
-       #{item.siteId,jdbcType=INTEGER},
-       #{item.limitNum,jdbcType=INTEGER},
-       #{item.operatorErp,jdbcType=VARCHAR},
-       #{item.operatorSiteId,jdbcType=INTEGER},
-       #{item.operatorSiteName,jdbcType=VARCHAR},
-       #{item.operatingTime,jdbcType=TIMESTAMP},
-       #{item.createTime,jdbcType=TIMESTAMP},
-       #{item.updateTime,jdbcType=TIMESTAMP},
-       #{item.yn,jdbcType=BOOLEAN},
-       #{item.configType,jdbcType=TINYINT},
-       #{item.boxNumberType,jdbcType=VARCHAR}
-       )
+      #{item.siteName,jdbcType=VARCHAR},
+      #{item.siteId,jdbcType=INTEGER},
+      #{item.limitNum,jdbcType=INTEGER},
+      #{item.operatorErp,jdbcType=VARCHAR},
+      #{item.operatorSiteId,jdbcType=INTEGER},
+      #{item.operatorSiteName,jdbcType=VARCHAR},
+      #{item.operatingTime,jdbcType=TIMESTAMP},
+      #{item.createTime,jdbcType=TIMESTAMP},
+      #{item.updateTime,jdbcType=TIMESTAMP},
+      #{item.yn,jdbcType=BOOLEAN},
+      #{item.configType,jdbcType=TINYINT},
+      #{item.boxNumberType,jdbcType=VARCHAR}
+      )
     </foreach>
   </insert>
 
@@ -209,10 +209,10 @@
     update box_limit_config set yn = 0
     where id IN
     <foreach collection="list" item="item" separator="," open="(" close=")">
-       #{item}
+      #{item}
     </foreach>
   </update>
-  
+
   <select id="queryBySiteIds"  resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -281,15 +281,14 @@
     <trim prefix="set" suffixOverrides=",">
       <trim prefix="limit_num =case" suffix="end,">
         <foreach collection="list" item="item" index="index">
-            when id=#{item.id,jdbcType=BIGINT} then #{item.limitNum,jdbcType=INTEGER}
+          when id=#{item.id,jdbcType=BIGINT} then #{item.limitNum,jdbcType=INTEGER}
         </foreach>
       </trim>
     </trim>
-        where id in
+    where id in
     <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
-        #{item.id,jdbcType=BIGINT}
+      #{item.id,jdbcType=BIGINT}
     </foreach>
   </update>
-
 
 </mapper>

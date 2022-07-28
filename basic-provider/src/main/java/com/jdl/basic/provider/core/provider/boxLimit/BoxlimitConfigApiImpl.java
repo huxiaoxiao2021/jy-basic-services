@@ -1,7 +1,7 @@
 package com.jdl.basic.provider.core.provider.boxLimit;
 
 
-import com.jdl.basic.api.domain.po.BoxLimitConfigDto;
+import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigDto;
 import com.jdl.basic.api.response.JDResponse;
 import com.jdl.basic.api.service.BoxlimitConfigApi;
 
@@ -9,9 +9,6 @@ import com.jdl.basic.provider.core.service.boxLimit.BoxlimitService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
-
-import javax.validation.Valid;
 
 /**
  * @Author: chenyaguo@jd.com

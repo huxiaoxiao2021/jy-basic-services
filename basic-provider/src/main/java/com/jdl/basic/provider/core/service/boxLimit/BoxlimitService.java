@@ -2,8 +2,7 @@ package com.jdl.basic.provider.core.service.boxLimit;
 
 
 
-import com.jdl.basic.api.domain.po.BoxLimitConfigDto;
-import com.jdl.basic.provider.core.po.BoxLimitConfigPO;
+import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigDto;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
