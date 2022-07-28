@@ -21,7 +21,7 @@ import org.springframework.context.annotation.PropertySource;
  */
 
 @MapperScan(basePackages = {"com.jdl.basic.provider.core.dao"})
-@SpringBootApplication(scanBasePackages = {"com.jdl.basic.provider.core"})
+@SpringBootApplication(scanBasePackages = {"com.jdl.basic"})
 @PropertySource(
     value = {
             "classpath:jsf/jsf-provider.properties",
