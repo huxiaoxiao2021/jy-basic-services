@@ -1,9 +1,8 @@
 # Default ignored files
 /.idea/
 /dms-workbench-basic-services.iml
-/workbench-basic-adaptor/target/
-/workbench-basic-api/target/
-/workbench-basic-dao/target/
-/workbench-basic-provider/target/
-/workbench-basic-service/target/
+/jy-basic-api/target/
+/jy-basic-common/target/
+/jy-basic-provider/target/
+/jy-basic-rpc/target/
 
