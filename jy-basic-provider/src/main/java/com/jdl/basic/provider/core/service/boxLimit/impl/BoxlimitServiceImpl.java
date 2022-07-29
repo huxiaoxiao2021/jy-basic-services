@@ -35,6 +35,13 @@ import java.util.*;
 @Service
 public class BoxlimitServiceImpl implements BoxlimitService {
 
+    //场地建箱配置类型
+    private static final Integer SITE_BOX_TYPE =2;
+
+    @Autowired
+    private BaseMajorRpc baseMajorRpc;
+
+
     @Autowired
     private BoxLimitConfigDao boxLimitConfigDao;
 
@@ -46,15 +53,6 @@ public class BoxlimitServiceImpl implements BoxlimitService {
 
         boxLimitConfigDao.insert(dto);
     }
-
-    //场地建箱配置类型
-    private static  Integer SITE_BOX_TYPE =2;
-
-
-
-    @Autowired
-    private BaseMajorRpc baseMajorRpc;
-
 
     @Override
     public PageDto<BoxLimitConfigDto> listData(BoxLimitConfigQueryDto queryDto) {
@@ -200,9 +198,6 @@ public class BoxlimitServiceImpl implements BoxlimitService {
             response.setMessage("建箱包裹上限不正确!");
             return response;
         }
-        if (!response.isSuccess()) {
-            return response;
-        }
         Date now = new Date();
         boxLimitConfig.setUpdateTime(now);
         boxLimitConfig.setOperatingTime(now);
@@ -234,23 +229,19 @@ public class BoxlimitServiceImpl implements BoxlimitService {
             response.setMessage("站点不存在!");
         } else {
             response.setData(siteOrgDto.getSiteName());
+            response.setCode(JDResponse.CODE_SUCCESS);
+            response.setMessage("获取站点成功!");
         }
         return response;
     }
 
-    @Override
-    public Integer queryLimitNumBySiteIdAndBoxNumberType(Integer siteId, String boxNumberType) {
-        return null;
-    }
 
-    @Override
-    public Integer queryCommonLimitNum(String boxNumberType) {
-        return null;
-    }
 
     @Override
     public JDResponse<Integer> countByCondition(BoxLimitConfigQueryDto dto) {
-        dto.setSiteName(dto.getSiteName().trim());
+        if(Objects.nonNull(dto) && StringUtils.isNotBlank(dto.getSiteName())){
+            dto.setSiteName(dto.getSiteName().trim());
+        }
         JDResponse<Integer> response = new JDResponse<>();
         response.setCode(JDResponse.CODE_SUCCESS);
         response.setData(boxLimitConfigDao.countByCondition(dto));
@@ -272,8 +263,26 @@ public class BoxlimitServiceImpl implements BoxlimitService {
     }
 
     @Override
-    public Integer getLimitNums(Integer createSiteCode, String type) {
-        return null;
+    public JDResponse<Integer> getLimitNums(Integer createSiteCode, String type) {
+        JDResponse<Integer> response = new JDResponse<>();
+        response.setData(0);
+        log.info("分拣数量限制拦截 createSiteCode:{}, type:{}", createSiteCode, type);
+        BoxLimitConfigDto dto = new BoxLimitConfigDto();
+        dto.setSiteId(createSiteCode);
+        dto.setBoxNumberType(type);
+        Integer limitNum =  boxLimitConfigDao.queryLimitNumBySiteId(dto);
+
+        if (limitNum != null) {
+            response.setData(limitNum);
+            return response;
+        }
+        Integer commonLimitNum = boxLimitConfigDao.queryCommonLimitNum(type);
+        log.info("分拣集包通用数量限制 箱号类型{}， 限制数量 {} ",type,commonLimitNum);
+        if(commonLimitNum != null){
+            response.setData(limitNum);
+            return response;
+        }
+        return response;
     }
 
 

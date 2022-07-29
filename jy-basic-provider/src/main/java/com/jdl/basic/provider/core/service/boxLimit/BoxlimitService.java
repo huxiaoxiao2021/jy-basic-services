@@ -35,12 +35,12 @@ public interface BoxlimitService {
     /**
      * PDA建箱包裹数 创建配置
      */
-    JDResponse create(BoxLimitConfigDto dto, LoginUser operator);
+    JDResponse create(@Valid BoxLimitConfigDto dto, LoginUser operator);
 
     /**
      * PDA建箱包裹数 更新配置
      */
-    JDResponse update(BoxLimitConfigDto dto, LoginUser operator);
+    JDResponse update(@Valid BoxLimitConfigDto dto, LoginUser operator);
 
     /**
      * 根据ID批量删除
@@ -52,18 +52,6 @@ public interface BoxlimitService {
      */
     JDResponse<String> querySiteNameById(Integer siteId);
 
-    /**
-     *  根据站点ID和箱号类型查询包裹数量限制
-     *  未配置 返回 null
-     */
-    Integer queryLimitNumBySiteIdAndBoxNumberType(Integer siteId,String boxNumberType);
-
-    /**
-     * 通过箱号类型获取通用包裹限制数量
-     * @param boxNumberType
-     * @return
-     */
-    Integer queryCommonLimitNum(String boxNumberType);
 
     /**
      * 查询符合条件的数据条数
@@ -78,5 +66,6 @@ public interface BoxlimitService {
      */
     JDResponse<List<String>> getBoxTypeList();
 
-    Integer getLimitNums( Integer createSiteCode, String type);
+    JDResponse<Integer> getLimitNums(Integer createSiteCode, String type);
+
 }

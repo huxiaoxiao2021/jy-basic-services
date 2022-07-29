@@ -39,6 +39,10 @@ public class JDResponse<T> implements Serializable {
 
     private String subCode;
 
+    public JDResponse(){
+        init(CODE_SUCCESS,MSG_SUCCESS);
+    }
+
     public static <T> JDResponse<T> writeSuccessMessage() {
         return writeResponseMessage(CODE_SUCCESS, ServiceResponseSubCodeEnum.SUCCESS.getSubCode(), ServiceResponseSubCodeEnum.SUCCESS.getValue(), null);
     }
@@ -73,6 +77,11 @@ public class JDResponse<T> implements Serializable {
 
     public static <T> JDResponse<T> writeExceptionMessage(String msg) {
         return JDResponse.writeMessage(CODE_EXCEPTION, null, msg);
+    }
+
+    public void init(Integer code, String message) {
+        this.code = code;
+        this.message = message;
     }
 
 }

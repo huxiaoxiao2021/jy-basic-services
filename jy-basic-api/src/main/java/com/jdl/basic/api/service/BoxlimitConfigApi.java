@@ -67,5 +67,12 @@ public interface BoxlimitConfigApi {
      */
     JDResponse<List<String>> getBoxTypeList();
 
+    /**
+     * 获取站点指定类型配置的集箱包裹数量限制值
+     * @param createSiteCode
+     * @param type
+     * @return
+     */
+    JDResponse<Integer> getLimitNums( Integer createSiteCode, String type);
 
 }
