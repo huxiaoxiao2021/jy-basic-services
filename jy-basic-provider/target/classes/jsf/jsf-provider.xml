@@ -15,6 +15,13 @@
                   interface="com.jd.intl.taskhub.callback.jsf.user.UserCallbackJsfService"
                   ref="userCallbackJsfServiceImpl"
                   server="jsf"/> -->
+    <!--  集箱包裹数量限制JSF服务   -->
+    <jsf:provider id="boxlimitConfigApi"
+                  interface="com.jdl.basic.api.service.BoxlimitConfigApi"
+                  alias="${jy.basic.jsf.alias}"
+                  ref="boxlimitConfigApiImpl"
+                  server="jsf">
+    </jsf:provider>
 
 
 </beans>
