@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 
@@ -34,16 +35,15 @@ import org.springframework.context.annotation.PropertySource;
 })
 @ImportAutoConfiguration(value = SpringBootConfiguration.class)
 @Slf4j
-public class ApplicationLaunch {
+public class ApplicationLaunch extends SpringBootServletInitializer {
 
-
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         try {
             SpringApplication.run(ApplicationLaunch.class, args);
-            Thread.currentThread().join();
-        } catch (Exception e) {
-            log.error("启动异常",e);
-            throw e;
+            log.info("ServiceBootApplication start success!");
+        }
+        catch (Exception e) {
+            log.error("ServiceBootApplication start error",e);
         }
     }
 }
