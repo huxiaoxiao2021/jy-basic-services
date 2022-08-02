@@ -28,5 +28,5 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 
 jsf:
-  alias:
-    jy_basic: jy-basic-server-test
+  jy_basic:
+    alias: jy-basic-server-test  #基础服务JSF别名

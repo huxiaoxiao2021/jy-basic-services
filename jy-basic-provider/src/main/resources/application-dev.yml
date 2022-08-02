@@ -29,5 +29,5 @@ spring:
 
 
 jsf:
-  alias:
-    jy_basic: jy-basic-server-test  #基础服务JSF别名
+  jy_basic:
+    alias: jy-basic-server-test  #基础服务JSF别名
