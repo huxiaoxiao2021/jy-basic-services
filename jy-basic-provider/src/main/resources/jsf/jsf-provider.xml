@@ -18,6 +18,14 @@
                   server="jsf">
     </jsf:provider>
 
+    <!-- 三定jsf服务 -->
+    <jsf:provider id="workStationJsfService"
+                  interface="com.jdl.basic.api.service.workStation.WorkStationJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workStationJsfServiceImpl"
+                  server="jsf">
+    </jsf:provider>
+
 
 </beans>
 
