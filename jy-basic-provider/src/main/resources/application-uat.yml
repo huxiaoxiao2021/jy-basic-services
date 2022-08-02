@@ -26,3 +26,22 @@ spring:
     maxPoolPreparedStatementPerConnectionSize: 20
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+
+jsf:
+  jy_basic:
+    alias: jy-basic-server-uat  #基础服务JSF别名
+
+## 云redis配置
+jimdb:
+  url: "redis://:dmsWbRedis64@redis-485k26izafvo-proxy-nlb.jvessel-open-hb.jdcloud.com:6379/0"
+  cfg:
+    timeout: 2000
+    newTimeout: 1000
+    poolConfig:
+      minEvictableIdleTimeMillis: -1
+      softMinEvictableIdleTimeMillis: -1
+      numTestsPerEvictionRun: -1
+      timeBetweenEvictionRunsMillis: 30000
+      minIdlePerKey: 0
+      maxIdlePerKey: 32
+      maxTotalPerKey: 200

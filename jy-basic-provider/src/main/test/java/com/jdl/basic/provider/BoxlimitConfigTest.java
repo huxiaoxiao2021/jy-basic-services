@@ -131,7 +131,7 @@ public class BoxlimitConfigTest {
 
     @Test
     public void getLimitNumsTest(){
-        JDResponse<Integer> bc = boxlimitConfigApi.getLimitNums(null, "GC");
+        JDResponse<Integer> bc = boxlimitConfigApi.getLimitNums(null, "BC");
         System.out.println(JSONObject.toJSONString(bc));
     }
 }

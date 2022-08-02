@@ -30,3 +30,18 @@ spring:
 jsf:
   jy_basic:
     alias: jy-basic-server-test  #基础服务JSF别名
+
+## 云redis配置
+jimdb:
+  url: "redis://:erdTest123@redis-nwdwv9zb0ij7-proxy-nlb.jvessel-open-hb.jdcloud.com:6379/0"
+  cfg:
+    timeout: 2000
+    newTimeout: 1000
+    poolConfig:
+      minEvictableIdleTimeMillis: -1
+      softMinEvictableIdleTimeMillis: -1
+      numTestsPerEvictionRun: -1
+      timeBetweenEvictionRunsMillis: 30000
+      minIdlePerKey: 0
+      maxIdlePerKey: 32
+      maxTotalPerKey: 200

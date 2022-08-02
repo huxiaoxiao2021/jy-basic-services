@@ -4,6 +4,7 @@ package com.jdl.basic.provider.core.service.boxLimit.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.LoginUser;
 import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigDto;
@@ -263,6 +264,8 @@ public class BoxlimitServiceImpl implements BoxlimitService {
     }
 
     @Override
+    @Cache(key = "BoxLimitServiceImpl.getLimitNums@args0@args1", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
     public JDResponse<Integer> getLimitNums(Integer createSiteCode, String type) {
         JDResponse<Integer> response = new JDResponse<>();
         response.setData(0);
@@ -279,7 +282,7 @@ public class BoxlimitServiceImpl implements BoxlimitService {
         Integer commonLimitNum = boxLimitConfigDao.queryCommonLimitNum(type);
         log.info("分拣集包通用数量限制 箱号类型{}， 限制数量 {} ",type,commonLimitNum);
         if(commonLimitNum != null){
-            response.setData(limitNum);
+            response.setData(commonLimitNum);
             return response;
         }
         return response;
