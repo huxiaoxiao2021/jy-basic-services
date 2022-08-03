@@ -6,5 +6,5 @@ spring:
 
 mybatis:
   config-locations: mybatis/mybatis-config.xml
-  mapper-locations: mapper/*.xml
-  type-aliases-package: com.jdl.basic.provider.core.dao.*
+  mapper-locations: mapper/*/*.xml
+  type-aliases-package: com.jdl.basic.provider.core.dao.*.*

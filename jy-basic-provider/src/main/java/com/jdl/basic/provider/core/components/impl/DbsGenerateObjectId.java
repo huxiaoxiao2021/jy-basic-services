@@ -3,6 +3,7 @@ package com.jdl.basic.provider.core.components.impl;
 
 import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.service.dbs.ObjectIdService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -18,15 +19,8 @@ public class DbsGenerateObjectId implements IGenerateObjectId {
 			.synchronizedMap(new HashMap<String, Long>());
 	private int maxValue = 999;
 
+	@Autowired
     private ObjectIdService objectIdService;
-
-    public ObjectIdService getObjectIdService() {
-        return objectIdService;
-    }
-
-    public void setObjectIdService(ObjectIdService objectIdService) {
-        this.objectIdService = objectIdService;
-    }
 
     @Override
 	public synchronized long getObjectId(String tableName) {
