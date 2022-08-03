@@ -1,4 +1,4 @@
-package com.jdl.basic.ommon.enums;
+package com.jdl.basic.common.enums;
 
 import java.util.HashMap;
 import java.util.Map;

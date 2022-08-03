@@ -1,4 +1,4 @@
-package com.jdl.basic.provider.core.service.workStation;
+package com.jdl.basic.api.service.workStation;
 
 
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
@@ -10,15 +10,14 @@ import com.jdl.basic.common.utils.Result;
 
 import java.util.List;
 
-
 /**
- * 工序岗位网格表--Service接口
+ * 工序岗位网格表--JsfService接口
  * 
  * @author wuyoude
  * @date 2021年12月30日 14:30:43
  *
  */
-public interface WorkStationGridService {
+public interface WorkStationGridJsfService {
 
 	/**
 	 * 插入一条数据
@@ -51,6 +50,12 @@ public interface WorkStationGridService {
 	 */
 	Result<PageDto<WorkStationGrid>> queryPageList(WorkStationGridQuery query);
 	/**
+	 * 按条件查询统计信息
+	 * @param query
+	 * @return
+	 */	
+	Result<WorkStationGridCountVo> queryPageCount(WorkStationGridQuery query);
+	/**
 	 * 查询站点下所有网格
 	 * @param query
 	 * @return
@@ -62,18 +67,6 @@ public interface WorkStationGridService {
 	 * @return
 	 */
 	Result<Boolean> importDatas(List<WorkStationGrid> dataList);
-	/**
-	 * 根据业务主键查询
-	 * @param data
-	 * @return
-	 */
-	Result<WorkStationGrid> queryByBusinessKey(WorkStationGrid data);
-	/**
-	 * 根据业务主键判断是否存在
-	 * @param data
-	 * @return
-	 */
-	boolean isExist(WorkStationGrid data);
 	/**
 	 * 查询场地网格作业区列表
 	 * @param query
@@ -99,18 +92,6 @@ public interface WorkStationGridService {
 	 */
 	Result<List<WorkStationGrid>> queryGridFloorDictList(WorkStationGridQuery query);
 	/**
-	 * 按条件查询统计信息
-	 * @param query
-	 * @return
-	 */
-	Result<WorkStationGridCountVo> queryPageCount(WorkStationGridQuery query);
-	/**
-	 * 
-	 * @param stationKey
-	 * @return
-	 */
-	boolean hasGridData(String stationKey);
-	/**
 	 * 批量删除
 	 * @param deleteRequest
 	 * @return
@@ -128,20 +109,6 @@ public interface WorkStationGridService {
 	 * @return
 	 */
 	Result<List<WorkStationGrid>> queryListForExport(WorkStationGridQuery query);
-	/**
-	 * 查询有网格的站点列表
-	 * @param query
-	 */
-	List<WorkStationGrid> querySiteListByOrgCode(WorkStationGridQuery query);
-	/**
-	 * 查询erp列表
-	 * @param query
-	 */
-	List<String> queryOwnerUserErpListBySiteCode(WorkStationGridQuery query);	
-	/**
-	 * 根据gridKey查询
-	 * @param workStationGridCheckQuery
-	 * @return
-	 */
-	Result<WorkStationGrid> queryByGridKey(WorkStationGridQuery workStationGridCheckQuery);
+	List<String> queryOwnerUserErpListBySiteCode(WorkStationGridQuery query);
+	List<WorkStationGrid> querySiteListByOrgCode(WorkStationGridQuery query);	
 }

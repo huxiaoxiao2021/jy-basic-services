@@ -1,4 +1,4 @@
-package com.jdl.basic.ommon.contants;
+package com.jdl.basic.common.contants;
 
 import java.util.ArrayList;
 import java.util.List;

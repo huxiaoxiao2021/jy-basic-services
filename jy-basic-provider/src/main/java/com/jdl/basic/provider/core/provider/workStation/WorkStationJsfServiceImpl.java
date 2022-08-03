@@ -5,8 +5,8 @@ import com.jdl.basic.api.domain.workStation.WorkStation;
 import com.jdl.basic.api.domain.workStation.WorkStationCountVo;
 import com.jdl.basic.api.domain.workStation.WorkStationQuery;
 import com.jdl.basic.api.service.workStation.WorkStationJsfService;
-import com.jdl.basic.ommon.utils.PageDto;
-import com.jdl.basic.ommon.utils.Result;
+import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.service.workStation.WorkStationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,5 +104,15 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 	@Override
 	public Result<List<WorkStation>> queryListForExport(WorkStationQuery query) {
 		return workStationService.queryListForExport(query);
+	}
+
+	@Override
+	public Result<WorkStation> queryByBusinessKey(WorkStation data) {
+		return workStationService.queryByBusinessKey(data);
+	}
+
+	@Override
+	public Result<WorkStation> queryByRealBusinessKey(String businessKey) {
+		return workStationService.queryByRealBusinessKey(businessKey);
 	}
 }

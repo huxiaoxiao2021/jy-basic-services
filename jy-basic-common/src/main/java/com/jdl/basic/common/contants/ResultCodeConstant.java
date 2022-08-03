@@ -1,4 +1,4 @@
-package com.jdl.basic.ommon.contants;
+package com.jdl.basic.common.contants;
 
 /**
  * 返回码常量

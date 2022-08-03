@@ -1,4 +1,4 @@
-package com.jdl.basic.ommon.contants;
+package com.jdl.basic.common.contants;
 
 import java.util.HashMap;
 import java.util.Map;

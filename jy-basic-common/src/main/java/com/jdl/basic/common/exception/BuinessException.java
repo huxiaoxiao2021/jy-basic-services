@@ -1,4 +1,4 @@
-package com.jdl.basic.ommon.exception;
+package com.jdl.basic.common.exception;
 
 /**
  * @Author: chenyaguo@jd.com

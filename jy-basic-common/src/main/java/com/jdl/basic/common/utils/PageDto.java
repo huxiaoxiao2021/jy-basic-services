@@ -1,4 +1,4 @@
-package com.jdl.basic.ommon.utils;
+package com.jdl.basic.common.utils;
 
 import lombok.Data;
 

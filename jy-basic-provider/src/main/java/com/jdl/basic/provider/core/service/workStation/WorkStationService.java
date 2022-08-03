@@ -5,8 +5,8 @@ import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkStation;
 import com.jdl.basic.api.domain.workStation.WorkStationCountVo;
 import com.jdl.basic.api.domain.workStation.WorkStationQuery;
-import com.jdl.basic.ommon.utils.PageDto;
-import com.jdl.basic.ommon.utils.Result;
+import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
 
 import java.util.List;
 

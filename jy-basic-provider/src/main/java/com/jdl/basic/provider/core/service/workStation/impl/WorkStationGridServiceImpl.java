@@ -5,13 +5,13 @@ import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 
 import com.jdl.basic.api.domain.position.PositionRecord;
 import com.jdl.basic.api.domain.workStation.*;
-import com.jdl.basic.ommon.contants.Constants;
-import com.jdl.basic.ommon.contants.DmsConstants;
-import com.jdl.basic.ommon.enums.AreaEnum;
-import com.jdl.basic.ommon.utils.CheckHelper;
-import com.jdl.basic.ommon.utils.PageDto;
-import com.jdl.basic.ommon.utils.Result;
-import com.jdl.basic.ommon.utils.StringHelper;
+import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.common.contants.DmsConstants;
+import com.jdl.basic.common.enums.AreaEnum;
+import com.jdl.basic.common.utils.CheckHelper;
+import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.common.utils.StringHelper;
 import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationGridDao;
 import com.jdl.basic.provider.core.service.position.PositionRecordService;
@@ -61,7 +61,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	 * @param insertData
 	 * @return
 	 */
-	@Transactional(value = "main_undiv", propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Transactional
 	public Result<Boolean> insert(WorkStationGrid insertData){
 		Result<Boolean> result = checkAndFillBeforeAdd(insertData);
 		if(!result.isSuccess()) {
@@ -203,7 +203,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	 * @param deleteData
 	 * @return
 	 */
-	@Transactional(value = "main_undiv", propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Transactional
 	public Result<Boolean> deleteById(WorkStationGrid deleteData){
 		Result<Boolean> result = Result.success();
 		Result<WorkStationGrid> queryResult = queryById(deleteData.getId());
@@ -282,7 +282,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		return result;
 	}
 
-	@Transactional(value = "main_undiv", propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Transactional
 	@Override
 	public Result<Boolean> importDatas(List<WorkStationGrid> dataList) {
 		Result<Boolean> result = checkAndFillImportDatas(dataList);

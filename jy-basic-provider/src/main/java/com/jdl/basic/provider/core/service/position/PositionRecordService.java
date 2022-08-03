@@ -3,8 +3,8 @@ package com.jdl.basic.provider.core.service.position;
 import com.jdl.basic.api.domain.position.PositionDetailRecord;
 import com.jdl.basic.api.domain.position.PositionQuery;
 import com.jdl.basic.api.domain.position.PositionRecord;
-import com.jdl.basic.ommon.utils.PageDto;
-import com.jdl.basic.ommon.utils.Result;
+import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
 
 import java.util.List;
 

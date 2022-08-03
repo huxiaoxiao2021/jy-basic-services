@@ -4,8 +4,8 @@ import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkStation;
 import com.jdl.basic.api.domain.workStation.WorkStationCountVo;
 import com.jdl.basic.api.domain.workStation.WorkStationQuery;
-import com.jdl.basic.ommon.utils.PageDto;
-import com.jdl.basic.ommon.utils.Result;
+import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
 
 import java.util.List;
 
@@ -88,4 +88,20 @@ public interface WorkStationJsfService {
 	 * @return
 	 */
 	Result<List<WorkStation>> queryListForExport(WorkStationQuery query);
+
+
+	/**
+	 * 根据业务主键查询
+	 * @param data
+	 * @return
+	 */
+	Result<WorkStation> queryByBusinessKey(WorkStation data);
+
+	/**
+	 * 根据业务主键查询
+	 * @param businessKey
+	 * @return
+	 */
+	Result<WorkStation> queryByRealBusinessKey(String businessKey);
+
 }

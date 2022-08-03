@@ -1,4 +1,4 @@
-package com.jdl.basic.ommon.utils;
+package com.jdl.basic.common.utils;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;

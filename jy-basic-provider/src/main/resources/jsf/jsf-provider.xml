@@ -18,11 +18,19 @@
                   server="jsf">
     </jsf:provider>
 
-    <!-- 三定jsf服务 -->
+    <!-- 三定网格工序管理jsf服务 -->
     <jsf:provider id="workStationJsfService"
                   interface="com.jdl.basic.api.service.workStation.WorkStationJsfService"
                   alias="${jsf.jy_basic.alias}"
                   ref="workStationJsfServiceImpl"
+                  server="jsf">
+    </jsf:provider>
+
+    <!-- 三定网格工序管理jsf服务 -->
+    <jsf:provider id="workStationGridJsfService"
+                  interface="com.jdl.basic.api.service.workStation.WorkStationGridJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workStationGridJsfServiceImpl"
                   server="jsf">
     </jsf:provider>
 

@@ -1,6 +1,6 @@
-package com.jdl.basic.ommon.utils;
+package com.jdl.basic.common.utils;
 
-import com.jdl.basic.ommon.contants.ResultCodeConstant;
+import com.jdl.basic.common.contants.ResultCodeConstant;
 
 import java.io.Serializable;
 import java.util.Collection;

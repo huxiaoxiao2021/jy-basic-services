@@ -1,4 +1,4 @@
-package com.jdl.basic.ommon.contants;
+package com.jdl.basic.common.contants;
 
 import java.util.Arrays;
 import java.util.HashSet;

@@ -1,9 +1,9 @@
-package com.jdl.basic.ommon.utils;
+package com.jdl.basic.common.utils;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Sets;
 
-import com.jdl.basic.ommon.contants.Constants;
+import com.jdl.basic.common.contants.Constants;
 import lombok.extern.slf4j.Slf4j;
 
 

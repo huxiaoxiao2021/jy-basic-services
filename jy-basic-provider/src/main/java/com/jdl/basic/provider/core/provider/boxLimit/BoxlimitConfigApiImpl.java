@@ -9,8 +9,7 @@ import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigQueryDto;
 import com.jdl.basic.api.response.JDResponse;
 import com.jdl.basic.api.service.BoxlimitConfigApi;
 
-import com.jdl.basic.ommon.utils.PageDto;
-import com.jdl.basic.provider.core.dao.boxLimit.BoxLimitConfigDao;
+import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.provider.core.service.boxLimit.BoxlimitService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Component;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @Author: chenyaguo@jd.com
