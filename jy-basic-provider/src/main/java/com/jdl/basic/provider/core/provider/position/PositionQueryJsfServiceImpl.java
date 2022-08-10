@@ -83,4 +83,17 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
             logger.error("同步历史数据异常!", e);
         }
     }
+
+    @Override
+    public Result<PositionDetailRecord> queryOneByPositionCode(String positionCode) {
+
+        Result<PositionDetailRecord> result = new Result<>();
+        result.toFail();
+        try {
+            return positionRecordService.queryOneByPositionCode(positionCode);
+        }catch (Exception e){
+            logger.error("根据岗位编码获取岗位详情:{} 异常!", positionCode, e);
+        }
+        return result;
+    }
 }

@@ -45,4 +45,12 @@ public interface PositionQueryJsfService {
      * @return
      */
     void syncAllData();
+
+    /**
+     * 根据岗位编码查询一条记录
+     *
+     * @param positionCode
+     * @return
+     */
+    Result<PositionDetailRecord> queryOneByPositionCode(String positionCode);
 }

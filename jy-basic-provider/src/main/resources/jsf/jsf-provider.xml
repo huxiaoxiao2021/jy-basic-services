@@ -50,6 +50,14 @@
                   server="jsf">
     </jsf:provider>
 
+    <!-- 拣运功能配置JSF服务 -->
+    <jsf:provider id="jyWorkMapFuncConfigJsfService"
+                  interface="com.jdl.basic.api.service.workMapFunc.JyWorkMapFuncConfigJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="jyWorkMapFuncConfigJsfServiceImpl"
+                  server="jsf">
+    </jsf:provider>
+
 
 </beans>
 
