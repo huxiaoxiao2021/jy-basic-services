@@ -24,6 +24,11 @@ public class JDResponse<T> implements Serializable {
     /**部分失败**/
     public static final int HALF_FAIL = -2;
 
+    /**
+     * 错误编码
+     */
+    public static final Integer CODE_ERROR = 3;
+
 
     public static final String MSG_SUCCESS ="请求成功!";
 
@@ -78,10 +83,43 @@ public class JDResponse<T> implements Serializable {
     public static <T> JDResponse<T> writeExceptionMessage(String msg) {
         return JDResponse.writeMessage(CODE_EXCEPTION, null, msg);
     }
+    public void init(Integer code) {
+        this.code = code;
+    }
 
     public void init(Integer code, String message) {
         this.code = code;
         this.message = message;
     }
+    /**
+     * 状态转换
+     */
+    public void toSucceed() {
+        init(CODE_SUCCESS);
+    }
+    /**
+     * 状态转换并设置返回信息
+     * @param message
+     */
+    public void toSucceed(String message) {
+        init(CODE_SUCCESS,message);
+    }
+    public void toFail() {
+        init(CODE_FAIL);
+    }
+    public void toFail(String message) {
+        init(CODE_FAIL,message);
+    }
+    public void toError() {
+        init(CODE_ERROR);
+    }
+    public void toError(String message) {
+        init(CODE_ERROR,message);
+    }
+
+
+
+
+
 
 }

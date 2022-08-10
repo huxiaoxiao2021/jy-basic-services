@@ -197,7 +197,7 @@
 	</select>
 
 	<select id="queryList" parameterType="com.jdl.basic.api.domain.position.PositionQuery" resultMap="BaseDetailResultMap">
-		selectuery.PositionQuery
+		select
 			<include refid="Base_Detail_Column_List"/>
 		from
 			position_record p

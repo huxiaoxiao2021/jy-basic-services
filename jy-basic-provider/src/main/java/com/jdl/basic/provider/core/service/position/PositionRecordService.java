@@ -1,8 +1,10 @@
 package com.jdl.basic.provider.core.service.position;
 
+import com.jdl.basic.api.domain.position.PositionData;
 import com.jdl.basic.api.domain.position.PositionDetailRecord;
 import com.jdl.basic.api.domain.position.PositionQuery;
 import com.jdl.basic.api.domain.position.PositionRecord;
+import com.jdl.basic.api.response.JDResponse;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 
@@ -82,15 +84,15 @@ public interface PositionRecordService {
      * 查询岗位信息
      * @param positionCode
      * @return
-
-	JdCResponse<PositionData> queryPositionWithIsMatchAppFunc(String positionCode);
      */
+	JDResponse<PositionData> queryPositionWithIsMatchAppFunc(String positionCode);
+
     /**
      * 查询岗位信息，并校验是否关联作业app功能
      *
      * @param positionCode
      * @return
-
-	JdCResponse<PositionData> queryPositionInfo(String positionCode);
      */
+    JDResponse<PositionData> queryPositionInfo(String positionCode);
+
 }

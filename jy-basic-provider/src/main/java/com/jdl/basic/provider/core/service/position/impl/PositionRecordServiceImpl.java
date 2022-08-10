@@ -1,16 +1,21 @@
 package com.jdl.basic.provider.core.service.position.impl;
 
+import com.jdl.basic.api.domain.position.PositionData;
 import com.jdl.basic.api.domain.position.PositionDetailRecord;
 import com.jdl.basic.api.domain.position.PositionQuery;
 import com.jdl.basic.api.domain.position.PositionRecord;
+import com.jdl.basic.api.domain.workMapFunc.JyWorkMapFuncConfigEntity;
+import com.jdl.basic.api.domain.workStation.WorkStation;
 import com.jdl.basic.api.domain.workStation.WorkStationGrid;
 import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
+import com.jdl.basic.api.response.JDResponse;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringHelper;
 import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.position.PositionRecordDao;
+import com.jdl.basic.provider.core.dao.workMapFunc.JyWorkMapFuncConfigDao;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationDao;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationGridDao;
 import com.jdl.basic.provider.core.service.position.PositionRecordService;
@@ -18,6 +23,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,8 +53,8 @@ public class PositionRecordServiceImpl implements PositionRecordService {
     @Autowired
     private WorkStationDao workStationDao;
 
-//    @Autowired
-//    private JyWorkMapFuncConfigDao jyWorkMapFuncConfigDao;
+    @Autowired
+    private JyWorkMapFuncConfigDao jyWorkMapFuncConfigDao;
 
     @Override
     public Result<Integer> insertPosition(PositionRecord record) {
@@ -166,5 +172,48 @@ public class PositionRecordServiceImpl implements PositionRecordService {
         logger.info("同步历史数据完成，共耗时：{}共同步:{}条记录", System.currentTimeMillis() - startTime, totalCount);
     }
 
+    @Override
+    public JDResponse<PositionData> queryPositionWithIsMatchAppFunc(String positionCode) {
+        JDResponse<PositionData> result = queryPositionInfo(positionCode);
+        if(!result.isSuccess()){
+            return result;
+        }
+        setDefaultMenuCode(positionCode, result);
+        return result;
+    }
+
+    @Override
+    public JDResponse<PositionData> queryPositionInfo(String positionCode) {
+        JDResponse<PositionData> result = new JDResponse<PositionData>();
+        result.toSucceed();
+        Result<PositionDetailRecord> positionDetailResult = this.queryOneByPositionCode(positionCode);
+        if(positionDetailResult == null
+                || positionDetailResult.getData() == null) {
+            result.toFail("无效的上岗码！");
+            return result;
+        }
+        PositionData positionData = new PositionData();
+        BeanUtils.copyProperties(positionDetailResult.getData(), positionData);
+        result.setData(positionData);
+        return result;
+    }
+
+    private void setDefaultMenuCode(String positionCode, JDResponse<PositionData> result) {
+        PositionData positionData = result.getData();
+        WorkStation workStation = new WorkStation();
+        workStation.setAreaCode(positionData.getAreaCode());
+        workStation.setWorkCode(positionData.getWorkCode());
+        WorkStation queryWork = workStationDao.queryByBusinessKey(workStation);
+        if(queryWork == null || StringUtils.isEmpty(queryWork.getBusinessKey())){
+            result.toFail(String.format("岗位码:%s对应的工序不存在，请联系分拣小秘!", positionCode));
+            return;
+        }
+        JyWorkMapFuncConfigEntity entity = jyWorkMapFuncConfigDao.queryByBusinessKey(queryWork.getBusinessKey());
+        if(entity == null || StringUtils.isEmpty(entity.getFuncCode())){
+            result.toFail(String.format("岗位码:%s对应的功能编码未配置，请联系分拣小秘!", positionCode));
+            return;
+        }
+        positionData.setDefaultMenuCode(entity.getFuncCode());
+    }
 
 }

@@ -6,7 +6,7 @@ import com.jdl.basic.api.domain.LoginUser;
 import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigDto;
 import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigQueryDto;
 import com.jdl.basic.api.response.JDResponse;
-import com.jdl.basic.api.service.BoxlimitConfigApi;
+import com.jdl.basic.api.service.boxLimit.BoxlimitConfigApi;
 
 import com.jdl.basic.common.utils.PageDto;
 import org.junit.Test;

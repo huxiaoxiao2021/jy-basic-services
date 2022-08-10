@@ -1,4 +1,4 @@
-package com.jdl.basic.api.service;
+package com.jdl.basic.api.service.boxLimit;
 
 
 import com.jdl.basic.api.domain.LoginUser;
