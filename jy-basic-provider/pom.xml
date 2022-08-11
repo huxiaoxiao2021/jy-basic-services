@@ -219,5 +219,21 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>com.jd.jdq</groupId>
+            <artifactId>jdq4-clients</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jd.ump</groupId>
+            <artifactId>profiler</artifactId>
+        </dependency>
+
+        <!-- UMP 增强组件接入 -->
+        <dependency>
+            <groupId>com.jd.ump.x</groupId>
+            <artifactId>ump-x</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

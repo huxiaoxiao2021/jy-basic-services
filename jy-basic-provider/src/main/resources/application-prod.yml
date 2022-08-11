@@ -46,3 +46,13 @@ jimdb:
       minIdlePerKey: 0
       maxIdlePerKey: 32
       maxTotalPerKey: 200
+
+#JDQ 配置
+jdq:
+  enabled: true
+  producers:
+    - id: colletBoxFlowDirection
+      clientId: Pbc31af51
+      topic: collect_box_flow_direction_conf_change_log
+      password: 9O2a2SWIq4CWDXB9
+      domain: dmsauto.etms.jd.com
