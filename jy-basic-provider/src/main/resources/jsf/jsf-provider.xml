@@ -58,6 +58,13 @@
                   server="jsf">
     </jsf:provider>
 
+    <!-- 网格异常配置jsf服务 -->
+    <jsf:provider id="workAbnormalGridBindingJsfService"
+                  interface="com.jdl.basic.api.service.workStation.WorkAbnormalGridBindingJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workAbnormalGridBindingJsfServiceImpl"
+                  server="jsf">
+    </jsf:provider>
 
 </beans>
 

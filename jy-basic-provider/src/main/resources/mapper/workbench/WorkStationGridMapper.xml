@@ -29,13 +29,13 @@
 		<result column="work_code" property="workCode" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="work_name" property="workName" javaType="java.lang.String" jdbcType="VARCHAR" />
 	</resultMap>
-	
+
 	<resultMap id="WorkStationGridCountVo" type="com.jdl.basic.api.domain.workStation.WorkStationGridCountVo" >
 		<result column="area_num" property="areaNum" javaType="java.lang.Integer" jdbcType="INTEGER" />
-		<result column="work_num" property="workNum" javaType="java.lang.Integer" jdbcType="INTEGER" />	
-		<result column="grid_no_num" property="gridNoNum" javaType="java.lang.Integer" jdbcType="INTEGER" />	
+		<result column="work_num" property="workNum" javaType="java.lang.Integer" jdbcType="INTEGER" />
+		<result column="grid_no_num" property="gridNoNum" javaType="java.lang.Integer" jdbcType="INTEGER" />
 	</resultMap>
-	
+
 	<sql id="Base_Column_List" >
 		g.id,g.business_key,g.org_code,g.org_name,g.site_code,g.site_name,
 		g.floor,g.grid_no,g.grid_code,g.grid_name,g.standard_num,
@@ -252,10 +252,10 @@
 			</set>
 		where id = #{id,jdbcType=BIGINT}
 	</update>
-	
+
 	<update id="deleteById" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGrid">
 		update work_station_grid
-			set 
+			set
 			<if test="updateUser != null" >
 				update_user = #{updateUser,jdbcType=VARCHAR},
 			</if>
@@ -265,10 +265,10 @@
 			   yn = 0
 		where id = #{id,jdbcType=BIGINT}
 	</update>
-	
+
 	<update id="deleteByBusinessKey" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGrid">
 		update work_station_grid
-			set 
+			set
 			<if test="updateUser != null" >
 				update_user = #{updateUser,jdbcType=VARCHAR},
 			</if>
@@ -295,9 +295,9 @@
 			and	g.grid_no = #{gridNo,jdbcType=VARCHAR}
 			and g.ref_station_key = #{refStationKey,jdbcType=VARCHAR}
 		order by g.id desc
-		limit 1			
+		limit 1
 	</select>
-	
+
 	<select id="queryById" parameterType="java.lang.Long" resultMap="WorkStationGrid">
 		select
 			<include refid="Base_Column_List"/>
@@ -312,20 +312,20 @@
 			<include refid="Base_Column_List"/>
 		from
 			work_station_grid g
-		<include refid="joinSql"/>			
+		<include refid="joinSql"/>
 		<include refid="queryCondition"/>
 		<if test="pageNumber > 0">
             limit #{offset}, #{limit}
-        </if>		
+        </if>
 	</select>
 	<select id="queryListForExport" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGridQuery" resultMap="WorkStationGrid">
 		select
 			<include refid="Base_Column_List"/>
 		from
 			work_station_grid g
-		<include refid="joinSql"/>			
+		<include refid="joinSql"/>
 		<include refid="queryCondition"/>
-		order by g.id 
+		order by g.id
         limit #{offset}, #{limit}
 	</select>
 	<select id="queryCount" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGridQuery" resultType="long">
@@ -333,10 +333,10 @@
 			count(1)
 		from
 			work_station_grid g
-		<include refid="joinSql"/>				
+		<include refid="joinSql"/>
 		<include refid="queryCondition"/>
 	</select>
-	
+
 	<select id="queryPageCount" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGridQuery" resultMap="WorkStationGridCountVo">
 		select
 			count(distinct s.area_code) area_num,
@@ -344,14 +344,14 @@
 			count(distinct g.grid_no) grid_no_num
 		from
 			work_station_grid g
-		<include refid="joinSql"/>				
+		<include refid="joinSql"/>
 		<include refid="queryCondition"/>
 	</select>
-		
+
 	<sql id="joinSql">
 	 left outer join work_station s on g.ref_station_key = s.business_key and s.yn = 1
 	</sql>
-	
+
 	<sql id="queryCondition">
 		<where>
 			g.yn = 1
@@ -363,10 +363,10 @@
 		</if>
 		<if test="workCode != null and workCode != ''" >
 			and s.work_code = #{workCode,jdbcType=VARCHAR}
-		</if>		
+		</if>
 		<if test="floor != null" >
 			and g.floor = #{floor,jdbcType=INTEGER}
-		</if>		    
+		</if>
 		<if test="gridNo != null and gridNo != ''" >
 			and g.grid_no = #{gridNo,jdbcType=VARCHAR}
 		</if>
@@ -375,24 +375,24 @@
 		</if>
 		</where>
 	</sql>
-	
+
 	<select id="queryAllGridBySiteCode" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGridQuery" resultMap="WorkStationGrid">
 		select
 			grid_code,max(grid_name) grid_name
 		from
 			work_station_grid g
-		where g.yn = 1 
+		where g.yn = 1
 		    and g.site_code = #{siteCode,jdbcType=INTEGER}
 		group by grid_code
 	</select>
-	
+
 	<select id="queryGridAreaDictList" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGridQuery" resultMap="WorkStationGrid">
 		select
 			s.area_code,max(s.area_name) area_name
 		from
 			work_station_grid g
 			<include refid="joinSql"/>
-		where g.yn = 1 
+		where g.yn = 1
 		    and g.site_code = #{siteCode,jdbcType=INTEGER}
 		    and s.area_code is not null
 		<if test="floor != null" >
@@ -406,27 +406,27 @@
 		from
 			work_station_grid g
 			<include refid="joinSql"/>
-		where g.yn = 1 
+		where g.yn = 1
 		    and g.site_code = #{siteCode,jdbcType=INTEGER}
 		    and s.work_code is not null
 		<if test="floor != null" >
 			and g.floor = #{floor,jdbcType=INTEGER}
-		</if>		    
+		</if>
 		<if test="gridNo != null and gridNo != ''" >
 			and g.grid_no = #{gridNo,jdbcType=VARCHAR}
 		</if>
 		<if test="areaCode != null and areaCode != ''" >
 			and s.area_code = #{areaCode,jdbcType=VARCHAR}
-		</if>		    
+		</if>
 		group by s.work_code
-	</select>	
+	</select>
 	<select id="queryGridNoDictList" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGridQuery" resultMap="WorkStationGrid">
 		select
 			g.grid_no,max(g.grid_name) grid_name
 		from
 			work_station_grid g
-			<include refid="joinSql"/>			
-		where g.yn = 1 
+			<include refid="joinSql"/>
+		where g.yn = 1
 		    and g.site_code = #{siteCode,jdbcType=INTEGER}
 		    and g.grid_no is not null
 		<if test="floor != null" >
@@ -434,17 +434,17 @@
 		</if>
 		<if test="areaCode != null and areaCode != ''" >
 			and s.area_code = #{areaCode,jdbcType=VARCHAR}
-		</if>		    		    
+		</if>
 		group by g.grid_no
-	</select>	
+	</select>
 	<select id="queryGridFloorDictList" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGridQuery" resultMap="WorkStationGrid">
 		select
 			g.floor
 		from
 			work_station_grid g
-		where g.yn = 1 
+		where g.yn = 1
 		    and g.site_code = #{siteCode,jdbcType=INTEGER}
-		    and g.floor is not null	    
+		    and g.floor is not null
 		group by g.floor
 	</select>
 	<select id="querySiteListByOrgCode" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGridQuery" resultMap="WorkStationGrid">
@@ -452,7 +452,7 @@
 			g.site_code,max(g.site_name) site_name
 		from
 			work_station_grid g
-		where g.yn = 1 
+		where g.yn = 1
 		    and g.org_code = #{orgCode,jdbcType=INTEGER}
 		    and g.site_code is not null
 		group by g.site_code
@@ -462,16 +462,16 @@
 			distinct g.owner_user_erp
 		from
 			work_station_grid g
-		where g.yn = 1 
+		where g.yn = 1
 		    and g.site_code = #{siteCode,jdbcType=INTEGER}
 		    and g.owner_user_erp is not null
-	</select>		
+	</select>
 	<select id="queryCountByRefStationKey" parameterType="java.lang.String" resultType="long">
 		select
 			count(1)
 		from
 			work_station_grid g
-		where g.yn = 1 
+		where g.yn = 1
 		    and g.ref_station_key = #{refStationKey,jdbcType=VARCHAR}
 	</select>
 
@@ -495,16 +495,16 @@
 		<foreach collection="dataList" item="item" open="(" close=")" separator=",">
 			#{item.id,jdbcType=BIGINT}
 		</foreach>
-	</select>	
+	</select>
 	<update id="deleteByIds" parameterType="com.jdl.basic.api.domain.workStation.DeleteRequest">
 		update work_station_grid
-			set 
+			set
 			<if test="operateUserCode != null" >
 				update_user = #{operateUserCode,jdbcType=VARCHAR},
 			</if>
 			<if test="operateUserName != null" >
 				update_user_name = #{operateUserName,jdbcType=VARCHAR},
-			</if>			
+			</if>
 			<if test="operateTime != null" >
 				update_time = #{operateTime,jdbcType=TIMESTAMP},
 			</if>
@@ -513,8 +513,8 @@
 		 	and id in
 		<foreach collection="dataList" item="item" open="(" close=")" separator=",">
 			#{item.id,jdbcType=BIGINT}
-		</foreach>		
-	</update>		
+		</foreach>
+	</update>
 	<select id="queryByGridKey" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGrid" resultMap="WorkStationGrid">
 		select
 			<include refid="Base_Column_List"/>
@@ -524,6 +524,39 @@
 		where g.yn = 1
 			and	g.business_key = #{businessKey,jdbcType=VARCHAR}
 		order by g.id desc
-		limit 1			
-	</select>	
+		limit 1
+	</select>
+	<select id="queryListDistinct" parameterType="com.jdl.basic.api.domain.workStation.WorkStationFloorGridQuery" resultMap="WorkStationGrid">
+		select distinct
+		g.org_code,g.org_name,g.site_code,g.site_name,
+		g.floor,g.grid_no,g.grid_code,g.grid_name,
+		s.area_code,s.area_name
+		from
+		work_station_grid g
+		<include refid="joinSql"/>
+		<include refid="queryDistinctCondition"/>
+		<if test="pageNumber > 0">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	<sql id="queryDistinctCondition">
+		<where>
+			g.yn = 1
+			<if test="orgCode != null and orgCode != ''" >
+				and g.org_code = #{orgCode,jdbcType=INTEGER}
+			</if>
+			<if test="siteCode != null and siteCode != ''" >
+				and g.site_code = #{siteCode,jdbcType=INTEGER}
+			</if>
+			<if test="floor != null and floor != ''" >
+				and g.floor = #{floor,jdbcType=INTEGER}
+			</if>
+			<if test="areaCode != null and areaCode != ''" >
+				and s.area_code = #{areaCode,jdbcType=VARCHAR}
+			</if>
+			<if test="gridNo != null and gridNo != ''" >
+				and g.grid_no = #{gridNo,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
 </mapper>

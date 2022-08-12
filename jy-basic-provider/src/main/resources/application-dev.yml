@@ -46,3 +46,4 @@ jimdb:
       minIdlePerKey: 0
       maxIdlePerKey: 32
       maxTotalPerKey: 200
+

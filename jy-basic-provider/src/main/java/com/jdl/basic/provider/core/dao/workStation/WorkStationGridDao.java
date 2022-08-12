@@ -1,16 +1,13 @@
 package com.jdl.basic.provider.core.dao.workStation;
 
 
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkStationGrid;
-import com.jdl.basic.api.domain.workStation.WorkStationGridCountVo;
-import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
+import com.jdl.basic.api.domain.workStation.*;
 
 import java.util.List;
 
 /**
  * 工序岗位网格表--Dao接口
- * 
+ *
  * @author wuyoude
  * @date 2021年12月30日 14:30:43
  *
@@ -60,7 +57,7 @@ public interface WorkStationGridDao {
 	 */
 	List<WorkStationGrid> queryAllGridBySiteCode(WorkStationGridQuery query);
 	/**
-	 * 
+	 *
 	 * @param deleteData
 	 */
 	int deleteByBusinessKey(WorkStationGrid deleteData);
@@ -148,4 +145,17 @@ public interface WorkStationGridDao {
 	 * @return
 	 */
 	WorkStationGrid queryByGridKey(WorkStationGridQuery workStationGridQuery);
+
+	/**
+	 * 去重查询
+	 * @param query
+	 * @return
+	 */
+	List<WorkStationGrid> queryListDistinct(WorkStationFloorGridQuery query);
+	/**
+	 * 去重查询求总数
+	 * @param query
+	 * @return
+	 */
+	Long queryDistinctCount(WorkStationFloorGridQuery query);
 }
