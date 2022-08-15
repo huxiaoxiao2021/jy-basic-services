@@ -59,5 +59,30 @@
     </jsf:provider>
 
 
+    <!-- 集包配置JSF服务 -->
+    <jsf:provider id="collectBoxFlowDirectionConfJsfService"
+                  interface="com.jdl.basic.api.service.boxFlow.CollectBoxFlowDirectionConfJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="collectBoxFlowDirectionConfJsfServiceImpl"
+                  server="jsf">
+    </jsf:provider>
+
+    <!-- 大数据推送集包配置JSF服务 -->
+    <jsf:provider id="collectBoxFlowDirectionConfPushJsfService"
+                  interface="com.jdl.basic.api.service.boxFlow.CollectBoxFlowDirectionConfPushJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="collectBoxFlowDirectionConfPushJsfServiceImpl"
+                  server="jsf">
+    </jsf:provider>
+
+    <!-- 集包配置校验JSF服务 -->
+    <jsf:provider id="collectBoxFlowDirectionVerifyJsfService"
+                  interface="com.jdl.basic.api.service.boxFlow.CollectBoxFlowDirectionVerifyJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="collectBoxFlowDirectionVerifyJsfServiceImpl"
+                  server="jsf">
+    </jsf:provider>
+
+
 </beans>
 

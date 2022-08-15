@@ -6,9 +6,21 @@ spring:
   application:
     name: dms-workbench-basic-services
   profiles:
-    active: dev
+    active: '@activatedProperties@'
 
 mybatis:
   config-locations: mybatis/mybatis-config.xml
   mapper-locations: mapper/*/*.xml
   type-aliases-package: com.jdl.basic.provider.core.dao.*.*
+
+pagehelper:
+  supportMethodsArguments: true
+  reasonable: false
+  helperDialect: mysql
+  params: count=countSql
+
+jd:
+  ump:
+    appName: jy-basic-services
+    systemKey: jy-basic-services
+    jvmKey: jy-basic-services.jvm

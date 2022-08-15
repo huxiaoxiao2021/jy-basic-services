@@ -45,3 +45,13 @@ jimdb:
       minIdlePerKey: 0
       maxIdlePerKey: 32
       maxTotalPerKey: 200
+
+#jdq 配置
+jdq:
+  enabled: false
+  producers:
+    - id: "colletBoxFlowDirection"
+      clientId: "jdq_client_id"
+      topic: "jdq_topic"
+      password: "jdq_password"
+      domain: "jdq_domain"
