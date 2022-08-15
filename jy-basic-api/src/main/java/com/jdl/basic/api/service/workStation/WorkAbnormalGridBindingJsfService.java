@@ -1,6 +1,8 @@
 package com.jdl.basic.api.service.workStation;
 
 
+import com.jdl.basic.api.domain.workStation.WorkStationBinding;
+import com.jdl.basic.api.domain.workStation.WorkStationBindingVo;
 import com.jdl.basic.api.domain.workStation.WorkStationFloorGridQuery;
 import com.jdl.basic.api.domain.workStation.WorkStationFloorGridVo;
 import com.jdl.basic.common.utils.PageDto;
@@ -21,9 +23,24 @@ public interface WorkAbnormalGridBindingJsfService {
      */
     Result<PageDto<WorkStationFloorGridVo>> queryListDistinct(WorkStationFloorGridQuery query);
     /**
-     * 查询场地信息
+     * 根据场地查询信息
      * @param query
      * @return
      */
-    Result<List<WorkStationFloorGridVo>> queryListBySite(WorkStationFloorGridQuery query);
+    Result<List<WorkStationBindingVo>> queryListBySite(WorkStationFloorGridQuery query);
+
+    /**
+     * 插入一条数据
+     * @param insertData
+     * @return
+     */
+    Result<Boolean> insert(List<WorkStationBinding> insertData);
+
+    /**
+     * 查询绑定数据
+     * @param query
+     * @return
+     */
+    Result<List<WorkStationBindingVo>> queryBindingList(WorkStationFloorGridQuery query);
+
 }
