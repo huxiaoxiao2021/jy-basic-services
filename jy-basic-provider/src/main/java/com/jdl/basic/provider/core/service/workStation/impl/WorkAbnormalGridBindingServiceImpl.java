@@ -110,6 +110,12 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
         return null;
     }
 
+    @Override
+    public WorkStationFloorGridVo getAbnormalGrid(WorkStationFloorGridQuery query) {
+
+        return null;
+    }
+
     private List<WorkStationFloorGridVo> getWorkStationFloorGridVoList(List<WorkStationGrid> workStationGrids) {
         List<WorkStationFloorGridVo> result = new ArrayList<>();
         for (WorkStationGrid data : workStationGrids) {
