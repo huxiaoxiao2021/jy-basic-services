@@ -112,8 +112,7 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
 
     @Override
     public WorkStationFloorGridVo getAbnormalGrid(WorkStationFloorGridQuery query) {
-
-        return null;
+        return workAbnormalGridDao.getAbnormalGrid(query);
     }
 
     private List<WorkStationFloorGridVo> getWorkStationFloorGridVoList(List<WorkStationGrid> workStationGrids) {
