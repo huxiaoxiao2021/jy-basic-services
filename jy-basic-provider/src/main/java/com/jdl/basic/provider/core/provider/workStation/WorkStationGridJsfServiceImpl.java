@@ -124,4 +124,14 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 	public List<WorkStationGrid> querySiteListByOrgCode(WorkStationGridQuery query) {
 		return workStationGridService.querySiteListByOrgCode(query);
 	}
+
+	@Override
+	public Result<WorkStationGrid> queryByBusinessKey(WorkStationGrid data) {
+		return workStationGridService.queryByBusinessKey(data);
+	}
+
+	@Override
+	public Result<WorkStationGrid> queryByGridKey(WorkStationGridQuery workStationGridCheckQuery) {
+		return workStationGridService.queryByGridKey(workStationGridCheckQuery);
+	}
 }

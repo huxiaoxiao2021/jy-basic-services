@@ -110,5 +110,19 @@ public interface WorkStationGridJsfService {
 	 */
 	Result<List<WorkStationGrid>> queryListForExport(WorkStationGridQuery query);
 	List<String> queryOwnerUserErpListBySiteCode(WorkStationGridQuery query);
-	List<WorkStationGrid> querySiteListByOrgCode(WorkStationGridQuery query);	
+	List<WorkStationGrid> querySiteListByOrgCode(WorkStationGridQuery query);
+
+	/**
+	 * 根据业务主键查询
+	 * @param data
+	 * @return
+	 */
+	Result<WorkStationGrid> queryByBusinessKey(WorkStationGrid data);
+
+	/**
+	 * 根据gridKey查询
+	 * @param workStationGridCheckQuery
+	 * @return
+	 */
+	Result<WorkStationGrid> queryByGridKey(WorkStationGridQuery workStationGridCheckQuery);
 }

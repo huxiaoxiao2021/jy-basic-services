@@ -2,7 +2,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://mysql-cn-north-1-f51a5018ea1d406c.rds.jdcloud.com:3358/bd_dms_con?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&failOverReadOnly=false
+    url: jdbc:mysql://mysql-cn-north-1-f51a5018ea1d406c.rds.jdcloud.com:3358/jybasic_conf?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&failOverReadOnly=false
     username: testwl
     password: 4x1eSVxcq0816pytgeyQAh1wUS
     #Spring Boot 默认是不注入这些属性值的，需要自己绑定
@@ -28,10 +28,6 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 
 
-jsf:
-  jy_basic:
-    alias: jy-basic-server-test  #基础服务JSF别名
-
 ## 云redis配置
 jimdb:
   url: "redis://:erdTest123@redis-nwdwv9zb0ij7-proxy-nlb.jvessel-open-hb.jdcloud.com:6379/0"
@@ -56,3 +52,24 @@ jdq:
       topic: "jdq_topic"
       password: "jdq_password"
       domain: "jdq_domain"
+
+###### jsf config  start######
+
+  #基础服务JSF别名
+jsf:
+  jy_basic:
+    alias: jy-basic-server-test
+
+basic:
+  jsf:
+    token: 123456
+    alias: basic-ql-jsf
+    timeout: 10000
+
+ldop:
+  basic:
+    jsf:
+      alias: ldop-basic-test
+      timeout: 10000
+
+###### jsf config  end######

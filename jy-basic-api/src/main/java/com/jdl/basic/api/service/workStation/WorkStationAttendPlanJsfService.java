@@ -76,5 +76,11 @@ public interface WorkStationAttendPlanJsfService {
 	 * @param query
 	 * @return
 	 */
-	Result<List<WorkStationAttendPlan>> queryListForExport(WorkStationAttendPlanQuery query);	
+	Result<List<WorkStationAttendPlan>> queryListForExport(WorkStationAttendPlanQuery query);
+	/**
+	 * 根据businessKeys查询
+	 * @param data
+	 * @return
+	 */
+	Result<WorkStationAttendPlan> queryByBusinessKeys(WorkStationAttendPlan data);
 }

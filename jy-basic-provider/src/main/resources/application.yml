@@ -14,7 +14,7 @@ mybatis:
   type-aliases-package: com.jdl.basic.provider.core.dao.*.*
 
 pagehelper:
-  supportMethodsArguments: true
+  supportMethodsArguments: false
   reasonable: false
   helperDialect: mysql
   params: count=countSql
@@ -24,3 +24,9 @@ jd:
     appName: jy-basic-services
     systemKey: jy-basic-services
     jvmKey: jy-basic-services.jvm
+
+jsf:
+  timeout: 5000
+  retries: 3
+  consumer:
+    lazy: true

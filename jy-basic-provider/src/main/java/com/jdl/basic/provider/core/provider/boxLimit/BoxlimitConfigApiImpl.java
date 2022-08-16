@@ -34,6 +34,7 @@ public class BoxlimitConfigApiImpl implements BoxlimitConfigApi {
 
     @Override
     public JDResponse insertBoxlimitConfig(@Valid BoxLimitConfigDto po) {
+
         JDResponse response = new JDResponse();
         try {
             boxlimitService.insertBoxlimitConfig(po);

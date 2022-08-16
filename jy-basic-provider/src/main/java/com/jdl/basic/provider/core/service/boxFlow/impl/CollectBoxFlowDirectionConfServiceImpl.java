@@ -25,9 +25,8 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-@Service("collectBoxFlowDirectionConfService")
 @Slf4j
+@Service
 public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDirectionConfService {
 
     @Resource
