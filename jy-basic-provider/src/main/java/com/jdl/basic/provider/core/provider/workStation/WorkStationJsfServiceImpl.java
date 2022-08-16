@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.core.provider.workStation;
 
+import com.alibaba.fastjson.JSON;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkStation;
 import com.jdl.basic.api.domain.workStation.WorkStationCountVo;
@@ -8,6 +9,7 @@ import com.jdl.basic.api.service.workStation.WorkStationJsfService;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.service.workStation.WorkStationService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import java.util.List;
  * @date 2022年02月23日 11:01:53
  *
  */
+@Slf4j
 @Service
 public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 
@@ -38,6 +41,7 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 	 * @return
 	 */
 	public Result<Boolean> insert(WorkStation insertData){
+		log.info("网格工序管理 insert 入参-{}", JSON.toJSONString(insertData));
 		return workStationService.insert(insertData);
 	 }
 	@Override
@@ -50,6 +54,7 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 	 * @return
 	 */
 	public Result<Boolean> updateById(WorkStation updateData){
+		logger.info("网格工序管理 updateById 入参-{}", JSON.toJSONString(updateData));
 		return workStationService.updateById(updateData);
 	 }
 	/**
@@ -58,6 +63,7 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 	 * @return
 	 */
 	public Result<Boolean> deleteById(WorkStation deleteData){
+		log.info("网格工序管理 deleteById 入参-{}", JSON.toJSONString(deleteData));
 		return workStationService.deleteById(deleteData);
 	 }
 	/**
@@ -66,6 +72,7 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 	 * @return
 	 */
 	public Result<WorkStation> queryById(Long id){
+		log.info("网格工序管理 queryById 入参-{}", JSON.toJSONString(id));
 		return workStationService.queryById(id);
 	 }
 	/**
@@ -74,6 +81,7 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 	 * @return
 	 */
 	public Result<PageDto<WorkStation>> queryPageList(WorkStationQuery query){
+		log.info("网格工序管理 queryPageList 入参-{}", JSON.toJSONString(query));
 		return workStationService.queryPageList(query);
 	 }
 	/**
@@ -83,36 +91,44 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 	 */	
 	@Override	
 	public Result<WorkStationCountVo> queryPageCount(WorkStationQuery query){
+		logger.info("网格工序管理 queryPageCount 入参-{}", JSON.toJSONString(query));
 		return workStationService.queryPageCount(query);
 	 }
 	@Override
 	public Result<List<WorkStation>> queryAreaDictList(WorkStationQuery query) {
+		log.info("网格工序管理 queryAreaDictList 入参-{}", JSON.toJSONString(query));
 		return workStationService.queryAreaDictList(query);
 	}
 	@Override
 	public Result<List<WorkStation>> queryWorkDictList(WorkStationQuery query) {
+		log.info("网格工序管理 queryWorkDictList 入参-{}", JSON.toJSONString(query));
 		return workStationService.queryWorkDictList(query);
 	}
 	@Override
 	public Result<Boolean> deleteByIds(DeleteRequest<WorkStation> deleteRequest) {
+		log.info("网格工序管理 deleteByIds 入参-{}", JSON.toJSONString(deleteRequest));
 		return workStationService.deleteByIds(deleteRequest);
 	}
 	@Override
 	public Result<Long> queryCount(WorkStationQuery query) {
+		logger.info("网格工序管理 queryCount 入参-{}", JSON.toJSONString(query));
 		return workStationService.queryCount(query);
 	}
 	@Override
 	public Result<List<WorkStation>> queryListForExport(WorkStationQuery query) {
+		log.info("网格工序管理 queryListForExport 入参-{}", JSON.toJSONString(query));
 		return workStationService.queryListForExport(query);
 	}
 
 	@Override
 	public Result<WorkStation> queryByBusinessKey(WorkStation data) {
+		log.info("网格工序管理 queryByBusinessKey 入参-{}", JSON.toJSONString(data));
 		return workStationService.queryByBusinessKey(data);
 	}
 
 	@Override
 	public Result<WorkStation> queryByRealBusinessKey(String businessKey) {
+		log.info("网格工序管理 queryByRealBusinessKey 入参-{}", JSON.toJSONString(businessKey));
 		return workStationService.queryByRealBusinessKey(businessKey);
 	}
 }

@@ -41,6 +41,7 @@ public class JyWorkMapFuncConfigJsfServiceImpl implements JyWorkMapFuncConfigJsf
 
     @Override
     public Result<Integer> addWorkMapFunConfig(JyWorkMapFuncConfigDetailVO record) {
+        logger.info("拣运功能工序映射配置-addWorkMapFunConfig-{}",JSON.toJSONString(record));
         Result<Integer> result = checkParams(record);
         if(!result.isSuccess()){
             return result;
@@ -94,6 +95,7 @@ public class JyWorkMapFuncConfigJsfServiceImpl implements JyWorkMapFuncConfigJsf
 
     @Override
     public Result<Integer> updateById(JyWorkMapFuncConfigDetailVO detailVO) {
+        logger.info("拣运功能工序映射配置-updateById-{}",JSON.toJSONString(detailVO));
         Result<Integer> result = checkParams(detailVO);
         if(!result.isSuccess()){
             return result;
@@ -121,6 +123,7 @@ public class JyWorkMapFuncConfigJsfServiceImpl implements JyWorkMapFuncConfigJsf
 
     @Override
     public Result<Integer> deleteById(JyWorkMapFuncConfigEntity entity) {
+        logger.info("拣运功能工序映射配置-deleteById-{}",JSON.toJSONString(entity));
         Result<Integer> result = new Result<Integer>();
         result.toFail();
         try {
@@ -134,6 +137,7 @@ public class JyWorkMapFuncConfigJsfServiceImpl implements JyWorkMapFuncConfigJsf
 
     @Override
     public Result<PageDto<JyWorkMapFuncConfigDetailVO>> queryPageList(JyWorkMapFuncQuery query) {
+        logger.info("拣运功能工序映射配置-queryPageList-{}",JSON.toJSONString(query));
         Result<PageDto<JyWorkMapFuncConfigDetailVO>> result = new Result<PageDto<JyWorkMapFuncConfigDetailVO>>();
         PageDto<JyWorkMapFuncConfigDetailVO> pageDto = new PageDto<JyWorkMapFuncConfigDetailVO>();
         result.toSuccess();

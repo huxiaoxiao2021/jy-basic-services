@@ -34,7 +34,7 @@ public class BoxlimitConfigApiImpl implements BoxlimitConfigApi {
 
     @Override
     public JDResponse insertBoxlimitConfig(@Valid BoxLimitConfigDto po) {
-
+        log.info("集箱包裹上限配置 insertBoxlimitConfig -{}", JSONObject.toJSONString(po));
         JDResponse response = new JDResponse();
         try {
             boxlimitService.insertBoxlimitConfig(po);
@@ -74,6 +74,7 @@ public class BoxlimitConfigApiImpl implements BoxlimitConfigApi {
 
     @Override
     public JDResponse<String> getSiteNameById(Integer siteId) {
+        log.info("集箱包裹上限配置 getSiteNameById -{}", JSONObject.toJSONString(siteId));
         return boxlimitService.querySiteNameById(siteId);
     }
 
@@ -89,6 +90,7 @@ public class BoxlimitConfigApiImpl implements BoxlimitConfigApi {
 
     @Override
     public JDResponse delete(ArrayList<Long> ids, LoginUser loginUser) {
+        log.info("集箱包裹上限配置 delete -{}-{}", JSONObject.toJSONString(ids),JSONObject.toJSONString(loginUser));
         return boxlimitService.delete(ids, loginUser.getUserErp());
     }
 
@@ -107,16 +109,19 @@ public class BoxlimitConfigApiImpl implements BoxlimitConfigApi {
 
     @Override
     public JDResponse<Integer> countByCondition(BoxLimitConfigQueryDto dto) {
+        log.info("集箱包裹上限配置 countByCondition -{}", JSONObject.toJSONString(dto));
         return boxlimitService.countByCondition(dto);
     }
 
     @Override
     public JDResponse<List<String>> getBoxTypeList() {
+        log.info("集箱包裹上限配置 getBoxTypeList");
         return boxlimitService.getBoxTypeList();
     }
 
     @Override
     public JDResponse<Integer> getLimitNums(Integer createSiteCode, String type) {
+        log.info("集箱包裹上限配置 getLimitNums -{} -{}",createSiteCode,type);
         if(StringUtils.isBlank(type)){
             return new JDResponse<>();
         }
