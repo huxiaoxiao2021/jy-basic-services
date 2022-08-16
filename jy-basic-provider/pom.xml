@@ -14,6 +14,7 @@
     <version>1.0-SNAPSHOT</version>
     <name>jy-basic-provider</name>
     <description>基础信息服务provider</description>
+    <packaging>war</packaging>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
