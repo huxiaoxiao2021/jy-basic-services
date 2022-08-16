@@ -58,7 +58,7 @@ jdq:
   #基础服务JSF别名
 jsf:
   jy_basic:
-    alias: jy-basic-server-test
+    alias: jy-basic-server-local
 
 basic:
   jsf:
