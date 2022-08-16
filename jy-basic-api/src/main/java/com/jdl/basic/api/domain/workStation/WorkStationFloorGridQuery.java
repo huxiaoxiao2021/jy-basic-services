@@ -66,5 +66,18 @@ public class WorkStationFloorGridQuery extends BasePagerCondition {
      * 分页-pageSize
      */
     private Integer pageSize;
+    /**
+     * 网格ID
+     */
+    private String excpGridCode;
 
+    /**
+     * 楼层
+     */
+    private Integer excpFloor;
+
+    /**
+     * 是否查询异常
+     */
+    private Integer excpFlag;
 }

@@ -25,7 +25,7 @@ public interface WorkAbnormalGridBindingService {
      * @param query
      * @return
      */
-    Result<List<WorkStationBindingVo>> queryListBySite(WorkStationFloorGridQuery query);
+    Result<WorkStationBindingEditVo> queryListBySite(WorkStationFloorGridQuery query);
 
     /**
      * 插入一条数据
@@ -40,4 +40,6 @@ public interface WorkAbnormalGridBindingService {
      * @return
      */
     Result<List<WorkStationBindingVo>> queryBindingList(WorkStationFloorGridQuery query);
+
+    Result<Boolean> update(List<WorkStationBinding> data);
 }

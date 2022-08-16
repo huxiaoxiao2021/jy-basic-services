@@ -16,7 +16,7 @@ import java.util.Date;
 public class WorkStation implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * 主键ID
 	 */
@@ -81,6 +81,10 @@ public class WorkStation implements Serializable {
 	 * 创建时间
 	 */
 	private Date createTime;
+	/**
+	 * 异常网络标识
+	 */
+	private Integer excpFlag;
 
 	/**
 	 * 更新时间

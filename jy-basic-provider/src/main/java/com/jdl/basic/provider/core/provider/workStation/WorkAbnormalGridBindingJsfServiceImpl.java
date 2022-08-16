@@ -1,9 +1,6 @@
 package com.jdl.basic.provider.core.provider.workStation;
 
-import com.jdl.basic.api.domain.workStation.WorkStationBinding;
-import com.jdl.basic.api.domain.workStation.WorkStationBindingVo;
-import com.jdl.basic.api.domain.workStation.WorkStationFloorGridQuery;
-import com.jdl.basic.api.domain.workStation.WorkStationFloorGridVo;
+import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.service.workStation.WorkAbnormalGridBindingJsfService;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
@@ -34,7 +31,7 @@ public class WorkAbnormalGridBindingJsfServiceImpl implements WorkAbnormalGridBi
     }
 
     @Override
-    public Result<List<WorkStationBindingVo>> queryListBySite(WorkStationFloorGridQuery query) {
+    public Result<WorkStationBindingEditVo> queryListBySite(WorkStationFloorGridQuery query) {
         return workAbnormalGridBindingService.queryListBySite(query);
     }
 
@@ -49,5 +46,10 @@ public class WorkAbnormalGridBindingJsfServiceImpl implements WorkAbnormalGridBi
     @Override
     public Result<List<WorkStationBindingVo>> queryBindingList(WorkStationFloorGridQuery query) {
         return workAbnormalGridBindingService.queryBindingList(query);
+    }
+
+    @Override
+    public Result<Boolean> update(List<WorkStationBinding> data) {
+        return workAbnormalGridBindingService.update(data);
     }
 }

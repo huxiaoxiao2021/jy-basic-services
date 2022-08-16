@@ -1,10 +1,7 @@
 package com.jdl.basic.api.service.workStation;
 
 
-import com.jdl.basic.api.domain.workStation.WorkStationBinding;
-import com.jdl.basic.api.domain.workStation.WorkStationBindingVo;
-import com.jdl.basic.api.domain.workStation.WorkStationFloorGridQuery;
-import com.jdl.basic.api.domain.workStation.WorkStationFloorGridVo;
+import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 
@@ -27,7 +24,7 @@ public interface WorkAbnormalGridBindingJsfService {
      * @param query
      * @return
      */
-    Result<List<WorkStationBindingVo>> queryListBySite(WorkStationFloorGridQuery query);
+    Result<WorkStationBindingEditVo> queryListBySite(WorkStationFloorGridQuery query);
 
     /**
      * 插入一条数据
@@ -43,4 +40,8 @@ public interface WorkAbnormalGridBindingJsfService {
      */
     Result<List<WorkStationBindingVo>> queryBindingList(WorkStationFloorGridQuery query);
 
+    /**
+     * 更新数据
+     */
+    Result<Boolean> update(List<WorkStationBinding> data);
 }

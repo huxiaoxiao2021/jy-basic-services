@@ -38,12 +38,15 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 	 * @return
 	 */
 	public Result<Boolean> insert(WorkStation insertData){
+		if (insertData.getExcpFlag() == 0){
+			insertData.setExcpFlag(1);
+		}
 		return workStationService.insert(insertData);
 	 }
 	@Override
 	public Result<Boolean> importDatas(List<WorkStation> dataList) {
 		return workStationService.importDatas(dataList);
-	}	
+	}
 	/**
 	 * 根据id更新数据
 	 * @param updateData
@@ -80,8 +83,8 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 	 * 按条件查询统计信息
 	 * @param query
 	 * @return
-	 */	
-	@Override	
+	 */
+	@Override
 	public Result<WorkStationCountVo> queryPageCount(WorkStationQuery query){
 		return workStationService.queryPageCount(query);
 	 }

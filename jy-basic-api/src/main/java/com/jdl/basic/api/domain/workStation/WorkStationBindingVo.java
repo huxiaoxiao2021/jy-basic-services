@@ -30,6 +30,10 @@ public class WorkStationBindingVo implements Serializable {
      */
     private String gridCode;
     /**
+     * 禁选标识
+     */
+    private Boolean disabled;
+    /**
      * 子节点
      */
     private List<WorkStationBindingVo> children;

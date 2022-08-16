@@ -16,7 +16,7 @@ import java.util.Date;
 public class WorkStationGrid implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * 主键ID
 	 */
@@ -141,5 +141,10 @@ public class WorkStationGrid implements Serializable {
 	 * 工序名称
 	 */
 	private String workName;
+
+	/**
+	 * 异常网格标志
+	 */
+	private Integer excpFlag;
 
 }

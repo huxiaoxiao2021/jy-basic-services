@@ -10,6 +10,7 @@
 		<result column="site_code" property="siteCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
 		<result column="site_name" property="siteName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="floor" property="floor" javaType="java.lang.Integer" jdbcType="INTEGER" />
+		<result column="excp_flag" property="excpFlag" javaType="java.lang.Integer" jdbcType="INTEGER" />
 		<result column="grid_no" property="gridNo" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="grid_code" property="gridCode" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="grid_name" property="gridName" javaType="java.lang.String" jdbcType="VARCHAR" />
@@ -530,9 +531,9 @@
 		select distinct
 		g.org_code,g.org_name,g.site_code,g.site_name,
 		g.floor,g.grid_no,g.grid_code,g.grid_name,
-		s.area_code,s.area_name
+		s.area_code,s.area_name,ifnull(s.excp_flag,0) excp_flag
 		from
-		work_station_grid g
+			work_station_grid g
 		<include refid="joinSql"/>
 		<include refid="queryDistinctCondition"/>
 		<if test="pageNumber > 0">
@@ -554,8 +555,11 @@
 			<if test="areaCode != null and areaCode != ''" >
 				and s.area_code = #{areaCode,jdbcType=VARCHAR}
 			</if>
-			<if test="gridNo != null and gridNo != ''" >
-				and g.grid_no = #{gridNo,jdbcType=VARCHAR}
+			<if test="gridCode != null and gridCode != ''" >
+				and g.grid_code = #{gridCode,jdbcType=VARCHAR}
+			</if>
+			<if test="excpFlag != null and excpFlag != ''" >
+				and s.excp_flag = #{excpFlag,jdbcType=INTEGER}
 			</if>
 		</where>
 	</sql>

@@ -1,7 +1,6 @@
 package com.jdl.basic.provider.core.dao.workStation;
 
 import com.jdl.basic.api.domain.workStation.WorkStationBinding;
-import com.jdl.basic.api.domain.workStation.WorkStationBindingVo;
 import com.jdl.basic.api.domain.workStation.WorkStationFloorGridQuery;
 
 import java.util.List;
@@ -24,7 +23,18 @@ public interface WorkAbnormalGridDao {
      */
     long queryOne(WorkStationBinding query);
 
-    List<WorkStationBindingVo> queryBindingList(WorkStationFloorGridQuery query);
+    /**
+     * 查询绑定关系
+     * @param query
+     * @return
+     */
+    List<WorkStationBinding> queryBindingList(WorkStationFloorGridQuery query);
 
-    List<Integer> queryFloor(WorkStationFloorGridQuery query);
+    /**
+     * 更新绑定关系
+     * @param data
+     */
+    void updateByGridCode(WorkStationBinding data);
+
+    void update(WorkStationBinding insertData);
 }
