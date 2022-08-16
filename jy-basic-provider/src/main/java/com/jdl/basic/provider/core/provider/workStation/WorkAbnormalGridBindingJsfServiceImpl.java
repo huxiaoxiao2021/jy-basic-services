@@ -4,6 +4,7 @@ import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.service.workStation.WorkAbnormalGridBindingJsfService;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.basic.provider.core.service.workStation.WorkAbnormalGridBindingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +52,23 @@ public class WorkAbnormalGridBindingJsfServiceImpl implements WorkAbnormalGridBi
     @Override
     public Result<Boolean> update(List<WorkStationBinding> data) {
         return workAbnormalGridBindingService.update(data);
+    }
+
+
+    @Override
+    public Result<WorkStationFloorGridVo> getAbnormalGrid(WorkStationFloorGridQuery query) {
+        Result<WorkStationFloorGridVo> result = Result.success();
+        if (query.getSiteCode() == null) {
+            return Result.fail("场地编号为空！");
+        }
+        if (StringUtils.isEmpty(query.getGridCode())){
+            return Result.fail("网格编号为空！");
+        }
+        if (query.getFloor() == null){
+            return Result.fail("楼层为空！");
+        }
+        result.setData(workAbnormalGridBindingService.getAbnormalGrid(query));
+        return result;
+
     }
 }

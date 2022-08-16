@@ -74,4 +74,8 @@ public class WorkStationFloorGridVo implements Serializable {
      */
     private String areaName;
 
+    public String getRefid(){
+        return this.getSiteCode()+"-"+this.getFloor()+"-"+this.getGridCode();
+    }
+
 }

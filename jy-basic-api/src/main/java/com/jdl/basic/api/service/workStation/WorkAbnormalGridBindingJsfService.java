@@ -24,7 +24,13 @@ public interface WorkAbnormalGridBindingJsfService {
      * @param query
      * @return
      */
-    Result<WorkStationBindingEditVo> queryListBySite(WorkStationFloorGridQuery query);
+    Result<List<WorkStationBindingVo>> queryListBySite(WorkStationFloorGridQuery query);
+    /**
+     * 获取异常网格
+     * @param query
+     * @return
+     */
+    Result<WorkStationFloorGridVo> getAbnormalGrid(WorkStationFloorGridQuery query);
 
     /**
      * 插入一条数据

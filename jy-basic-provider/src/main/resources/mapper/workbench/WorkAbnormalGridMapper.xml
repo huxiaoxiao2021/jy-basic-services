@@ -18,6 +18,14 @@
         <result column="yn" property="yn" javaType="java.lang.Integer" jdbcType="TINYINT" />
     </resultMap>
 
+    <resultMap id="WorkStationFloorGridVo" type="com.jdl.basic.api.domain.workStation.WorkStationFloorGridVo">
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+        <result column="site_code" property="siteCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
+        <result column="site_name" property="siteName" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="floor" property="floor" javaType="java.lang.Integer" jdbcType="INTEGER" />
+        <result column="grid_code" property="gridCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </resultMap>
+
     <insert id="insert" parameterType="com.jdl.basic.api.domain.workStation.WorkStationBinding" useGeneratedKeys="true" keyProperty="id">
         insert into jy_exception_grid_relation
         (
@@ -203,4 +211,20 @@
             and floor = #{floor,jdbcType=INTEGER}
         </if>
     </update>
+
+    <select id="getAbnormalGrid" resultMap="WorkStationFloorGridVo">
+        select site_code,site_name,excp_floor as floor,excp_grid_code as grid_code
+        from jy_exception_grid_relation
+        where
+        yn = 1
+        <if test="siteCode != null and siteCode != ''" >
+            and site_code = #{siteCode,jdbcType=INTEGER}
+        </if>
+        <if test="gridCode != null and gridCode != ''" >
+            and grid_code = #{gridCode,jdbcType=VARCHAR}
+        </if>
+        <if test="floor != null and floor != ''" >
+            and floor = #{floor,jdbcType=INTEGER}
+        </if>
+    </select>
 </mapper>
