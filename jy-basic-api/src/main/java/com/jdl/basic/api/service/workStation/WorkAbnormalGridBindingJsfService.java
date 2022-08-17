@@ -19,12 +19,20 @@ public interface WorkAbnormalGridBindingJsfService {
      * @return
      */
     Result<PageDto<WorkStationFloorGridVo>> queryListDistinct(WorkStationFloorGridQuery query);
+
+    /**
+     * 查询数据总数
+     * @param query
+     * @return
+     */
+    Result<Long> queryDistinctCount(WorkStationFloorGridQuery query);
+
     /**
      * 根据场地查询信息
      * @param query
      * @return
      */
-    Result<List<WorkStationBindingVo>> queryListBySite(WorkStationFloorGridQuery query);
+    Result<WorkStationBindingEditVo> queryListBySite(WorkStationFloorGridQuery query);
     /**
      * 获取异常网格
      * @param query
@@ -50,4 +58,12 @@ public interface WorkAbnormalGridBindingJsfService {
      * 更新数据
      */
     Result<Boolean> update(List<WorkStationBinding> data);
+
+    /**
+     * 导出数据
+     * @param query
+     * @return
+     */
+    Result<List<WorkStationFloorGridVo>> queryListForExport(WorkStationFloorGridQuery query);
+
 }

@@ -32,6 +32,11 @@ public class WorkAbnormalGridBindingJsfServiceImpl implements WorkAbnormalGridBi
     }
 
     @Override
+    public Result<Long> queryDistinctCount(WorkStationFloorGridQuery query) {
+        return workAbnormalGridBindingService.queryDistinctCount(query);
+    }
+
+    @Override
     public Result<WorkStationBindingEditVo> queryListBySite(WorkStationFloorGridQuery query) {
         return workAbnormalGridBindingService.queryListBySite(query);
     }
@@ -52,6 +57,11 @@ public class WorkAbnormalGridBindingJsfServiceImpl implements WorkAbnormalGridBi
     @Override
     public Result<Boolean> update(List<WorkStationBinding> data) {
         return workAbnormalGridBindingService.update(data);
+    }
+
+    @Override
+    public Result<List<WorkStationFloorGridVo>> queryListForExport(WorkStationFloorGridQuery query) {
+        return workAbnormalGridBindingService.queryListForExport(query);
     }
 
 

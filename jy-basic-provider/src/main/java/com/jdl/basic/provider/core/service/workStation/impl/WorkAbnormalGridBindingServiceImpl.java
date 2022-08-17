@@ -53,6 +53,11 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
     }
 
     @Override
+    public Result<Long> queryDistinctCount(WorkStationFloorGridQuery query) {
+        return Result.success(workStationGridDao.queryDistinctCount(query));
+    }
+
+    @Override
     public Result<WorkStationBindingEditVo> queryListBySite(WorkStationFloorGridQuery query) {
         Result<WorkStationBindingEditVo> result = Result.success();
         if (query.getSiteCode() == null) {
@@ -98,13 +103,13 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
                         areas.add(d.getAreaCode());
                     }
                     WorkStationBindingVo area = new WorkStationBindingVo();
-                    area.setLabel(d.getAreaName());
+                    area.setLabel(d.getAreaName() + "  " + d.getAreaCode());
                     area.setChildren(new ArrayList<>());
                     for (WorkStationGrid g : data) {
                         if (Objects.equals(g.getFloor(), f)&&Objects.equals(d.getAreaCode(),g.getAreaCode())) {
                             WorkStationBindingVo grid = new WorkStationBindingVo();
                             grid.setFloor(f);
-                            grid.setLabel(g.getGridName());
+                            grid.setLabel(g.getGridName() + "  " + g.getGridCode());
                             grid.setGridCode(g.getGridCode());
                             for (WorkStationBinding ckeck : ckecks) {
                                 if (ckeck.getGridCode().equals(g.getGridCode())
@@ -204,6 +209,11 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
         return workAbnormalGridDao.getAbnormalGrid(query);
     }
 
+    @Override
+    public Result<List<WorkStationFloorGridVo>> queryListForExport(WorkStationFloorGridQuery query) {
+        return Result.success(getWorkStationFloorGridVoList(workStationGridDao.queryListDistinct(query)));
+    }
+
     private List<WorkStationFloorGridVo> getWorkStationFloorGridVoList(List<WorkStationGrid> workStationGrids) {
         List<WorkStationFloorGridVo> result = new ArrayList<>();
         for (WorkStationGrid data : workStationGrids) {
@@ -218,6 +228,15 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
             workStationFloorGridVo.setSiteName(data.getSiteName());
             workStationFloorGridVo.setAreaName(data.getAreaName());
             workStationFloorGridVo.setAreaCode(data.getAreaCode());
+            WorkStationBinding query = new WorkStationBinding();
+            query.setSiteCode(data.getSiteCode());
+            query.setExcpFloor(data.getFloor());
+            query.setExcpGridCode(data.getGridCode());
+            if (workAbnormalGridDao.queryOneUnDelete(query) > 0) {
+                workStationFloorGridVo.setBinding(1);
+            }else {
+                workStationFloorGridVo.setBinding(0);
+            }
             result.add(workStationFloorGridVo);
         }
         return result;

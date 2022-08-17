@@ -43,4 +43,5 @@ public interface WorkAbnormalGridDao {
 
     WorkStationFloorGridVo getAbnormalGrid(WorkStationFloorGridQuery query);
 
+    long queryOneUnDelete(WorkStationBinding query);
 }

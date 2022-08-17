@@ -20,6 +20,7 @@ public interface WorkAbnormalGridBindingService {
      */
     Result<PageDto<WorkStationFloorGridVo>> queryListDistinct(WorkStationFloorGridQuery query);
 
+    Result<Long> queryDistinctCount(WorkStationFloorGridQuery query);
     /**
      * 查询场地信息
      * @param query
@@ -50,4 +51,5 @@ public interface WorkAbnormalGridBindingService {
      */
     WorkStationFloorGridVo getAbnormalGrid(WorkStationFloorGridQuery query);
 
+    Result<List<WorkStationFloorGridVo>> queryListForExport(WorkStationFloorGridQuery query);
 }
