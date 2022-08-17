@@ -64,8 +64,8 @@ jsf:
 
 basic:
   jsf:
-    token: 123456
-    alias: basic-ql-jsf
+    token: 96KYOS24GJ
+    alias: basic_pro_L0
     timeout: 10000
 
 ldop:
