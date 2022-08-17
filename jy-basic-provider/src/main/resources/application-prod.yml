@@ -71,7 +71,7 @@ basic:
 ldop:
   basic:
     jsf:
-      alias: ldop-basic-test
+      alias: ldop-basic
       timeout: 10000
 
 ###### jsf config  end######

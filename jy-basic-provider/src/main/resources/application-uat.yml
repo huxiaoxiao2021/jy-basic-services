@@ -61,7 +61,6 @@ jsf:
   jy_basic:
     alias: jy-basic-server-uat
 
-
 basic:
   jsf:
     token: 96KYOS24GJ
@@ -71,7 +70,7 @@ basic:
 ldop:
   basic:
     jsf:
-      alias: ldop-basic-test
+      alias: uat-ldop-basic
       timeout: 10000
 
 ###### jsf config  end######
