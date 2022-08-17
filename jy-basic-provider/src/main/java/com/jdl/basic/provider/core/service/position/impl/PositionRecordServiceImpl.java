@@ -1,5 +1,7 @@
 package com.jdl.basic.provider.core.service.position.impl;
 
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.position.PositionData;
 import com.jdl.basic.api.domain.position.PositionDetailRecord;
 import com.jdl.basic.api.domain.position.PositionQuery;
@@ -9,6 +11,7 @@ import com.jdl.basic.api.domain.workStation.WorkStation;
 import com.jdl.basic.api.domain.workStation.WorkStationGrid;
 import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
 import com.jdl.basic.api.response.JDResponse;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
@@ -140,6 +143,7 @@ public class PositionRecordServiceImpl implements PositionRecordService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.syncAllData", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public void syncAllData() {
         long startTime = System.currentTimeMillis();
         WorkStationGridQuery query = new WorkStationGridQuery();
@@ -173,6 +177,7 @@ public class PositionRecordServiceImpl implements PositionRecordService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.queryPositionWithIsMatchAppFunc", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public JDResponse<PositionData> queryPositionWithIsMatchAppFunc(String positionCode) {
         JDResponse<PositionData> result = queryPositionInfo(positionCode);
         if(!result.isSuccess()){

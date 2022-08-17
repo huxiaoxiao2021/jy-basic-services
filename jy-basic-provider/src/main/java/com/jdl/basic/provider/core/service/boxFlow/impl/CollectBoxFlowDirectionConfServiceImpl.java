@@ -161,6 +161,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionConfServiceImpl.listByParamAndWhetherConfiged", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Pager<CollectBoxFlowDirectionConf>> listByParamAndWhetherConfiged(Pager<CollectBoxFlowDirectionConf> pager, Boolean configed) {
         Result<Pager<CollectBoxFlowDirectionConf>> result = Result.success();
         if(pager == null){
