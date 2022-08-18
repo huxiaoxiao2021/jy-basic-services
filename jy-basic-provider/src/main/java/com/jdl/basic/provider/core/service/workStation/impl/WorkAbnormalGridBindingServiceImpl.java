@@ -5,15 +5,13 @@ import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
-import com.jdl.basic.common.utils.StringHelper;
 import com.jdl.basic.common.utils.StringUtils;
-import com.jdl.basic.provider.common.Jimdb.CacheService;
-import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkAbnormalGridDao;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationGridDao;
 import com.jdl.basic.provider.core.service.workStation.WorkAbnormalGridBindingService;
+import com.jdl.basic.provider.jimdbCache.CacheService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -31,19 +29,15 @@ import java.util.concurrent.TimeUnit;
 @Service("workAbnormalGridBindingService")
 public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindingService {
 
-    public static final String CACHE_KEY_GRID_BINDING = "jyBasic:WorkAbnormalGridBinding";
-
     @Resource
     private WorkStationGridDao workStationGridDao;
 
     @Resource
     private WorkAbnormalGridDao workAbnormalGridDao;
 
-    @Autowired
-    private IGenerateObjectId genObjectId;
-
     @Resource
-    private CacheService jimdbCacheService;
+    @Qualifier("JimdbCacheService")
+    private CacheService cacheService;
 
     @Override
     public Result<PageDto<WorkStationFloorGridVo>> queryListDistinct(WorkStationFloorGridQuery query) {
@@ -149,9 +143,9 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
     @Override
     public Result<Boolean> insert(WorkStationBinding insertData) {
         Result<Boolean> result = Result.success();
-        String key = String.format(insertData.getSiteCode().toString(),insertData.getExcpFloor(),insertData.getExcpGridCode());
+        String key = insertData.getSiteCode().toString() + insertData.getFloor() + insertData.getGridCode();
         try {
-            boolean getLock = jimdbCacheService.setNx(key, 1 + "", 60, TimeUnit.SECONDS);
+            boolean getLock = cacheService.setNx(key, 1 + "", 60, TimeUnit.SECONDS);
             if(!getLock){
                 result.toFail("操作太快，正在处理中");
                 return result;
@@ -159,13 +153,14 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
             long count = workAbnormalGridDao.queryOne(insertData);
             if (count > 0) {
                 workAbnormalGridDao.update(insertData);
-            }else {
+            } else {
                 workAbnormalGridDao.insert(insertData);
             }
-            return Result.success(Boolean.TRUE);
-        }finally {
-            jimdbCacheService.del(key);
+        } finally {
+            cacheService.del(key);
         }
+
+        return Result.success(Boolean.TRUE);
 
     }
     @Override
