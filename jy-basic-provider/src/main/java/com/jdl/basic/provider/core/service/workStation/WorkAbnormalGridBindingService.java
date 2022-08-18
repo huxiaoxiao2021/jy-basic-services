@@ -42,6 +42,11 @@ public interface WorkAbnormalGridBindingService {
      */
     Result<List<WorkStationBindingVo>> queryBindingList(WorkStationFloorGridQuery query);
 
+    /**
+     * 更新绑定信息
+     * @param data
+     * @return
+     */
     Result<Boolean> update(List<WorkStationBinding> data);
 
     /**

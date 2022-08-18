@@ -143,6 +143,21 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
     @Override
     public Result<Boolean> insert(WorkStationBinding insertData) {
         Result<Boolean> result = Result.success();
+        if (insertData.getSiteCode() == null) {
+            return Result.fail("场地编号为空！");
+        }
+        if (StringUtils.isEmpty(insertData.getGridCode())){
+            return Result.fail("网格编号为空！");
+        }
+        if (insertData.getFloor() == null){
+            return Result.fail("楼层为空！");
+        }
+        if (StringUtils.isEmpty(insertData.getExcpGridCode())){
+            return Result.fail("异常网格编号为空！");
+        }
+        if (insertData.getExcpFloor() == null){
+            return Result.fail("异常楼层为空！");
+        }
         String key = insertData.getSiteCode().toString() + insertData.getFloor() + insertData.getGridCode();
         try {
             boolean getLock = cacheService.setNx(key, 1 + "", 60, TimeUnit.SECONDS);
@@ -216,11 +231,27 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
         return res;
     }
     @Override
-    public Result<Boolean> update(List<WorkStationBinding> data) {
-        for (WorkStationBinding d : data) {
-            workAbnormalGridDao.updateByGridCode(d);
+    public Result<Boolean> update(List<WorkStationBinding> updateData) {
+        Result<Boolean> result = Result.success();
+        for (WorkStationBinding data : updateData) {
+            if (data.getSiteCode() == null) {
+                return Result.fail("场地编号为空！");
+            }
+            if (StringUtils.isEmpty(data.getGridCode())){
+                return Result.fail("网格编号为空！");
+            }
+            if (data.getFloor() == null){
+                return Result.fail("楼层为空！");
+            }
+            if (StringUtils.isEmpty(data.getExcpGridCode())){
+                return Result.fail("异常网格编号为空！");
+            }
+            if (data.getExcpFloor() == null){
+                return Result.fail("异常楼层为空！");
+            }
+            workAbnormalGridDao.updateByGridCode(data);
         }
-        return Result.success();
+        return result;
     }
 
     @Override
