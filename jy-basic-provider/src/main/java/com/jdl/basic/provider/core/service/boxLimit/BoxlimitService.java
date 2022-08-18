@@ -1,7 +1,6 @@
 package com.jdl.basic.provider.core.service.boxLimit;
 
 
-
 import com.jdl.basic.api.domain.LoginUser;
 import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigDto;
 import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigQueryDto;
@@ -17,13 +16,13 @@ import java.util.List;
  * @Date: 2022/7/24 11:33
  * @Description:
  */
-@Validated
+
 public interface BoxlimitService {
 
-    void insertBoxlimitConfig(@Valid BoxLimitConfigDto po);
+    void insertBoxlimitConfig(BoxLimitConfigDto po);
 
     /**
-     *  PDA建箱包裹数 列表查询
+     * PDA建箱包裹数 列表查询
      */
     PageDto<BoxLimitConfigDto> listData(BoxLimitConfigQueryDto dto);
 
@@ -35,12 +34,12 @@ public interface BoxlimitService {
     /**
      * PDA建箱包裹数 创建配置
      */
-    JDResponse create(@Valid BoxLimitConfigDto dto, LoginUser operator);
+    JDResponse create(BoxLimitConfigDto dto, LoginUser operator);
 
     /**
      * PDA建箱包裹数 更新配置
      */
-    JDResponse update(@Valid BoxLimitConfigDto dto, LoginUser operator);
+    JDResponse update(BoxLimitConfigDto dto, LoginUser operator);
 
     /**
      * 根据ID批量删除
@@ -48,13 +47,14 @@ public interface BoxlimitService {
     JDResponse delete(List<Long> ids, String operatorErp);
 
     /**
-     *  查询展示名称
+     * 查询展示名称
      */
     JDResponse<String> querySiteNameById(Integer siteId);
 
 
     /**
      * 查询符合条件的数据条数
+     *
      * @param dto
      * @return
      */
@@ -62,6 +62,7 @@ public interface BoxlimitService {
 
     /**
      * 获取箱号类型集合
+     *
      * @return
      */
     JDResponse<List<String>> getBoxTypeList();

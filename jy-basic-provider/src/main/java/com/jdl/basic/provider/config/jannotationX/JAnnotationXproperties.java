@@ -13,7 +13,6 @@ import javax.validation.constraints.NotNull;
  * @date 2019/10/21 20:03
  */
 @Configuration
-@Valid
 public class JAnnotationXproperties {
 
     /**
