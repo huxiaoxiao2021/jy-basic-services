@@ -934,15 +934,6 @@ public class Constants {
     public static final Integer ROUTE_INTER_BIZZ_TYPE_CANG_PEI_B2B= 6;
 
     /**
-     * UMP监控应用名-dms.etms
-     */
-    public static final String UMP_APP_NAME_DMSWEB= "dms.etms";
-    /**
-     * UMP监控应用名-bluedragon-distribution-worker
-     */
-    public static final String UMP_APP_NAME_DMSWORKER= "bluedragon-distribution-worker";
-
-    /**
      *  重泡比超过正常范围168:1到330:1
      */
     public static final double CBM_DIV_KG_MIN_LIMIT = 168.0;
@@ -1375,10 +1366,7 @@ public class Constants {
      */
     public static final Integer PACKAGE_NUM_ONCE_QUERY = 5000;
 
-    /**
-     * ump ver系统key
-     */
-    public static final String UMP_APP_NAME_DMSVER = "dmsver.etms";
+
 
     /**
      * C网无计泡拦截 存入scan_lists的exp_type
@@ -1718,4 +1706,9 @@ public class Constants {
      * 验货菜单编码：0101019
      */
     public static final String MENU_CODE_INSPECTION  = "0101019";
+
+    /**
+     * UMP appName
+     */
+    public static final String UMP_APP_NAME = "jy-basic-services";
 }

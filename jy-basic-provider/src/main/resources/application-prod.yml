@@ -2,7 +2,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://mysql-cn-north-1-f51a5018ea1d406c.rds.jdcloud.com:3358/bd_dms_con?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&failOverReadOnly=false
+    url: jdbc:mysql://mysql-cn-north-1-faa4483a25674aac.rds.jdcloud.com:3358/jybasic_conf?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&failOverReadOnly=false
     username: testwl
     password: 4x1eSVxcq0816pytgeyQAh1wUS
 
@@ -28,9 +28,7 @@ spring:
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 
-jsf:
-  jy_basic:
-    alias: jy-basic-server #基础服务JSF别名
+
 
 ## 云redis配置
 jimdb:
@@ -46,3 +44,34 @@ jimdb:
       minIdlePerKey: 0
       maxIdlePerKey: 32
       maxTotalPerKey: 200
+
+#JDQ 配置
+jdq:
+  enabled: true
+  producers:
+    - id: colletBoxFlowDirection
+      clientId: Pbc31af51
+      topic: collect_box_flow_direction_conf_change_log
+      password: 9O2a2SWIq4CWDXB9
+      domain: dmsauto.etms.jd.com
+
+###### jsf config  start######
+
+  #基础服务JSF别名
+jsf:
+  jy_basic:
+    alias: jy-basic-server
+
+basic:
+  jsf:
+    token: 96KYOS24GJ
+    alias: basic_pro_L0
+    timeout: 10000
+
+ldop:
+  basic:
+    jsf:
+      alias: ldop-basic
+      timeout: 10000
+
+###### jsf config  end######

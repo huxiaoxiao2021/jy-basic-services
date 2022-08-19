@@ -34,7 +34,7 @@ public class BoxLimitConfigDto implements Serializable {
     /**
      * 建箱包裹数上限
      */
-    @Min(value = 0, message = "最小值不能小于0")
+    //@Min(value = 0, message = "最小值不能小于0")
     private Integer limitNum;
 
     /**

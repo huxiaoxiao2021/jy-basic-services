@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.core.provider.workStation;
 
+import com.alibaba.fastjson.JSON;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkStationAttendPlan;
 import com.jdl.basic.api.domain.workStation.WorkStationAttendPlanQuery;
@@ -35,6 +36,7 @@ public class WorkStationAttendPlanJsfServiceImpl implements WorkStationAttendPla
 	 * @return
 	 */
 	public Result<Boolean> insert(WorkStationAttendPlan insertData){
+		log.info("岗位人员出勤计划 insert 入参-{}", JSON.toJSONString(insertData));
 		return workStationAttendPlanService.insert(insertData);
 	 }
 	/**
@@ -43,6 +45,7 @@ public class WorkStationAttendPlanJsfServiceImpl implements WorkStationAttendPla
 	 * @return
 	 */
 	public Result<Boolean> updateById(WorkStationAttendPlan updateData){
+		log.info("岗位人员出勤计划 updateById 入参-{}", JSON.toJSONString(updateData));
 		return workStationAttendPlanService.updateById(updateData);
 	 }
 	/**
@@ -51,6 +54,7 @@ public class WorkStationAttendPlanJsfServiceImpl implements WorkStationAttendPla
 	 * @return
 	 */
 	public Result<Boolean> deleteById(WorkStationAttendPlan deleteData){
+		log.info("岗位人员出勤计划 deleteById 入参-{}", JSON.toJSONString(deleteData));
 		return workStationAttendPlanService.deleteById(deleteData);
 	 }
 	/**
@@ -59,6 +63,7 @@ public class WorkStationAttendPlanJsfServiceImpl implements WorkStationAttendPla
 	 * @return
 	 */
 	public Result<WorkStationAttendPlan> queryById(Long id){
+		log.info("岗位人员出勤计划 queryById 入参-{}", JSON.toJSONString(id));
 		return workStationAttendPlanService.queryById(id);
 	 }
 	/**
@@ -67,27 +72,39 @@ public class WorkStationAttendPlanJsfServiceImpl implements WorkStationAttendPla
 	 * @return
 	 */
 	public Result<PageDto<WorkStationAttendPlan>> queryPageList(WorkStationAttendPlanQuery query){
+		log.info("岗位人员出勤计划 queryPageList 入参-{}", JSON.toJSONString(query));
 		return workStationAttendPlanService.queryPageList(query);
 	 }
 	@Override
 	public Result<Boolean> importDatas(List<WorkStationAttendPlan> dataList) {
+		log.info("岗位人员出勤计划 importDatas");
 		return workStationAttendPlanService.importDatas(dataList);
 	}
 	@Override
 	public Result<List<WorkStationAttendPlan>> queryWaveDictList(WorkStationAttendPlanQuery query) {
+		log.info("岗位人员出勤计划 queryWaveDictList 入参-{}", JSON.toJSONString(query));
 		return workStationAttendPlanService.queryWaveDictList(query);
 	}
 	@Override
 	public Result<Boolean> deleteByIds(DeleteRequest<WorkStationAttendPlan> deleteRequest) {
+		log.info("岗位人员出勤计划 deleteByIds 入参-{}", JSON.toJSONString(deleteRequest));
 		return workStationAttendPlanService.deleteByIds(deleteRequest);
 	}
 	@Override
 	public Result<Long> queryCount(WorkStationAttendPlanQuery query) {
+		log.info("岗位人员出勤计划 queryCount 入参-{}", JSON.toJSONString(query));
 		return workStationAttendPlanService.queryCount(query);
 	}
 	@Override
 	public Result<List<WorkStationAttendPlan>> queryListForExport(WorkStationAttendPlanQuery query) {
+		log.info("岗位人员出勤计划 queryListForExport 入参-{}", JSON.toJSONString(query));
 		return workStationAttendPlanService.queryListForExport(query);
+	}
+
+	@Override
+	public Result<WorkStationAttendPlan> queryByBusinessKeys(WorkStationAttendPlan data) {
+		log.info("岗位人员出勤计划 queryByBusinessKeys 入参-{}", JSON.toJSONString(data));
+		return workStationAttendPlanService.queryByBusinessKeys(data);
 	}
 
 }

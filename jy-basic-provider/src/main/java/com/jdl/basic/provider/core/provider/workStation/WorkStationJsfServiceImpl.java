@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.core.provider.workStation;
 
+import com.alibaba.fastjson.JSON;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkStation;
 import com.jdl.basic.api.domain.workStation.WorkStationCountVo;
@@ -8,6 +9,7 @@ import com.jdl.basic.api.service.workStation.WorkStationJsfService;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.service.workStation.WorkStationService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import java.util.List;
  * @date 2022年02月23日 11:01:53
  *
  */
+@Slf4j
 @Service
 public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 

@@ -30,7 +30,7 @@ spring:
 
 jsf:
   jy_basic:
-    alias: jy-basic-server-dev  #基础服务JSF别名
+    alias: jy-basic-server-test  #基础服务JSF别名
 
 ## 云redis配置
 jimdb:
@@ -47,3 +47,31 @@ jimdb:
       maxIdlePerKey: 32
       maxTotalPerKey: 200
 
+#jdq 配置
+jdq:
+  enabled: false
+  producers:
+    - id: "colletBoxFlowDirection"
+      clientId: "jdq_client_id"
+      topic: "jdq_topic"
+      password: "jdq_password"
+      domain: "jdq_domain"
+
+###### jsf config  start######
+
+  #基础服务JSF别名
+
+
+basic:
+  jsf:
+    token: 123456
+    alias: basic-ql-jsf
+    timeout: 10000
+
+ldop:
+  basic:
+    jsf:
+      alias: ldop-basic-test
+      timeout: 10000
+
+###### jsf config  end######

@@ -23,12 +23,12 @@ import org.springframework.context.annotation.PropertySource;
 
 @MapperScan(basePackages = {"com.jdl.basic.provider.core.dao"})
 @SpringBootApplication(scanBasePackages = {"com.jdl.basic"})
-@PropertySource(
-    value = {
-            "classpath:jsf/jsf-provider.properties",
-            "classpath:jsf/jsf-consumer.properties"
-    }
-)
+//@PropertySource(
+//    value = {
+//            "classpath:jsf/jsf-provider.properties",
+//            "classpath:jsf/jsf-consumer.properties"
+//    }
+//)
 @ImportResource(value = {
         "classpath:jsf/jsf-provider.xml",
         "classpath:jsf/jsf-consumer.xml"
