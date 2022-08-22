@@ -22,13 +22,13 @@ public enum OrgEnum {
     public static Map<Integer, OrgEnum> orgEnumMap;
     public static List<Integer> orgIds;
     static {
-        HashMap<Integer, OrgEnum> orgMap = new HashMap<>();
+        HashMap<Integer, OrgEnum> orgMap = new HashMap<Integer, OrgEnum>();
         OrgEnum[] values = OrgEnum.values();
         for (OrgEnum value : values) {
             orgMap.put(value.getOrgCode(), value);
         }
         OrgEnum.orgEnumMap = orgMap;
-        orgIds=new ArrayList<>();
+        orgIds=new ArrayList<Integer>();
         for (OrgEnum value : OrgEnum.values()) {
             orgIds.add(value.getOrgCode());
         }
