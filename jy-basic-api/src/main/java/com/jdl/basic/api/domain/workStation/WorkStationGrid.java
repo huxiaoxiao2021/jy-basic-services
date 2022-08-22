@@ -145,6 +145,6 @@ public class WorkStationGrid implements Serializable {
 	/**
 	 * 异常网格标志
 	 */
-	private Integer excpFlag;
+	private Integer areaType;
 
 }

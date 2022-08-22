@@ -27,19 +27,6 @@ public interface CacheService {
 	 */
 	<T> T get(String key,Class<T> responseType);
 
-	/**
-	 * 从缓存中获取一个List对象
-	 * @param key
-	 * @param responseType
-	 * @return
-	 */
-	<T> List<T> getList(String key, Class<T> responseType);
-	/**
-	 * 缓存中放入一个可序列化的对象
-	 * @param key
-	 * @param val
-	 * @return
-	 */
 	<T> boolean set(String key, T val);
 
 	/**
@@ -116,6 +103,7 @@ public interface CacheService {
 	/**
 	 * 获取key所有成员，返回set集合
 	 * @param key
+	 * @param responseType
 	 * @return
 	 */
 	Set<String> sMembers(String key);

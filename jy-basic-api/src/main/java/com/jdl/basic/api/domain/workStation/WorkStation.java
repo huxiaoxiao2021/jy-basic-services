@@ -82,9 +82,9 @@ public class WorkStation implements Serializable {
 	 */
 	private Date createTime;
 	/**
-	 * 异常网络标识
+	 * 作业区类型
 	 */
-	private Integer excpFlag;
+	private Integer areaType;
 
 	/**
 	 * 更新时间

@@ -9,16 +9,19 @@ import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.basic.provider.core.dao.workStation.WorkAbnormalGridDao;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationGridDao;
 import com.jdl.basic.provider.core.service.workStation.WorkAbnormalGridBindingService;
-import com.jdl.basic.provider.jimdbCache.CacheService;
+import com.jdl.basic.provider.common.Jimdb.CacheService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
-import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.TimeUnit;
+
+import static com.jdl.basic.common.utils.StringHelper.EXCP_AREA;
+import static com.jdl.basic.common.utils.StringHelper.FLOOR;
 
 /**
  * @author liwenji
@@ -75,7 +78,7 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
         List<WorkStationGrid> grids = workStationGridDao.queryListDistinct(gridQuery);
         List<WorkStationGrid> data = new ArrayList<>();
         for (WorkStationGrid d : grids) {
-            if (d.getExcpFlag() == 1) {
+            if (Objects.equals(EXCP_AREA,d.getAreaType())) {
                 continue;
             }
             data.add(d);
@@ -90,56 +93,114 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
         for (WorkStationGrid f : floor) {
             newFloor.add(f.getFloor());
         }
-        List<Integer> defultCheck = new ArrayList<>();
+        List<Integer> defaultCheck = new ArrayList<>();
         WorkStationBindingEditVo r = new WorkStationBindingEditVo();
-        r.setWorkStationBindingVo(getTree(data,newFloor,checks,defultCheck,query));
-        r.setDefaultChecks(defultCheck);
+        HashMap<Object, HashMap> tree = getTree(data, defaultCheck, checks, query);
+        r.setDefaultChecks(defaultCheck);
+        r.setWorkStationBindingVo(getWorkStationBindingVo(tree));
         return result.setData(r);
     }
-    private List<WorkStationBindingVo> getTree(List<WorkStationGrid> data,List<Integer> floor, List<WorkStationBinding> ckecks,List<Integer> defultCheck,WorkStationFloorGridQuery query){
-        Integer id = 0;
+
+    private List<WorkStationBindingVo> getWorkStationBindingVo(HashMap<Object, HashMap> tree) {
         List<WorkStationBindingVo> res = new ArrayList<>();
-        for (Integer f : floor) {
-            List<String> areas = new ArrayList<>();
-            WorkStationBindingVo flo = new WorkStationBindingVo();
-            flo.setLabel("楼层"+f);
-            flo.setChildren(new ArrayList<>());
-            for (WorkStationGrid d : data) {
-                if (Objects.equals(d.getFloor(), f)&&!areas.contains(d.getAreaCode())) {
-                    if (StringUtils.isEmpty(d.getAreaCode())){
-                        areas.add(d.getAreaCode());
-                    }
-                    WorkStationBindingVo area = new WorkStationBindingVo();
-                    area.setLabel(d.getAreaName() + "  " + d.getAreaCode());
-                    area.setChildren(new ArrayList<>());
-                    for (WorkStationGrid g : data) {
-                        if (Objects.equals(g.getFloor(), f)&&Objects.equals(d.getAreaCode(),g.getAreaCode())) {
-                            WorkStationBindingVo grid = new WorkStationBindingVo();
-                            grid.setFloor(f);
-                            grid.setLabel(g.getGridName() + "  " + g.getGridCode());
-                            grid.setGridCode(g.getGridCode());
-                            for (WorkStationBinding ckeck : ckecks) {
-                                if (ckeck.getGridCode().equals(g.getGridCode())
-                                    && ckeck.getFloor().equals(g.getFloor())){
-                                    if (ckeck.getExcpFloor().equals(query.getExcpFloor())&&ckeck.getExcpGridCode().equals(query.getExcpGridCode())){
-                                        grid.setId(id);
-                                        defultCheck.add(id);
-                                        id++;
-                                    }else {
-                                        grid.setDisabled(Boolean.TRUE);
-                                    }
-                                }
-                            }
-                            area.getChildren().add(grid);
-                        }
-                    }
-                    flo.getChildren().add(area);
-                }
+        for (Object k : tree.keySet()) {
+            WorkStationBindingVo floor = new WorkStationBindingVo();
+            floor.setLabel(FLOOR+String.valueOf(k));
+            HashMap ar = tree.get(k);
+            List<WorkStationBindingVo> areas = new ArrayList<>();
+            for (Object a : ar.keySet()) {
+                WorkStationBindingVo area = new WorkStationBindingVo();
+                area.setLabel((String) a);
+                area.setChildren((List<WorkStationBindingVo>) ar.get(a));
+                areas.add(area);
             }
-            res.add(flo);
+            floor.setChildren(areas);
+            res.add(floor);
         }
         return res;
     }
+
+    private HashMap<Object, HashMap> getTree(List<WorkStationGrid> data, List<Integer> defaultCheck, List<WorkStationBinding> ckecks, WorkStationFloorGridQuery query) {
+        int id =0;
+        HashMap res = new HashMap<>();
+        for (WorkStationGrid d : data) {
+            if (!res.containsKey(d.getFloor())){
+                res.put(d.getFloor(),new HashMap<>());
+            }
+            HashMap floor = (HashMap) res.get(d.getFloor());
+            if (StringUtils.isEmpty(d.getAreaCode())){
+                continue;
+            }
+            if (!floor.containsKey(d.getAreaCode())){
+                floor.put(d.getAreaCode(),new ArrayList<>());
+            }
+
+            ArrayList<WorkStationBindingVo> grids = (ArrayList) floor.get(d.getAreaCode());
+            WorkStationBindingVo grid = new WorkStationBindingVo();
+            grid.setLabel(d.getGridName() + "  " + d.getGridCode());
+            grid.setFloor(d.getFloor());
+            grid.setGridCode(d.getGridCode());
+            for (WorkStationBinding ckeck : ckecks) {
+                if (ckeck.getGridCode().equals(d.getGridCode())
+                        && ckeck.getFloor().equals(d.getFloor())){
+                    if (ckeck.getExcpFloor().equals(query.getExcpFloor())&&ckeck.getExcpGridCode().equals(query.getExcpGridCode())){
+                        grid.setId(id);
+                        defaultCheck.add(id);
+                        id++;
+                    }else {
+                        grid.setDisabled(Boolean.TRUE);
+                    }
+                }
+            }
+            grids.add(grid);
+        }
+        return res;
+    }
+
+//    private List<WorkStationBindingVo> getTree(List<WorkStationGrid> data,List<Integer> floor, List<WorkStationBinding> ckecks,List<Integer> defultCheck,WorkStationFloorGridQuery query){
+//        Integer id = 0;
+//        List<WorkStationBindingVo> res = new ArrayList<>();
+//        for (Integer f : floor) {
+//            List<String> areas = new ArrayList<>();
+//            WorkStationBindingVo flo = new WorkStationBindingVo();
+//            flo.setLabel(FLOOR+f);
+//            flo.setChildren(new ArrayList<>());
+//            for (WorkStationGrid d : data) {
+//                if (Objects.equals(d.getFloor(), f)&&!areas.contains(d.getAreaCode())) {
+//                    if (StringUtils.isEmpty(d.getAreaCode())){
+//                        areas.add(d.getAreaCode());
+//                    }
+//                    WorkStationBindingVo area = new WorkStationBindingVo();
+//                    area.setLabel(d.getAreaName() + "  " + d.getAreaCode());
+//                    area.setChildren(new ArrayList<>());
+//                    for (WorkStationGrid g : data) {
+//                        if (Objects.equals(g.getFloor(), f)&&Objects.equals(d.getAreaCode(),g.getAreaCode())) {
+//                            WorkStationBindingVo grid = new WorkStationBindingVo();
+//                            grid.setFloor(f);
+//                            grid.setLabel(g.getGridName() + "  " + g.getGridCode());
+//                            grid.setGridCode(g.getGridCode());
+//                            for (WorkStationBinding ckeck : ckecks) {
+//                                if (ckeck.getGridCode().equals(g.getGridCode())
+//                                    && ckeck.getFloor().equals(g.getFloor())){
+//                                    if (ckeck.getExcpFloor().equals(query.getExcpFloor())&&ckeck.getExcpGridCode().equals(query.getExcpGridCode())){
+//                                        grid.setId(id);
+//                                        defultCheck.add(id);
+//                                        id++;
+//                                    }else {
+//                                        grid.setDisabled(Boolean.TRUE);
+//                                    }
+//                                }
+//                            }
+//                            area.getChildren().add(grid);
+//                        }
+//                    }
+//                    flo.getChildren().add(area);
+//                }
+//            }
+//            res.add(flo);
+//        }
+//        return res;
+//    }
     @Override
     public Result<Boolean> insert(WorkStationBinding insertData) {
         Result<Boolean> result = Result.success();
@@ -165,7 +226,7 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
                 result.toFail("操作太快，正在处理中");
                 return result;
             }
-            long count = workAbnormalGridDao.queryOne(insertData);
+            long count = workAbnormalGridDao.queryCount(insertData);
             if (count > 0) {
                 workAbnormalGridDao.update(insertData);
             } else {
@@ -185,7 +246,7 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
             return Result.success();
         }
         List<WorkStationGrid> data = new ArrayList<>();
-        List<Integer> floor = new ArrayList<>();
+        Set<Integer> floor = new HashSet<>();
         for (WorkStationBinding d : info) {
             floor.add(d.getFloor());
             WorkStationFloorGridQuery gridQuery = new WorkStationFloorGridQuery();
@@ -193,18 +254,18 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
             gridQuery.setSiteCode(query.getSiteCode());
             gridQuery.setFloor(d.getFloor());
             gridQuery.setGridCode(d.getGridCode());
-            gridQuery.setExcpFlag(query.getExcpFlag());
+            gridQuery.setAreaType(query.getAreaType());
             data.addAll(workStationGridDao.queryListDistinct(gridQuery));
         }
         return Result.success(getLookTree(data,floor));
     }
-    private List<WorkStationBindingVo> getLookTree(List<WorkStationGrid> data,List<Integer> floor){
+    private List<WorkStationBindingVo> getLookTree(List<WorkStationGrid> data,Set<Integer> floor){
         Integer id = 0;
         List<WorkStationBindingVo> res = new ArrayList<>();
         for (Integer f : floor) {
             List<String> areas = new ArrayList<>();
             WorkStationBindingVo flo = new WorkStationBindingVo();
-            flo.setLabel("楼层"+f);
+            flo.setLabel(FLOOR+f);
             flo.setChildren(new ArrayList<>());
             for (WorkStationGrid d : data) {
                 if (Objects.equals(d.getFloor(), f)&&!areas.contains(d.getAreaCode())) {
@@ -261,6 +322,7 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
 
     @Override
     public Result<List<WorkStationFloorGridVo>> queryListForExport(WorkStationFloorGridQuery query) {
+        query.setPageNumber(0);
         return Result.success(getWorkStationFloorGridVoList(workStationGridDao.queryListDistinct(query)));
     }
 
@@ -282,7 +344,7 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
             query.setSiteCode(data.getSiteCode());
             query.setExcpFloor(data.getFloor());
             query.setExcpGridCode(data.getGridCode());
-            if (workAbnormalGridDao.queryOneUnDelete(query) > 0) {
+            if (workAbnormalGridDao.queryCountUnDelete(query) > 0) {
                 workStationFloorGridVo.setBinding(1);
             }else {
                 workStationFloorGridVo.setBinding(0);

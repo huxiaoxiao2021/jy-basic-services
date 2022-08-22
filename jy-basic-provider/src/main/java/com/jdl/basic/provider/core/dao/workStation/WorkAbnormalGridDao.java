@@ -23,7 +23,7 @@ public interface WorkAbnormalGridDao {
     /**
      * 查询是否存在该条数据
      */
-    long queryOne(WorkStationBinding query);
+    long queryCount(WorkStationBinding query);
 
     /**
      * 查询绑定关系
@@ -43,5 +43,5 @@ public interface WorkAbnormalGridDao {
 
     WorkStationFloorGridVo getAbnormalGrid(WorkStationFloorGridQuery query);
 
-    long queryOneUnDelete(WorkStationBinding query);
+    long queryCountUnDelete(WorkStationBinding query);
 }

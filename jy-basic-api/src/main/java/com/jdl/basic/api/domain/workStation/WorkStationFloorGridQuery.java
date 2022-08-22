@@ -79,5 +79,5 @@ public class WorkStationFloorGridQuery extends BasePagerCondition {
     /**
      * 是否查询异常
      */
-    private Integer excpFlag;
+    private Integer areaType;
 }

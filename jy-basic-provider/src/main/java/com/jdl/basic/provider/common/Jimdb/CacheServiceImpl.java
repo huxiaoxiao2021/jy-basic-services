@@ -1,10 +1,10 @@
-package com.jdl.basic.provider.jimdbCache;
+package com.jdl.basic.provider.common.Jimdb;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.jd.jim.cli.Cluster;
 import com.jdl.basic.common.utils.JsonHelper;
-import org.codehaus.jackson.type.JavaType;
+import com.jdl.basic.provider.common.Jimdb.CacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;

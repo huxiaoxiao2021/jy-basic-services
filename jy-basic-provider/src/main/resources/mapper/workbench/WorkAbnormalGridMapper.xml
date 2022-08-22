@@ -122,7 +122,7 @@
         </trim>
         )
     </insert>
-    <select id="queryOne" parameterType="com.jdl.basic.api.domain.workStation.WorkStationBinding" resultType="long">
+    <select id="queryCount" parameterType="com.jdl.basic.api.domain.workStation.WorkStationBinding" resultType="long">
         select count(1)
         from jy_exception_grid_relation
         where
@@ -233,7 +233,7 @@
             and floor = #{floor,jdbcType=INTEGER}
         </if>
     </select>
-    <select id="queryOneUnDelete" parameterType="com.jdl.basic.api.domain.workStation.WorkStationBinding" resultType="long">
+    <select id="queryCountUnDelete" parameterType="com.jdl.basic.api.domain.workStation.WorkStationBinding" resultType="long">
         select count(1)
         from jy_exception_grid_relation
         where yn = 1

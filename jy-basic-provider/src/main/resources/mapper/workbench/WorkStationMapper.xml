@@ -17,7 +17,7 @@
 		<result column="update_user_name" property="updateUserName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
 		<result column="update_time" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-		<result column="excp_flag" property="excpFlag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+		<result column="area_type" property="areaType" javaType="java.lang.Integer" jdbcType="TINYINT" />
 		<result column="yn" property="yn" javaType="java.lang.Integer" jdbcType="TINYINT" />
 		<result column="ts" property="ts" javaType="java.util.Date" jdbcType="TIMESTAMP" />
 	</resultMap>
@@ -85,8 +85,8 @@
 				<if test="ts != null" >
 					ts,
 				</if>
-				<if test="excpFlag != null" >
-					excp_flag,
+				<if test="areaType != null" >
+					area_type,
 				</if>
 			</trim>
 			)
@@ -141,8 +141,8 @@
 				<if test="ts != null" >
 					#{ts,jdbcType=TIMESTAMP},
 				</if>
-				<if test="excpFlag == 1" >
-					#{excpFlag,jdbcType=TINYINT},
+				<if test="areaType == 1" >
+					#{areaType,jdbcType=TINYINT},
 				</if>
 			</trim>
 			)
