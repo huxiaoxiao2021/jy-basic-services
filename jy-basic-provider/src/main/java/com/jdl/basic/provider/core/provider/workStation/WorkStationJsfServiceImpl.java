@@ -41,9 +41,6 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 	 * @return
 	 */
 	public Result<Boolean> insert(WorkStation insertData){
-		if (insertData.getAreaType() == 0){
-			insertData.setAreaType(1);
-		}
 		return workStationService.insert(insertData);
 	 }
 	@Override
