@@ -88,11 +88,6 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
         List<WorkStationBinding> checks = workAbnormalGridDao.queryBindingList(queryChecked);
         WorkStationGridQuery queryFloor = new WorkStationGridQuery();
         queryFloor.setSiteCode(query.getSiteCode());
-        List<WorkStationGrid> floor = workStationGridDao.queryGridFloorDictList(queryFloor);
-        List<Integer> newFloor = new ArrayList<>();
-        for (WorkStationGrid f : floor) {
-            newFloor.add(f.getFloor());
-        }
         List<Integer> defaultCheck = new ArrayList<>();
         WorkStationBindingEditVo r = new WorkStationBindingEditVo();
         HashMap<Object, HashMap> tree = getTree(data, defaultCheck, checks, query);
