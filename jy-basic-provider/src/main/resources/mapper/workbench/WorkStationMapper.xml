@@ -85,7 +85,7 @@
 				<if test="ts != null" >
 					ts,
 				</if>
-				<if test="areaType != null" >
+				<if test="areaType == 1" >
 					area_type,
 				</if>
 			</trim>
