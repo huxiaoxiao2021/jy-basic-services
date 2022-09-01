@@ -11,10 +11,10 @@
     <jsf:server id="jsf" protocol="jsf" threads="400"/>
 
     <!--  集箱包裹数量限制JSF服务   -->
-    <jsf:provider id="boxlimitConfigApi"
+    <jsf:provider id="boxlimitConfigJsfService"
                   interface="com.jdl.basic.api.service.boxLimit.BoxlimitConfigJsfService"
                   alias="${jsf.jy_basic.alias}"
-                  ref="boxlimitConfigApiImpl"
+                  ref="boxlimitConfigJsfServiceImpl"
                   server="jsf">
     </jsf:provider>
 

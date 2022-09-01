@@ -27,7 +27,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class BoxlimitConfigApiImpl implements BoxlimitConfigJsfService {
+public class BoxlimitConfigJsfServiceImpl implements BoxlimitConfigJsfService {
 
     @Autowired
     private BoxlimitService boxlimitService;
