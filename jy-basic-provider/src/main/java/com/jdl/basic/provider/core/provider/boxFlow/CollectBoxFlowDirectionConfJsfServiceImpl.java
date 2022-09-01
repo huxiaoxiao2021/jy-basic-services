@@ -23,9 +23,8 @@ public class CollectBoxFlowDirectionConfJsfServiceImpl implements CollectBoxFlow
     @Override
     public Result<CollectBoxFlowDirectionConf> selectById(Long id) {
         if(log.isInfoEnabled()){
-
+            log.info("集包规则配置 selectById -{}",id);
         }
-        log.info("集包规则配置 selectById -{}",id);
         return collectBoxFlowDirectionConfService.selectById(id);
     }
 
