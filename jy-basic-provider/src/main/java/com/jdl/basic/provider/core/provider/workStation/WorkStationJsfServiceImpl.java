@@ -81,7 +81,9 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 	 * @return
 	 */
 	public Result<PageDto<WorkStation>> queryPageList(WorkStationQuery query){
-		log.info("网格工序管理 queryPageList 入参-{}", JSON.toJSONString(query));
+		if(log.isInfoEnabled()) {
+			log.info("网格工序管理 queryPageList 入参-{}", JSON.toJSONString(query));
+		}
 		return workStationService.queryPageList(query);
 	 }
 	/**
@@ -91,17 +93,23 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 	 */	
 	@Override	
 	public Result<WorkStationCountVo> queryPageCount(WorkStationQuery query){
-		logger.info("网格工序管理 queryPageCount 入参-{}", JSON.toJSONString(query));
+		if(log.isInfoEnabled()) {
+			logger.info("网格工序管理 queryPageCount 入参-{}", JSON.toJSONString(query));
+		}
 		return workStationService.queryPageCount(query);
 	 }
 	@Override
 	public Result<List<WorkStation>> queryAreaDictList(WorkStationQuery query) {
-		log.info("网格工序管理 queryAreaDictList 入参-{}", JSON.toJSONString(query));
+		if(log.isInfoEnabled()) {
+			log.info("网格工序管理 queryAreaDictList 入参-{}", JSON.toJSONString(query));
+		}
 		return workStationService.queryAreaDictList(query);
 	}
 	@Override
 	public Result<List<WorkStation>> queryWorkDictList(WorkStationQuery query) {
-		log.info("网格工序管理 queryWorkDictList 入参-{}", JSON.toJSONString(query));
+		if(log.isInfoEnabled()) {
+			log.info("网格工序管理 queryWorkDictList 入参-{}", JSON.toJSONString(query));
+		}
 		return workStationService.queryWorkDictList(query);
 	}
 	@Override
@@ -111,24 +119,32 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 	}
 	@Override
 	public Result<Long> queryCount(WorkStationQuery query) {
-		logger.info("网格工序管理 queryCount 入参-{}", JSON.toJSONString(query));
+		if(log.isInfoEnabled()) {
+			logger.info("网格工序管理 queryCount 入参-{}", JSON.toJSONString(query));
+		}
 		return workStationService.queryCount(query);
 	}
 	@Override
 	public Result<List<WorkStation>> queryListForExport(WorkStationQuery query) {
-		log.info("网格工序管理 queryListForExport 入参-{}", JSON.toJSONString(query));
+		if(log.isInfoEnabled()) {
+			log.info("网格工序管理 queryListForExport 入参-{}", JSON.toJSONString(query));
+		}
 		return workStationService.queryListForExport(query);
 	}
 
 	@Override
 	public Result<WorkStation> queryByBusinessKey(WorkStation data) {
-		log.info("网格工序管理 queryByBusinessKey 入参-{}", JSON.toJSONString(data));
+		if(log.isInfoEnabled()) {
+			log.info("网格工序管理 queryByBusinessKey 入参-{}", JSON.toJSONString(data));
+		}
 		return workStationService.queryByBusinessKey(data);
 	}
 
 	@Override
 	public Result<WorkStation> queryByRealBusinessKey(String businessKey) {
-		log.info("网格工序管理 queryByRealBusinessKey 入参-{}", JSON.toJSONString(businessKey));
+		if(log.isInfoEnabled()) {
+			log.info("网格工序管理 queryByRealBusinessKey 入参-{}", JSON.toJSONString(businessKey));
+		}
 		return workStationService.queryByRealBusinessKey(businessKey);
 	}
 }

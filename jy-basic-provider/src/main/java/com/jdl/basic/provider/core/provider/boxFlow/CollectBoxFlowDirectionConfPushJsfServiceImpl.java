@@ -22,7 +22,9 @@ public class CollectBoxFlowDirectionConfPushJsfServiceImpl implements CollectBox
 
     @Override
     public Result<Void> updateOrNewConfig(CollectBoxFlowDirectionPushConfDto conf) {
-        log.info("大数据推集包规则接口 updateOrNewConfig -{}", JSON.toJSONString(conf));
+        if(log.isInfoEnabled()){
+            log.info("大数据推集包规则接口 updateOrNewConfig -{}", JSON.toJSONString(conf));
+        }
         return collectBoxFlowDirectionConfPushService.updateOrNewConfig(conf);
     }
 }

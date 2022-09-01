@@ -63,7 +63,9 @@ public class WorkStationAttendPlanJsfServiceImpl implements WorkStationAttendPla
 	 * @return
 	 */
 	public Result<WorkStationAttendPlan> queryById(Long id){
-		log.info("岗位人员出勤计划 queryById 入参-{}", JSON.toJSONString(id));
+		if(log.isInfoEnabled()){
+			log.info("岗位人员出勤计划 queryById 入参-{}", JSON.toJSONString(id));
+		}
 		return workStationAttendPlanService.queryById(id);
 	 }
 	/**
@@ -72,7 +74,9 @@ public class WorkStationAttendPlanJsfServiceImpl implements WorkStationAttendPla
 	 * @return
 	 */
 	public Result<PageDto<WorkStationAttendPlan>> queryPageList(WorkStationAttendPlanQuery query){
-		log.info("岗位人员出勤计划 queryPageList 入参-{}", JSON.toJSONString(query));
+		if(log.isInfoEnabled()){
+			log.info("岗位人员出勤计划 queryPageList 入参-{}", JSON.toJSONString(query));
+		}
 		return workStationAttendPlanService.queryPageList(query);
 	 }
 	@Override
@@ -82,7 +86,9 @@ public class WorkStationAttendPlanJsfServiceImpl implements WorkStationAttendPla
 	}
 	@Override
 	public Result<List<WorkStationAttendPlan>> queryWaveDictList(WorkStationAttendPlanQuery query) {
-		log.info("岗位人员出勤计划 queryWaveDictList 入参-{}", JSON.toJSONString(query));
+		if(log.isInfoEnabled()){
+			log.info("岗位人员出勤计划 queryWaveDictList 入参-{}", JSON.toJSONString(query));
+		}
 		return workStationAttendPlanService.queryWaveDictList(query);
 	}
 	@Override
@@ -97,13 +103,17 @@ public class WorkStationAttendPlanJsfServiceImpl implements WorkStationAttendPla
 	}
 	@Override
 	public Result<List<WorkStationAttendPlan>> queryListForExport(WorkStationAttendPlanQuery query) {
-		log.info("岗位人员出勤计划 queryListForExport 入参-{}", JSON.toJSONString(query));
+		if(log.isInfoEnabled()){
+			log.info("岗位人员出勤计划 queryListForExport 入参-{}", JSON.toJSONString(query));
+		}
 		return workStationAttendPlanService.queryListForExport(query);
 	}
 
 	@Override
 	public Result<WorkStationAttendPlan> queryByBusinessKeys(WorkStationAttendPlan data) {
-		log.info("岗位人员出勤计划 queryByBusinessKeys 入参-{}", JSON.toJSONString(data));
+		if(log.isInfoEnabled()){
+			log.info("岗位人员出勤计划 queryByBusinessKeys 入参-{}", JSON.toJSONString(data));
+		}
 		return workStationAttendPlanService.queryByBusinessKeys(data);
 	}
 

@@ -6,14 +6,14 @@ import com.jdl.basic.api.domain.LoginUser;
 import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigDto;
 import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigQueryDto;
 import com.jdl.basic.api.response.JDResponse;
-import com.jdl.basic.api.service.boxLimit.BoxlimitConfigApi;
+import com.jdl.basic.api.service.boxLimit.BoxlimitConfigJsfService;
 
 import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import java.util.List;
 public class BoxlimitConfigTest {
 
     @Autowired
-    private BoxlimitConfigApi boxlimitConfigApi;
+    private BoxlimitConfigJsfService boxlimitConfigApi;
 
     @Test
     public void testAdd() {
@@ -38,7 +38,7 @@ public class BoxlimitConfigTest {
         po.setBoxNumberType("BC");
         po.setLimitNum(1000);
         po.setSiteName("    ");
-        JDResponse response = boxlimitConfigApi.insertBoxlimitConfig(po);
+        Result response = boxlimitConfigApi.insertBoxlimitConfig(po);
         System.out.println(JSONObject.toJSONString(response));
     }
 
@@ -46,13 +46,13 @@ public class BoxlimitConfigTest {
     public void testlistData() {
         BoxLimitConfigQueryDto dto = new BoxLimitConfigQueryDto();
         dto.setConfigType(2);
-        JDResponse<PageDto<BoxLimitConfigDto>> pageDtoJDResponse = boxlimitConfigApi.listData(dto);
+        Result<PageDto<BoxLimitConfigDto>> pageDtoJDResponse = boxlimitConfigApi.listData(dto);
         System.out.println(JSONObject.toJSONString(pageDtoJDResponse));
     }
 
     @Test
     public void testgetSiteNameById() {
-        JDResponse<String> siteNameById = boxlimitConfigApi.getSiteNameById(910);
+        Result<String> siteNameById = boxlimitConfigApi.getSiteNameById(910);
         System.out.println(siteNameById);
     }
 
@@ -71,7 +71,7 @@ public class BoxlimitConfigTest {
         loginUser.setSiteName("管理站点");
         loginUser.setUserErp("chen");
 
-        JDResponse response = boxlimitConfigApi.saveOrUpdate(dto, loginUser);
+        Result response = boxlimitConfigApi.saveOrUpdate(dto, loginUser);
         System.out.println(JSONObject.toJSONString(response));
     }
 
@@ -81,7 +81,7 @@ public class BoxlimitConfigTest {
         ids.add(379L);
         ids.add(380L);
         LoginUser user = new LoginUser();
-        JDResponse delete = boxlimitConfigApi.delete(ids, user);
+        Result delete = boxlimitConfigApi.delete(ids, user);
         System.out.println(JSONObject.toJSONString(delete));
     }
 
@@ -110,7 +110,7 @@ public class BoxlimitConfigTest {
         loginUser.setSiteCode(910);
         loginUser.setSiteName("管理站点");
         loginUser.setUserErp("chen");
-        JDResponse response = boxlimitConfigApi.toImport(dtos, loginUser);
+        Result response = boxlimitConfigApi.toImport(dtos, loginUser);
         System.out.println(response);
     }
 
@@ -119,19 +119,19 @@ public class BoxlimitConfigTest {
         BoxLimitConfigQueryDto dto1 = new BoxLimitConfigQueryDto();
         dto1.setSiteId(910);
 
-        JDResponse<Integer> integerJDResponse = boxlimitConfigApi.countByCondition(dto1);
+        Result<Integer> integerJDResponse = boxlimitConfigApi.countByCondition(dto1);
         System.out.println(integerJDResponse);
     }
 
     @Test
     public void getBoxTypeListTest() {
-        JDResponse<List<String>> boxTypeList = boxlimitConfigApi.getBoxTypeList();
+        Result<List<String>> boxTypeList = boxlimitConfigApi.getBoxTypeList();
         System.out.println(JSONObject.toJSONString(boxTypeList));
     }
 
     @Test
     public void getLimitNumsTest(){
-        JDResponse<Integer> bc = boxlimitConfigApi.getLimitNums(null, "BC");
+        Result<Integer> bc = boxlimitConfigApi.getLimitNums(null, "BC");
         System.out.println(JSONObject.toJSONString(bc));
     }
 }

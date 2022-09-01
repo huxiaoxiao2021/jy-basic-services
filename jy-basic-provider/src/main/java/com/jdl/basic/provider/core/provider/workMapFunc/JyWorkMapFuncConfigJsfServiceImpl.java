@@ -137,7 +137,9 @@ public class JyWorkMapFuncConfigJsfServiceImpl implements JyWorkMapFuncConfigJsf
 
     @Override
     public Result<PageDto<JyWorkMapFuncConfigDetailVO>> queryPageList(JyWorkMapFuncQuery query) {
-        logger.info("拣运功能工序映射配置-queryPageList-{}",JSON.toJSONString(query));
+        if(logger.isInfoEnabled()){
+            logger.info("拣运功能工序映射配置-queryPageList-{}",JSON.toJSONString(query));
+        }
         Result<PageDto<JyWorkMapFuncConfigDetailVO>> result = new Result<PageDto<JyWorkMapFuncConfigDetailVO>>();
         PageDto<JyWorkMapFuncConfigDetailVO> pageDto = new PageDto<JyWorkMapFuncConfigDetailVO>();
         result.toSuccess();
@@ -159,7 +161,7 @@ public class JyWorkMapFuncConfigJsfServiceImpl implements JyWorkMapFuncConfigJsf
                 detailVO.setCreateTime(entity.getCreateTime());
                 detailVO.setUpdateUser(entity.getUpdateUser());
                 detailVO.setUpdateTime(entity.getUpdateTime());
-                com.jdl.basic.common.utils.Result<WorkStation> workStationResult = workStationService.queryByRealBusinessKey(entity.getRefWorkKey());
+                Result<WorkStation> workStationResult = workStationService.queryByRealBusinessKey(entity.getRefWorkKey());
                 if(workStationResult != null && workStationResult.getData() != null){
                     detailVO.setAreaCode(workStationResult.getData().getAreaCode());
                     detailVO.setAreaName(workStationResult.getData().getAreaName());

@@ -25,6 +25,8 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+
 @Slf4j
 @Service
 public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDirectionConfService {
@@ -37,8 +39,19 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
     private JDQ4Producer jdq4Producer;
 
     @Override
-    public CollectBoxFlowDirectionConf selectById(Long id) {
-        return collectBoxFlowDirectionConfMapper.selectByPrimaryKey(id);
+    public Result<CollectBoxFlowDirectionConf> selectById(Long id) {
+        Result<CollectBoxFlowDirectionConf> result = new Result<>();
+        result.toFail();
+        if(id == null){
+            result.setMessage("id 不能为空！");
+            return result;
+        }
+        CollectBoxFlowDirectionConf conf = collectBoxFlowDirectionConfMapper.selectByPrimaryKey(id);
+        if(Objects.nonNull(conf)){
+            result.toSuccess("获取配置成功！");
+            result.setData(conf);
+        }
+        return result;
     }
 
     @Override

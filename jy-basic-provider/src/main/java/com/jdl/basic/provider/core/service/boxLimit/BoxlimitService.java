@@ -6,6 +6,7 @@ import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigDto;
 import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigQueryDto;
 import com.jdl.basic.api.response.JDResponse;
 import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -29,27 +30,27 @@ public interface BoxlimitService {
     /**
      * 导入模板数据
      */
-    JDResponse importData(List<BoxLimitConfigDto> data, LoginUser operator);
+    Result importData(List<BoxLimitConfigDto> data, LoginUser operator);
 
     /**
      * PDA建箱包裹数 创建配置
      */
-    JDResponse create(BoxLimitConfigDto dto, LoginUser operator);
+    Result create(BoxLimitConfigDto dto, LoginUser operator);
 
     /**
      * PDA建箱包裹数 更新配置
      */
-    JDResponse update(BoxLimitConfigDto dto, LoginUser operator);
+    Result update(BoxLimitConfigDto dto, LoginUser operator);
 
     /**
      * 根据ID批量删除
      */
-    JDResponse delete(List<Long> ids, String operatorErp);
+    Result delete(List<Long> ids, String operatorErp);
 
     /**
      * 查询展示名称
      */
-    JDResponse<String> querySiteNameById(Integer siteId);
+    Result<String> querySiteNameById(Integer siteId);
 
 
     /**
@@ -58,15 +59,15 @@ public interface BoxlimitService {
      * @param dto
      * @return
      */
-    JDResponse<Integer> countByCondition(BoxLimitConfigQueryDto dto);
+    Result<Integer> countByCondition(BoxLimitConfigQueryDto dto);
 
     /**
      * 获取箱号类型集合
      *
      * @return
      */
-    JDResponse<List<String>> getBoxTypeList();
+    Result<List<String>> getBoxTypeList();
 
-    JDResponse<Integer> getLimitNums(Integer createSiteCode, String type);
+    Result<Integer> getLimitNums(Integer createSiteCode, String type);
 
 }

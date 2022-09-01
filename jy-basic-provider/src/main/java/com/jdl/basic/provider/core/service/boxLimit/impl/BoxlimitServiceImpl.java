@@ -15,6 +15,7 @@ import com.jdl.basic.api.response.JDResponse;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.enums.BoxTypeEnum;
 import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.boxLimit.BoxLimitConfigDao;
 import com.jdl.basic.provider.core.po.BoxLimitConfigPO;
 import com.jdl.basic.provider.core.service.boxLimit.BoxlimitService;
@@ -93,8 +94,8 @@ public class BoxlimitServiceImpl implements BoxlimitService {
     }
 
     @Override
-    public JDResponse importData(List<BoxLimitConfigDto> data, LoginUser operator) {
-        JDResponse response = new JDResponse();
+    public Result importData(List<BoxLimitConfigDto> data, LoginUser operator) {
+        Result response = new Result();
         Date now = new Date();
         String operatorErp = operator.getUserErp();
         Integer operatorSiteId = operator.getSiteCode();
@@ -155,9 +156,9 @@ public class BoxlimitServiceImpl implements BoxlimitService {
     }
 
     @Override
-    public JDResponse create(BoxLimitConfigDto dto, LoginUser operator) {
+    public Result create(BoxLimitConfigDto dto, LoginUser operator) {
 
-        JDResponse response = new JDResponse();
+        Result response = new Result();
         checkDtoData(dto, response);
         log.info("建箱包裹数限制：create数据校验结果为:{}",JSON.toJSONString(response));
         if (!response.isSuccess()) {
@@ -183,8 +184,8 @@ public class BoxlimitServiceImpl implements BoxlimitService {
     }
 
     @Override
-    public JDResponse update(BoxLimitConfigDto dto, LoginUser operator) {
-        JDResponse response = new JDResponse();
+    public Result update(BoxLimitConfigDto dto, LoginUser operator) {
+        Result response = new Result();
         log.info("建箱包裹数限制：update数据校验结果为:{}", JSONObject.toJSONString(response));
         if (dto.getId() == null) {
             response.setCode(JDResponse.CODE_FAIL);
@@ -218,15 +219,15 @@ public class BoxlimitServiceImpl implements BoxlimitService {
     }
 
     @Override
-    public JDResponse delete(List<Long> ids, String operatorErp) {
+    public Result delete(List<Long> ids, String operatorErp) {
         log.info("建箱包裹数限制 delete操作, 参数 ids={},操作人:{}", ids, operatorErp);
         boxLimitConfigDao.batchDelete(ids);
-        return new JDResponse();
+        return new Result();
     }
 
     @Override
-    public JDResponse<String> querySiteNameById(Integer siteId) {
-        JDResponse<String> response = new JDResponse<>();
+    public Result<String> querySiteNameById(Integer siteId) {
+        Result<String> response = new Result<>();
         BaseStaffSiteOrgDto siteOrgDto = baseMajorRpc.getBaseSiteBySiteId(siteId);
         if (siteOrgDto == null || siteOrgDto.getSiteName() == null) {
             response.setCode(JDResponse.CODE_FAIL);
@@ -242,19 +243,19 @@ public class BoxlimitServiceImpl implements BoxlimitService {
 
 
     @Override
-    public JDResponse<Integer> countByCondition(BoxLimitConfigQueryDto dto) {
+    public Result<Integer> countByCondition(BoxLimitConfigQueryDto dto) {
         if(Objects.nonNull(dto) && StringUtils.isNotBlank(dto.getSiteName())){
             dto.setSiteName(dto.getSiteName().trim());
         }
-        JDResponse<Integer> response = new JDResponse<>();
+        Result<Integer> response = new Result<>();
         response.setCode(JDResponse.CODE_SUCCESS);
         response.setData(boxLimitConfigDao.countByCondition(dto));
         return response;
     }
 
     @Override
-    public JDResponse<List<String>> getBoxTypeList() {
-        JDResponse response= new JDResponse();
+    public Result<List<String>> getBoxTypeList() {
+        Result response= new Result();
         List<String> boxTypes = new ArrayList<>();
         Map<String, String> map = BoxTypeEnum.getMap();
         for(String key : map.keySet()){
@@ -270,8 +271,8 @@ public class BoxlimitServiceImpl implements BoxlimitService {
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitServiceImpl.getLimitNums", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     @Cache(key = "BoxLimitServiceImpl.getLimitNums@args0@args1", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
             ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
-    public JDResponse<Integer> getLimitNums(Integer createSiteCode, String type) {
-        JDResponse<Integer> response = new JDResponse<>();
+    public Result<Integer> getLimitNums(Integer createSiteCode, String type) {
+        Result<Integer> response = new Result<>();
         response.setData(0);
         log.info("分拣数量限制拦截 createSiteCode:{}, type:{}", createSiteCode, type);
         BoxLimitConfigDto dto = new BoxLimitConfigDto();
@@ -298,7 +299,7 @@ public class BoxlimitServiceImpl implements BoxlimitService {
      * @param dto
      * @param response
      */
-    private void checkDtoData(BoxLimitConfigDto dto, JDResponse response) {
+    private void checkDtoData(BoxLimitConfigDto dto, Result response) {
         //场地建箱配置需要判断机构id
         if (dto.getConfigType().equals(SITE_BOX_TYPE) && dto.getSiteId() == null) {
             response.setCode(JDResponse.CODE_FAIL);

@@ -23,7 +23,9 @@ public class CollectBoxFlowDirectionVerifyJsfServiceImpl implements CollectBoxFl
 
     @Override
     public Result<CollectBoxFlowDirectionConf> verifyBoxFlowDirectionConf(CollectBoxFlowDirectionConf collectBoxFlowDirectionConf) {
-        log.info("集包规则校验接口 verifyBoxFlowDirectionConf -{}", JSON.toJSONString(collectBoxFlowDirectionConf));
+        if(log.isInfoEnabled()){
+            log.info("集包规则校验接口 verifyBoxFlowDirectionConf -{}", JSON.toJSONString(collectBoxFlowDirectionConf));
+        }
         return collectBoxFlowDirectionVerifyService.verifyBoxFlowDirectionConf(collectBoxFlowDirectionConf);
     }
 }

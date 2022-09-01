@@ -74,7 +74,9 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 	 * @return
 	 */
 	public Result<PageDto<WorkStationGrid>> queryPageList(WorkStationGridQuery query){
-		log.info("场地网格工序管理 queryPageList 入参-{}", JSON.toJSONString(query));
+		if(log.isInfoEnabled()){
+			log.info("场地网格工序管理 queryPageList 入参-{}", JSON.toJSONString(query));
+		}
 		return workStationGridService.queryPageList(query);
 	 }
 	/**
@@ -89,8 +91,9 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 	 }	
 	@Override
 	public Result<List<WorkStationGrid>> queryAllGridBySiteCode(WorkStationGridQuery query) {
-		log.info("场地网格工序管理 queryAllGridBySiteCode 入参-{}", JSON.toJSONString(query));
-
+		if(log.isInfoEnabled()){
+			log.info("场地网格工序管理 queryAllGridBySiteCode 入参-{}", JSON.toJSONString(query));
+		}
 		return workStationGridService.queryAllGridBySiteCode(query);
 	}
 	@Override
@@ -99,22 +102,30 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 	}
 	@Override
 	public Result<List<WorkStationGrid>> queryGridWorkDictList(WorkStationGridQuery query) {
-		log.info("场地网格工序管理 queryGridWorkDictList 入参-{}", JSON.toJSONString(query));
+		if(log.isInfoEnabled()){
+			log.info("场地网格工序管理 queryGridWorkDictList 入参-{}", JSON.toJSONString(query));
+		}
 		return workStationGridService.queryGridWorkDictList(query);
 	}
 	@Override
 	public Result<List<WorkStationGrid>> queryGridAreaDictList(WorkStationGridQuery query) {
-		log.info("场地网格工序管理 queryGridAreaDictList 入参-{}", JSON.toJSONString(query));
+		if(log.isInfoEnabled()) {
+			log.info("场地网格工序管理 queryGridAreaDictList 入参-{}", JSON.toJSONString(query));
+		}
 		return workStationGridService.queryGridAreaDictList(query);
 	}
 	@Override
 	public Result<List<WorkStationGrid>> queryGridNoDictList(WorkStationGridQuery query) {
-		log.info("场地网格工序管理 queryGridNoDictList 入参-{}", JSON.toJSONString(query));
+		if(log.isInfoEnabled()) {
+			log.info("场地网格工序管理 queryGridNoDictList 入参-{}", JSON.toJSONString(query));
+		}
 		return workStationGridService.queryGridNoDictList(query);
 	}
 	@Override
 	public Result<List<WorkStationGrid>> queryGridFloorDictList(WorkStationGridQuery query) {
-		log.info("场地网格工序管理 queryGridFloorDictList 入参-{}", JSON.toJSONString(query));
+		if(log.isInfoEnabled()) {
+			log.info("场地网格工序管理 queryGridFloorDictList 入参-{}", JSON.toJSONString(query));
+		}
 		return workStationGridService.queryGridFloorDictList(query);
 	}
 	@Override
@@ -129,29 +140,39 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 	}
 	@Override
 	public Result<List<WorkStationGrid>> queryListForExport(WorkStationGridQuery query) {
-		log.info("场地网格工序管理 queryListForExport 入参-{}", JSON.toJSONString(query));
+		if(log.isInfoEnabled()) {
+			log.info("场地网格工序管理 queryListForExport 入参-{}", JSON.toJSONString(query));
+		}
 		return workStationGridService.queryListForExport(query);
 	}
 	@Override
 	public List<String> queryOwnerUserErpListBySiteCode(WorkStationGridQuery query) {
-		log.info("场地网格工序管理 query 入参-{}", JSON.toJSONString(query));
+		if(log.isInfoEnabled()) {
+			log.info("场地网格工序管理 query 入参-{}", JSON.toJSONString(query));
+		}
 		return workStationGridService.queryOwnerUserErpListBySiteCode(query);
 	}
 	@Override
 	public List<WorkStationGrid> querySiteListByOrgCode(WorkStationGridQuery query) {
-		log.info("场地网格工序管理 querySiteListByOrgCode 入参-{}", JSON.toJSONString(query));
+		if(log.isInfoEnabled()) {
+			log.info("场地网格工序管理 querySiteListByOrgCode 入参-{}", JSON.toJSONString(query));
+		}
 		return workStationGridService.querySiteListByOrgCode(query);
 	}
 
 	@Override
 	public Result<WorkStationGrid> queryByBusinessKey(WorkStationGrid data) {
-		log.info("场地网格工序管理 queryByBusinessKey 入参-{}", JSON.toJSONString(data));
+		if(log.isInfoEnabled()) {
+			log.info("场地网格工序管理 queryByBusinessKey 入参-{}", JSON.toJSONString(data));
+		}
 		return workStationGridService.queryByBusinessKey(data);
 	}
 
 	@Override
 	public Result<WorkStationGrid> queryByGridKey(WorkStationGridQuery workStationGridCheckQuery) {
-		log.info("场地网格工序管理 queryByGridKey 入参-{}", JSON.toJSONString(workStationGridCheckQuery));
+		if(log.isInfoEnabled()) {
+			log.info("场地网格工序管理 queryByGridKey 入参-{}", JSON.toJSONString(workStationGridCheckQuery));
+		}
 		return workStationGridService.queryByGridKey(workStationGridCheckQuery);
 	}
 }

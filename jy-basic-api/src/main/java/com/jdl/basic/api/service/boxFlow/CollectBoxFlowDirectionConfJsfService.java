@@ -8,7 +8,7 @@ import com.jdl.basic.common.utils.Result;
 
 public interface CollectBoxFlowDirectionConfJsfService {
 
-    CollectBoxFlowDirectionConf selectById(Long id);
+    Result<CollectBoxFlowDirectionConf> selectById(Long id);
 
     Result<Boolean> newConfig(CollectBoxFlowDirectionConf conf);
 
