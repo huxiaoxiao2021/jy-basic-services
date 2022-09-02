@@ -33,7 +33,9 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
 
     @Override
     public Result<PageDto<PositionDetailRecord>> queryPageList(PositionQuery query) {
-        log.info("岗位管理-queryPageList-{}",JSON.toJSONString(query));
+        if(log.isInfoEnabled()){
+            log.info("岗位管理-queryPageList-{}",JSON.toJSONString(query));
+        }
         Result<PageDto<PositionDetailRecord>> result = new Result<PageDto<PositionDetailRecord>>();
         result.toFail();
         try {
@@ -46,7 +48,9 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
 
     @Override
     public Result<Long> queryCountByCondition(PositionQuery query) {
-        log.info("岗位管理-queryCountByCondition-{}",JSON.toJSONString(query));
+        if(log.isInfoEnabled()) {
+            log.info("岗位管理-queryCountByCondition-{}",JSON.toJSONString(query));
+        }
         Result<Long> result = new Result<Long>();
         result.toFail();
         try {
@@ -90,7 +94,9 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
 
     @Override
     public Result<PositionDetailRecord> queryOneByPositionCode(String positionCode) {
-        log.info("岗位管理-updateByPositionCode-{}",positionCode);
+        if(log.isInfoEnabled()){
+            log.info("岗位管理-updateByPositionCode-{}",positionCode);
+        }
         Result<PositionDetailRecord> result = new Result<>();
         result.toFail();
         try {
@@ -102,9 +108,11 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
     }
 
     @Override
-    public JDResponse<PositionData> queryPositionWithIsMatchAppFunc(String positionCode) {
-        log.info("岗位管理-queryPositionWithIsMatchAppFunc-{}",positionCode);
-        JDResponse<PositionData> response = new JDResponse<>();
+    public Result<PositionData> queryPositionWithIsMatchAppFunc(String positionCode) {
+        if(log.isInfoEnabled()){
+            log.info("岗位管理-queryPositionWithIsMatchAppFunc-{}",positionCode);
+        }
+        Result<PositionData> response = new Result<>();
         response.toFail();
         try {
             return positionRecordService.queryPositionWithIsMatchAppFunc(positionCode);
@@ -115,9 +123,11 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
     }
 
     @Override
-    public JDResponse<PositionData> queryPositionInfo(String positionCode) {
-        log.info("岗位管理-queryPositionInfo-{}",positionCode);
-        JDResponse<PositionData> response = new JDResponse<>();
+    public Result<PositionData> queryPositionInfo(String positionCode) {
+        if(log.isInfoEnabled()){
+            log.info("岗位管理-queryPositionInfo-{}",positionCode);
+        }
+        Result<PositionData> response = new Result<>();
         response.toFail();
         try {
             return positionRecordService.queryPositionInfo(positionCode);

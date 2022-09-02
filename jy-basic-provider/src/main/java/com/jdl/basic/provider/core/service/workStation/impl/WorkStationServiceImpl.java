@@ -1,11 +1,14 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
 
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkStation;
 import com.jdl.basic.api.domain.workStation.WorkStationCountVo;
 import com.jdl.basic.api.domain.workStation.WorkStationQuery;
 import com.jdl.basic.api.enums.BusinessLineTypeEnum;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.utils.CheckHelper;
 import com.jdl.basic.common.utils.PageDto;
@@ -43,7 +46,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 	@Autowired
 	@Qualifier("workStationDao")
 	private WorkStationDao workStationDao;
-	
+
 	@Autowired
 	private IGenerateObjectId genObjectId;
 	@Autowired
@@ -55,6 +58,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 	 * @param insertData
 	 * @return
 	 */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.insert", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> insert(WorkStation insertData){
 		Result<Boolean> result = checkAndFillBeforeAdd(insertData);
 		if(!result.isSuccess()) {
@@ -65,11 +69,12 @@ public class WorkStationServiceImpl implements WorkStationService {
 		return result;
 	 }
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.importDatas", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> importDatas(List<WorkStation> dataList) {
 		Result<Boolean> result = checkImportDatas(dataList);
 		if(!result.isSuccess()) {
 			return result;
-		}		
+		}
 		//先删除后插入新记录
 		for(WorkStation data : dataList) {
 			WorkStation oldData = workStationDao.queryByBusinessKey(data);
@@ -101,7 +106,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 			return result.toFail("该作业区、工序已存在，请修改！");
 		}
 		return result;
-	}	
+	}
 	/**
 	 * 校验并填充导入数据
 	 * @param dataList
@@ -154,10 +159,10 @@ public class WorkStationServiceImpl implements WorkStationService {
 		String areaCode = data.getAreaCode();
 		String areaName = data.getAreaName();
 		data.setBusinessLineName(BusinessLineTypeEnum.getNameByCode(data.getBusinessLineCode()));
-		
+
 		if(!CheckHelper.checkStr("作业区ID", areaCode, 50, result).isSuccess()) {
 			return result;
-		}		
+		}
 		if(!CheckHelper.checkStr("作业区名称", areaName, 100, result).isSuccess()) {
 			return result;
 		}
@@ -174,6 +179,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 	 * @param updateData
 	 * @return
 	 */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.updateById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> updateById(WorkStation updateData){
 		Result<Boolean> result = checkAndFillNewData(updateData);
 		if(!result.isSuccess()) {
@@ -194,6 +200,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 	 * @param deleteData
 	 * @return
 	 */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.deleteById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> deleteById(WorkStation deleteData){
 		Result<Boolean> result = Result.success();
 		if(deleteData == null
@@ -215,6 +222,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 	 * @param id
 	 * @return
 	 */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.queryById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<WorkStation> queryById(Long id){
 		Result<WorkStation> result = Result.success();
 		result.setData(workStationDao.queryById(id));
@@ -225,6 +233,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 	 * @param query
 	 * @return
 	 */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.queryPageList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<PageDto<WorkStation>> queryPageList(WorkStationQuery query){
 		Result<PageDto<WorkStation>> result = Result.success();
 		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
@@ -249,6 +258,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 	 * @param query
 	 * @return
 	 */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.checkParamForQueryPageList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> checkParamForQueryPageList(WorkStationQuery query){
 		Result<Boolean> result = Result.success();
 		if(query.getPageSize() == null
@@ -262,26 +272,33 @@ public class WorkStationServiceImpl implements WorkStationService {
 		}
 		return result;
 	 }
+
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.queryWorkDictList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<List<WorkStation>> queryWorkDictList(WorkStationQuery query) {
 		Result<List<WorkStation>> result = Result.success();
 		result.setData(workStationDao.queryWorkDictList(query));
 		return result;
 	}
+
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.queryAreaDictList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<List<WorkStation>> queryAreaDictList(WorkStationQuery query) {
 		Result<List<WorkStation>> result = Result.success();
 		result.setData(workStationDao.queryAreaDictList(query));
 		return result;
 	}
+
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.queryByBusinessKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<WorkStation> queryByBusinessKey(WorkStation data) {
 		Result<WorkStation> result = Result.success();
 		result.setData(workStationDao.queryByBusinessKey(data));
-		return result;		
+		return result;
 	}
 
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.queryByRealBusinessKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<WorkStation> queryByRealBusinessKey(String businessKey) {
 		Result<WorkStation> result = Result.success();
 		if(StringUtils.isEmpty(businessKey)){
@@ -293,10 +310,13 @@ public class WorkStationServiceImpl implements WorkStationService {
 	}
 
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.isExist", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public boolean isExist(WorkStation data) {
 		return workStationDao.queryByBusinessKey(data) != null;
 	}
+
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.queryPageCount", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<WorkStationCountVo> queryPageCount(WorkStationQuery query) {
 		Result<WorkStationCountVo> result = Result.success();
 		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
@@ -316,7 +336,9 @@ public class WorkStationServiceImpl implements WorkStationService {
 			data.setBusinessKey(DmsConstants.CODE_PREFIX_WORK_STATION.concat(StringHelper.padZero(this.genObjectId.getObjectId(WorkStation.class.getName()),11)));
 		}
 	}
+
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.deleteByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> deleteByIds(DeleteRequest<WorkStation> deleteRequest) {
 		Result<Boolean> result = Result.success();
 		if(deleteRequest == null
@@ -336,7 +358,9 @@ public class WorkStationServiceImpl implements WorkStationService {
 		result.setData(workStationDao.deleteByIds(deleteRequest) > 0);
 		return result;
 	}
+
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.queryCount", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Long> queryCount(WorkStationQuery query) {
 		Result<Long> result = Result.success();
 		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
@@ -346,7 +370,9 @@ public class WorkStationServiceImpl implements WorkStationService {
 		result.setData(workStationDao.queryCount(query));
 		return result;
 	}
+
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.queryListForExport", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<List<WorkStation>> queryListForExport(WorkStationQuery query) {
 		Result<List<WorkStation>> result = Result.success();
 		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);

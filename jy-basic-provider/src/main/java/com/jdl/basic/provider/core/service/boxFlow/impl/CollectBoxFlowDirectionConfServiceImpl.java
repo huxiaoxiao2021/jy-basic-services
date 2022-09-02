@@ -25,6 +25,8 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+
 @Slf4j
 @Service
 public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDirectionConfService {
@@ -37,8 +39,20 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
     private JDQ4Producer jdq4Producer;
 
     @Override
-    public CollectBoxFlowDirectionConf selectById(Long id) {
-        return collectBoxFlowDirectionConfMapper.selectByPrimaryKey(id);
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionConfServiceImpl.selectById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<CollectBoxFlowDirectionConf> selectById(Long id) {
+        Result<CollectBoxFlowDirectionConf> result = new Result<>();
+        result.toFail();
+        if(id == null){
+            result.setMessage("id 不能为空！");
+            return result;
+        }
+        CollectBoxFlowDirectionConf conf = collectBoxFlowDirectionConfMapper.selectByPrimaryKey(id);
+        if(Objects.nonNull(conf)){
+            result.toSuccess("获取配置成功！");
+            result.setData(conf);
+        }
+        return result;
     }
 
     @Override
@@ -99,6 +113,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         return result;
     }
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionConfServiceImpl.updateConfig", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> updateConfig(CollectBoxFlowDirectionConf conf) {
         Result<Boolean> result = new Result<>();
         if (conf.getStartSiteId() == null || conf.getEndSiteId() == null
@@ -191,6 +206,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
     }
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionConfServiceImpl.updateOrNewConfig", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> updateOrNewConfig(CollectBoxFlowDirectionConf conf) {
         Result<Boolean> result = new Result<>();
 

@@ -1,5 +1,8 @@
 package com.jdl.basic.provider.core.service.dbs.impl;
 
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.provider.core.dao.dbs.ObjectIdDao;
 import com.jdl.basic.provider.core.service.dbs.ObjectIdService;
 import org.slf4j.Logger;
@@ -23,7 +26,8 @@ public class ObjectIdServiceImpl implements ObjectIdService {
     private static int TRY_MAX_TIMES = 5;
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
-    public Long getFirstId(String objectName, Integer count) {
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".ObjectIdServiceImpl.getFirstId", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Long getFirstId(String objectName, Integer count) {
         Integer rowCount = objectIdDao.updateFirstIdByName(objectName, count);
         if (rowCount == 0) {
             objectIdDao.insertObjectId(objectName, count);
@@ -36,6 +40,7 @@ public class ObjectIdServiceImpl implements ObjectIdService {
      * 尝试多次获取++firstId的值,乐观锁方式，先取得firstId当前值，带条件更新数据
      */
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".ObjectIdServiceImpl.getNextFirstId", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Long getNextFirstId(String objectName) {
 		int tryTimes = 0;
 		int updateRows = 0;

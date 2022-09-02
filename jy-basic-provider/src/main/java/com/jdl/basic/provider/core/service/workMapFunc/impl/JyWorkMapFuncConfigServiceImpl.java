@@ -1,6 +1,8 @@
 package com.jdl.basic.provider.core.service.workMapFunc.impl;
 
 
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.workMapFunc.JyWorkMapFuncConfigEntity;
 import com.jdl.basic.api.domain.workMapFunc.JyWorkMapFuncQuery;
 import com.jdl.basic.common.contants.Constants;
@@ -28,11 +30,13 @@ public class JyWorkMapFuncConfigServiceImpl implements JyWorkMapFuncConfigServic
     private JyWorkMapFuncConfigDao jyWorkMapFuncConfigDao;
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyWorkMapFuncConfigServiceImpl.addWorkMapFunConfig", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public int addWorkMapFunConfig(JyWorkMapFuncConfigEntity entity) {
         return jyWorkMapFuncConfigDao.insert(entity);
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyWorkMapFuncConfigServiceImpl.updateById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public int updateById(JyWorkMapFuncConfigEntity entity) {
         if(entity == null || jyWorkMapFuncConfigDao.queryById(entity.getId()) == null){
             throw new RuntimeException(String.format("id:%s不存在", entity.getId()));
@@ -41,6 +45,7 @@ public class JyWorkMapFuncConfigServiceImpl implements JyWorkMapFuncConfigServic
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyWorkMapFuncConfigServiceImpl.deleteById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public int deleteById(JyWorkMapFuncConfigEntity entity) {
         if(entity == null || jyWorkMapFuncConfigDao.queryById(entity.getId()) == null){
             throw new RuntimeException(String.format("id:%s不存在", entity.getId()));
@@ -49,6 +54,7 @@ public class JyWorkMapFuncConfigServiceImpl implements JyWorkMapFuncConfigServic
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyWorkMapFuncConfigServiceImpl.queryPageList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public PageDto<JyWorkMapFuncConfigEntity> queryPageList(JyWorkMapFuncQuery query) {
         if(query.getPageNumber() < Constants.YN_YES || query.getPageSize() <= Constants.YN_NO){
             throw new RuntimeException("分页参数不合法!");
@@ -68,6 +74,7 @@ public class JyWorkMapFuncConfigServiceImpl implements JyWorkMapFuncConfigServic
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyWorkMapFuncConfigServiceImpl.queryByCondition", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public List<JyWorkMapFuncConfigEntity> queryByCondition(JyWorkMapFuncConfigEntity entity) {
         if(entity == null || StringUtils.isEmpty(entity.getFuncCode()) || StringUtils.isEmpty(entity.getRefWorkKey())){
             throw new RuntimeException("请求参数不合法!");

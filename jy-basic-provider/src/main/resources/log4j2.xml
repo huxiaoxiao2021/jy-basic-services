@@ -6,13 +6,13 @@
 
     <!--变量配置-->
     <Properties>
-        <Property name="app_name">jy-msp-provider</Property>
+        <Property name="app_name">jy-basic-provider</Property>
         <!-- 格式化输出：%date表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符-->
         <!-- %logger{36} 表示 Logger 名字最长36个字符 -->
         <property name="LOG_PATTERN" value="%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %m%n" />
         <!-- 定义日志存储的路径 -->
         <property name="FILE_PATH" value="/export/Logs/${app_name}" />
-        <property name="FILE_NAME" value="jy-msp-provider" />
+        <property name="FILE_NAME" value="jy-basic-provider" />
     </Properties>
 
     <appenders>

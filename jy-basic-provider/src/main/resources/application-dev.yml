@@ -28,10 +28,6 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 
 
-jsf:
-  jy_basic:
-    alias: jy-basic-server-test  #基础服务JSF别名
-
 ## 云redis配置
 jimdb:
   url: "redis://:erdTest123@redis-nwdwv9zb0ij7-proxy-nlb.jvessel-open-hb.jdcloud.com:6379/0"
@@ -60,7 +56,10 @@ jdq:
 ###### jsf config  start######
 
   #基础服务JSF别名
-
+jsf:
+  jy_basic:
+    alias: jy-basic-server-local
+    token: jy-basic-server-token
 
 basic:
   jsf:

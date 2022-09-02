@@ -2,7 +2,10 @@ package com.jdl.basic.provider.core.service.workStation.impl;
 
 
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.workStation.*;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.enums.WaveTypeEnum;
 import com.jdl.basic.common.utils.CheckHelper;
@@ -61,6 +64,7 @@ public class WorkStationAttendPlanServiceImpl implements WorkStationAttendPlanSe
 	 * @param insertData
 	 * @return
 	 */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationAttendPlanServiceImpl.insert", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> insert(WorkStationAttendPlan insertData){
 		Result<Boolean> result = checkAndFillBeforeAdd(insertData);
 		if(!result.isSuccess()) {
@@ -90,6 +94,7 @@ public class WorkStationAttendPlanServiceImpl implements WorkStationAttendPlanSe
 	 * @param updateData
 	 * @return
 	 */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationAttendPlanServiceImpl.updateById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> updateById(WorkStationAttendPlan updateData){
 		Result<Boolean> result = Result.success();
 		String planName = updateData.getPlanName();
@@ -114,6 +119,7 @@ public class WorkStationAttendPlanServiceImpl implements WorkStationAttendPlanSe
 	 * @param deleteData
 	 * @return
 	 */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationAttendPlanServiceImpl.deleteById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> deleteById(WorkStationAttendPlan deleteData){
 		Result<Boolean> result = Result.success();
 		result.setData(workStationAttendPlanDao.deleteById(deleteData) == 1);
@@ -124,6 +130,7 @@ public class WorkStationAttendPlanServiceImpl implements WorkStationAttendPlanSe
 	 * @param id
 	 * @return
 	 */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationAttendPlanServiceImpl.queryById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<WorkStationAttendPlan> queryById(Long id){
 		Result<WorkStationAttendPlan> result = Result.success();
 		result.setData(this.fillOtherInfo(workStationAttendPlanDao.queryById(id)));
@@ -134,6 +141,7 @@ public class WorkStationAttendPlanServiceImpl implements WorkStationAttendPlanSe
 	 * @param query
 	 * @return
 	 */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationAttendPlanServiceImpl.queryPageList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<PageDto<WorkStationAttendPlan>> queryPageList(WorkStationAttendPlanQuery query){
 		Result<PageDto<WorkStationAttendPlan>> result = Result.success();
 		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
@@ -174,6 +182,7 @@ public class WorkStationAttendPlanServiceImpl implements WorkStationAttendPlanSe
 	 * @param query
 	 * @return
 	 */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationAttendPlanServiceImpl.checkParamForQueryPageList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> checkParamForQueryPageList(WorkStationAttendPlanQuery query){
 		Result<Boolean> result = Result.success();
 		if(query.getPageSize() == null
@@ -194,6 +203,7 @@ public class WorkStationAttendPlanServiceImpl implements WorkStationAttendPlanSe
 	}
 	
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationAttendPlanServiceImpl.queryByBusinessKeys", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<WorkStationAttendPlan> queryByBusinessKeys(WorkStationAttendPlan data) {
 		Result<WorkStationAttendPlan> result = Result.success();
 		result.setData(this.fillOtherInfo(workStationAttendPlanDao.queryByBusinessKey(data)));
@@ -201,6 +211,7 @@ public class WorkStationAttendPlanServiceImpl implements WorkStationAttendPlanSe
 	}	
 	
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationAttendPlanServiceImpl.importDatas", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> importDatas(List<WorkStationAttendPlan> dataList) {
 		Result<Boolean> result = checkAndFillImportDatas(dataList);
 		if(!result.isSuccess()) {
@@ -338,12 +349,14 @@ public class WorkStationAttendPlanServiceImpl implements WorkStationAttendPlanSe
 		return result;
 	}
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationAttendPlanServiceImpl.queryWaveDictList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<List<WorkStationAttendPlan>> queryWaveDictList(WorkStationAttendPlanQuery query) {
 		Result<List<WorkStationAttendPlan>> result = Result.success();
 		result.setData(workStationAttendPlanDao.queryWaveDictList(query));
 		return result;
 	}
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationAttendPlanServiceImpl.deleteByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> deleteByIds(DeleteRequest<WorkStationAttendPlan> deleteRequest) {
 		Result<Boolean> result = Result.success();
 		if(deleteRequest == null
@@ -364,6 +377,7 @@ public class WorkStationAttendPlanServiceImpl implements WorkStationAttendPlanSe
 		return result;
 	}
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationAttendPlanServiceImpl.queryCount", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Long> queryCount(WorkStationAttendPlanQuery query) {
 		Result<Long> result = Result.success();
 		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
@@ -373,7 +387,9 @@ public class WorkStationAttendPlanServiceImpl implements WorkStationAttendPlanSe
 		result.setData(workStationAttendPlanDao.queryCount(query));
 		return result;
 	}
+
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationAttendPlanServiceImpl.queryListForExport", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<List<WorkStationAttendPlan>> queryListForExport(WorkStationAttendPlanQuery query) {
 		Result<List<WorkStationAttendPlan>> result = Result.success();
 		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);

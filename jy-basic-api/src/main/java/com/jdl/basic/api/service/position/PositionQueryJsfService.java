@@ -61,7 +61,7 @@ public interface PositionQueryJsfService {
      * @param positionCode
      * @return
      */
-    JDResponse<PositionData> queryPositionWithIsMatchAppFunc(String positionCode);
+    Result<PositionData> queryPositionWithIsMatchAppFunc(String positionCode);
 
     /**
      * 查询岗位信息，并校验是否关联作业app功能
@@ -69,5 +69,5 @@ public interface PositionQueryJsfService {
      * @param positionCode
      * @return
      */
-    JDResponse<PositionData> queryPositionInfo(String positionCode);
+    Result<PositionData> queryPositionInfo(String positionCode);
 }

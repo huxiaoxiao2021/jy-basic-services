@@ -21,8 +21,10 @@ public class CollectBoxFlowDirectionConfJsfServiceImpl implements CollectBoxFlow
     private ICollectBoxFlowDirectionConfService collectBoxFlowDirectionConfService;
 
     @Override
-    public CollectBoxFlowDirectionConf selectById(Long id) {
-        log.info("集包规则配置 selectById -{}",id);
+    public Result<CollectBoxFlowDirectionConf> selectById(Long id) {
+        if(log.isInfoEnabled()){
+            log.info("集包规则配置 selectById -{}",id);
+        }
         return collectBoxFlowDirectionConfService.selectById(id);
     }
 
@@ -40,7 +42,9 @@ public class CollectBoxFlowDirectionConfJsfServiceImpl implements CollectBoxFlow
 
     @Override
     public Result<Pager<CollectBoxFlowDirectionConf>> listByParamAndWhetherConfiged(Pager<CollectBoxFlowDirectionConf> pager, Boolean configed) {
-        log.info("集包规则配置 listByParamAndWhetherConfiged {} ,{}",JSON.toJSONString(pager),configed);
+        if(log.isInfoEnabled()){
+            log.info("集包规则配置 listByParamAndWhetherConfiged {} ,{}",JSON.toJSONString(pager),configed);
+        }
         return collectBoxFlowDirectionConfService.listByParamAndWhetherConfiged(pager,configed);
     }
 }

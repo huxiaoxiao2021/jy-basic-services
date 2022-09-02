@@ -59,6 +59,7 @@ jdq:
 jsf:
   jy_basic:
     alias: jy-basic-server-test
+    token: jy-basic-server-token
 
 basic:
   jsf:

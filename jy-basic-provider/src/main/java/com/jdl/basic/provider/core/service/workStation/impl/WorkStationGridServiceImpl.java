@@ -64,6 +64,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	 * @return
 	 */
 	@Transactional
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.insert", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> insert(WorkStationGrid insertData){
 		Result<Boolean> result = checkAndFillBeforeAdd(insertData);
 		if(!result.isSuccess()) {
@@ -181,6 +182,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	 * @param updateData
 	 * @return
 	 */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.updateById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> updateById(WorkStationGrid updateData){
 		Result<Boolean> result = Result.success();
 		String ownerUserErp = updateData.getOwnerUserErp();
@@ -206,6 +208,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	 * @return
 	 */
 	@Transactional
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.deleteById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> deleteById(WorkStationGrid deleteData){
 		Result<Boolean> result = Result.success();
 		Result<WorkStationGrid> queryResult = queryById(deleteData.getId());
@@ -229,6 +232,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	 * @param id
 	 * @return
 	 */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<WorkStationGrid> queryById(Long id){
 		Result<WorkStationGrid> result = Result.success();
 		result.setData(workStationGridDao.queryById(id));
@@ -239,6 +243,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	 * @param query
 	 * @return
 	 */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryPageList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<PageDto<WorkStationGrid>> queryPageList(WorkStationGridQuery query){
 		Result<PageDto<WorkStationGrid>> result = Result.success();
 		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
@@ -262,6 +267,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	 * @param query
 	 * @return
 	 */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.checkParamForQueryPageList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> checkParamForQueryPageList(WorkStationGridQuery query){
 		Result<Boolean> result = Result.success();
 		if(query.getPageSize() == null
@@ -278,6 +284,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	 }
 
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryAllGridBySiteCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<List<WorkStationGrid>> queryAllGridBySiteCode(WorkStationGridQuery query) {
 		Result<List<WorkStationGrid>> result = Result.success();
 		result.setData(workStationGridDao.queryAllGridBySiteCode(query));
@@ -286,6 +293,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 
 	@Transactional
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.importDatas", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> importDatas(List<WorkStationGrid> dataList) {
 		Result<Boolean> result = checkAndFillImportDatas(dataList);
 		if(!result.isSuccess()) {
@@ -368,35 +376,46 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		result.setData(workStationGridDao.queryByBusinessKey(data));
 		return result;
 	}
+
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.isExist", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public boolean isExist(WorkStationGrid data) {
 		return workStationGridDao.queryByBusinessKey(data) != null;
 	}
+
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryGridWorkDictList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<List<WorkStationGrid>> queryGridWorkDictList(WorkStationGridQuery query) {
 		Result<List<WorkStationGrid>> result = Result.success();
 		result.setData(workStationGridDao.queryGridWorkDictList(query));
 		return result;
 	}
+
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryGridAreaDictList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<List<WorkStationGrid>> queryGridAreaDictList(WorkStationGridQuery query) {
 		Result<List<WorkStationGrid>> result = Result.success();
 		result.setData(workStationGridDao.queryGridAreaDictList(query));
 		return result;
 	}
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryGridFloorDictList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<List<WorkStationGrid>> queryGridNoDictList(WorkStationGridQuery query) {
 		Result<List<WorkStationGrid>> result = Result.success();
 		result.setData(workStationGridDao.queryGridNoDictList(query));
 		return result;
 	}
+
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryGridFloorDictList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<List<WorkStationGrid>> queryGridFloorDictList(WorkStationGridQuery query) {
 		Result<List<WorkStationGrid>> result = Result.success();
 		result.setData(workStationGridDao.queryGridFloorDictList(query));
 		return result;
 	}
+
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryPageCount", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<WorkStationGridCountVo> queryPageCount(WorkStationGridQuery query) {
 		Result<WorkStationGridCountVo> result = Result.success();
 		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
@@ -406,11 +425,15 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		result.setData(workStationGridDao.queryPageCount(query));
 		return result;
 	}
+
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.hasGridData", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public boolean hasGridData(String stationKey) {
 		return workStationGridDao.queryCountByRefStationKey(stationKey) > 0;
 	}
+
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.deleteByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> deleteByIds(DeleteRequest<WorkStationGrid> deleteRequest) {
 		Result<Boolean> result = Result.success();
 		if(deleteRequest == null
@@ -430,7 +453,9 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		result.setData(workStationGridDao.deleteByIds(deleteRequest) > 0);
 		return result;
 	}
+
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryCount", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Long> queryCount(WorkStationGridQuery query) {
 		Result<Long> result = Result.success();
 		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
@@ -440,7 +465,9 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		result.setData(workStationGridDao.queryCount(query));
 		return result;
 	}
+
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryListForExport", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<List<WorkStationGrid>> queryListForExport(WorkStationGridQuery query) {
 		Result<List<WorkStationGrid>> result = Result.success();
 		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
@@ -451,10 +478,12 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		return result;
 	}
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.querySiteListByOrgCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public List<WorkStationGrid> querySiteListByOrgCode(WorkStationGridQuery query) {
 		return workStationGridDao.querySiteListByOrgCode(query);
 	}
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryOwnerUserErpListBySiteCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public List<String> queryOwnerUserErpListBySiteCode(WorkStationGridQuery query) {
 		return workStationGridDao.queryOwnerUserErpListBySiteCode(query);
 	}

@@ -3,8 +3,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://mysql-cn-north-1-faa4483a25674aac.rds.jdcloud.com:3358/jybasic_conf?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&failOverReadOnly=false
-    username: testwl
-    password: 4x1eSVxcq0816pytgeyQAh1wUS
+    username: jybasic_conf_rw
+    password: yKxYyjAPdVPDYwEnE3Zheeo5Fc4jGfrn
 
     #Spring Boot 默认是不注入这些属性值的，需要自己绑定
     #druid 数据源专有配置
@@ -61,6 +61,7 @@ jdq:
 jsf:
   jy_basic:
     alias: jy-basic-server
+    token: anktYmFzaWMtc2VydmVyLXRva2Vu
 
 basic:
   jsf:
