@@ -268,13 +268,13 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
                         areas.add(d.getAreaCode());
                     }
                     WorkStationBindingVo area = new WorkStationBindingVo();
-                    area.setLabel(d.getAreaName());
+                    area.setLabel(d.getAreaName() + " " + d.getAreaCode());
                     area.setChildren(new ArrayList<>());
                     for (WorkStationGrid g : data) {
                         if (Objects.equals(g.getFloor(), f)&&Objects.equals(d.getAreaCode(),g.getAreaCode())) {
                             WorkStationBindingVo grid = new WorkStationBindingVo();
                             grid.setFloor(f);
-                            grid.setLabel(g.getGridName());
+                            grid.setLabel(g.getGridName() + g.getGridCode());
                             grid.setGridCode(g.getGridCode());
                             area.getChildren().add(grid);
                         }
