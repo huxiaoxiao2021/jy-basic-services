@@ -108,11 +108,11 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
     }
 
     @Override
-    public JDResponse<PositionData> queryPositionWithIsMatchAppFunc(String positionCode) {
+    public Result<PositionData> queryPositionWithIsMatchAppFunc(String positionCode) {
         if(log.isInfoEnabled()){
             log.info("岗位管理-queryPositionWithIsMatchAppFunc-{}",positionCode);
         }
-        JDResponse<PositionData> response = new JDResponse<>();
+        Result<PositionData> response = new Result<>();
         response.toFail();
         try {
             return positionRecordService.queryPositionWithIsMatchAppFunc(positionCode);
@@ -123,11 +123,11 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
     }
 
     @Override
-    public JDResponse<PositionData> queryPositionInfo(String positionCode) {
+    public Result<PositionData> queryPositionInfo(String positionCode) {
         if(log.isInfoEnabled()){
             log.info("岗位管理-queryPositionInfo-{}",positionCode);
         }
-        JDResponse<PositionData> response = new JDResponse<>();
+        Result<PositionData> response = new Result<>();
         response.toFail();
         try {
             return positionRecordService.queryPositionInfo(positionCode);

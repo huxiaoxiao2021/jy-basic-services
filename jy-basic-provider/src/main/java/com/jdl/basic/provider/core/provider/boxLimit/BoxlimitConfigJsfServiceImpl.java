@@ -9,6 +9,7 @@ import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigQueryDto;
 import com.jdl.basic.api.response.JDResponse;
 import com.jdl.basic.api.service.boxLimit.BoxlimitConfigJsfService;
 
+import com.jdl.basic.common.contants.ResultCodeConstant;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.service.boxLimit.BoxlimitService;
@@ -55,18 +56,15 @@ public class BoxlimitConfigJsfServiceImpl implements BoxlimitConfigJsfService {
     public Result<PageDto<BoxLimitConfigDto>> listData(BoxLimitConfigQueryDto dto) {
         log.info("获取集箱包裹上限配置列表信息入参-{}", JSONObject.toJSONString(dto));
         Result<PageDto<BoxLimitConfigDto>> response = new Result<>();
-        response.setCode(JDResponse.CODE_FAIL);
-        response.setMessage(JDResponse.MSG_FAIL);
+        response.toFail("获取集箱包裹上限配置列表信息失败！");
         try {
             PageDto<BoxLimitConfigDto> result = boxlimitService.listData(dto);
             if (result != null) {
                 response.setData(result);
-                response.setCode(JDResponse.CODE_SUCCESS);
-                response.setMessage(JDResponse.MSG_SUCCESS);
+                response.toSuccess("获取集箱包裹上限配置列表信息成功！");
+
             }
         } catch (Exception e) {
-            response.setCode(JDResponse.CODE_EXCEPTION);
-            response.setMessage(JDResponse.MSG_EXCEPTION);
             log.error("获取集箱包裹上限配置列表信息异常! {}", e.getMessage(), e);
         }
         return response;
@@ -101,8 +99,7 @@ public class BoxlimitConfigJsfServiceImpl implements BoxlimitConfigJsfService {
         } catch (Exception e) {
             this.log.error("导入异常!-{}", e.getMessage(), e);
             Result response = new Result();
-            response.setCode(JDResponse.CODE_EXCEPTION);
-            response.setMessage(JDResponse.MSG_EXCEPTION);
+            response.toFail("导入异常!");
             return response;
         }
     }

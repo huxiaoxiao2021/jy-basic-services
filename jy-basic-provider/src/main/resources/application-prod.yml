@@ -61,6 +61,7 @@ jdq:
 jsf:
   jy_basic:
     alias: jy-basic-server
+    token: anktYmFzaWMtc2VydmVyLXRva2Vu
 
 basic:
   jsf:

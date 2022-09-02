@@ -1,4 +1,4 @@
-package com.jdl.basic.provider;
+package com.jdl.basic.provider.boxlimit;
 
 
 import com.alibaba.fastjson.JSONObject;
@@ -10,6 +10,7 @@ import com.jdl.basic.api.service.boxLimit.BoxlimitConfigJsfService;
 
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.provider.ApplicationLaunch;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -16,6 +16,7 @@
                   alias="${jsf.jy_basic.alias}"
                   ref="boxlimitConfigJsfServiceImpl"
                   server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
 
     <!-- 三定网格工序管理jsf服务 -->
@@ -24,6 +25,7 @@
                   alias="${jsf.jy_basic.alias}"
                   ref="workStationJsfServiceImpl"
                   server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
 
     <!-- 三定网格工序管理jsf服务 -->
@@ -32,6 +34,7 @@
                   alias="${jsf.jy_basic.alias}"
                   ref="workStationGridJsfServiceImpl"
                   server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
 
     <!-- 三定场地人员出勤计划管理jsf服务 -->
@@ -40,6 +43,7 @@
                   alias="${jsf.jy_basic.alias}"
                   ref="workStationAttendPlanJsfServiceImpl"
                   server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
 
     <!-- 上岗码管理jsf服务 -->
@@ -48,6 +52,7 @@
                   alias="${jsf.jy_basic.alias}"
                   ref="positionQueryJsfServiceImpl"
                   server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
 
     <!-- 拣运功能配置JSF服务 -->
@@ -56,6 +61,7 @@
                   alias="${jsf.jy_basic.alias}"
                   ref="jyWorkMapFuncConfigJsfServiceImpl"
                   server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
 
 
@@ -65,6 +71,7 @@
                   alias="${jsf.jy_basic.alias}"
                   ref="collectBoxFlowDirectionConfJsfServiceImpl"
                   server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}"  hide="true"/>
     </jsf:provider>
 
     <!-- 大数据推送集包配置JSF服务 -->
@@ -73,6 +80,7 @@
                   alias="${jsf.jy_basic.alias}"
                   ref="collectBoxFlowDirectionConfPushJsfServiceImpl"
                   server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
 
     <!-- 集包配置校验JSF服务 -->
@@ -81,6 +89,7 @@
                   alias="${jsf.jy_basic.alias}"
                   ref="collectBoxFlowDirectionVerifyJsfServiceImpl"
                   server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true"/>
     </jsf:provider>
 
 

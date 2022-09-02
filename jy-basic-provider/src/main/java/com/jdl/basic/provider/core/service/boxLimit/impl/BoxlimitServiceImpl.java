@@ -51,6 +51,7 @@ public class BoxlimitServiceImpl implements BoxlimitService {
     private BoxLimitConfigDao boxLimitConfigDao;
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitServiceImpl.insertBoxlimitConfig", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public void insertBoxlimitConfig(BoxLimitConfigDto po) {
 
         BoxLimitConfigPO dto=  new BoxLimitConfigPO();
@@ -60,6 +61,7 @@ public class BoxlimitServiceImpl implements BoxlimitService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitServiceImpl.listData", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public PageDto<BoxLimitConfigDto> listData(BoxLimitConfigQueryDto queryDto) {
 
         log.info("配置分页查询入参-{}", JSON.toJSONString(queryDto));
@@ -94,6 +96,7 @@ public class BoxlimitServiceImpl implements BoxlimitService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitServiceImpl.importData", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result importData(List<BoxLimitConfigDto> data, LoginUser operator) {
         Result response = new Result();
         Date now = new Date();
@@ -156,6 +159,7 @@ public class BoxlimitServiceImpl implements BoxlimitService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitServiceImpl.create", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result create(BoxLimitConfigDto dto, LoginUser operator) {
 
         Result response = new Result();
@@ -184,23 +188,21 @@ public class BoxlimitServiceImpl implements BoxlimitService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitServiceImpl.update", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result update(BoxLimitConfigDto dto, LoginUser operator) {
         Result response = new Result();
         log.info("建箱包裹数限制：update数据校验结果为:{}", JSONObject.toJSONString(response));
         if (dto.getId() == null) {
-            response.setCode(JDResponse.CODE_FAIL);
-            response.setMessage("ID不能为空!");
+            response.toFail("ID不能为空!");
             return response;
         }
         BoxLimitConfigPO boxLimitConfig = boxLimitConfigDao.selectByPrimaryKey(dto.getId());
         if (boxLimitConfig == null) {
-            response.setCode(JDResponse.CODE_FAIL);
-            response.setMessage("数据不存在!");
+            response.toFail("数据不存在!");
             return response;
         }
         if (dto.getLimitNum() == null || dto.getLimitNum() <= 0) {
-            response.setCode(JDResponse.CODE_FAIL);
-            response.setMessage("建箱包裹上限不正确!");
+            response.toFail("建箱包裹上限不正确!");
             return response;
         }
         Date now = new Date();
@@ -219,6 +221,7 @@ public class BoxlimitServiceImpl implements BoxlimitService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitServiceImpl.delete", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result delete(List<Long> ids, String operatorErp) {
         log.info("建箱包裹数限制 delete操作, 参数 ids={},操作人:{}", ids, operatorErp);
         boxLimitConfigDao.batchDelete(ids);
@@ -226,16 +229,15 @@ public class BoxlimitServiceImpl implements BoxlimitService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitServiceImpl.querySiteNameById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<String> querySiteNameById(Integer siteId) {
         Result<String> response = new Result<>();
         BaseStaffSiteOrgDto siteOrgDto = baseMajorRpc.getBaseSiteBySiteId(siteId);
         if (siteOrgDto == null || siteOrgDto.getSiteName() == null) {
-            response.setCode(JDResponse.CODE_FAIL);
-            response.setMessage("站点不存在!");
+            response.toFail("站点不存在!");
         } else {
             response.setData(siteOrgDto.getSiteName());
-            response.setCode(JDResponse.CODE_SUCCESS);
-            response.setMessage("获取站点成功!");
+            response.toSuccess("获取站点成功!");
         }
         return response;
     }
@@ -243,17 +245,19 @@ public class BoxlimitServiceImpl implements BoxlimitService {
 
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitServiceImpl.countByCondition", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Integer> countByCondition(BoxLimitConfigQueryDto dto) {
         if(Objects.nonNull(dto) && StringUtils.isNotBlank(dto.getSiteName())){
             dto.setSiteName(dto.getSiteName().trim());
         }
         Result<Integer> response = new Result<>();
-        response.setCode(JDResponse.CODE_SUCCESS);
         response.setData(boxLimitConfigDao.countByCondition(dto));
+        response.toSuccess("成功！");
         return response;
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitServiceImpl.getBoxTypeList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<List<String>> getBoxTypeList() {
         Result response= new Result();
         List<String> boxTypes = new ArrayList<>();
@@ -262,8 +266,7 @@ public class BoxlimitServiceImpl implements BoxlimitService {
             boxTypes.add(key);
         }
         response.setData(boxTypes);
-        response.setMessage(JDResponse.MSG_SUCCESS);
-        response.setCode(JDResponse.CODE_SUCCESS);
+        response.toSuccess("成功！");
         return response;
     }
 
@@ -302,18 +305,15 @@ public class BoxlimitServiceImpl implements BoxlimitService {
     private void checkDtoData(BoxLimitConfigDto dto, Result response) {
         //场地建箱配置需要判断机构id
         if (dto.getConfigType().equals(SITE_BOX_TYPE) && dto.getSiteId() == null) {
-            response.setCode(JDResponse.CODE_FAIL);
-            response.setMessage("机构ID为空!");
+            response.toFail("机构ID为空!");
             return;
         }
         if (dto.getLimitNum() == null || dto.getLimitNum() <= 0) {
-            response.setCode(JDResponse.CODE_FAIL);
-            response.setMessage("建箱包裹上限不正确!");
+            response.toFail("机构ID为空!");
             return;
         }
         if(org.springframework.util.StringUtils.isEmpty(dto.getBoxNumberType())){
-            response.setCode(JDResponse.CODE_FAIL);
-            response.setMessage("箱号类型为空!");
+            response.toFail("机构ID为空!");
             return;
         }
         BoxLimitConfigQueryDto queryDTO = new BoxLimitConfigQueryDto();
@@ -325,11 +325,11 @@ public class BoxlimitServiceImpl implements BoxlimitService {
         if (!CollectionUtils.isEmpty(boxLimitConfigs)) {
             if (dto.getId() == null || !dto.getId().equals(boxLimitConfigs.get(0).getId())) {
                 if(dto.getConfigType().equals(SITE_BOX_TYPE)){
-                    response.setCode(JDResponse.CODE_FAIL);
+                    response.toFail();
                     response.setMessage(String.format("ID为:%s 的机构配置箱号类型:%s 已经存在,请修改或者删除原配置", dto.getSiteId(),dto.getBoxNumberType()));
                     return;
                 }
-                response.setCode(JDResponse.CODE_FAIL);
+                response.toFail();
                 response.setMessage(String.format("配置箱号类型:%s 已经存在,不允许重复配置", dto.getBoxNumberType()));
                 return;
             }
@@ -337,8 +337,7 @@ public class BoxlimitServiceImpl implements BoxlimitService {
         if(dto.getConfigType().equals(SITE_BOX_TYPE)){
             BaseStaffSiteOrgDto siteOrgDto = baseMajorRpc.getBaseSiteBySiteId(dto.getSiteId());
             if (siteOrgDto == null || org.springframework.util.StringUtils.isEmpty(siteOrgDto.getSiteName())) {
-                response.setCode(JDResponse.CODE_FAIL);
-                response.setMessage(String.format("ID为%s的机构不存在!", dto.getSiteId()));
+                response.toFail(String.format("ID为%s的机构不存在!", dto.getSiteId()));
                 return;
             }
             dto.setSiteName(siteOrgDto.getSiteName());

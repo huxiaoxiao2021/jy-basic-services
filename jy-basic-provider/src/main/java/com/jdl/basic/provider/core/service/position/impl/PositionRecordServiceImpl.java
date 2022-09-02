@@ -60,6 +60,7 @@ public class PositionRecordServiceImpl implements PositionRecordService {
     private JyWorkMapFuncConfigDao jyWorkMapFuncConfigDao;
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.insertPosition", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Integer> insertPosition(PositionRecord record) {
         Result<Integer> result = new Result<Integer>();
         result.toSuccess();
@@ -75,6 +76,7 @@ public class PositionRecordServiceImpl implements PositionRecordService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.batchInsert", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Integer> batchInsert(List<PositionRecord> list) {
         Result<Integer> result = new Result<Integer>();
         result.toSuccess();
@@ -88,6 +90,7 @@ public class PositionRecordServiceImpl implements PositionRecordService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.queryPageList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<PageDto<PositionDetailRecord>> queryPageList(PositionQuery query) {
         Result<PageDto<PositionDetailRecord>> result = new Result<PageDto<PositionDetailRecord>>();
         result.toSuccess();
@@ -111,6 +114,7 @@ public class PositionRecordServiceImpl implements PositionRecordService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.queryOneByPositionCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<PositionDetailRecord> queryOneByPositionCode(String positionCode) {
         Result<PositionDetailRecord> result = new Result<PositionDetailRecord>();
         result.setData(positionRecordDao.queryDetailByPositionCode(positionCode));
@@ -119,6 +123,7 @@ public class PositionRecordServiceImpl implements PositionRecordService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.updateByPositionCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> updateByPositionCode(PositionRecord positionRecord) {
         Result<Boolean> result = new Result<Boolean>();
         result.toSuccess();
@@ -127,6 +132,7 @@ public class PositionRecordServiceImpl implements PositionRecordService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.deleteByBusinessKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> deleteByBusinessKey(PositionRecord positionRecord) {
         Result<Boolean> result = new Result<Boolean>();
         result.toSuccess();
@@ -135,6 +141,7 @@ public class PositionRecordServiceImpl implements PositionRecordService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.queryCountByCondition", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Long> queryCountByCondition(PositionQuery query) {
         Result<Long> result = new Result<Long>();
         result.toSuccess();
@@ -178,8 +185,8 @@ public class PositionRecordServiceImpl implements PositionRecordService {
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.queryPositionWithIsMatchAppFunc", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public JDResponse<PositionData> queryPositionWithIsMatchAppFunc(String positionCode) {
-        JDResponse<PositionData> result = queryPositionInfo(positionCode);
+    public Result<PositionData> queryPositionWithIsMatchAppFunc(String positionCode) {
+        Result<PositionData> result = queryPositionInfo(positionCode);
         if(!result.isSuccess()){
             return result;
         }
@@ -188,9 +195,10 @@ public class PositionRecordServiceImpl implements PositionRecordService {
     }
 
     @Override
-    public JDResponse<PositionData> queryPositionInfo(String positionCode) {
-        JDResponse<PositionData> result = new JDResponse<PositionData>();
-        result.toSucceed();
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.queryPositionInfo", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<PositionData> queryPositionInfo(String positionCode) {
+        Result<PositionData> result = new Result<PositionData>();
+        result.toSuccess();
         Result<PositionDetailRecord> positionDetailResult = this.queryOneByPositionCode(positionCode);
         if(positionDetailResult == null
                 || positionDetailResult.getData() == null) {
@@ -203,7 +211,7 @@ public class PositionRecordServiceImpl implements PositionRecordService {
         return result;
     }
 
-    private void setDefaultMenuCode(String positionCode, JDResponse<PositionData> result) {
+    private void setDefaultMenuCode(String positionCode, Result<PositionData> result) {
         PositionData positionData = result.getData();
         WorkStation workStation = new WorkStation();
         workStation.setAreaCode(positionData.getAreaCode());
