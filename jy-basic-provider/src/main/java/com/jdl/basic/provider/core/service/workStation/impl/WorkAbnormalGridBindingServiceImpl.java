@@ -255,7 +255,6 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
         return Result.success(getLookTree(data,floor));
     }
     private List<WorkStationBindingVo> getLookTree(List<WorkStationGrid> data,Set<Integer> floor){
-        Integer id = 0;
         List<WorkStationBindingVo> res = new ArrayList<>();
         for (Integer f : floor) {
             List<String> areas = new ArrayList<>();
@@ -274,7 +273,7 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
                         if (Objects.equals(g.getFloor(), f)&&Objects.equals(d.getAreaCode(),g.getAreaCode())) {
                             WorkStationBindingVo grid = new WorkStationBindingVo();
                             grid.setFloor(f);
-                            grid.setLabel(g.getGridName() + g.getGridCode());
+                            grid.setLabel(g.getGridName() + " " + g.getGridCode());
                             grid.setGridCode(g.getGridCode());
                             area.getChildren().add(grid);
                         }
@@ -290,21 +289,6 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
     public Result<Boolean> update(List<WorkStationBinding> updateData) {
         Result<Boolean> result = Result.success();
         for (WorkStationBinding data : updateData) {
-            if (data.getSiteCode() == null) {
-                return Result.fail("场地编号为空！");
-            }
-            if (StringUtils.isEmpty(data.getGridCode())){
-                return Result.fail("网格编号为空！");
-            }
-            if (data.getFloor() == null){
-                return Result.fail("楼层为空！");
-            }
-            if (StringUtils.isEmpty(data.getExcpGridCode())){
-                return Result.fail("异常网格编号为空！");
-            }
-            if (data.getExcpFloor() == null){
-                return Result.fail("异常楼层为空！");
-            }
             workAbnormalGridDao.updateByGridCode(data);
         }
         return result;
@@ -317,7 +301,6 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
 
     @Override
     public Result<List<WorkStationFloorGridVo>> queryListForExport(WorkStationFloorGridQuery query) {
-        query.setPageNumber(0);
         return Result.success(getWorkStationFloorGridVoList(workStationGridDao.queryListDistinct(query)));
     }
 
