@@ -2,8 +2,7 @@ package com.jdl.basic.api.domain.boxLimit;
 
 import lombok.Data;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+
 import java.io.Serializable;
 import java.util.Date;
 

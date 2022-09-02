@@ -33,7 +33,7 @@ public class BoxlimitConfigApiImpl implements BoxlimitConfigApi {
     private BoxlimitService boxlimitService;
 
     @Override
-    public JDResponse insertBoxlimitConfig(@Valid BoxLimitConfigDto po) {
+    public JDResponse insertBoxlimitConfig(BoxLimitConfigDto po) {
         log.info("集箱包裹上限配置 insertBoxlimitConfig -{}", JSONObject.toJSONString(po));
         JDResponse response = new JDResponse();
         try {

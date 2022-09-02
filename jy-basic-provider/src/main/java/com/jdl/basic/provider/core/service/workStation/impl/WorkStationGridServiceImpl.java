@@ -3,6 +3,8 @@ package com.jdl.basic.provider.core.service.workStation.impl;
 
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.position.PositionRecord;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.common.contants.Constants;
@@ -360,6 +362,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		return null;
 	}
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryByBusinessKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<WorkStationGrid> queryByBusinessKey(WorkStationGrid data) {
 		Result<WorkStationGrid> result = Result.success();
 		result.setData(workStationGridDao.queryByBusinessKey(data));
@@ -457,6 +460,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	}
 
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryByGridKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<WorkStationGrid> queryByGridKey(WorkStationGridQuery workStationGridQuery) {
 		Result<WorkStationGrid> result = Result.success();
 		result.setData(workStationGridDao.queryByGridKey(workStationGridQuery));

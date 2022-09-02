@@ -6,10 +6,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.LoginUser;
 import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigDto;
 import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigQueryDto;
 import com.jdl.basic.api.response.JDResponse;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.enums.BoxTypeEnum;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.provider.core.dao.boxLimit.BoxLimitConfigDao;
@@ -264,6 +267,7 @@ public class BoxlimitServiceImpl implements BoxlimitService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitServiceImpl.getLimitNums", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     @Cache(key = "BoxLimitServiceImpl.getLimitNums@args0@args1", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
             ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
     public JDResponse<Integer> getLimitNums(Integer createSiteCode, String type) {
