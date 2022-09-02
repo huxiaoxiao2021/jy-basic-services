@@ -7,16 +7,17 @@ import com.jdl.basic.api.domain.LoginUser;
 import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigDto;
 import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigQueryDto;
 import com.jdl.basic.api.response.JDResponse;
-import com.jdl.basic.api.service.boxLimit.BoxlimitConfigApi;
+import com.jdl.basic.api.service.boxLimit.BoxlimitConfigJsfService;
 
+import com.jdl.basic.common.contants.ResultCodeConstant;
 import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.service.boxLimit.BoxlimitService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,15 +28,15 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class BoxlimitConfigApiImpl implements BoxlimitConfigApi {
+public class BoxlimitConfigJsfServiceImpl implements BoxlimitConfigJsfService {
 
     @Autowired
     private BoxlimitService boxlimitService;
 
     @Override
-    public JDResponse insertBoxlimitConfig(BoxLimitConfigDto po) {
+    public Result insertBoxlimitConfig(BoxLimitConfigDto po) {
         log.info("集箱包裹上限配置 insertBoxlimitConfig -{}", JSONObject.toJSONString(po));
-        JDResponse response = new JDResponse();
+        Result response = new Result();
         try {
             boxlimitService.insertBoxlimitConfig(po);
             response.setCode(1);
@@ -52,34 +53,31 @@ public class BoxlimitConfigApiImpl implements BoxlimitConfigApi {
 
 
     @Override
-    public JDResponse<PageDto<BoxLimitConfigDto>> listData(BoxLimitConfigQueryDto dto) {
+    public Result<PageDto<BoxLimitConfigDto>> listData(BoxLimitConfigQueryDto dto) {
         log.info("获取集箱包裹上限配置列表信息入参-{}", JSONObject.toJSONString(dto));
-        JDResponse<PageDto<BoxLimitConfigDto>> response = new JDResponse<>();
-        response.setCode(JDResponse.CODE_FAIL);
-        response.setMessage(JDResponse.MSG_FAIL);
+        Result<PageDto<BoxLimitConfigDto>> response = new Result<>();
+        response.toFail("获取集箱包裹上限配置列表信息失败！");
         try {
             PageDto<BoxLimitConfigDto> result = boxlimitService.listData(dto);
             if (result != null) {
                 response.setData(result);
-                response.setCode(JDResponse.CODE_SUCCESS);
-                response.setMessage(JDResponse.MSG_SUCCESS);
+                response.toSuccess("获取集箱包裹上限配置列表信息成功！");
+
             }
         } catch (Exception e) {
-            response.setCode(JDResponse.CODE_EXCEPTION);
-            response.setMessage(JDResponse.MSG_EXCEPTION);
             log.error("获取集箱包裹上限配置列表信息异常! {}", e.getMessage(), e);
         }
         return response;
     }
 
     @Override
-    public JDResponse<String> getSiteNameById(Integer siteId) {
+    public Result<String> getSiteNameById(Integer siteId) {
         log.info("集箱包裹上限配置 getSiteNameById -{}", JSONObject.toJSONString(siteId));
         return boxlimitService.querySiteNameById(siteId);
     }
 
     @Override
-    public JDResponse saveOrUpdate(BoxLimitConfigDto dto, LoginUser loginUser) {
+    public Result saveOrUpdate(BoxLimitConfigDto dto, LoginUser loginUser) {
         log.info("新增或者修改集箱包裹限制-入参-{}", JSON.toJSONString(dto));
         if (dto.getId() == null) {
             return boxlimitService.create(dto, loginUser);
@@ -89,41 +87,42 @@ public class BoxlimitConfigApiImpl implements BoxlimitConfigApi {
     }
 
     @Override
-    public JDResponse delete(ArrayList<Long> ids, LoginUser loginUser) {
+    public Result delete(ArrayList<Long> ids, LoginUser loginUser) {
         log.info("集箱包裹上限配置 delete -{}-{}", JSONObject.toJSONString(ids),JSONObject.toJSONString(loginUser));
         return boxlimitService.delete(ids, loginUser.getUserErp());
     }
 
     @Override
-    public JDResponse toImport(List<BoxLimitConfigDto> dataList, LoginUser loginUser) {
+    public Result toImport(List<BoxLimitConfigDto> dataList, LoginUser loginUser) {
         try {
             return boxlimitService.importData(dataList, loginUser);
         } catch (Exception e) {
             this.log.error("导入异常!-{}", e.getMessage(), e);
-            JDResponse response = new JDResponse();
-            response.setCode(JDResponse.CODE_EXCEPTION);
-            response.setMessage(JDResponse.MSG_EXCEPTION);
+            Result response = new Result();
+            response.toFail("导入异常!");
             return response;
         }
     }
 
     @Override
-    public JDResponse<Integer> countByCondition(BoxLimitConfigQueryDto dto) {
+    public Result<Integer> countByCondition(BoxLimitConfigQueryDto dto) {
         log.info("集箱包裹上限配置 countByCondition -{}", JSONObject.toJSONString(dto));
         return boxlimitService.countByCondition(dto);
     }
 
     @Override
-    public JDResponse<List<String>> getBoxTypeList() {
+    public Result<List<String>> getBoxTypeList() {
         log.info("集箱包裹上限配置 getBoxTypeList");
         return boxlimitService.getBoxTypeList();
     }
 
     @Override
-    public JDResponse<Integer> getLimitNums(Integer createSiteCode, String type) {
-        log.info("集箱包裹上限配置 getLimitNums -{} -{}",createSiteCode,type);
+    public Result<Integer> getLimitNums(Integer createSiteCode, String type) {
+        if(log.isInfoEnabled()){
+            log.info("集箱包裹上限配置 getLimitNums -{} -{}",createSiteCode,type);
+        }
         if(StringUtils.isBlank(type)){
-            return new JDResponse<>();
+            return new Result<>();
         }
         return boxlimitService.getLimitNums(createSiteCode, type);
     }
