@@ -301,6 +301,10 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
 
     @Override
     public Result<List<WorkStationFloorGridVo>> queryListForExport(WorkStationFloorGridQuery query) {
+        Result<Boolean> result = this.checkParamForQueryPageList(query);
+        if(!result.isSuccess()){
+            return Result.fail(result.getMessage());
+        }
         return Result.success(getWorkStationFloorGridVoList(workStationGridDao.queryListDistinct(query)));
     }
 
