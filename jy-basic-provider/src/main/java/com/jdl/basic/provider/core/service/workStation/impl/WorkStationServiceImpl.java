@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
@@ -291,6 +292,8 @@ public class WorkStationServiceImpl implements WorkStationService {
 
 	@Override
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.queryByBusinessKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	@Cache(key = "WorkStationServiceImpl.queryByBusinessKey@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+			,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
 	public Result<WorkStation> queryByBusinessKey(WorkStation data) {
 		Result<WorkStation> result = Result.success();
 		result.setData(workStationDao.queryByBusinessKey(data));
@@ -299,6 +302,8 @@ public class WorkStationServiceImpl implements WorkStationService {
 
 	@Override
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.queryByRealBusinessKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	@Cache(key = "WorkStationServiceImpl.queryByRealBusinessKey@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+			,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
 	public Result<WorkStation> queryByRealBusinessKey(String businessKey) {
 		Result<WorkStation> result = Result.success();
 		if(StringUtils.isEmpty(businessKey)){

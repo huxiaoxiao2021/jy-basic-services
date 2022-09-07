@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.core.service.position.impl;
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.position.PositionData;
@@ -115,6 +116,8 @@ public class PositionRecordServiceImpl implements PositionRecordService {
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.queryOneByPositionCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    @Cache(key = "PositionRecordServiceImpl.queryOneByPositionCode@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
     public Result<PositionDetailRecord> queryOneByPositionCode(String positionCode) {
         Result<PositionDetailRecord> result = new Result<PositionDetailRecord>();
         result.setData(positionRecordDao.queryDetailByPositionCode(positionCode));
@@ -185,6 +188,8 @@ public class PositionRecordServiceImpl implements PositionRecordService {
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.queryPositionWithIsMatchAppFunc", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    @Cache(key = "PositionRecordServiceImpl.queryPositionWithIsMatchAppFunc@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
     public Result<PositionData> queryPositionWithIsMatchAppFunc(String positionCode) {
         Result<PositionData> result = queryPositionInfo(positionCode);
         if(!result.isSuccess()){
@@ -196,6 +201,8 @@ public class PositionRecordServiceImpl implements PositionRecordService {
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.queryPositionInfo", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    @Cache(key = "PositionRecordServiceImpl.queryPositionInfo@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
     public Result<PositionData> queryPositionInfo(String positionCode) {
         Result<PositionData> result = new Result<PositionData>();
         result.toSuccess();
