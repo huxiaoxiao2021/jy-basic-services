@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jdl.basic.provider.core.dao.sendHandover.SendTripartiteHandoverDetailDao">
+    <resultMap id="SendTripartiteHandoverDetail" type="com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverDetail" >
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+        <result column="site_code" property="siteCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
+        <result column="plan_name" property="planName" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="create_user_erp" property="createUserErp" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+        <result column="to_email" property="toEmail" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="cc_email" property="ccEmail" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="mail_topic" property="mailTopic" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="approval_status" property="approvalStatus" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        <result column="last_operate_time" property="lastOperateTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+        <result column="is_delete" property="isDelete" javaType="java.lang.Integer" jdbcType="TINYINT" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,site_code,plan_name,to_email,cc_email,mail_topic,create_user_erp,create_time,approval_status
+    </sql>
+    <insert id="insert" parameterType="com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into send_tripartite_handover_detail
+        (
+        <trim suffixOverrides=",">
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="siteCode != null" >
+                site_code,
+            </if>
+            <if test="createUserErp != null" >
+                create_user_erp,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="planName != null" >
+                plan_name,
+            </if>
+            <if test="toEmail != null" >
+                to_email,
+            </if>
+            <if test="ccEmail != null" >
+                cc_email,
+            </if>
+            <if test="mailTopic != null" >
+                mail_topic,
+            </if>
+            <if test="approvalStatus != null" >
+                approval_status,
+            </if>
+            <if test="lastOperateTime != null" >
+                last_operate_time,
+            </if>
+            <if test="isDelete != null" >
+                is_delete,
+            </if>
+        </trim>
+        )
+        values
+        (
+        <trim suffixOverrides=",">
+            <if test="id != null" >
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="siteCode != null" >
+                #{siteCode,jdbcType=INTEGER},
+            </if>
+            <if test="createUserErp != null" >
+                #{createUserErp,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="planName != null" >
+                #{planName,jdbcType=VARCHAR},
+            </if>
+            <if test="toEmail != null" >
+                #{toEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="ccEmail != null" >
+                #{ccEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="mailTopic != null" >
+                #{mailTopic,jdbcType=VARCHAR},
+            </if>
+            <if test="approvalStatus != null" >
+                #{approvalStatus,jdbcType=TINYINT},
+            </if>
+            <if test="lastOperateTime != null" >
+                #{lastOperateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDelete != null" >
+                #{isDelete,jdbcType=TINYINT},
+            </if>
+        </trim>
+        )
+    </insert>
+    <select id="getPageOrderByOperateTime" parameterType="com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverQuery" resultMap="SendTripartiteHandoverDetail">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        send_tripartite_handover_detail
+        <include refid="queryCondition"/>
+        <if test="pageNumber > 0">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+    <select id="queryListOrderByOperateTime" parameterType="com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverQuery" resultMap="SendTripartiteHandoverDetail">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        send_tripartite_handover_detail
+        <include refid="queryCondition"/>
+        <if test="limit != null and limit != ''">
+            limit #{limit}
+        </if>
+    </select>
+    <select id="queryCount" parameterType="com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverQuery" resultType="int">
+        select
+        count(1)
+        from
+        send_tripartite_handover_detail
+        <include refid="queryCondition"/>
+    </select>
+
+    <sql id="queryCondition">
+        <where>
+            is_delete = 0 and site_code = #{siteCode,jdbcType=INTEGER}
+            <if test="planName != null and planName != ''" >
+                and plan_name = #{planName,jdbcType=VARCHAR}
+            </if>
+            <if test="mailTopic != null and mailTopic != ''" >
+                and mail_topic = #{mailTopic,jdbcType=INTEGER}
+            </if>
+            order by last_operate_time desc
+        </where>
+    </sql>
+</mapper>
