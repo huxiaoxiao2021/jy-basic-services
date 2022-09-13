@@ -112,6 +112,7 @@
         from
         send_tripartite_handover_detail
         <include refid="queryCondition"/>
+            and approval_status = 1
         <if test="limit != null and limit != ''">
             limit #{limit}
         </if>
@@ -134,6 +135,11 @@
         <foreach collection="dataList" item="item" open="(" close=")" separator=",">
             #{item.id,jdbcType=BIGINT}
         </foreach>
+    </update>
+    <update id="updateApprovalStatusById" parameterType="com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverDetail">
+        update send_tripartite_handover_detail
+        set approval_status = #{approvalStatus}
+        where id = #{id} and is_delete = 0
     </update>
     <select id="queryCount" parameterType="com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverQuery" resultType="int">
         select
@@ -158,7 +164,7 @@
     <update id="updateLastOperateTimeById" parameterType="com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverDetail">
         update send_tripartite_handover_detail
         set last_operate_time = #{lastOperateTime}
-        where id = #{id}
+        where id = #{id} and is_delete = 0
     </update>
     <select id="getInfoById" parameterType="com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverQuery" resultMap="SendTripartiteHandoverDetail">
         select

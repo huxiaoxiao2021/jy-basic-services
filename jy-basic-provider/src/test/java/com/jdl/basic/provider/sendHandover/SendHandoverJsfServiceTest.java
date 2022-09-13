@@ -35,12 +35,17 @@ public class SendHandoverJsfServiceTest {
 
     @Test
     public void update() {
-        service.updateLastOperateTimeById(269L);
+        service.updateLastOperateTimeById(337L);
     }
 
     @Test
     public void getById() {
         Result<SendTripartiteHandoverDetail> infoById = service.getInfoById(269L);
         System.out.println(infoById.getData().getCcEmail());
+    }
+
+    @Test
+    public void updateById() {
+        Result<Boolean> result = service.updateApprovalStatusById(337L, 1);
     }
 }

@@ -75,4 +75,15 @@ public class SendHandoverJsfServiceImpl implements SendHandoverJsfService {
         }
         return sendHandoverService.getInfoById(id);
     }
+
+    @Override
+    public Result<Boolean> updateApprovalStatusById(Long id, Integer approvalStatus) {
+        if (id == null) {
+            return Result.fail("id不能为空");
+        }
+        if (approvalStatus!=1&&approvalStatus!=2){
+            return Result.fail("输入的审批状态参数不合法");
+        }
+        return sendHandoverService.updateApprovalStatusById(id,approvalStatus);
+    }
 }

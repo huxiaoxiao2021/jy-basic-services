@@ -76,4 +76,12 @@ public interface SendHandoverService {
      * @return
      */
     Result<SendTripartiteHandoverDetail> getInfoById(Long id);
+
+    /**
+     * 根据ID更新审批状态
+     * @param id
+     * @param approvalStatus
+     * @return
+     */
+    Result<Boolean> updateApprovalStatusById(Long id, Integer approvalStatus);
 }

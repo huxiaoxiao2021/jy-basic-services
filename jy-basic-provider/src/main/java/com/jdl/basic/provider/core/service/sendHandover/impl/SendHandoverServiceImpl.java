@@ -109,6 +109,14 @@ public class SendHandoverServiceImpl implements SendHandoverService {
         return Result.success(sendTripartiteHandoverDetailDao.getInfoById(query).get(0));
     }
 
+    @Override
+    public Result<Boolean> updateApprovalStatusById(Long id, Integer approvalStatus) {
+        SendTripartiteHandoverDetail update = new SendTripartiteHandoverDetail();
+        update.setId(id);
+        update.setApprovalStatus(approvalStatus);
+        return Result.success(sendTripartiteHandoverDetailDao.updateApprovalStatusById(update)>0);
+    }
+
     public Result<Boolean> checkParamForQueryPageList(SendTripartiteHandoverQuery query){
         Result<Boolean> result = Result.success();
         if(query.getPageSize() == null
