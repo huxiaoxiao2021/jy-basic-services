@@ -30,7 +30,7 @@
 	<sql id="Base_Column_List" >
 		id,business_key,business_line_code,business_line_name,area_code,area_name,work_code,work_name,
 		create_user,create_user_name,update_user,update_user_name,create_time,
-		update_time,yn,ts
+		update_time,yn,ts,area_type
 	</sql>
 
 	<insert id="insert" parameterType="com.jdl.basic.api.domain.workStation.WorkStation" useGeneratedKeys="true" keyProperty="id">
