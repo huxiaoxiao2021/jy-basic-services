@@ -40,7 +40,7 @@ public class SendHandoverJsfServiceTest {
 
     @Test
     public void getById() {
-        Result<SendTripartiteHandoverDetail> infoById = service.getInfoById(269L);
+        Result<SendTripartiteHandoverDetail> infoById = service.getInfoById(317L);
         System.out.println(infoById.getData().getCcEmail());
     }
 

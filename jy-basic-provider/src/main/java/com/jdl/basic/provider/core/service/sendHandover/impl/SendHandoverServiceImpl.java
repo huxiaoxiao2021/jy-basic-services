@@ -106,7 +106,7 @@ public class SendHandoverServiceImpl implements SendHandoverService {
     public Result<SendTripartiteHandoverDetail> getInfoById(Long id) {
         SendTripartiteHandoverQuery query = new SendTripartiteHandoverQuery();
         query.setId(id);
-        return Result.success(sendTripartiteHandoverDetailDao.getInfoById(query).get(0));
+        return Result.success(sendTripartiteHandoverDetailDao.getInfoById(query));
     }
 
     @Override

@@ -66,7 +66,7 @@ public interface SendTripartiteHandoverDetailDao {
      * @param id
      * @return
      */
-    List<SendTripartiteHandoverDetail> getInfoById(SendTripartiteHandoverQuery id);
+    SendTripartiteHandoverDetail getInfoById(SendTripartiteHandoverQuery id);
 
     /**
      * 根据ID更新审批状态
