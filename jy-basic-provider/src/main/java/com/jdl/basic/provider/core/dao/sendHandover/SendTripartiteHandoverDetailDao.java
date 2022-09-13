@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.dao.sendHandover;
 
 import com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverDetail;
 import com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverQuery;
+import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.common.utils.Result;
 
 import java.util.List;
@@ -35,8 +36,36 @@ public interface SendTripartiteHandoverDetailDao {
 
     /**
      * 获取三方交接明细 limit 15
+     * @param siteCode
+     * @return
+     */
+    List<SendTripartiteHandoverDetail> queryListOrderByOperateTime(SendTripartiteHandoverQuery siteCode);
+
+    /**
+     * 导出
      * @param query
      * @return
      */
-    List<SendTripartiteHandoverDetail> queryListOrderByOperateTime(SendTripartiteHandoverQuery query);
+    List<SendTripartiteHandoverDetail> getListForExport(SendTripartiteHandoverQuery query);
+
+    /**
+     * 根据ID逻辑删除
+     * @param data
+     * @return
+     */
+    int deleteByIds(DeleteRequest<SendTripartiteHandoverDetail> data);
+
+    /**
+     * 根据ID更新热点值
+     * @param id
+     * @return
+     */
+    int updateLastOperateTimeById(SendTripartiteHandoverDetail id);
+
+    /**
+     * 根据ID获取三方交接明细
+     * @param id
+     * @return
+     */
+    List<SendTripartiteHandoverDetail> getInfoById(SendTripartiteHandoverQuery id);
 }

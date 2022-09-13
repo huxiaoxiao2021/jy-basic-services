@@ -33,5 +33,47 @@ public interface SendHandoverService {
      * @param query
      * @return
      */
-    Result<List<SendTripartiteHandoverDetail>> getListOrderByOperateTime(SendTripartiteHandoverQuery query);
+    Result<List<SendTripartiteHandoverDetail>> getListOrderByOperateTime(Integer query);
+
+    /**
+     * 获取该场地的信息总数
+     * @return
+     * @param query
+     */
+    Result<Integer> queryCountBySiteCode(SendTripartiteHandoverQuery query);
+
+    /**
+     * 导出
+     * @param query
+     * @return
+     */
+    Result<List<SendTripartiteHandoverDetail>> queryListForExport(SendTripartiteHandoverQuery query);
+
+    /**
+     * 批量删除
+     * @param deleteDatas
+     * @return
+     */
+    Result<Boolean> deleteByIds(List<SendTripartiteHandoverDetail> deleteDatas);
+
+    /**
+     * 导入
+     * @param datas
+     * @return
+     */
+    Result<Boolean> importDatas(List<SendTripartiteHandoverDetail> datas);
+
+    /**
+     * 根据ID更新热点值
+     * @param id
+     * @return
+     */
+    Result<Boolean> updateLastOperateTimeById(Long id);
+
+    /**
+     * 根据id 获取详细信息
+     * @param id
+     * @return
+     */
+    Result<SendTripartiteHandoverDetail> getInfoById(Long id);
 }

@@ -15,6 +15,17 @@ public class SendTripartiteHandoverQuery extends BasePagerCondition {
      * 场地编码
      */
     private Integer siteCode;
+
+    /**
+     * ID
+     */
+    private Long id;
+
+    /**
+     * 场地编码
+     */
+    private String siteName;
+
     /**
      * 方案名称
      */

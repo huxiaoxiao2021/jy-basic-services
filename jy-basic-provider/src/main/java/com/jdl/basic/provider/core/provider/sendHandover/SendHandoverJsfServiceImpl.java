@@ -39,7 +39,40 @@ public class SendHandoverJsfServiceImpl implements SendHandoverJsfService {
     }
 
     @Override
-    public Result<List<SendTripartiteHandoverDetail>> getListOrderByOperateTime(SendTripartiteHandoverQuery query) {
-        return sendHandoverService.getListOrderByOperateTime(query);
+    public Result<List<SendTripartiteHandoverDetail>> getListOrderByOperateTimeLimit(Integer siteCode) {
+        return sendHandoverService.getListOrderByOperateTime(siteCode);
+    }
+
+    @Override
+    public Result<Integer> queryCountBySiteCode(SendTripartiteHandoverQuery query) {
+        return sendHandoverService.queryCountBySiteCode(query);
+    }
+
+    @Override
+    public Result<List<SendTripartiteHandoverDetail>> queryListForExport(SendTripartiteHandoverQuery query) {
+        return sendHandoverService.queryListForExport(query);
+    }
+
+    @Override
+    public Result<Boolean> deleteByIds(List<SendTripartiteHandoverDetail> deleteDatas) {
+        return sendHandoverService.deleteByIds(deleteDatas);
+    }
+
+    @Override
+    public Result<Boolean> importDatas(List<SendTripartiteHandoverDetail> datas) {
+        return sendHandoverService.importDatas(datas);
+    }
+
+    @Override
+    public Result<Boolean> updateLastOperateTimeById(Long id) {
+        return sendHandoverService.updateLastOperateTimeById(id);
+    }
+
+    @Override
+    public Result<SendTripartiteHandoverDetail> getInfoById(Long id) {
+        if (id == null ){
+            return Result.fail("参数为空");
+        }
+        return sendHandoverService.getInfoById(id);
     }
 }
