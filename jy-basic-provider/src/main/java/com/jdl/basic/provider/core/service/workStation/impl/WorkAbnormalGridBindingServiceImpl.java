@@ -127,7 +127,7 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
                 continue;
             }
             if (!floor.containsKey(d.getAreaCode())){
-                floor.put(d.getAreaCode(),new ArrayList<>());
+                floor.put(d.getAreaCode()+" "+d.getAreaName(),new ArrayList<>());
             }
 
             ArrayList<WorkStationBindingVo> grids = (ArrayList) floor.get(d.getAreaCode());
