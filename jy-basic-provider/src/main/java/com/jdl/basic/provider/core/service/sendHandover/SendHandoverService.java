@@ -52,9 +52,10 @@ public interface SendHandoverService {
     /**
      * 批量删除
      * @param deleteDatas
+     * @param erp
      * @return
      */
-    Result<Boolean> deleteByIds(List<SendTripartiteHandoverDetail> deleteDatas);
+    Result<Boolean> deleteByIds(List<SendTripartiteHandoverDetail> deleteDatas, String erp);
 
     /**
      * 导入

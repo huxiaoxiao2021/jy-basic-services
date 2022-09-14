@@ -54,8 +54,8 @@ public class SendHandoverJsfServiceImpl implements SendHandoverJsfService {
     }
 
     @Override
-    public Result<Boolean> deleteByIds(List<SendTripartiteHandoverDetail> deleteDatas) {
-        return sendHandoverService.deleteByIds(deleteDatas);
+    public Result<Boolean> deleteByIds(List<SendTripartiteHandoverDetail> deleteDatas, String erp) {
+        return sendHandoverService.deleteByIds(deleteDatas,erp);
     }
 
     @Override

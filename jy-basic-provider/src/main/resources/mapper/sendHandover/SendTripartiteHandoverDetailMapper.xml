@@ -129,7 +129,14 @@
     </select>
     <update id="deleteByIds" parameterType="com.jdl.basic.api.domain.workStation.DeleteRequest">
         update send_tripartite_handover_detail
-        set is_delete = 1
+        set
+        <if test="operateUserName != null" >
+            update_user_erp = #{operateUserName,jdbcType=VARCHAR},
+        </if>
+        <if test="operateTime != null" >
+            update_time = #{operateTime,jdbcType=TIMESTAMP},
+        </if>
+        is_delete = 1
         where is_delete = 0
         and id in
         <foreach collection="dataList" item="item" open="(" close=")" separator=",">

@@ -78,9 +78,11 @@ public class SendHandoverServiceImpl implements SendHandoverService {
     }
 
     @Override
-    public Result<Boolean> deleteByIds(List<SendTripartiteHandoverDetail> deleteDatas) {
+    public Result<Boolean> deleteByIds(List<SendTripartiteHandoverDetail> deleteDatas, String erp) {
         DeleteRequest<SendTripartiteHandoverDetail> deleteIds = new DeleteRequest<>();
         deleteIds.setDataList(deleteDatas);
+        deleteIds.setOperateTime(new Date());
+        deleteIds.setOperateUserName(erp);
         return Result.success(sendTripartiteHandoverDetailDao.deleteByIds(deleteIds)>0);
     }
 

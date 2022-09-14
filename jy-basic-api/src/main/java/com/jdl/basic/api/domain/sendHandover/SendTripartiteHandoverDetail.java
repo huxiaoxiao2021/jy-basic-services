@@ -56,6 +56,14 @@ public class SendTripartiteHandoverDetail implements Serializable {
      */
     private Date lastOperateTime;
     /**
+     * 更新人姓名
+     */
+    private String updateUserErp;
+    /**
+     * 更新时间
+     */
+    private Date update_time;
+    /**
      * 删除逻辑
      */
     private Integer isDelete;
