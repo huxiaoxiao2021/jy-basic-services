@@ -111,11 +111,11 @@
         <include refid="Base_Column_List"/>
         from
         send_tripartite_handover_detail
-        <include refid="queryCondition"/>
-            and approval_status = 1
-        <if test="limit != null and limit != ''">
+        where
+        is_delete = 0
+        and site_code = #{siteCode,jdbcType=INTEGER}
+        and approval_status = 1
             limit #{limit}
-        </if>
     </select>
     <select id="getListForExport" parameterType="com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverQuery" resultMap="SendTripartiteHandoverDetail">
         select
