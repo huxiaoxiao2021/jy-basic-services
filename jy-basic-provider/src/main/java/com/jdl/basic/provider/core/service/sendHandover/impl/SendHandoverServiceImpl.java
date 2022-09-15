@@ -87,13 +87,15 @@ public class SendHandoverServiceImpl implements SendHandoverService {
     }
 
     @Override
-    public Result<Boolean> importDatas(List<SendTripartiteHandoverDetail> datas) {
+    public Result<List<Long>> importDatas(List<SendTripartiteHandoverDetail> datas) {
+        List<Long> result = new ArrayList<>();
         for (SendTripartiteHandoverDetail data : datas) {
             if (sendTripartiteHandoverDetailDao.insert(data)<1){
                 return Result.fail("导入失败");
             }
+            result.add(data.getId());
         }
-        return Result.success(Boolean.TRUE);
+        return Result.success(result);
     }
 
     @Override

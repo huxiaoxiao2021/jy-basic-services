@@ -17,7 +17,7 @@ public interface SendHandoverJsfService {
     /**
      * 新增
      */
-    Result<Boolean> insert(SendTripartiteHandoverDetail detail);
+    Result<List<Long>> insert(SendTripartiteHandoverDetail detail);
 
     /**
      * 分页获取该场地信息 根据最后操作时间进行排序
@@ -60,7 +60,7 @@ public interface SendHandoverJsfService {
      * @param datas
      * @return
      */
-    Result<Boolean> importDatas(List<SendTripartiteHandoverDetail> datas);
+    Result<List<Long>> importDatas(List<SendTripartiteHandoverDetail> datas);
 
     /**
      * 根据ID更新热点值

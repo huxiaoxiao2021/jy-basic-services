@@ -62,7 +62,7 @@ public interface SendHandoverService {
      * @param datas
      * @return
      */
-    Result<Boolean> importDatas(List<SendTripartiteHandoverDetail> datas);
+    Result<List<Long>> importDatas(List<SendTripartiteHandoverDetail> datas);
 
     /**
      * 根据ID更新热点值

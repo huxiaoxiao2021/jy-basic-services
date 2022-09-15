@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ public class SendHandoverJsfServiceTest {
 
     @Test
     public void getList(){
-        Result<List<SendTripartiteHandoverDetail>> listOrderByOperateTime = service.getListOrderByOperateTimeLimit(10098);
+        Result<List<SendTripartiteHandoverDetail>> listOrderByOperateTime = service.getListOrderByOperateTimeLimit(910);
         for (SendTripartiteHandoverDetail datum : listOrderByOperateTime.getData()) {
             System.out.println(datum.getCreateTime());
         }
@@ -40,8 +41,27 @@ public class SendHandoverJsfServiceTest {
 
     @Test
     public void getById() {
-        Result<SendTripartiteHandoverDetail> infoById = service.getInfoById(317L);
-        System.out.println(infoById.getData().getCcEmail());
+        Result<SendTripartiteHandoverDetail> infoById = service.getInfoById(307L);
+        Result<SendTripartiteHandoverDetail> infoById2 = service.getInfoById(308L);
+        Result<SendTripartiteHandoverDetail> infoById3 = service.getInfoById(309L);
+        Result<SendTripartiteHandoverDetail> infoById4 = service.getInfoById(310L);
+        Result<SendTripartiteHandoverDetail> infoById5 = service.getInfoById(311L);
+
+        List<SendTripartiteHandoverDetail> details = new ArrayList<>();
+        infoById.getData().setId(null);
+        infoById2.getData().setId(null);
+        infoById3.getData().setId(null);
+        infoById4.getData().setId(null);
+        infoById5.getData().setId(null);
+
+        details.add(infoById.getData());
+        details.add(infoById2.getData());
+        details.add(infoById3.getData());
+        details.add(infoById4.getData());
+        details.add(infoById5.getData());
+        for (Long datum : service.importDatas(details).getData()) {
+            System.out.println(datum);
+        }
     }
 
     @Test

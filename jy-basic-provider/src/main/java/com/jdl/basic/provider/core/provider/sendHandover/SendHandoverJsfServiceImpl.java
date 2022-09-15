@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,9 +26,11 @@ public class SendHandoverJsfServiceImpl implements SendHandoverJsfService {
     private SendHandoverService sendHandoverService;
 
     @Override
-    public Result<Boolean> insert(SendTripartiteHandoverDetail detail) {
+    public Result<List<Long>> insert(SendTripartiteHandoverDetail detail) {
         if (sendHandoverService.insert(detail).getData()>0){
-            return Result.success(Boolean.TRUE);
+            List<Long> result = new ArrayList<>();
+            result.add(detail.getId());
+            return Result.success(result);
         }else {
             return Result.fail("新增交接配置邮件失败");
         }
@@ -59,7 +62,7 @@ public class SendHandoverJsfServiceImpl implements SendHandoverJsfService {
     }
 
     @Override
-    public Result<Boolean> importDatas(List<SendTripartiteHandoverDetail> datas) {
+    public Result<List<Long>> importDatas(List<SendTripartiteHandoverDetail> datas) {
         return sendHandoverService.importDatas(datas);
     }
 
