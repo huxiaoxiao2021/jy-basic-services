@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.service.sendHandover.impl;
 
 import com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverDetail;
 import com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverQuery;
+import com.jdl.basic.api.domain.sendHandover.UpdateRequest;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkStationAttendPlan;
 import com.jdl.basic.common.contants.Constants;
@@ -114,9 +115,9 @@ public class SendHandoverServiceImpl implements SendHandoverService {
     }
 
     @Override
-    public Result<Boolean> updateApprovalStatusById(Long id, Integer approvalStatus) {
-        SendTripartiteHandoverDetail update = new SendTripartiteHandoverDetail();
-        update.setId(id);
+    public Result<Boolean> updateApprovalStatusById(List<Long> id, Integer approvalStatus) {
+        UpdateRequest<Long> update = new UpdateRequest<>();
+        update.setDataList(id);
         update.setApprovalStatus(approvalStatus);
         return Result.success(sendTripartiteHandoverDetailDao.updateApprovalStatusById(update)>0);
     }

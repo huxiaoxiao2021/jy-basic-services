@@ -80,7 +80,7 @@ public class SendHandoverJsfServiceImpl implements SendHandoverJsfService {
     }
 
     @Override
-    public Result<Boolean> updateApprovalStatusById(Long id, Integer approvalStatus) {
+    public Result<Boolean> updateApprovalStatusById(List<Long> id, Integer approvalStatus) {
         if (id == null) {
             return Result.fail("id不能为空");
         }

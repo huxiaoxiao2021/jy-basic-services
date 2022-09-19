@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.dao.sendHandover;
 
 import com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverDetail;
 import com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverQuery;
+import com.jdl.basic.api.domain.sendHandover.UpdateRequest;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 
 import java.util.List;
@@ -73,5 +74,5 @@ public interface SendTripartiteHandoverDetailDao {
      * @param detail
      * @return
      */
-    int updateApprovalStatusById(SendTripartiteHandoverDetail detail);
+    int updateApprovalStatusById(UpdateRequest<Long> detail);
 }

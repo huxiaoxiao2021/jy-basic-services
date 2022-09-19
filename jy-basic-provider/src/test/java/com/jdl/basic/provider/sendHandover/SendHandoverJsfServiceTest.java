@@ -66,6 +66,11 @@ public class SendHandoverJsfServiceTest {
 
     @Test
     public void updateById() {
-        Result<Boolean> result = service.updateApprovalStatusById(337L, 1);
+        List<Long> id = new ArrayList<>();
+        id.add(297L);
+        id.add(298L);
+        id.add(299L);
+        id.add(300L);
+        Result<Boolean> result = service.updateApprovalStatusById(id, 2);
     }
 }

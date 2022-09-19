@@ -143,10 +143,13 @@
             #{item.id,jdbcType=BIGINT}
         </foreach>
     </update>
-    <update id="updateApprovalStatusById" parameterType="com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverDetail">
+    <update id="updateApprovalStatusById" parameterType="com.jdl.basic.api.domain.sendHandover.UpdateRequest">
         update send_tripartite_handover_detail
         set approval_status = #{approvalStatus}
-        where id = #{id} and is_delete = 0
+        where  is_delete = 0 and id in
+        <foreach collection="dataList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=BIGINT}
+        </foreach>
     </update>
     <select id="queryCount" parameterType="com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverQuery" resultType="int">
         select

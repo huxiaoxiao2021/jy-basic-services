@@ -82,6 +82,6 @@ public interface SendHandoverJsfService {
      * @param approvalStatus
      * @return
      */
-    Result<Boolean> updateApprovalStatusById(Long id,Integer approvalStatus);
+    Result<Boolean> updateApprovalStatusById(List<Long> id,Integer approvalStatus);
 
 }
