@@ -67,7 +67,7 @@ public interface SendHandoverJsfService {
      * @param id
      * @return
      */
-    Result<Boolean> updateLastOperateTimeById(Long id);
+    Result<Boolean> updateLastOperateTimeById(List<Long> id);
 
     /**
      * 根据id获取明细
