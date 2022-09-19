@@ -67,7 +67,7 @@ public class SendHandoverJsfServiceImpl implements SendHandoverJsfService {
     }
 
     @Override
-    public Result<Boolean> updateLastOperateTimeById(Long id) {
+    public Result<Boolean> updateLastOperateTimeById(List<Long> id) {
         return sendHandoverService.updateLastOperateTimeById(id);
     }
 
