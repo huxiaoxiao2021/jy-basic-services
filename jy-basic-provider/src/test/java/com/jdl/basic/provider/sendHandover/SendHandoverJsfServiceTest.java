@@ -36,12 +36,7 @@ public class SendHandoverJsfServiceTest {
 
     @Test
     public void update() {
-        List<Long> i = new ArrayList<>();
-        i.add(297L);
-        i.add(298L);
-        i.add(299L);
-        i.add(300L);
-        service.updateLastOperateTimeById(i);
+        service.updateLastOperateTimeById(297L);
     }
 
     @Test

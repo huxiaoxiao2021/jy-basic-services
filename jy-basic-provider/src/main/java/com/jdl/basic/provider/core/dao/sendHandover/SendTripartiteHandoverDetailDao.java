@@ -60,7 +60,7 @@ public interface SendTripartiteHandoverDetailDao {
      * @param id
      * @return
      */
-    int updateLastOperateTimeById( DeleteRequest<Long>  id);
+    int updateLastOperateTimeById( SendTripartiteHandoverDetail id);
 
     /**
      * 根据ID获取三方交接明细

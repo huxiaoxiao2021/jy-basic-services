@@ -173,11 +173,8 @@
     </sql>
     <update id="updateLastOperateTimeById" parameterType="com.jdl.basic.api.domain.workStation.DeleteRequest">
         update send_tripartite_handover_detail
-        set last_operate_time = #{operateTime,jdbcType=TIMESTAMP}
-        where  is_delete = 0 and id in
-        <foreach collection="dataList" item="id" open="(" close=")" separator=",">
-            #{id,jdbcType=BIGINT}
-        </foreach>
+        set last_operate_time = #{lastOperateTime,jdbcType=TIMESTAMP}
+        where  is_delete = 0 and id = #{id}
     </update>
     <select id="getInfoById" parameterType="com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverQuery" resultMap="SendTripartiteHandoverDetail">
         select

@@ -100,11 +100,11 @@ public class SendHandoverServiceImpl implements SendHandoverService {
     }
 
     @Override
-    public Result<Boolean> updateLastOperateTimeById(List<Long> id) {
-        DeleteRequest<Long> request = new DeleteRequest<>();
-        request.setOperateTime(new Date());
-        request.setDataList(id);
-        return Result.success(sendTripartiteHandoverDetailDao.updateLastOperateTimeById(request)>0);
+    public Result<Boolean> updateLastOperateTimeById(Long id) {
+        SendTripartiteHandoverDetail detail = new SendTripartiteHandoverDetail();
+        detail.setLastOperateTime(new Date());
+        detail.setId(id);
+        return Result.success(sendTripartiteHandoverDetailDao.updateLastOperateTimeById(detail)>0);
     }
 
     @Override
