@@ -115,6 +115,7 @@
         is_delete = 0
         and site_code = #{siteCode,jdbcType=INTEGER}
         and approval_status = 1
+        order by last_operate_time desc
             limit #{limit}
     </select>
     <select id="getListForExport" parameterType="com.jdl.basic.api.domain.sendHandover.SendTripartiteHandoverQuery" resultMap="SendTripartiteHandoverDetail">
