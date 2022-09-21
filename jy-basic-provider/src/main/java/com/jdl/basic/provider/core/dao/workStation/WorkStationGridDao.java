@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.dao.workStation;
 
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkStationGrid;
 import com.jdl.basic.api.domain.workStation.WorkStationGridCountVo;
@@ -69,6 +70,8 @@ public interface WorkStationGridDao {
 	 * @param data
 	 * @return
 	 */
+	@Cache(key = "WorkStationGridDao.queryByBusinessKey@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+			,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
 	WorkStationGrid queryByBusinessKey(WorkStationGrid data);
 	/**
 	 * 查询场地网格作业区列表
@@ -147,5 +150,7 @@ public interface WorkStationGridDao {
 	 * @param workStationGridQuery
 	 * @return
 	 */
+	@Cache(key = "WorkStationGridDao.queryByGridKey@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+			,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
 	WorkStationGrid queryByGridKey(WorkStationGridQuery workStationGridQuery);
 }

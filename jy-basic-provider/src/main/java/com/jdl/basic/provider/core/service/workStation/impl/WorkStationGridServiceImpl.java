@@ -372,8 +372,6 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	}
 	@Override
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryByBusinessKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-	@Cache(key = "WorkStationGridServiceImpl.queryByBusinessKey@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
-			,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
 	public Result<WorkStationGrid> queryByBusinessKey(WorkStationGrid data) {
 		Result<WorkStationGrid> result = Result.success();
 		result.setData(workStationGridDao.queryByBusinessKey(data));
@@ -493,8 +491,6 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 
 	@Override
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryByGridKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-	@Cache(key = "WorkStationGridServiceImpl.queryByGridKey@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
-			,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
 	public Result<WorkStationGrid> queryByGridKey(WorkStationGridQuery workStationGridQuery) {
 		Result<WorkStationGrid> result = Result.success();
 		result.setData(workStationGridDao.queryByGridKey(workStationGridQuery));

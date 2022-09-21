@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.core.dao.workStation;
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkStation;
 import com.jdl.basic.api.domain.workStation.WorkStationCountVo;
@@ -61,6 +62,8 @@ public interface WorkStationDao {
      * @param data
      * @return
      */
+    @Cache(key = "WorkStationDao.queryByBusinessKey@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
     WorkStation queryByBusinessKey(WorkStation data);
 
     /**
@@ -69,6 +72,8 @@ public interface WorkStationDao {
      * @param businessKey
      * @return
      */
+    @Cache(key = "WorkStationDao.queryByRealBusinessKey@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
     WorkStation queryByRealBusinessKey(String businessKey);
 
     /**

@@ -205,8 +205,6 @@ public class WorkStationAttendPlanServiceImpl implements WorkStationAttendPlanSe
 	
 	@Override
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationAttendPlanServiceImpl.queryByBusinessKeys", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-	@Cache(key = "WorkStationAttendPlanServiceImpl.queryByBusinessKeys@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
-			,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
 	public Result<WorkStationAttendPlan> queryByBusinessKeys(WorkStationAttendPlan data) {
 		Result<WorkStationAttendPlan> result = Result.success();
 		result.setData(this.fillOtherInfo(workStationAttendPlanDao.queryByBusinessKey(data)));

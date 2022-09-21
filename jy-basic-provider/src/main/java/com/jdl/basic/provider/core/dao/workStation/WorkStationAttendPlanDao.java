@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.core.dao.workStation;
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkStationAttendPlan;
 import com.jdl.basic.api.domain.workStation.WorkStationAttendPlanQuery;
@@ -62,6 +63,8 @@ public interface WorkStationAttendPlanDao {
 	 * @param data
 	 * @return
 	 */
+	@Cache(key = "WorkStationAttendPlanDao.queryByBusinessKey@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+			,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
 	WorkStationAttendPlan queryByBusinessKey(WorkStationAttendPlan data);
 	/**
 	 * 查询场地班次列表

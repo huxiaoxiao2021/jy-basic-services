@@ -272,8 +272,6 @@ public class BoxlimitServiceImpl implements BoxlimitService {
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitServiceImpl.getLimitNums", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    @Cache(key = "BoxLimitServiceImpl.getLimitNums@args0@args1", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
-            ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
     public Result<Integer> getLimitNums(Integer createSiteCode, String type) {
         Result<Integer> response = new Result<>();
         response.setData(0);
