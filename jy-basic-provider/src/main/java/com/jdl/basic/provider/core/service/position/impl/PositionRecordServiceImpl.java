@@ -137,7 +137,7 @@ public class PositionRecordServiceImpl implements PositionRecordService {
     public Result<Boolean> deleteByBusinessKey(PositionRecord positionRecord) {
         Result<Boolean> result = new Result<Boolean>();
         result.toSuccess();
-        result.setData(positionRecordDao.deleteByBusinessKey(positionRecord) == 1);
+        result.setData(positionRecordDao.deleteByBusinessKey(positionRecord) > 0);
         return result;
     }
 
