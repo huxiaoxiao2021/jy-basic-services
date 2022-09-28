@@ -202,7 +202,7 @@
 		from
 			position_record p
 		left join
-			work_station_grid g on g.business_key = p.ref_grid_key and g.yn = 1
+			work_station_grid g on g.business_key = p.ref_grid_key and g.yn = 1 and p.yn =1
 		left join
 			work_station s on g.ref_station_key = s.business_key and s.yn = 1
 		<include refid="queryCondition"/>
