@@ -272,7 +272,7 @@ public class JimdbCacheServiceImpl implements CacheService {
 			if(value instanceof String){
 				return (String)value;
 			}else{
-				return JsonHelper.toJsonMs(value);
+				return JsonHelper.toJSONString(value);
 			}
 		} catch (Exception e) {
 			throw new IllegalArgumentException("Non-serializable object", e);

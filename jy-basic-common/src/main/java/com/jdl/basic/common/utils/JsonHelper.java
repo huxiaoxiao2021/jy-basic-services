@@ -1,70 +1,77 @@
 package com.jdl.basic.common.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.JSONLibDataFormatSerializer;
+import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.serializer.SimpleDateFormatSerializer;
 
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
+import java.util.Map;
 
-import java.text.SimpleDateFormat;
-
-
+/***
+ * JSON 工具类
+ * 基于FastJson
+ */
 public class JsonHelper {
 
-    private final static Logger log = LoggerFactory.getLogger(JsonHelper.class);
-    private static final String DATE_FORMAT_MS = "yyyy-MM-dd HH:mm:ss.SSS";
-    ;
+    private static String dateFormat = "yyyy-MM-dd HH:mm:ss";
 
-
-
-    /**
-     * jacjson序列化器-日期格式带毫秒
-     */
-    private static ObjectMapper objectMapperMs = null;
-
-
-
-
+    private static SerializeConfig config;
+    private static SerializerFeature[] features = {
+            //输出空值字段
+            SerializerFeature.WriteMapNullValue,
+            //如果数组结果为null,则输出为[],而不是null
+            SerializerFeature.WriteNullListAsEmpty,
+            //数值字段为null,则输出为0,而不是null
+            SerializerFeature.WriteNullNumberAsZero,
+            //Boolean字段为null,则输出为false,而不是null
+            SerializerFeature.WriteNullBooleanAsFalse,
+            //字符类型如果为null,则输出为" ",而不是null
+            SerializerFeature.WriteNullStringAsEmpty,
+            SerializerFeature.WriteDateUseDateFormat
+    };
     static {
-        //毫秒格式的初始化
-        objectMapperMs = new ObjectMapper();
-        //序列化对象时：空对象不会出现在json中
-        objectMapperMs.setSerializationInclusion(JsonSerialize.Inclusion.NON_EMPTY);
-        //反序列化时：忽略未知属性（默认为true，会抛出异常）
-        objectMapperMs.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapperMs.configure(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS, false);
-        objectMapperMs.configure(SerializationConfig.Feature.WRITE_DATE_KEYS_AS_TIMESTAMPS, false);
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_MS);
-    }
-
-
-
-    /**
-     * 支持日期格式为yyyy-MM-dd HH:mm:ss.SSS的序列化方法
-     *
-     * @param obj
-     * @return
-     */
-    public static String toJsonMs(Object obj) {
-        if (obj == null) {
-            return null;
-        }
-        try {
-            return objectMapperMs.writeValueAsString(obj);
-        } catch (Exception e) {
-            JsonHelper.log.error("序列化JSON发生异常", e);
-        }
-        return null;
+        config = new SerializeConfig();
+        //使用json-lib兼容的日期输出格式
+        //config.put(java.util.Date.class,new JSONLibDataFormatSerializer());
+        config.put(java.util.Date.class, new SimpleDateFormatSerializer(dateFormat));
     }
 
     /**
-     * 支持日期格式为yyyy-MM-dd HH:mm:ss.SSS的反序列化方法
-     *
-     * @param json
-     * @param responseType
-     * @return
+     * 将一个对象装换为Json字符串
      */
+    public static String toJSONString(Object object) {
+        return JSONObject.toJSONString(object,config,features);
+    }
+
+    /**
+     * 将Json字符串转换为Object类型的
+     * */
+    public  static  Object toObject(String str){
+        return JSON.parse(str);
+    }
+
+    /**
+     * 将Json字符串转换为实例
+     * */
+    public static <T> T toObject(String str,Class<T> t){
+        return JSON.parseObject(str,t);
+    }
+
+    /**
+     * 将Json转换为指定类型的List
+     * */
+    public static <T> List<T> toList(String str, Class<T> t){
+        return JSON.parseArray(str,t);
+    }
+
+    /**
+     * 将Json转换为Map
+     * */
+    public static <T> Map<String,T> toMap(String str){
+        return (Map<String, T>) JSONObject.parseObject(str);
+    }
 
 }
