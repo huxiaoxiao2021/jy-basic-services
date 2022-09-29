@@ -6,9 +6,13 @@ import com.jdl.basic.api.domain.workStation.WorkStation;
 import com.jdl.basic.api.domain.workStation.WorkStationCountVo;
 import com.jdl.basic.api.domain.workStation.WorkStationQuery;
 import com.jdl.basic.api.service.workStation.WorkStationJsfService;
+import com.jdl.basic.common.contants.CacheKeyConstants;
+import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.provider.config.lock.LockService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationService;
+import com.jdl.basic.provider.hander.ResultHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,42 +33,132 @@ import java.util.List;
 @Service
 public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 
-	private static final Logger logger = LoggerFactory.getLogger(WorkStationJsfServiceImpl.class);
-
 	@Autowired
 	@Qualifier("workStationService")
 	private WorkStationService workStationService;
+
+	@Autowired
+	@Qualifier("jimdbRemoteLockService")
+	private LockService lockService;
 
 	/**
 	 * 插入一条数据
 	 * @param insertData
 	 * @return
 	 */
-	public Result<Boolean> insert(WorkStation insertData){
+	public Result<Boolean> insert(final WorkStation insertData){
 		log.info("网格工序管理 insert 入参-{}", JSON.toJSONString(insertData));
-		return workStationService.insert(insertData);
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_EDIT, DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				Result<Boolean> apiResult = workStationService.insert(insertData);
+				if(!apiResult.isSuccess()) {
+					result.setCode(apiResult.getCode());
+					result.setMessage(apiResult.getMessage());
+					result.setData(apiResult.getData());
+					return ;
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改工序信息，请稍后操作！");
+			}
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+		return result;
 	 }
 	@Override
-	public Result<Boolean> importDatas(List<WorkStation> dataList) {
-		return workStationService.importDatas(dataList);
+	public Result<Boolean> importDatas(final List<WorkStation> dataList) {
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_EDIT,DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				Result<Boolean> apiResult = workStationService.importDatas(dataList);
+				if(!apiResult.isSuccess()) {
+					result.setCode(apiResult.getCode());
+					result.setMessage(apiResult.getMessage());
+					result.setData(apiResult.getData());
+					return ;
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改工序信息，请稍后操作！");
+			}
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+		return result;
 	}	
 	/**
 	 * 根据id更新数据
 	 * @param updateData
 	 * @return
 	 */
-	public Result<Boolean> updateById(WorkStation updateData){
-		logger.info("网格工序管理 updateById 入参-{}", JSON.toJSONString(updateData));
-		return workStationService.updateById(updateData);
-	 }
+	public Result<Boolean> updateById(final WorkStation updateData){
+		log.info("网格工序管理 updateById 入参-{}", JSON.toJSONString(updateData));
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				Result<Boolean> apiResult = workStationService.updateById(updateData);
+				if(!apiResult.isSuccess()) {
+					result.setCode(apiResult.getCode());
+					result.setMessage(apiResult.getMessage());
+					result.setData(apiResult.getData());
+					return ;
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改工序信息，请稍后操作！");
+			}
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+		return result;
+	}
 	/**
 	 * 根据id删除数据
 	 * @param deleteData
 	 * @return
 	 */
-	public Result<Boolean> deleteById(WorkStation deleteData){
+	public Result<Boolean> deleteById(final WorkStation deleteData){
 		log.info("网格工序管理 deleteById 入参-{}", JSON.toJSONString(deleteData));
-		return workStationService.deleteById(deleteData);
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				Result<Boolean> apiResult = workStationService.deleteById(deleteData);
+				if(!apiResult.isSuccess()) {
+					result.setCode(apiResult.getCode());
+					result.setMessage(apiResult.getMessage());
+					result.setData(apiResult.getData());
+					return ;
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改工序信息，请稍后操作！");
+			}
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+		return result;
 	 }
 	/**
 	 * 根据id查询
@@ -94,7 +188,7 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 	@Override	
 	public Result<WorkStationCountVo> queryPageCount(WorkStationQuery query){
 		if(log.isInfoEnabled()) {
-			logger.info("网格工序管理 queryPageCount 入参-{}", JSON.toJSONString(query));
+			log.info("网格工序管理 queryPageCount 入参-{}", JSON.toJSONString(query));
 		}
 		return workStationService.queryPageCount(query);
 	 }
@@ -113,14 +207,36 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 		return workStationService.queryWorkDictList(query);
 	}
 	@Override
-	public Result<Boolean> deleteByIds(DeleteRequest<WorkStation> deleteRequest) {
+	public Result<Boolean> deleteByIds(final DeleteRequest<WorkStation> deleteRequest) {
 		log.info("网格工序管理 deleteByIds 入参-{}", JSON.toJSONString(deleteRequest));
-		return workStationService.deleteByIds(deleteRequest);
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				Result<Boolean> apiResult = workStationService.deleteByIds(deleteRequest);
+				if(!apiResult.isSuccess()) {
+					result.setCode(apiResult.getCode());
+					result.setMessage(apiResult.getMessage());
+					result.setData(apiResult.getData());
+					return ;
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改工序信息，请稍后操作！");
+			}
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+		return result;
 	}
 	@Override
 	public Result<Long> queryCount(WorkStationQuery query) {
 		if(log.isInfoEnabled()) {
-			logger.info("网格工序管理 queryCount 入参-{}", JSON.toJSONString(query));
+			log.info("网格工序管理 queryCount 入参-{}", JSON.toJSONString(query));
 		}
 		return workStationService.queryCount(query);
 	}
