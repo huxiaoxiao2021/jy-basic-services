@@ -8,6 +8,8 @@ import com.jdl.basic.provider.config.cache.CacheService;
 import org.codehaus.jackson.type.JavaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -29,7 +31,9 @@ public class JimdbCacheServiceImpl implements CacheService {
 	 */
 	private long exTime = 30*60;
 	private TimeUnit exTimeUnit = TimeUnit.SECONDS;
-	
+
+	@Qualifier("jimClient")
+	@Autowired
 	private Cluster jimdbClient;
     private static final byte EXPIRE_FLAG_VALUE = 1;
     /**
