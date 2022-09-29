@@ -17,6 +17,7 @@ import com.jdl.basic.common.utils.StringHelper;
 import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationGridDao;
 import com.jdl.basic.provider.core.service.position.PositionRecordService;
+import com.jdl.basic.provider.core.service.workStation.WorkAbnormalGridBindingService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationService;
 import com.jdl.basic.rpc.Rpc.BaseMajorRpc;
@@ -27,7 +28,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -46,6 +46,9 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	@Autowired
 	@Qualifier("workStationGridDao")
 	private WorkStationGridDao workStationGridDao;
+	
+	@Autowired
+	private WorkAbnormalGridBindingService workAbnormalGridBindingService;
 	
 	@Autowired
 	@Qualifier("workStationService")
@@ -216,6 +219,10 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			throw new RuntimeException("根据id:" + deleteData.getId() + "未查询到数据!");
 		}
 		result.setData(workStationGridDao.deleteById(deleteData) == 1);
+
+		// 同步删除异常网格绑定数据
+		deleteWorkAbnormalGridBinding(queryResult.getData(),deleteData);
+		
 		// 同步删除岗位记录
 		String businessKey = queryResult.getData().getBusinessKey();
 		PositionRecord positionRecord = new PositionRecord();
@@ -227,6 +234,21 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		}
 		return result;
 	 }
+
+	private void deleteWorkAbnormalGridBinding(WorkStationGrid data, WorkStationGrid deleteData) {
+		List<WorkStationBinding> delete = new ArrayList<>();
+		WorkStationBinding workStationBinding = new WorkStationBinding();
+		workStationBinding.setGridCode(data.getGridCode());
+		workStationBinding.setFloor(data.getFloor());
+		workStationBinding.setSiteCode(data.getSiteCode());
+		workStationBinding.setUpdateUser(deleteData.getUpdateUser());
+		workStationBinding.setUpdateUserName(deleteData.getUpdateUserName());
+		workStationBinding.setUpdateTime(new Date());
+		delete.add(workStationBinding);
+		workAbnormalGridBindingService.update(delete);
+	}
+
+
 	/**
 	 * 根据id查询
 	 * @param id
