@@ -1,6 +1,6 @@
 package com.jdl.basic.provider.core.service.position.impl;
 
-import com.jd.etms.framework.utils.cache.annotation.Cache;
+import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.position.PositionData;
@@ -22,6 +22,7 @@ import com.jdl.basic.provider.core.dao.position.PositionRecordDao;
 import com.jdl.basic.provider.core.dao.workMapFunc.JyWorkMapFuncConfigDao;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationDao;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationGridDao;
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.position.PositionRecordService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -59,6 +60,9 @@ public class PositionRecordServiceImpl implements PositionRecordService {
 
     @Autowired
     private JyWorkMapFuncConfigDao jyWorkMapFuncConfigDao;
+
+    @Autowired
+    private BaseMajorManager baseMajorManager;
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.insertPosition", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
@@ -118,8 +122,16 @@ public class PositionRecordServiceImpl implements PositionRecordService {
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.queryOneByPositionCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<PositionDetailRecord> queryOneByPositionCode(String positionCode) {
         Result<PositionDetailRecord> result = new Result<PositionDetailRecord>();
-        result.setData(positionRecordDao.queryDetailByPositionCode(positionCode));
-        result.toSuccess();
+        PositionDetailRecord positionDetailRecord = positionRecordDao.queryDetailByPositionCode(positionCode);
+        // 防止站点名称变更而表中的站点名称未及时更新导致查出的站点名称不对
+        BaseStaffSiteOrgDto baseSite = baseMajorManager.getBaseSiteBySiteId(positionDetailRecord.getSiteCode());
+        if(baseSite != null && !StringUtils.isEmpty(baseSite.getSiteName())){
+            positionDetailRecord.setSiteName(baseSite.getSiteName());
+            result.toSuccess();
+        }else {
+            result.toFail("未查询到场地信息!");
+        }
+        result.setData(positionDetailRecord);
         return result;
     }
 
