@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.dao.boxLimit;
 
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigDto;
 import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigQueryDto;
 import com.jdl.basic.provider.core.po.BoxLimitConfigPO;
@@ -89,6 +90,8 @@ public interface BoxLimitConfigDao {
      * @param
      * @return
      */
+    @Cache(key = "BoxLimitConfigDao.queryLimitNumBySiteId@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
     Integer queryLimitNumBySiteId(BoxLimitConfigDto dto);
 
 
@@ -105,6 +108,8 @@ public interface BoxLimitConfigDao {
      * @param boxNumberType
      * @return
      */
+    @Cache(key = "BoxLimitConfigDao.queryCommonLimitNum@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
     Integer queryCommonLimitNum(String boxNumberType);
 
     /**

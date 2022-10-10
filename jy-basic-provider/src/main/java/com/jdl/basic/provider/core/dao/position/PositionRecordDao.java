@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.dao.position;
 
 
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jdl.basic.api.domain.position.PositionDetailRecord;
 import com.jdl.basic.api.domain.position.PositionQuery;
 import com.jdl.basic.api.domain.position.PositionRecord;
@@ -61,6 +62,8 @@ public interface PositionRecordDao {
      * @param positionCode
      * @return
      */
+    @Cache(key = "PositionRecordDao.queryDetailByPositionCode@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
     PositionDetailRecord queryDetailByPositionCode(String positionCode);
 
     /**

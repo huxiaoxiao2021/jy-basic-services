@@ -5,9 +5,13 @@ import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkStationAttendPlan;
 import com.jdl.basic.api.domain.workStation.WorkStationAttendPlanQuery;
 import com.jdl.basic.api.service.workStation.WorkStationAttendPlanJsfService;
+import com.jdl.basic.common.contants.CacheKeyConstants;
+import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.provider.config.lock.LockService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationAttendPlanService;
+import com.jdl.basic.provider.hander.ResultHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,7 +21,7 @@ import java.util.List;
 
 /**
  * 岗位人员出勤计划表--JsfService接口实现
- * 
+ *
  * @author wuyoude
  * @date 2021年12月30日 14:30:43
  *
@@ -30,33 +34,106 @@ public class WorkStationAttendPlanJsfServiceImpl implements WorkStationAttendPla
 	@Qualifier("workStationAttendPlanService")
 	private WorkStationAttendPlanService workStationAttendPlanService;
 
+	@Autowired
+	@Qualifier("jimdbRemoteLockService")
+	private LockService lockService;
+
 	/**
 	 * 插入一条数据
 	 * @param insertData
 	 * @return
 	 */
-	public Result<Boolean> insert(WorkStationAttendPlan insertData){
+	public Result<Boolean> insert(final WorkStationAttendPlan insertData){
 		log.info("岗位人员出勤计划 insert 入参-{}", JSON.toJSONString(insertData));
-		return workStationAttendPlanService.insert(insertData);
-	 }
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_ATTEND_PLAN_EDIT, DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				Result<Boolean> apiResult = workStationAttendPlanService.insert(insertData);
+				if(!apiResult.isSuccess()) {
+					result.setCode(apiResult.getCode());
+					result.setMessage(apiResult.getMessage());
+					result.setData(apiResult.getData());
+					return ;
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改网格计划信息，请稍后操作！");
+			}
+
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+		return result;
+	}
 	/**
 	 * 根据id更新数据
 	 * @param updateData
 	 * @return
 	 */
-	public Result<Boolean> updateById(WorkStationAttendPlan updateData){
+	public Result<Boolean> updateById(final WorkStationAttendPlan updateData){
 		log.info("岗位人员出勤计划 updateById 入参-{}", JSON.toJSONString(updateData));
-		return workStationAttendPlanService.updateById(updateData);
-	 }
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_ATTEND_PLAN_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				Result<Boolean> apiResult = workStationAttendPlanService.updateById(updateData);
+				if(!apiResult.isSuccess()) {
+					result.setCode(apiResult.getCode());
+					result.setMessage(apiResult.getMessage());
+					result.setData(apiResult.getData());
+					return ;
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改网格计划信息，请稍后操作！");
+			}
+
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+		return result;
+	}
 	/**
 	 * 根据id删除数据
 	 * @param deleteData
 	 * @return
 	 */
-	public Result<Boolean> deleteById(WorkStationAttendPlan deleteData){
+	public Result<Boolean> deleteById(final WorkStationAttendPlan deleteData){
 		log.info("岗位人员出勤计划 deleteById 入参-{}", JSON.toJSONString(deleteData));
-		return workStationAttendPlanService.deleteById(deleteData);
-	 }
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_ATTEND_PLAN_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				Result<Boolean> apiResult = workStationAttendPlanService.deleteById(deleteData);
+				if(!apiResult.isSuccess()) {
+					result.setCode(apiResult.getCode());
+					result.setMessage(apiResult.getMessage());
+					result.setData(apiResult.getData());
+					return ;
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改网格计划信息，请稍后操作！");
+			}
+
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+		return result;
+	}
 	/**
 	 * 根据id查询
 	 * @param id
@@ -80,9 +157,32 @@ public class WorkStationAttendPlanJsfServiceImpl implements WorkStationAttendPla
 		return workStationAttendPlanService.queryPageList(query);
 	 }
 	@Override
-	public Result<Boolean> importDatas(List<WorkStationAttendPlan> dataList) {
+	public Result<Boolean> importDatas(final List<WorkStationAttendPlan> dataList) {
 		log.info("岗位人员出勤计划 importDatas");
-		return workStationAttendPlanService.importDatas(dataList);
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_ATTEND_PLAN_EDIT,DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				Result<Boolean> apiResult = workStationAttendPlanService.importDatas(dataList);
+				if(!apiResult.isSuccess()) {
+					result.setCode(apiResult.getCode());
+					result.setMessage(apiResult.getMessage());
+					result.setData(apiResult.getData());
+					return ;
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改网格计划信息，请稍后操作！");
+			}
+
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+		return result;
 	}
 	@Override
 	public Result<List<WorkStationAttendPlan>> queryWaveDictList(WorkStationAttendPlanQuery query) {
@@ -92,9 +192,32 @@ public class WorkStationAttendPlanJsfServiceImpl implements WorkStationAttendPla
 		return workStationAttendPlanService.queryWaveDictList(query);
 	}
 	@Override
-	public Result<Boolean> deleteByIds(DeleteRequest<WorkStationAttendPlan> deleteRequest) {
+	public Result<Boolean> deleteByIds(final DeleteRequest<WorkStationAttendPlan> deleteRequest) {
 		log.info("岗位人员出勤计划 deleteByIds 入参-{}", JSON.toJSONString(deleteRequest));
-		return workStationAttendPlanService.deleteByIds(deleteRequest);
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_ATTEND_PLAN_EDIT,DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				Result<Boolean> apiResult = workStationAttendPlanService.deleteByIds(deleteRequest);
+				if(!apiResult.isSuccess()) {
+					result.setCode(apiResult.getCode());
+					result.setMessage(apiResult.getMessage());
+					result.setData(apiResult.getData());
+					return ;
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改网格计划信息，请稍后操作！");
+			}
+
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+		return result;
 	}
 	@Override
 	public Result<Long> queryCount(WorkStationAttendPlanQuery query) {

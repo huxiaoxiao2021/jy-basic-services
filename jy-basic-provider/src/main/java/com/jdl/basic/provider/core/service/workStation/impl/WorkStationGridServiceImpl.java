@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 
 import com.jd.ump.annotation.JProEnum;
@@ -473,6 +474,17 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			}
 		}
 		result.setData(workStationGridDao.deleteByIds(deleteRequest) > 0);
+		for(WorkStationGrid oldData : oldDataList) {
+			// 同步删除岗位记录
+			String businessKey = oldData.getBusinessKey();
+			PositionRecord positionRecord = new PositionRecord();
+			positionRecord.setRefGridKey(businessKey);
+			positionRecord.setUpdateUser(deleteRequest.getOperateUserCode());
+			Result<Boolean> deletePositionResult = positionRecordService.deleteByBusinessKey(positionRecord);
+			if(Objects.equals(deletePositionResult.getData(), false)){
+				throw new RuntimeException("根据businessKey:" + businessKey + "删除岗位数据失败!");
+			}
+		}
 		return result;
 	}
 

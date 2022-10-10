@@ -7,9 +7,13 @@ import com.jdl.basic.api.domain.workStation.WorkStationGrid;
 import com.jdl.basic.api.domain.workStation.WorkStationGridCountVo;
 import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
 import com.jdl.basic.api.service.workStation.WorkStationGridJsfService;
+import com.jdl.basic.common.contants.CacheKeyConstants;
+import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.provider.config.lock.LockService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
+import com.jdl.basic.provider.hander.ResultHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,33 +36,103 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 	@Qualifier("workStationGridService")
 	private WorkStationGridService workStationGridService;
 
+	@Autowired
+	@Qualifier("jimdbRemoteLockService")
+	private LockService lockService;
+
 	/**
 	 * 插入一条数据
 	 * @param insertData
 	 * @return
 	 */
-	public Result<Boolean> insert(WorkStationGrid insertData){
+	public Result<Boolean> insert(final WorkStationGrid insertData){
 		log.info("场地网格工序管理 insert 入参-{}", JSON.toJSONString(insertData));
-		return workStationGridService.insert(insertData);
-	 }
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT, DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				Result<Boolean> apiResult = workStationGridService.insert(insertData);
+				if(!apiResult.isSuccess()) {
+					result.setCode(apiResult.getCode());
+					result.setMessage(apiResult.getMessage());
+					result.setData(apiResult.getData());
+					return ;
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改网格信息，请稍后操作！");
+			}
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+		return result;
+	}
 	/**
 	 * 根据id更新数据
 	 * @param updateData
 	 * @return
 	 */
-	public Result<Boolean> updateById(WorkStationGrid updateData){
+	public Result<Boolean> updateById(final WorkStationGrid updateData){
 		log.info("场地网格工序管理 updateById 入参-{}", JSON.toJSONString(updateData));
-		return workStationGridService.updateById(updateData);
-	 }
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				Result<Boolean> apiResult = workStationGridService.updateById(updateData);
+				if(!apiResult.isSuccess()) {
+					result.setCode(apiResult.getCode());
+					result.setMessage(apiResult.getMessage());
+					result.setData(apiResult.getData());
+					return ;
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改网格信息，请稍后操作！");
+			}
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+		return result;
+	}
 	/**
 	 * 根据id删除数据
 	 * @param deleteData
 	 * @return
 	 */
-	public Result<Boolean> deleteById(WorkStationGrid deleteData){
+	public Result<Boolean> deleteById(final WorkStationGrid deleteData){
 		log.info("场地网格工序管理 deleteById 入参-{}", JSON.toJSONString(deleteData));
-		return workStationGridService.deleteById(deleteData);
-	 }
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				Result<Boolean> apiResult = workStationGridService.deleteById(deleteData);
+				if(!apiResult.isSuccess()) {
+					result.setCode(apiResult.getCode());
+					result.setMessage(apiResult.getMessage());
+					result.setData(apiResult.getData());
+					return ;
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改网格信息，请稍后操作！");
+			}
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+		return result;
+	}
 	/**
 	 * 根据id查询
 	 * @param id
@@ -97,8 +171,30 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 		return workStationGridService.queryAllGridBySiteCode(query);
 	}
 	@Override
-	public Result<Boolean> importDatas(List<WorkStationGrid> dataList) {
-		return workStationGridService.importDatas(dataList);
+	public Result<Boolean> importDatas(final List<WorkStationGrid> dataList) {
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				Result<Boolean> apiResult = workStationGridService.importDatas(dataList);
+				if(!apiResult.isSuccess()) {
+					result.setCode(apiResult.getCode());
+					result.setMessage(apiResult.getMessage());
+					result.setData(apiResult.getData());
+					return ;
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改网格信息，请稍后操作！");
+			}
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+		return result;
 	}
 	@Override
 	public Result<List<WorkStationGrid>> queryGridWorkDictList(WorkStationGridQuery query) {
@@ -129,9 +225,31 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 		return workStationGridService.queryGridFloorDictList(query);
 	}
 	@Override
-	public Result<Boolean> deleteByIds(DeleteRequest<WorkStationGrid> deleteRequest) {
+	public Result<Boolean> deleteByIds(final DeleteRequest<WorkStationGrid> deleteRequest) {
 		log.info("场地网格工序管理 deleteByIds 入参-{}", JSON.toJSONString(deleteRequest));
-		return workStationGridService.deleteByIds(deleteRequest);
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				Result<Boolean> apiResult = workStationGridService.deleteByIds(deleteRequest);
+				if(!apiResult.isSuccess()) {
+					result.setCode(apiResult.getCode());
+					result.setMessage(apiResult.getMessage());
+					result.setData(apiResult.getData());
+					return ;
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改网格信息，请稍后操作！");
+			}
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+		return result;
 	}
 	@Override
 	public Result<Long> queryCount(WorkStationGridQuery query) {

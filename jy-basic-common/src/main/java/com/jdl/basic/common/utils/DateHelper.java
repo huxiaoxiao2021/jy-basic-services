@@ -17,7 +17,18 @@ public class DateHelper {
     public final static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     
     public final static String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
-    
+
+    /**
+     * 一分钟的毫秒数
+     */
+    public static final long ONE_MINUTES_MILLI = 60 * 1000;
+
+    /**
+     * 五分钟毫秒数
+     */
+    public static final long FIVE_MINUTES_MILLI = 5 * ONE_MINUTES_MILLI;
+
+
     public static String chineseDateFormat() {
         return chineseDateFormat(Calendar.getInstance().getTime());
     }
