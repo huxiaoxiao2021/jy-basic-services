@@ -14,6 +14,8 @@ import com.jdl.basic.provider.config.lock.LockService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationService;
 import com.jdl.basic.provider.hander.ResultHandler;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -253,7 +255,9 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 		if(log.isInfoEnabled()) {
 			log.info("网格工序管理 queryByBusinessKey 入参-{}", JSON.toJSONString(data));
 		}
-		return workStationService.queryByBusinessKey(data);
+		Result<WorkStation> result = Result.success();
+		result.setData(workStationService.queryByBusinessKeyWithCache(data));
+		return result;
 	}
 
 	@Override
@@ -261,6 +265,12 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 		if(log.isInfoEnabled()) {
 			log.info("网格工序管理 queryByRealBusinessKey 入参-{}", JSON.toJSONString(businessKey));
 		}
-		return workStationService.queryByRealBusinessKey(businessKey);
+		Result<WorkStation> result = Result.success();
+		if(StringUtils.isEmpty(businessKey)){
+			result.toFail("业务主键不能为空!");
+			return result;
+		}
+		result.setData(workStationService.queryByRealBusinessKeyWithCache(businessKey));
+		return result;	
 	}
 }

@@ -69,6 +69,12 @@ public interface WorkStationGridService {
 	 */
 	Result<WorkStationGrid> queryByBusinessKey(WorkStationGrid data);
 	/**
+	 * 根据业务主键查询-缓存结果
+	 * @param data
+	 * @return
+	 */
+	WorkStationGrid queryByBusinessKeyWithCache(WorkStationGrid data);	
+	/**
 	 * 根据业务主键判断是否存在
 	 * @param data
 	 * @return
@@ -143,5 +149,5 @@ public interface WorkStationGridService {
 	 * @param workStationGridCheckQuery
 	 * @return
 	 */
-	Result<WorkStationGrid> queryByGridKey(WorkStationGridQuery workStationGridCheckQuery);
+	WorkStationGrid queryByGridKeyWithCache(WorkStationGridQuery workStationGridCheckQuery);
 }

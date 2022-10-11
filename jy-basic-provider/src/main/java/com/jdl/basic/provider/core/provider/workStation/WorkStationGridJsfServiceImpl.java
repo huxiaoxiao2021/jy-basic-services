@@ -283,7 +283,9 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 		if(log.isInfoEnabled()) {
 			log.info("场地网格工序管理 queryByBusinessKey 入参-{}", JSON.toJSONString(data));
 		}
-		return workStationGridService.queryByBusinessKey(data);
+		Result<WorkStationGrid> result = Result.success();
+		result.setData(workStationGridService.queryByBusinessKeyWithCache(data));
+		return result;
 	}
 
 	@Override
@@ -291,6 +293,8 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 		if(log.isInfoEnabled()) {
 			log.info("场地网格工序管理 queryByGridKey 入参-{}", JSON.toJSONString(workStationGridCheckQuery));
 		}
-		return workStationGridService.queryByGridKey(workStationGridCheckQuery);
+		Result<WorkStationGrid> result = Result.success();
+		result.setData(workStationGridService.queryByGridKeyWithCache(workStationGridCheckQuery));
+		return result;		
 	}
 }

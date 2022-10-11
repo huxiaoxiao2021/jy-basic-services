@@ -237,7 +237,9 @@ public class WorkStationAttendPlanJsfServiceImpl implements WorkStationAttendPla
 		if(log.isInfoEnabled()){
 			log.info("岗位人员出勤计划 queryByBusinessKeys 入参-{}", JSON.toJSONString(data));
 		}
-		return workStationAttendPlanService.queryByBusinessKeys(data);
+		Result<WorkStationAttendPlan> result = Result.success();
+		result.setData(workStationAttendPlanService.queryByBusinessKeysWithCache(data));
+		return result;		
 	}
 
 }

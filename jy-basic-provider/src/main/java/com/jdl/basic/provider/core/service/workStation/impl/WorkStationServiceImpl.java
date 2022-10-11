@@ -297,7 +297,18 @@ public class WorkStationServiceImpl implements WorkStationService {
 		result.setData(workStationDao.queryByBusinessKey(data));
 		return result;
 	}
-
+    /**
+     * 根据业务主键查询
+     *
+     * @param data
+     * @return
+     */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.queryByBusinessKeyWithCache", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})	
+    @Cache(key = "WorkStationDao.queryByBusinessKeyWithCache@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
+    public WorkStation queryByBusinessKeyWithCache(WorkStation data) {
+    	return workStationDao.queryByBusinessKey(data);
+    }
 	@Override
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.queryByRealBusinessKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<WorkStation> queryByRealBusinessKey(String businessKey) {
@@ -309,6 +320,13 @@ public class WorkStationServiceImpl implements WorkStationService {
 		result.setData(workStationDao.queryByRealBusinessKey(businessKey));
 		return result;
 	}
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.queryByRealBusinessKeyWithCache", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    @Cache(key = "WorkStationDao.queryByRealBusinessKeyWithCache@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+    ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
+	public WorkStation queryByRealBusinessKeyWithCache(String businessKey) {
+		return workStationDao.queryByRealBusinessKey(businessKey);
+	}	
 
 	@Override
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.isExist", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})

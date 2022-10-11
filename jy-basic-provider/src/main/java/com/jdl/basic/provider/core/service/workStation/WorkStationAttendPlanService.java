@@ -48,6 +48,12 @@ public interface WorkStationAttendPlanService {
 	 */
 	Result<WorkStationAttendPlan> queryByBusinessKeys(WorkStationAttendPlan data);
 	/**
+	 * 根据businessKeys查询-缓存结果
+	 * @param data
+	 * @return
+	 */
+	WorkStationAttendPlan queryByBusinessKeysWithCache(WorkStationAttendPlan data);	
+	/**
 	 * 按条件分页查询
 	 * @param query
 	 * @return
