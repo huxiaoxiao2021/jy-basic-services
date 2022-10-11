@@ -1,9 +1,9 @@
 package com.jdl.basic.provider.config.jannotationX;
 
-import com.jd.ump.x.JAnnotationX;
-import org.springframework.beans.BeanUtils;
+import com.jd.ump.annotation.JAnnotation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 
 /**
  * ump监控
@@ -13,11 +13,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class JAnnotationXConfiguration {
 
-    @Bean
-    public JAnnotationX jAnnotationX(JAnnotationXproperties jAnnotationXproperties) {
-        JAnnotationX jAnnotationX = new JAnnotationX();
-        BeanUtils.copyProperties(jAnnotationXproperties,jAnnotationX);
-        return jAnnotationX;
+    @Bean(initMethod="afterPropertiesSet")
+    public JAnnotation umpJAnnotation() {
+        return new JAnnotation();
     }
 
 }

@@ -235,11 +235,11 @@
             <artifactId>profiler</artifactId>
         </dependency>
 
-        <!-- UMP 增强组件接入 -->
-        <dependency>
-            <groupId>com.jd.ump.x</groupId>
-            <artifactId>ump-x</artifactId>
-        </dependency>
+<!--        &lt;!&ndash; UMP 增强组件接入 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.jd.ump.x</groupId>-->
+<!--            <artifactId>ump-x</artifactId>-->
+<!--        </dependency>-->
 
     </dependencies>
 
