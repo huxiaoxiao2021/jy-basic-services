@@ -31,6 +31,7 @@
         <jdq4-sdk-version>1.0.0-SNAPSHOT</jdq4-sdk-version>
 <!--        <jd.ump.version>6.2.13-HOTFIX-T1</jd.ump.version>-->
 <!--        <jd.ump-x.version>1.0.2</jd.ump-x.version>-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <!--配置环境的profile-->
@@ -227,6 +228,7 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
             <plugin>
