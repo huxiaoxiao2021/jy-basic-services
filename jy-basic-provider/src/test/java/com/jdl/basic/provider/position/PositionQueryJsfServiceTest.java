@@ -7,6 +7,7 @@ import com.jdl.basic.api.service.position.PositionQueryJsfService;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.ApplicationLaunch;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +34,16 @@ public class PositionQueryJsfServiceTest {
         positionQuery.setPageNumber(1);
         Result<PageDto<PositionDetailRecord>> pageDtoResult = positionQueryJsfService.queryPageList(positionQuery);
         System.out.println(JSON.toJSONString(pageDtoResult));
+    }
+
+    @Test
+    public void queryDetailTest(){
+        try {
+            String positionQuery = "GW00010021";
+            Result<PositionDetailRecord> result = positionQueryJsfService.queryOneByPositionCode(positionQuery);
+            Assert.assertTrue(true);
+        }catch (Exception e){
+            Assert.fail();
+        }
     }
 }
