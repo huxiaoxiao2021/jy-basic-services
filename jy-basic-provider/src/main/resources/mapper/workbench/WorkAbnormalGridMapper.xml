@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jdl.basic.provider.core.dao.workStation.WorkAbnormalGridDao">
+    <resultMap id="WorkStationBinding" type="com.jdl.basic.api.domain.workStation.WorkStationBinding" >
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+        <result column="site_code" property="siteCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
+        <result column="site_name" property="siteName" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="floor" property="floor" javaType="java.lang.Integer" jdbcType="INTEGER" />
+        <result column="grid_code" property="gridCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="create_user" property="createUser" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="create_user_name" property="createUserName" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="update_user" property="updateUser" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="update_user_name" property="updateUserName" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+        <result column="excp_floor" property="excpFloor" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result column="excp_grid_code" property="excpGridCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="yn" property="yn" javaType="java.lang.Integer" jdbcType="TINYINT" />
+    </resultMap>
+
+    <resultMap id="WorkStationFloorGridVo" type="com.jdl.basic.api.domain.workStation.WorkStationFloorGridVo">
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+        <result column="site_code" property="siteCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
+        <result column="site_name" property="siteName" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="floor" property="floor" javaType="java.lang.Integer" jdbcType="INTEGER" />
+        <result column="grid_code" property="gridCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <insert id="insert" parameterType="com.jdl.basic.api.domain.workStation.WorkStationBinding" useGeneratedKeys="true" keyProperty="id">
+        insert into jy_exception_grid_relation
+        (
+        <trim suffixOverrides=",">
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="siteCode != null" >
+                site_code,
+            </if>
+            <if test="siteName != null" >
+                site_name,
+            </if>
+            <if test="gridCode != null" >
+                grid_code,
+            </if>
+            <if test="createUser != null" >
+                create_user,
+            </if>
+            <if test="createUserName != null" >
+                create_user_name,
+            </if>
+            <if test="updateUser != null" >
+                update_user,
+            </if>
+            <if test="updateUserName != null" >
+                update_user_name,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="updateTime != null" >
+                update_time,
+            </if>
+            <if test="yn != null" >
+                yn,
+            </if>
+            <if test="floor != null" >
+                floor,
+            </if>
+            <if test="excpFloor != null" >
+                excp_floor,
+            </if>
+            <if test="excpGridCode != null" >
+                excp_grid_code
+            </if>
+        </trim>
+        )
+        values
+        (
+        <trim suffixOverrides=",">
+            <if test="id != null" >
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="siteCode != null" >
+                #{siteCode,jdbcType=INTEGER},
+            </if>
+            <if test="siteName != null" >
+                #{siteName,jdbcType=VARCHAR},
+            </if>
+            <if test="gridCode != null" >
+                #{gridCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createUserName != null" >
+                #{createUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUserName != null" >
+                #{updateUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="yn != null" >
+                #{yn,jdbcType=TINYINT},
+            </if>
+            <if test="floor != null" >
+                #{floor,jdbcType=INTEGER},
+            </if>
+            <if test="excpFloor != null" >
+                #{excpFloor,jdbcType=INTEGER},
+            </if>
+            <if test="excpGridCode != null" >
+                #{excpGridCode,jdbcType=VARCHAR}
+            </if>
+        </trim>
+        )
+    </insert>
+    <select id="queryCount" parameterType="com.jdl.basic.api.domain.workStation.WorkStationBinding" resultType="long">
+        select count(1)
+        from jy_exception_grid_relation
+        where
+        <if test="siteCode != null and siteCode != ''" >
+            site_code = #{siteCode,jdbcType=INTEGER}
+        </if>
+        <if test="gridCode != null and gridCode != ''" >
+            and grid_code = #{gridCode,jdbcType=VARCHAR}
+        </if>
+        <if test="floor != null and floor != ''" >
+            and floor = #{floor,jdbcType=INTEGER}
+        </if>
+        <if test="excpFloor != null and excpFloor != ''" >
+            and excp_floor = #{excpFloor,jdbcType=INTEGER}
+        </if>
+        <if test="excpGridCode != null and excpGridCode != ''" >
+            and excp_grid_code = #{excpGridCode,jdbcType=VARCHAR}
+        </if>
+    </select>
+    <select id="queryBindingList" parameterType="com.jdl.basic.api.domain.workStation.WorkStationFloorGridQuery" resultMap="WorkStationBinding">
+        select
+        floor, grid_code,site_code,excp_floor,excp_grid_code
+        from jy_exception_grid_relation
+        where yn = 1
+        <if test="siteCode != null and excpFloor != ''" >
+            and site_code = #{siteCode,jdbcType=INTEGER}
+        </if>
+        <if test="excpFloor != null and excpFloor != ''" >
+            and excp_floor = #{excpFloor,jdbcType=INTEGER}
+        </if>
+        <if test="excpGridCode != null and excpGridCode != ''" >
+            and excp_grid_code = #{excpGridCode,jdbcType=VARCHAR}
+        </if>
+        <if test="floor != null and floor != ''" >
+            and floor = #{floor,jdbcType=INTEGER}
+        </if>
+        <if test="gridCode != null and gridCode != ''" >
+            and grid_code = #{gridCode,jdbcType=VARCHAR}
+        </if>
+    </select>
+    <update id="updateByGridCode" parameterType="com.jdl.basic.api.domain.workStation.WorkStationBinding">
+        update jy_exception_grid_relation
+        set
+        <if test="updateUser != null" >
+            update_user = #{updateUser,jdbcType=VARCHAR},
+        </if>
+        <if test="updateTime != null" >
+            update_time = #{updateTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="updateUserName != null" >
+            update_user_name = #{updateUserName,jdbcType=VARCHAR},
+        </if>
+        yn = 0
+        where
+        <if test="siteCode != null and siteCode != ''" >
+            site_code = #{siteCode,jdbcType=INTEGER}
+        </if>
+        <if test="gridCode != null and gridCode != ''" >
+            and grid_code = #{gridCode,jdbcType=VARCHAR}
+        </if>
+        <if test="floor != null and floor != ''" >
+            and floor = #{floor,jdbcType=INTEGER}
+        </if>
+    </update>
+    <update id="update" parameterType="com.jdl.basic.api.domain.workStation.WorkStationBinding">
+        update jy_exception_grid_relation
+        set
+        <if test="updateUser != null" >
+            update_user = #{updateUser,jdbcType=VARCHAR},
+        </if>
+        <if test="updateTime != null" >
+            update_time = #{updateTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="updateUserName != null" >
+            update_user_name = #{updateUserName,jdbcType=VARCHAR},
+        </if>
+        yn = 1
+        where
+        <if test="siteCode != null and siteCode != ''" >
+            site_code = #{siteCode,jdbcType=INTEGER}
+        </if>
+        <if test="gridCode != null and gridCode != ''" >
+            and grid_code = #{gridCode,jdbcType=VARCHAR}
+        </if>
+        <if test="floor != null and floor != ''" >
+            and floor = #{floor,jdbcType=INTEGER}
+        </if>
+        <if test="excpGridCode != null and excpGridCode != ''" >
+            and excp_grid_code = #{excpGridCode,jdbcType=VARCHAR}
+        </if>
+        <if test="excpFloor != null and excpFloor != ''" >
+            and excp_floor = #{excpFloor,jdbcType=INTEGER}
+        </if>
+    </update>
+
+    <select id="getAbnormalGrid" resultMap="WorkStationFloorGridVo">
+        select site_code,site_name,excp_floor as floor,excp_grid_code as grid_code
+        from jy_exception_grid_relation
+        where
+        yn = 1
+        <if test="siteCode != null and siteCode != ''" >
+            and site_code = #{siteCode,jdbcType=INTEGER}
+        </if>
+        <if test="gridCode != null and gridCode != ''" >
+            and grid_code = #{gridCode,jdbcType=VARCHAR}
+        </if>
+        <if test="floor != null and floor != ''" >
+            and floor = #{floor,jdbcType=INTEGER}
+        </if>
+    </select>
+    <select id="queryCountUnDelete" parameterType="com.jdl.basic.api.domain.workStation.WorkStationBinding" resultType="long">
+        select count(1)
+        from jy_exception_grid_relation
+        where yn = 1
+        <if test="siteCode != null and siteCode != ''" >
+            and site_code = #{siteCode,jdbcType=INTEGER}
+        </if>
+        <if test="gridCode != null and gridCode != ''" >
+            and grid_code = #{gridCode,jdbcType=VARCHAR}
+        </if>
+        <if test="floor != null and floor != ''" >
+            and floor = #{floor,jdbcType=INTEGER}
+        </if>
+        <if test="excpFloor != null and excpFloor != ''" >
+            and excp_floor = #{excpFloor,jdbcType=INTEGER}
+        </if>
+        <if test="excpGridCode != null and excpGridCode != ''" >
+            and excp_grid_code = #{excpGridCode,jdbcType=VARCHAR}
+        </if>
+    </select>
+</mapper>

@@ -22,6 +22,9 @@ public class StringHelper {
     public static final int PHONE_FIRST_NUMBER = 3;//收件人联系方式前几位需要显示
     public static final int PHONE_HIGHLIGHT_NUMBER = 4;//收件人联系方式需要突出显示的位数(即手机尾数要保留的位数)
 
+    public static final int EXCP_AREA = 1;  // 异常作业区类型
+    public static final String FLOOR = "楼层"; // 楼层
+
     public static String getRandomString() {
         Random random = new Random();
         StringBuilder sb = new StringBuilder();

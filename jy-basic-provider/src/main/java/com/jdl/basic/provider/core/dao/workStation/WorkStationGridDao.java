@@ -6,6 +6,7 @@ import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkStationGrid;
 import com.jdl.basic.api.domain.workStation.WorkStationGridCountVo;
 import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
+import com.jdl.basic.api.domain.workStation.*;
 
 import java.util.List;
 
@@ -149,4 +150,17 @@ public interface WorkStationGridDao {
 	 * @return
 	 */
 	WorkStationGrid queryByGridKey(WorkStationGridQuery workStationGridQuery);
+
+	/**
+	 * 去重查询
+	 * @param query
+	 * @return
+	 */
+	List<WorkStationGrid> queryListDistinct(WorkStationFloorGridQuery query);
+	/**
+	 * 去重查询求总数
+	 * @param query
+	 * @return
+	 */
+	Long queryDistinctCount(WorkStationFloorGridQuery query);
 }
