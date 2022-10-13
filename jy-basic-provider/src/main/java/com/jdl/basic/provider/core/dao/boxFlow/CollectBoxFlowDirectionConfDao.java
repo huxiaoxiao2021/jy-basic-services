@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.dao.boxFlow;
 
 
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf;
+import com.jdl.basic.provider.core.dao.boxFlow.query.CollectBoxFlowDirectionConfQuery;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -29,5 +30,8 @@ public interface CollectBoxFlowDirectionConfDao {
     int updateBoxReceiveNameById(@Param("ids") List<Long> ids, @Param("newBoxReceiveName") String newBoxReceiveName);
 
     List<CollectBoxFlowDirectionConf> selectByParamAndWhetherConfiged(@Param("conf") CollectBoxFlowDirectionConf collectBoxFlowDirectionConf, @Param("configed") Boolean configed);
+
+
+    List<CollectBoxFlowDirectionConf> selectByStartSiteIdAndEndSiteIds(CollectBoxFlowDirectionConfQuery query);
 
 }

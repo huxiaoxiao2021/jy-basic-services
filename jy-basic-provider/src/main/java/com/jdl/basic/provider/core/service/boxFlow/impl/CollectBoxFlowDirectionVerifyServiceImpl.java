@@ -5,6 +5,11 @@ import com.jd.fastjson.JSONObject;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf;
+import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowDirectionConfReq;
+import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowDirectionConfResp;
+import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowFinishBoxReq;
+import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowFinishBoxResp;
+import com.jdl.basic.provider.core.dao.boxFlow.query.CollectBoxFlowDirectionConfQuery;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.boxFlow.CollectBoxFlowDirectionConfDao;
@@ -14,8 +19,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service("collectBoxFlowDirectionVerifyService")
 @Slf4j
@@ -25,7 +30,7 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
     private CollectBoxFlowDirectionConfDao collectBoxFlowDirectionConfMapper;
 
     @Override
-    @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionVerifyServiceImpl.verifyBoxFlowDirectionConf", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionVerifyServiceImpl.verifyBoxFlowDirectionConf", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<CollectBoxFlowDirectionConf> verifyBoxFlowDirectionConf(CollectBoxFlowDirectionConf confToBeVerifyed) {
         Integer startSiteId = confToBeVerifyed.getStartSiteId();
         Integer endSiteId = confToBeVerifyed.getEndSiteId();
@@ -80,6 +85,111 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
         checkPageResult.setData(conf);
 
         return checkPageResult;
+    }
+
+    @Override
+    public Result<CollectBoxFlowDirectionConfResp> verifyBoxFlowDirectionConfs(CollectBoxFlowDirectionConfReq req) {
+
+        if (req.getBoxReceiveId() == null || req.getFlowType() == null || req.getTransportType() == null || req.getStartSiteId() == null) {
+            log.warn("参数错误,{}", JSONObject.toJSONString(req));
+            return Result.fail("参数不能为空");
+        }
+
+        //防止全查出来
+        if (CollectionUtils.isEmpty(req.getEndSiteId())) {
+            req.setEndSiteId(Arrays.asList(-1));
+        }
+
+        Result<CollectBoxFlowDirectionConfResp> result = new Result<>();
+        CollectBoxFlowDirectionConfResp resp = new CollectBoxFlowDirectionConfResp();
+
+        CollectBoxFlowDirectionConfQuery query = new CollectBoxFlowDirectionConfQuery();
+        query.setStartSiteId(req.getStartSiteId());
+        query.setEndSiteIds(req.getEndSiteId());
+
+        query.setTransportType(req.getTransportType());
+        query.setFlowType(req.getFlowType());
+
+        try {
+
+            List<CollectBoxFlowDirectionConf> select = collectBoxFlowDirectionConfMapper.selectByStartSiteIdAndEndSiteIds(query);
+            //错误的配置list
+            List<CollectBoxFlowDirectionConf> wrongList = select.stream().filter(s -> {
+                Integer boxReceiveId = s.getBoxReceiveId();
+                if (!Objects.equals(boxReceiveId, req.getBoxReceiveId())) {
+                    return true;
+                }
+                return false;
+            }).collect(Collectors.toList());
+
+            //如果列表不是空，说明有错误的配置
+            if (CollectionUtils.isNotEmpty(wrongList)) {
+                resp.setResult(CollectBoxFlowDirectionConf.WRONG_CONF);
+                resp.setWrongConfs(wrongList);
+            } else {
+                resp.setResult(CollectBoxFlowDirectionConf.SUCCESS);
+            }
+
+            result.setData(resp);
+            result.toSuccess("ok");
+        } catch (Exception e) {
+            log.error("流向校验异常,入参：" + JSONObject.toJSONString(req), e);
+            result.toFail("系统异常" + e.getMessage());
+        }
+        return result;
+
+    }
+
+    @Override
+    public Result<CollectBoxFlowFinishBoxResp> ifBoxesWasFinishBox(CollectBoxFlowFinishBoxReq req) {
+        if (req.getFlowType() == null || req.getTransportType() == null || req.getStartSiteId() == null) {
+            log.warn("参数错误,{}", JSONObject.toJSONString(req));
+            return Result.fail("参数不能为空");
+        }
+
+        //防止全查出来
+        if (CollectionUtils.isEmpty(req.getEndSiteId())) {
+            req.setEndSiteId(new ArrayList<Integer>() {{
+                add(-1);
+            }});
+        }
+
+        Result<CollectBoxFlowFinishBoxResp> result = new Result<>();
+        CollectBoxFlowDirectionConfQuery query = new CollectBoxFlowDirectionConfQuery();
+        CollectBoxFlowFinishBoxResp resp = new CollectBoxFlowFinishBoxResp();
+
+        query.setStartSiteId(req.getStartSiteId());
+        query.setEndSiteIds(req.getEndSiteId());
+
+        query.setTransportType(req.getTransportType());
+        query.setFlowType(req.getFlowType());
+
+        try {
+
+            List<CollectBoxFlowDirectionConf> select = collectBoxFlowDirectionConfMapper.selectByStartSiteIdAndEndSiteIds(query);
+
+            //按照集包要求分组
+            Map<Integer, List<CollectBoxFlowDirectionConf>> groupByCollectClaim = select.stream()
+                    .collect(Collectors.groupingBy(CollectBoxFlowDirectionConf::getCollectClaim));
+
+            ArrayList<CollectBoxFlowDirectionConf> mixs = (ArrayList<CollectBoxFlowDirectionConf>) groupByCollectClaim.get(CollectBoxFlowDirectionConf.COLLECT_CLAIM_MIX);
+            ArrayList<CollectBoxFlowDirectionConf> finishs = (ArrayList<CollectBoxFlowDirectionConf>) groupByCollectClaim.get(CollectBoxFlowDirectionConf.COLLECT_CLAIM_FINISH);
+
+            resp.setMixSites(mixs);
+            resp.setFinishSites(finishs);
+            if (CollectionUtils.isNotEmpty(mixs)) {
+                resp.setResult(false);
+            } else {
+                resp.setResult(true);
+            }
+            result.setData(resp);
+            result.toSuccess();
+        } catch (Exception e) {
+
+            log.error("校验成品包异常,入参：" + JSONObject.toJSONString(req), e);
+            result.toFail("系统异常" + e.getMessage());
+        }
+        return result;
     }
 
 }
