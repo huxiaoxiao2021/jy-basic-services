@@ -239,11 +239,6 @@
 <!--            <groupId>com.jd.ump.x</groupId>-->
 <!--            <artifactId>ump-x</artifactId>-->
 <!--        </dependency>-->
-        <!-- UMP 增强组件接入 -->
-        <dependency>
-            <groupId>com.jd.ump.x</groupId>
-            <artifactId>ump-x</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.jdl.basic</groupId>
             <artifactId>jy-basic-api</artifactId>
