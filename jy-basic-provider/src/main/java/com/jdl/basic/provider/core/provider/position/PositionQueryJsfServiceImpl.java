@@ -56,7 +56,7 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
         try {
             return positionRecordService.queryCountByCondition(query);
         }catch (Exception e){
-            log.error("根据条件:{}查询总数异常!", JSON.toJSONString(query), e);
+            log.error("根据条件:{}查询总数异常!{}", JSON.toJSONString(query),e.getMessage(), e);
         }
         return result;
     }
@@ -69,7 +69,7 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
         try {
             return positionRecordService.updateByPositionCode(positionRecord);
         }catch (Exception e){
-            log.error("根据岗位编码:{}更新异常!", positionRecord.getPositionCode(), e);
+            log.error("根据岗位编码:{}更新异常!-{}", positionRecord.getPositionCode(), e.getMessage(),e);
         }
         return result;
     }
@@ -102,7 +102,7 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
         try {
             return positionRecordService.queryOneByPositionCode(positionCode);
         }catch (Exception e){
-            log.error("根据岗位编码获取岗位详情:{} 异常!", positionCode, e);
+            log.error("根据岗位编码获取岗位详情:{} 异常!-{}", positionCode, e.getMessage(),e);
         }
         return result;
     }
@@ -117,7 +117,7 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
         try {
             return positionRecordService.queryPositionWithIsMatchAppFunc(positionCode);
         }catch (Exception e){
-            log.error("queryPositionWithIsMatchAppFunc 查询岗位信息:{} 异常!", positionCode, e);
+            log.error("queryPositionWithIsMatchAppFunc 查询岗位信息:{} 异常!-{}", positionCode, e.getMessage(),e);
         }
         return response;
     }
@@ -132,7 +132,7 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
         try {
             return positionRecordService.queryPositionInfo(positionCode);
         }catch (Exception e){
-            log.error("queryPositionInfo 查询岗位信息:{} 异常!", positionCode, e);
+            log.error("queryPositionInfo 查询岗位信息:{} 异常!-{}", positionCode, e.getMessage(),e);
         }
         return response;
     }
