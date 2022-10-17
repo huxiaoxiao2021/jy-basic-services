@@ -1,9 +1,11 @@
 package com.jdl.basic.provider.core.service.workMapFunc;
 
 
+import com.jdl.basic.api.domain.workMapFunc.JyWorkMapFuncConfigDetailVO;
 import com.jdl.basic.api.domain.workMapFunc.JyWorkMapFuncConfigEntity;
 import com.jdl.basic.api.domain.workMapFunc.JyWorkMapFuncQuery;
 import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
 
 import java.util.List;
 
@@ -54,4 +56,11 @@ public interface JyWorkMapFuncConfigService {
      * @return
      */
     List<JyWorkMapFuncConfigEntity> queryByCondition(JyWorkMapFuncConfigEntity query);
+
+    /**
+     * 根据工序编码获取功能编码
+     * @param refWorkKey
+     * @return
+     */
+    Result<List<JyWorkMapFuncConfigEntity>> queryFuncCodeByRefWorkKey(String refWorkKey);
 }

@@ -3,10 +3,12 @@ package com.jdl.basic.provider.core.service.workMapFunc.impl;
 
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
+import com.jdl.basic.api.domain.workMapFunc.JyWorkMapFuncConfigDetailVO;
 import com.jdl.basic.api.domain.workMapFunc.JyWorkMapFuncConfigEntity;
 import com.jdl.basic.api.domain.workMapFunc.JyWorkMapFuncQuery;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.workMapFunc.JyWorkMapFuncConfigDao;
 import com.jdl.basic.provider.core.service.workMapFunc.JyWorkMapFuncConfigService;
 import org.apache.commons.lang.StringUtils;
@@ -80,5 +82,13 @@ public class JyWorkMapFuncConfigServiceImpl implements JyWorkMapFuncConfigServic
             throw new RuntimeException("请求参数不合法!");
         }
         return jyWorkMapFuncConfigDao.queryByCondition(entity);
+    }
+
+    @Override
+    public Result<List<JyWorkMapFuncConfigEntity>> queryFuncCodeByRefWorkKey(String refWorkKey) {
+        if (StringUtils.isEmpty(refWorkKey)){
+            return Result.fail("请求参数不合法");
+        }
+        return Result.success(jyWorkMapFuncConfigDao.queryFuncCodeByRefWorkKey(refWorkKey));
     }
 }

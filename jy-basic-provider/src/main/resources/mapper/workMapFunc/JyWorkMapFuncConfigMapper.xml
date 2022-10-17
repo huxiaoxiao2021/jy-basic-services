@@ -145,4 +145,8 @@
             and ref_work_key = #{refWorkKey,jdbcType=VARCHAR}
         </if>
     </select>
+    
+    <select id="queryFuncCodeByRefWorkKey" parameterType="java.lang.String" resultMap="jyWorkMapFuncConfigMap">
+        select func_code from jy_work_map_func_config where yn = 1 and ref_work_key = #{refWorkKey,jdbcType=VARCHAR}
+    </select>
 </mapper>

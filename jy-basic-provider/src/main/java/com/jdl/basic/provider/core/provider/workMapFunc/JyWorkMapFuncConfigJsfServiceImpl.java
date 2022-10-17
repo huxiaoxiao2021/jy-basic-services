@@ -178,4 +178,9 @@ public class JyWorkMapFuncConfigJsfServiceImpl implements JyWorkMapFuncConfigJsf
         }
         return result;
     }
+
+    @Override
+    public Result<List<JyWorkMapFuncConfigEntity>> queryFuncCodeByRefWorkKey(String refWorkKey) {
+        return jyWorkMapFuncConfigService.queryFuncCodeByRefWorkKey(refWorkKey);
+    }
 }

@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.core.dao.workMapFunc;
 
+import com.jdl.basic.api.domain.workMapFunc.JyWorkMapFuncConfigDetailVO;
 import com.jdl.basic.api.domain.workMapFunc.JyWorkMapFuncConfigEntity;
 import com.jdl.basic.api.domain.workMapFunc.JyWorkMapFuncQuery;
 
@@ -28,4 +29,6 @@ public interface JyWorkMapFuncConfigDao {
     int queryCount(JyWorkMapFuncQuery query);
 
     List<JyWorkMapFuncConfigEntity> queryByCondition(JyWorkMapFuncConfigEntity entity);
+
+    List<JyWorkMapFuncConfigEntity> queryFuncCodeByRefWorkKey(String refWorkKey);
 }
