@@ -74,6 +74,6 @@ public class PositionDetailRecord extends PositionRecord {
     /**
      * 工序主键
      */
-    private String businessKey;
+    private String refStationKey;
 
 }

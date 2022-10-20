@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -85,10 +86,13 @@ public class JyWorkMapFuncConfigServiceImpl implements JyWorkMapFuncConfigServic
     }
 
     @Override
-    public Result<List<JyWorkMapFuncConfigEntity>> queryFuncCodeByRefWorkKey(String refWorkKey) {
-        if (StringUtils.isEmpty(refWorkKey)){
-            return Result.fail("请求参数不合法");
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyWorkMapFuncConfigServiceImpl.queryFuncCodeMap", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public HashMap<String, String> queryFuncCodeMap() {
+        HashMap<String, String> funcCodeMap = new HashMap<>();
+        List<JyWorkMapFuncConfigEntity> entities = jyWorkMapFuncConfigDao.queryFuncCodeMap();
+        for (JyWorkMapFuncConfigEntity entity : entities) {
+            funcCodeMap.put(entity.getRefWorkKey(), entity.getFuncCode());
         }
-        return Result.success(jyWorkMapFuncConfigDao.queryFuncCodeByRefWorkKey(refWorkKey));
+        return funcCodeMap;
     }
 }

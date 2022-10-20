@@ -7,6 +7,7 @@ import com.jdl.basic.api.domain.workMapFunc.JyWorkMapFuncQuery;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -59,8 +60,7 @@ public interface JyWorkMapFuncConfigService {
 
     /**
      * 根据工序编码获取功能编码
-     * @param refWorkKey
      * @return
      */
-    Result<List<JyWorkMapFuncConfigEntity>> queryFuncCodeByRefWorkKey(String refWorkKey);
+    HashMap<String, String> queryFuncCodeMap();
 }
