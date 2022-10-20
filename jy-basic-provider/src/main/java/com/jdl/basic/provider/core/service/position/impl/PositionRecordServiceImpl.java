@@ -123,6 +123,10 @@ public class PositionRecordServiceImpl implements PositionRecordService {
     public Result<PositionDetailRecord> queryOneByPositionCode(String positionCode) {
         Result<PositionDetailRecord> result = new Result<PositionDetailRecord>();
         PositionDetailRecord positionDetailRecord = positionRecordDao.queryDetailByPositionCode(positionCode);
+        if(positionDetailRecord == null){
+            result.toFail("岗位码：" + positionCode + "无效!");
+            return result;
+        }
         // 防止站点名称变更而表中的站点名称未及时更新导致查出的站点名称不对
         BaseStaffSiteOrgDto baseSite = baseMajorManager.getBaseSiteBySiteId(positionDetailRecord.getSiteCode());
         if(baseSite != null && !StringUtils.isEmpty(baseSite.getSiteName())){
