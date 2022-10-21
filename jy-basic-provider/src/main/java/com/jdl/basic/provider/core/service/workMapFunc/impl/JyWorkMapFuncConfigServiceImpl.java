@@ -79,7 +79,7 @@ public class JyWorkMapFuncConfigServiceImpl implements JyWorkMapFuncConfigServic
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyWorkMapFuncConfigServiceImpl.queryByCondition", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public List<JyWorkMapFuncConfigEntity> queryByCondition(JyWorkMapFuncConfigEntity entity) {
-        if(entity == null || StringUtils.isEmpty(entity.getFuncCode()) || StringUtils.isEmpty(entity.getRefWorkKey())){
+        if(entity == null || StringUtils.isEmpty(entity.getRefWorkKey())){
             throw new RuntimeException("请求参数不合法!");
         }
         return jyWorkMapFuncConfigDao.queryByCondition(entity);
