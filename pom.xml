@@ -21,7 +21,7 @@
         <spring-boot.version>2.2.8.RELEASE</spring-boot.version>
         <mysql.version>5.1.41</mysql.version>
         <lombok.version>1.18.20</lombok.version>
-        <ump.profiler.version>20211231</ump.profiler.version>
+        <ump.profiler.version>20220630.1</ump.profiler.version>
         <mybatis.version>3.5.6</mybatis.version>
         <mybatis.spring.boot.version>2.1.2</mybatis.spring.boot.version>
         <log4j.version>2.18.0-jdsec.rc2</log4j.version>
@@ -29,8 +29,9 @@
         <pagehelper.version>1.3.0</pagehelper.version>
         <jmiss-cli.version>3.0.1-SNAPSHOT</jmiss-cli.version>
         <jdq4-sdk-version>1.0.0-SNAPSHOT</jdq4-sdk-version>
-        <jd.ump.version>6.2.13-HOTFIX-T1</jd.ump.version>
-        <jd.ump-x.version>1.0.2</jd.ump-x.version>
+<!--        <jd.ump.version>6.2.13-HOTFIX-T1</jd.ump.version>-->
+<!--        <jd.ump-x.version>1.0.2</jd.ump-x.version>-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <!--配置环境的profile-->
@@ -177,17 +178,17 @@
                 </exclusions>
             </dependency>
 
-            <dependency>
-                <groupId>com.jd.ump</groupId>
-                <artifactId>profiler</artifactId>
-                <version>${jd.ump.version}</version>
-            </dependency>
-            <!-- UMP-x  -->
-            <dependency>
-                <groupId>com.jd.ump.x</groupId>
-                <artifactId>ump-x</artifactId>
-                <version>${jd.ump-x.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.jd.ump</groupId>-->
+<!--                <artifactId>profiler</artifactId>-->
+<!--                <version>${jd.ump.version}</version>-->
+<!--            </dependency>-->
+<!--            &lt;!&ndash; UMP-x  &ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>com.jd.ump.x</groupId>-->
+<!--                <artifactId>ump-x</artifactId>-->
+<!--                <version>${jd.ump-x.version}</version>-->
+<!--            </dependency>-->
 
         </dependencies>
     </dependencyManagement>
@@ -227,6 +228,7 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
             <plugin>

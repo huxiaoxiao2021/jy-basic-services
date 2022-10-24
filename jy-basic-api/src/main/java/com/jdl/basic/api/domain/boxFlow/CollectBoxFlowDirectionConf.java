@@ -21,6 +21,8 @@ public class CollectBoxFlowDirectionConf {
     public static Integer WRONG_CONF=403;//错误的配置
     public static Integer SUCCESS=200;//错误的配置
 
+    public static Integer COLLECT_CLAIM_MIX = 2;//可混包
+    public static Integer COLLECT_CLAIM_FINISH = 1;//成品包
 
 
     /**

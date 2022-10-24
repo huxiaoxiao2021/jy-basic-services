@@ -480,4 +480,57 @@
 
     </select>
 
+    <select id="selectByStartSiteIdAndEndSiteIds" resultMap="BaseResultMap">
+        select *
+        from collect_box_flow_direction_conf
+        where yn = 1
+
+        <if test="startOrgId != null">
+            and start_org_id = #{startOrgId,jdbcType=INTEGER}
+        </if>
+        <if test="endOrgId != null">
+            and end_org_id = #{endOrgId,jdbcType=VARCHAR}
+        </if>
+        <if test="startSiteId != null">
+            and start_site_id = #{startSiteId,jdbcType=INTEGER}
+        </if>
+        <if test="startSiteName != null">
+            and start_site_name = #{startSiteName,jdbcType=VARCHAR}
+        </if>
+        <if test="endSiteId != null">
+            and end_site_id = #{endSiteId,jdbcType=INTEGER}
+        </if>
+        <if test="endSiteName != null">
+            and end_site_name = #{endSiteName,jdbcType=VARCHAR}
+        </if>
+        <if test="flowType != null">
+            and flow_type = #{flowType,jdbcType=INTEGER}
+        </if>
+        <if test="transportType != null">
+            and transport_type = #{transportType,jdbcType=INTEGER}
+        </if>
+        <if test="boxReceiveId != null">
+            and box_receive_id = #{boxReceiveId,jdbcType=INTEGER}
+        </if>
+
+        <if test="boxReceiveName != null">
+            and box_receive_name = #{boxReceiveName,jdbcType=INTEGER}
+        </if>
+
+        <if test="boxPkgName != null">
+            and box_pkg_name = #{boxReceiveName,jdbcType=INTEGER}
+        </if>
+        <if test="collectClaim != null">
+            and collect_claim = #{collectClaim,jdbcType=INTEGER}
+        </if>
+        <if test="ifChangeSinceLastUpdate != null">
+            and if_change_since_last_update = #{ifChangeSinceLastUpdate,jdbcType=INTEGER}
+        </if>
+        <if test="endSiteIds != null and endSiteIds.size() != 0">
+            and end_site_id in
+            <foreach collection="endSiteIds" item="item" open="(" separator="," close=")">
+                #{item,jdbcType=BIGINT}
+            </foreach>
+        </if>
+    </select>
 </mapper>

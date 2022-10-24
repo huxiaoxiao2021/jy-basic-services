@@ -71,6 +71,12 @@ public interface WorkStationService {
 	 * @return
 	 */
 	Result<WorkStation> queryByBusinessKey(WorkStation data);
+	/**
+	 * 根据业务主键查询-缓存结果
+	 * @param data
+	 * @return
+	 */
+	WorkStation queryByBusinessKeyWithCache(WorkStation data);
 
 	/**
 	 * 根据业务主键查询
@@ -78,6 +84,12 @@ public interface WorkStationService {
 	 * @return
 	 */
 	Result<WorkStation> queryByRealBusinessKey(String businessKey);
+	/**
+	 * 根据业务主键查询
+	 * @param businessKey
+	 * @return
+	 */
+	WorkStation queryByRealBusinessKeyWithCache(String businessKey);
 	/**
 	 * 根据业务主键判断是否存在
 	 * @param data
