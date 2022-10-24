@@ -237,10 +237,20 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	 }
 
 	private void deleteWorkAbnormalGridBinding(WorkStationGrid data, WorkStationGrid deleteData) {
+		// 如果删除的是实操网格
 		List<WorkStationBinding> delete = new ArrayList<>();
 		WorkStationBinding workStationBinding = new WorkStationBinding();
 		workStationBinding.setGridCode(data.getGridCode());
 		workStationBinding.setFloor(data.getFloor());
+		workStationBinding.setSiteCode(data.getSiteCode());
+		workStationBinding.setUpdateUser(deleteData.getUpdateUser());
+		workStationBinding.setUpdateUserName(deleteData.getUpdateUserName());
+		workStationBinding.setUpdateTime(new Date());
+		delete.add(workStationBinding);
+		workAbnormalGridBindingService.update(delete);
+		// 如果删除的是异常网格
+		workStationBinding.setExcpGridCode(data.getGridCode());
+		workStationBinding.setExcpFloor(data.getFloor());
 		workStationBinding.setSiteCode(data.getSiteCode());
 		workStationBinding.setUpdateUser(deleteData.getUpdateUser());
 		workStationBinding.setUpdateUserName(deleteData.getUpdateUserName());

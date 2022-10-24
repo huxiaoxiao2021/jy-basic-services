@@ -186,6 +186,12 @@
         <if test="floor != null and floor != ''" >
             and floor = #{floor,jdbcType=INTEGER}
         </if>
+        <if test="excpGridCode != null and excpGridCode != ''" >
+            and excp_grid_code = #{excpGridCode,jdbcType=VARCHAR}
+        </if>
+        <if test="excpFloor != null and excpFloor != ''" >
+            and excp_floor = #{excpFloor,jdbcType=INTEGER}
+        </if>
     </update>
     <update id="update" parameterType="com.jdl.basic.api.domain.workStation.WorkStationBinding">
         update jy_exception_grid_relation
