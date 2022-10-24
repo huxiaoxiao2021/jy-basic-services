@@ -263,7 +263,7 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
             flo.setChildren(new ArrayList<>());
             for (WorkStationGrid d : data) {
                 if (Objects.equals(d.getFloor(), f)&&!areas.contains(d.getAreaCode())) {
-                    if (StringUtils.isEmpty(d.getAreaCode())){
+                    if (!StringUtils.isEmpty(d.getAreaCode())){
                         areas.add(d.getAreaCode());
                     }
                     WorkStationBindingVo area = new WorkStationBindingVo();
