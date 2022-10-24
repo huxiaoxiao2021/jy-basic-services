@@ -56,5 +56,13 @@ public interface WorkAbnormalGridBindingService {
      */
     WorkStationFloorGridVo getAbnormalGrid(WorkStationFloorGridQuery query);
 
+    /**
+     * 同步删除关联关系
+     * @param deleteData
+     * @return
+     */
+    void deleteByGrid(WorkStationBinding deleteData);
+    
+
     Result<List<WorkStationFloorGridVo>> queryListForExport(WorkStationFloorGridQuery query);
 }

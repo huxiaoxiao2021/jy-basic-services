@@ -237,26 +237,14 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	 }
 
 	private void deleteWorkAbnormalGridBinding(WorkStationGrid data, WorkStationGrid deleteData) {
-		// 如果删除的是实操网格
-		List<WorkStationBinding> delete = new ArrayList<>();
-		WorkStationBinding workStationBinding = new WorkStationBinding();
-		workStationBinding.setGridCode(data.getGridCode());
-		workStationBinding.setFloor(data.getFloor());
-		workStationBinding.setSiteCode(data.getSiteCode());
-		workStationBinding.setUpdateUser(deleteData.getUpdateUser());
-		workStationBinding.setUpdateUserName(deleteData.getUpdateUserName());
-		workStationBinding.setUpdateTime(new Date());
-		delete.add(workStationBinding);
-		// 如果删除的是异常网格
-		WorkStationBinding excpBinding = new WorkStationBinding();
-		excpBinding.setExcpGridCode(data.getGridCode());
-		excpBinding.setExcpFloor(data.getFloor());
-		excpBinding.setSiteCode(data.getSiteCode());
-		excpBinding.setUpdateUser(deleteData.getUpdateUser());
-		excpBinding.setUpdateUserName(deleteData.getUpdateUserName());
-		excpBinding.setUpdateTime(new Date());
-		delete.add(excpBinding);
-		workAbnormalGridBindingService.update(delete);
+		WorkStationBinding delete = new WorkStationBinding();
+		delete.setGridCode(data.getGridCode());
+		delete.setFloor(data.getFloor());
+		delete.setSiteCode(data.getSiteCode());
+		delete.setUpdateUser(deleteData.getUpdateUser());
+		delete.setUpdateUserName(deleteData.getUpdateUserName());
+		delete.setUpdateTime(new Date());
+		workAbnormalGridBindingService.deleteByGrid(delete);
 	}
 
 
