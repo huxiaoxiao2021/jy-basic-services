@@ -177,13 +177,7 @@
         </if>
         yn = 0
         where
-            site_code = #{siteCode,jdbcType=INTEGER} and grid_code = #{gridCode,jdbcType=VARCHAR} and floor = #{floor,jdbcType=INTEGER}
-        <if test="excpGridCode != null and excpGridCode != ''" >
-            and excp_grid_code = #{excpGridCode,jdbcType=VARCHAR}
-        </if>
-        <if test="excpFloor != null and excpFloor != ''" >
-            and excp_floor = #{excpFloor,jdbcType=INTEGER}
-        </if>
+        site_code = #{siteCode,jdbcType=INTEGER} and grid_code = #{gridCode,jdbcType=VARCHAR} and floor = #{floor,jdbcType=INTEGER}
     </update>
     <update id="deleteByExcpGrid" parameterType="com.jdl.basic.api.domain.workStation.WorkStationBinding">
         update jy_exception_grid_relation
