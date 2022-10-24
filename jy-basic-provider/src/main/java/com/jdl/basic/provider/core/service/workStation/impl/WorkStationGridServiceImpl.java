@@ -247,15 +247,15 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		workStationBinding.setUpdateUserName(deleteData.getUpdateUserName());
 		workStationBinding.setUpdateTime(new Date());
 		delete.add(workStationBinding);
-		workAbnormalGridBindingService.update(delete);
 		// 如果删除的是异常网格
-		workStationBinding.setExcpGridCode(data.getGridCode());
-		workStationBinding.setExcpFloor(data.getFloor());
-		workStationBinding.setSiteCode(data.getSiteCode());
-		workStationBinding.setUpdateUser(deleteData.getUpdateUser());
-		workStationBinding.setUpdateUserName(deleteData.getUpdateUserName());
-		workStationBinding.setUpdateTime(new Date());
-		delete.add(workStationBinding);
+		WorkStationBinding excpBinding = new WorkStationBinding();
+		excpBinding.setExcpGridCode(data.getGridCode());
+		excpBinding.setExcpFloor(data.getFloor());
+		excpBinding.setSiteCode(data.getSiteCode());
+		excpBinding.setUpdateUser(deleteData.getUpdateUser());
+		excpBinding.setUpdateUserName(deleteData.getUpdateUserName());
+		excpBinding.setUpdateTime(new Date());
+		delete.add(excpBinding);
 		workAbnormalGridBindingService.update(delete);
 	}
 
