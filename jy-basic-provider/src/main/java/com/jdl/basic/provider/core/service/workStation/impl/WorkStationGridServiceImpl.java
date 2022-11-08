@@ -6,6 +6,8 @@ import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
+import com.jdl.basic.api.domain.machine.Machine;
+import com.jdl.basic.api.domain.machine.WorkStationGridMachine;
 import com.jdl.basic.api.domain.position.PositionRecord;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.common.contants.Constants;
@@ -17,6 +19,7 @@ import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringHelper;
 import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationGridDao;
+import com.jdl.basic.provider.core.service.machine.WorkStationGridMachineService;
 import com.jdl.basic.provider.core.service.position.PositionRecordService;
 import com.jdl.basic.provider.core.service.workStation.WorkAbnormalGridBindingService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
@@ -31,6 +34,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -62,6 +66,10 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 
 	@Autowired
 	private PositionRecordService positionRecordService;
+	
+	@Autowired
+	private WorkStationGridMachineService machineService;
+	
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -78,8 +86,23 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		result.setData(workStationGridDao.insert(insertData) == 1);
 		// 添加岗位记录
 		addPosition(insertData);
+		// 添加自动化设备
+		addMachine(insertData);
 		return result;
 	 }
+
+	private void addMachine(WorkStationGrid insertData) {
+		for (Machine m : insertData.getMachine()) {
+			WorkStationGridMachine machine =  new WorkStationGridMachine();
+			machine.setCreateUser(insertData.getCreateUser());
+			machine.setRefGridKey(insertData.getBusinessKey());
+			machine.setMachineCode(m.getMachineCode());
+			machine.setMachineTypeCode(m.getMachineTypeCode());
+			if (!Objects.equals(machineService.insert(machine),Constants.YN_YES)) {
+				throw new RuntimeException("关联自动化设备失败,网格:"+insertData.getBusinessKey());
+			}
+		}
+	}
 
 	private String generalBusinessKey() {
 		return DmsConstants.CODE_PREFIX_WORK_STATION_GRID.concat(StringHelper.padZero(this.genObjectId.getObjectId(WorkStationGrid.class.getName()),11));
@@ -204,8 +227,20 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		workStationGridDao.deleteById(updateData);
 		updateData.setId(null);
 		result.setData(workStationGridDao.insert(updateData) == 1);
+		// 更新关联自动化设备
+		deleteMachineByRefGridKey(updateData);
+		addMachine(updateData);
 		return result;
 	 }
+
+	private void deleteMachineByRefGridKey(WorkStationGrid updateData) {
+		// 删除关联设备
+		WorkStationGridMachine updateMachine = new WorkStationGridMachine();
+		updateMachine.setRefGridKey(updateData.getBusinessKey());
+		updateMachine.setUpdateUser(updateData.getUpdateUser());
+		machineService.deleteByRefGridKey(updateMachine);
+	}
+
 	/**
 	 * 根据id删除数据
 	 * @param deleteData
@@ -223,6 +258,9 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 
 		// 同步删除异常网格绑定数据
 		deleteWorkAbnormalGridBinding(queryResult.getData(),deleteData);
+		
+		// 同步删除绑定自动化设备
+		deleteMachineByRefGridKey(deleteData);
 		
 		// 同步删除岗位记录
 		String businessKey = queryResult.getData().getBusinessKey();
@@ -274,7 +312,13 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		PageDto<WorkStationGrid> pageData = new PageDto<>(query.getPageNumber(), query.getPageSize());
 		Long totalCount = workStationGridDao.queryCount(query);
 		if(totalCount != null && totalCount > 0){
-			pageData.setResult(workStationGridDao.queryList(query));
+			List<WorkStationGrid> grids = workStationGridDao.queryList(query);
+			// 查询关联的自动化设备
+			for (WorkStationGrid grid : grids) {
+				List<Machine> machines = machineService.getMachineListByRefGridKey(grid.getBusinessKey());
+				grid.setMachine(machines);
+			}
+			pageData.setResult(grids);
 			pageData.setTotalRow(totalCount.intValue());
 		}else {
 			pageData.setResult(new ArrayList<WorkStationGrid>());
@@ -339,8 +383,17 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			}
 			// 同步处理岗位
 			syncDealPosition(oldData, data);
+			// 删除旧数据，保存新的自动化设备
+			deleteAndAddMachine(oldData,data);
 		}
 		return result;
+	}
+
+	private void deleteAndAddMachine(WorkStationGrid oldData, WorkStationGrid data) {
+		if (oldData != null){
+			deleteMachineByRefGridKey(oldData);
+		}
+		addMachine(data);
 	}
 
 	private void syncDealPosition(WorkStationGrid oldData, WorkStationGrid newData) {

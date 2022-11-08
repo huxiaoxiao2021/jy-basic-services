@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jdl.basic.provider.core.dao.machine.WorkStationGridMachineDao">
+    <resultMap id="workStationGridMachine" type="com.jdl.basic.api.domain.machine.WorkStationGridMachine">
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <result column="ref_grid_key" property="refGridKey" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="machine_code" property="machineCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="machine_type_code" property="machineTypeCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="create_user" property="createUser" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateUser" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        <result column="yn" property="yn" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+        <result column="ts" property="ts" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <resultMap id="machine" type="com.jdl.basic.api.domain.machine.Machine">
+        <result column="machine_code" property="machineCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="machine_type_code" property="machineTypeCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.jdl.basic.api.domain.machine.WorkStationGridMachine" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into work_station_grid_machine
+        (
+        <trim suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="refGridKey != null">
+                ref_grid_key,
+            </if>
+            <if test="machineCode != null">
+                machine_code,
+            </if>
+            <if test="machineTypeCode != null">
+                machine_type_code,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            create_time,
+            yn,
+            ts
+        </trim>
+        )
+        values
+        (
+        <trim suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="refGridKey != null">
+                #{refGridKey, jdbcType=VARCHAR},
+            </if>
+            <if test="machineCode != null">
+                #{machineCode, jdbcType=VARCHAR},
+            </if>
+            <if test="machineTypeCode != null">
+                #{machineTypeCode, jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                #{createUser, jdbcType=VARCHAR},
+            </if>
+            now(),
+            1,
+            now()
+        </trim>
+        )
+    </insert>
+    <update id="deleteByRefGridKey" parameterType="com.jdl.basic.api.domain.machine.WorkStationGridMachine">
+        update work_station_grid_machine set yn = 0,
+        <if test="updateUser != null">
+            update_user = #{updateUser, jdbcType=VARCHAR},
+        </if>
+        update_time = now()
+        where ref_grid_key = #{refGridKey, jdbcType=VARCHAR}
+    </update>
+
+    <select id="getMachineListByRefGridKey" parameterType="java.lang.String" resultMap="machine">
+        select machine_code, machine_type_code
+        from work_station_grid_machine
+        where ref_grid_key = #{refGridKey, jdbcType=VARCHAR}
+          and yn = 1
+    </select>
+</mapper>
