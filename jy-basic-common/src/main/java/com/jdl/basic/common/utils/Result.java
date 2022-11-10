@@ -281,6 +281,15 @@ public class Result<T> implements Serializable {
     }
 
     /**
+     * 置为失败
+     */
+    public Result<T> toError(String message){
+        this.code = ResultCodeConstant.ERROR;
+        this.message = message;
+        return this;
+    }
+
+    /**
      * 是否成功
      * @return boolean 成功标志
      */

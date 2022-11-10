@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jdl.basic.provider.core.dao.easyFreezeSite.EasyFreezeSiteDao">
+    <resultMap id="BaseResultMap" type="com.jdl.basic.provider.core.po.EasyFreezeSitePO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="site_code" jdbcType="INTEGER" property="siteCode"/>
+        <result column="site_name" jdbcType="VARCHAR" property="siteName"/>
+        <result column="site_type" jdbcType="INTEGER" property="siteType"/>
+        <result column="city_name" jdbcType="VARCHAR" property="cityName"/>
+        <result column="org_name" jdbcType="VARCHAR" property="orgName"/>
+        <result column="remind_start_time" jdbcType="TIMESTAMP" property="remindStartTime"/>
+        <result column="remind_end_time" jdbcType="TIMESTAMP" property="remindEndTime"/>
+        <result column="use_state" jdbcType="TINYINT" property="useState"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="ts" jdbcType="TIMESTAMP" property="ts"/>
+        <result column="yn" jdbcType="TINYINT" property="yn"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,
+        site_code,
+        site_name,
+        site_type,
+        city_name,
+        org_name,
+        remind_start_time,
+        remind_end_time,
+        use_state,
+        create_user,
+        update_user,
+        create_time,
+        update_time,
+        yn,
+        ts
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from jy_easy_freeze_site_conf
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <insert id="insert" keyColumn="id" keyProperty="id"
+            parameterType="com.jdl.basic.provider.core.po.EasyFreezeSitePO" useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into jy_easy_freeze_site_conf (
+        site_code,
+        site_name,
+        site_type,
+        city_name,
+        org_name,
+        remind_start_time,
+        remind_end_time,
+        use_state,
+        create_user,
+        update_user,
+        create_time,
+        update_time
+        )
+        values (
+        #{siteCode,jdbcType=INTEGER},
+        #{siteName,jdbcType=VARCHAR},
+        #{siteType,jdbcType=VARCHAR},
+        #{cityName,jdbcType=VARCHAR},
+        #{orgName,jdbcType=VARCHAR},
+        #{remindStartTime,jdbcType=TIMESTAMP},
+        #{remindEndTime,jdbcType=TIMESTAMP},
+        #{useState,jdbcType=TINYINT},
+        #{createUser,jdbcType=INTEGER},
+        #{updateUser,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <insert id="batchInsert" useGeneratedKeys="true">
+        insert into jy_easy_freeze_site_conf (
+        site_code,
+        site_name,
+        site_type,
+        city_name,
+        org_name,
+        remind_start_time,
+        remind_end_time,
+        use_state,
+        create_user,
+        update_user,
+        create_time,
+        update_time
+        )
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.siteCode,jdbcType=INTEGER},
+            #{item.siteName,jdbcType=VARCHAR},
+            #{item.siteType,jdbcType=VARCHAR},
+            #{item.cityName,jdbcType=VARCHAR},
+            #{item.orgName,jdbcType=VARCHAR},
+            #{item.remindStartTime,jdbcType=TIMESTAMP},
+            #{item.remindEndTime,jdbcType=TIMESTAMP},
+            #{item.useState,jdbcType=TINYINT},
+            #{item.createUser,jdbcType=INTEGER},
+            #{item.updateUser,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateTime,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.jdl.basic.provider.core.po.EasyFreezeSitePO">
+        <!--@mbg.generated-->
+        update jy_easy_freeze_site_conf
+        <set>
+            <if test="siteCode != null">
+                site_code = #{siteCode,jdbcType=INTEGER},
+            </if>
+            <if test="siteName != null">
+                site_name = #{siteName,jdbcType=VARCHAR},
+            </if>
+            <if test="siteType != null">
+                site_type = #{siteType,jdbcType=VARCHAR},
+            </if>
+            <if test="cityName != null">
+                city_name = #{cityName,jdbcType=VARCHAR},
+            </if>
+            <if test="orgName != null">
+                org_name = #{orgName,jdbcType=VARCHAR},
+            </if>
+            <if test="remindStartTime != null">
+                remind_start_time = #{remindStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remindEndTime != null">
+                remind_end_time = #{remindEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="useState != null">
+                use_state = #{useState,jdbcType=TINYINT},
+            </if>
+
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="ts != null">
+                ts = #{ts,jdbcType=TIMESTAMP},
+            </if>
+            <if test="yn != null">
+                yn = #{yn,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="batchUpdateBySiteCode">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update
+            jy_easy_freeze_site_conf
+            <set>
+                <if test="item.siteName != null">
+                    site_name = #{item.siteName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.siteType != null">
+                    site_type = #{item.siteType,jdbcType=VARCHAR},
+                </if>
+                <if test="item.cityName != null">
+                    city_name = #{item.cityName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.orgName != null">
+                    org_name = #{item.orgName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.remindStartTime != null">
+                    remind_start_time = #{item.remindStartTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.remindEndTime != null">
+                    remind_end_time = #{item.remindEndTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.useState != null">
+                    use_state = #{item.useState,jdbcType=TINYINT},
+                </if>
+
+                <if test="item.createUser != null">
+                    create_user = #{item.createUser,jdbcType=VARCHAR},
+                </if>
+                <if test="item.updateUser != null">
+                    update_user = #{item.updateUser,jdbcType=VARCHAR},
+                </if>
+                <if test="item.createTime != null">
+                    create_time = #{item.createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.updateTime != null">
+                    update_time = #{item.updateTime,jdbcType=TIMESTAMP},
+                </if>
+            </set>
+            where site_code = #{item.siteCode,jdbcType=INTEGER}
+        </foreach>
+    </update>
+
+    <select id="selectByCondition"   resultMap="BaseResultMap">
+
+        select
+        <include refid="Base_Column_List" />
+        from jy_easy_freeze_site_conf
+        <where>
+            AND yn = 1
+            <if test="orgName != null">
+                AND org_name = #{orgName}
+            </if>
+            <if test="siteType != null">
+                AND site_type = #{siteType}
+            </if>
+            <if test="siteName != null and siteName !=''">
+                AND site_name LIKE CONCAT('%',#{siteName},'%')
+            </if>
+            <if test="cityName != null and cityName !=''">
+                AND city_name LIKE CONCAT('%',#{cityName},'%')
+            </if>
+            <if test="useState != null ">
+                AND use_state = #{useState}
+            </if>
+        </where>
+        ORDER BY update_time DESC LIMIT #{offset},#{pageSize}
+
+    </select>
+
+    <select id="selectOneByCondition"   resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from jy_easy_freeze_site_conf
+        where yn= 1
+        <if test="siteCode != null">
+            AND site_code = #{siteCode}
+        </if>
+        <if test="useState != null">
+            AND use_state = #{useState}
+        </if>
+        limit 1
+    </select>
+
+    <select id="selectOneBysiteCode" parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from jy_easy_freeze_site_conf
+        where yn= 1
+        AND site_code = #{siteCode} limit 1
+    </select>
+
+    <select id="countByCondition"  resultType="java.lang.Integer">
+        select
+        COUNT(1)
+        from jy_easy_freeze_site_conf
+        <where>
+            AND yn = 1
+            <if test="orgName != null">
+                AND org_name = #{orgName}
+            </if>
+            <if test="siteType != null">
+                AND site_type = #{siteType}
+            </if>
+            <if test="siteName != null and siteName !=''">
+                AND site_name LIKE CONCAT('%',#{siteName},'%')
+            </if>
+            <if test="cityName != null and cityName !=''">
+                AND city_name LIKE CONCAT('%',#{cityName},'%')
+            </if>
+            <if test="useState != null ">
+                AND use_state = #{useState}
+            </if>
+        </where>
+    </select>
+
+
+
+
+</mapper>

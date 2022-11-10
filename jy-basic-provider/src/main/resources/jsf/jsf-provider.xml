@@ -106,5 +106,13 @@
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
+
+    <jsf:provider id="easyFreezeSiteJsfService"
+                  interface="com.jdl.basic.api.service.easyFreeze.EasyFreezeSiteJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="easyFreezeSiteJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
 </beans>
 
