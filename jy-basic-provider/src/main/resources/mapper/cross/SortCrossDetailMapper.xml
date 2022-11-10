@@ -22,11 +22,12 @@
     <result column="TS" jdbcType="TIMESTAMP" property="ts" />
     <result column="BELONG_CODE" jdbcType="INTEGER" property="belongCode" />
     <result column="BELONG_NAME" jdbcType="VARCHAR" property="belongName" />
+    <result column="enable" jdbcType="INTEGER" property="enable" />
   </resultMap>
   <sql id="Base_Column_List">
     ID, TABLETROLLEY_CODE, CROSS_CODE, SITE_CODE, SITE_NAME, SITE_TYPE, SUB_TYPE, THIRD_TYPE, 
     CREATOR, CREATOR_ACCOUNT, MODIFIER, MODIFIER_ACCOUNT, DMS_ID, ORG_ID, CREATE_TIME, 
-    UPDATE_TIME, YN, TS, BELONG_CODE, BELONG_NAME
+    UPDATE_TIME, YN, TS, BELONG_CODE, BELONG_NAME, ENABLE
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -266,5 +267,51 @@
       BELONG_CODE = #{belongCode,jdbcType=INTEGER},
       BELONG_NAME = #{belongName,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="queryPage" parameterType="com.jdl.basic.api.domain.cross.SortCrossQuery" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from sort_cross_detail
+    <include refid="queryCondition"/>
+    <if test="pageNumber > 0">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+  <select id="queryCount" parameterType="com.jdl.basic.api.domain.cross.SortCrossQuery" resultType="java.lang.Long">
+    select count(*) from sort_cross_detail
+    <include refid="queryCondition"/>
+  </select>
+  <sql id="queryCondition">
+    where yn = 1
+    <if test="dmsId != null and dmsId != ''" >
+      and dms_id = #{dmsId,jdbcType=INTEGER}
+    </if>
+    <if test="orgId != null and orgId != ''" >
+      and org_id = #{orgId,jdbcType=INTEGER}
+    </if>
+    <if test="siteType != null and siteType != ''" >
+      and site_type = #{siteType,jdbcType=INTEGER}
+    </if>
+    <if test="subType != null and subType != ''" >
+      and sub_type = #{subType,jdbcType=INTEGER}
+    </if>
+    <if test="thirdType != null and thirdType != ''" >
+      and third_type = #{thirdType,jdbcType=INTEGER}
+    </if>
+    <if test="tabletrolleyCode != null and tabletrolleyCode != ''" >
+      and tabletrolley_code = #{tabletrolleyCode,jdbcType=VARCHAR}
+    </if>
+    <if test="crossCode != null and crossCode != ''" >
+      and cross_code = #{crossCode,jdbcType=VARCHAR}
+    </if>
+    <if test="siteCode != null and siteCode != ''" >
+      and site_code = #{siteCode,jdbcType=VARCHAR}
+    </if>
+  </sql>
+  <update id="updateEnableByIds" parameterType="com.jdl.basic.api.domain.cross.SortCrossUpdateRequest">
+    update sort_cross_detail 
+    set enable = #{enable, jdbcType=INTEGER}
+    where id in
+    <foreach collection="ids" item="item" open="(" close=")" separator=",">
+      #{item,jdbcType=BIGINT}
+    </foreach>
   </update>
 </mapper>

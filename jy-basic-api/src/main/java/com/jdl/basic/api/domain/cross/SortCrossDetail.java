@@ -43,6 +43,8 @@ public class SortCrossDetail {
 
     private String belongName;
 
+    private Integer enable;
+    
     public Long getId() {
         return id;
     }
@@ -201,5 +203,13 @@ public class SortCrossDetail {
 
     public void setBelongName(String belongName) {
         this.belongName = belongName;
+    }
+
+    public Integer getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Integer enable) {
+        this.enable = enable;
     }
 }
