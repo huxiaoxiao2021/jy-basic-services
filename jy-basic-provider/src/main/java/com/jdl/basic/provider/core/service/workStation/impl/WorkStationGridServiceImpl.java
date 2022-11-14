@@ -92,15 +92,17 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	 }
 
 	private void addMachine(WorkStationGrid insertData) {
+		List<WorkStationGridMachine> machines = new ArrayList<>();
 		for (Machine m : insertData.getMachine()) {
 			WorkStationGridMachine machine =  new WorkStationGridMachine();
 			machine.setCreateUser(insertData.getCreateUser());
 			machine.setRefGridKey(insertData.getBusinessKey());
 			machine.setMachineCode(m.getMachineCode());
 			machine.setMachineTypeCode(m.getMachineTypeCode());
-			if (!Objects.equals(machineService.insert(machine),Constants.YN_YES)) {
-				throw new RuntimeException("关联自动化设备失败,网格:"+insertData.getBusinessKey());
-			}
+			machines.add(machine);
+		}
+		if (!machineService.batchInsert(machines)) {
+			throw new RuntimeException("关联自动化设备失败,网格:"+insertData.getBusinessKey());
 		}
 	}
 
@@ -209,6 +211,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	 * @param updateData
 	 * @return
 	 */
+	@Transactional
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.updateById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> updateById(WorkStationGrid updateData){
 		Result<Boolean> result = Result.success();
@@ -314,9 +317,9 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(totalCount != null && totalCount > 0){
 			List<WorkStationGrid> grids = workStationGridDao.queryList(query);
 			// 查询关联的自动化设备
+			HashMap<String, List<Machine>> machineMap = machineService.getMachineListByRefGridKey(grids);
 			for (WorkStationGrid grid : grids) {
-				List<Machine> machines = machineService.getMachineListByRefGridKey(grid.getBusinessKey());
-				grid.setMachine(machines);
+				grid.setMachine(machineMap.get(grid.getBusinessKey()));
 			}
 			pageData.setResult(grids);
 			pageData.setTotalRow(totalCount.intValue());

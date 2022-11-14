@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.dao.machine;
 
 import com.jdl.basic.api.domain.machine.Machine;
 import com.jdl.basic.api.domain.machine.WorkStationGridMachine;
+import com.jdl.basic.api.domain.workStation.WorkStationGrid;
 
 import java.util.List;
 
@@ -27,8 +28,16 @@ public interface WorkStationGridMachineDao {
 
     /**
      * 获取网格工序绑定的自动化设备编码和类型
-     * @param refGridKey
+     * @param grids
      * @return
      */
-    List<Machine> getMachineListByRefGridKey(String refGridKey);
+    List<WorkStationGridMachine> getMachineListByRefGridKey(List<WorkStationGrid> grids);
+
+    /**
+     * 批量新增
+     * @param machines
+     * @return
+     */
+    int batchInsert(List<WorkStationGridMachine> machines);
+    
 }

@@ -4,13 +4,18 @@ import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.machine.Machine;
 import com.jdl.basic.api.domain.machine.WorkStationGridMachine;
+import com.jdl.basic.api.domain.workStation.WorkStationGrid;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.provider.core.dao.machine.WorkStationGridMachineDao;
 import com.jdl.basic.provider.core.service.machine.WorkStationGridMachineService;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -30,18 +35,35 @@ public class WorkStationGridMachineServiceImpl implements WorkStationGridMachine
     }
 
     @Override
+    public Boolean batchInsert(List<WorkStationGridMachine> machines) {
+        return workStationGridMachineDao.batchInsert(machines) > 0;
+    }
+
+    @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridMachineServiceImpl.deleteByRefGridKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public Integer deleteByRefGridKey(WorkStationGridMachine machine) {
-        return workStationGridMachineDao.deleteByRefGridKey(machine);
+    public Boolean deleteByRefGridKey(WorkStationGridMachine machine) {
+        return workStationGridMachineDao.deleteByRefGridKey(machine) > 0;
     }
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridMachineServiceImpl.getMachineListByRefGridKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public List<Machine> getMachineListByRefGridKey(String refGridKey) {
-        if (StringUtils.isEmpty(refGridKey)){
+    public HashMap<String, List<Machine>> getMachineListByRefGridKey(List<WorkStationGrid> grids) {
+        if (CollectionUtils.isEmpty(grids)) {
             return null;
         }
-        return workStationGridMachineDao.getMachineListByRefGridKey(refGridKey);
+        HashMap<String, List<Machine>> result = new HashMap<>();
+        for (WorkStationGrid grid : grids) {
+            result.put(grid.getBusinessKey(), new ArrayList<>());
+        }
+        List<WorkStationGridMachine> machineList = workStationGridMachineDao.getMachineListByRefGridKey(grids);
+        for (WorkStationGridMachine gridMachine : machineList) {
+            List<Machine> list = result.get(gridMachine.getRefGridKey());
+            Machine machine = new Machine();
+            machine.setMachineCode(gridMachine.getMachineCode());
+            machine.setMachineTypeCode(gridMachine.getMachineTypeCode());
+            list.add(machine);
+        }
+        return result;
     }
 
 }
