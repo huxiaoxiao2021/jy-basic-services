@@ -107,6 +107,7 @@
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
 
+    <!--易冻品场地配置JSF服务-->
     <jsf:provider id="easyFreezeSiteJsfService"
                   interface="com.jdl.basic.api.service.easyFreeze.EasyFreezeSiteJsfService"
                   alias="${jsf.jy_basic.alias}"
