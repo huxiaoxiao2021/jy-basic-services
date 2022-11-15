@@ -237,16 +237,14 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	 }
 
 	private void deleteWorkAbnormalGridBinding(WorkStationGrid data, WorkStationGrid deleteData) {
-		List<WorkStationBinding> delete = new ArrayList<>();
-		WorkStationBinding workStationBinding = new WorkStationBinding();
-		workStationBinding.setGridCode(data.getGridCode());
-		workStationBinding.setFloor(data.getFloor());
-		workStationBinding.setSiteCode(data.getSiteCode());
-		workStationBinding.setUpdateUser(deleteData.getUpdateUser());
-		workStationBinding.setUpdateUserName(deleteData.getUpdateUserName());
-		workStationBinding.setUpdateTime(new Date());
-		delete.add(workStationBinding);
-		workAbnormalGridBindingService.update(delete);
+		WorkStationBinding delete = new WorkStationBinding();
+		delete.setGridCode(data.getGridCode());
+		delete.setFloor(data.getFloor());
+		delete.setSiteCode(data.getSiteCode());
+		delete.setUpdateUser(deleteData.getUpdateUser());
+		delete.setUpdateUserName(deleteData.getUpdateUserName());
+		delete.setUpdateTime(new Date());
+		workAbnormalGridBindingService.deleteByGrid(delete);
 	}
 
 

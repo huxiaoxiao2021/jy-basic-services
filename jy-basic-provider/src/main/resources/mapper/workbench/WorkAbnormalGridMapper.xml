@@ -163,7 +163,7 @@
             and grid_code = #{gridCode,jdbcType=VARCHAR}
         </if>
     </select>
-    <update id="updateByGridCode" parameterType="com.jdl.basic.api.domain.workStation.WorkStationBinding">
+    <update id="deleteByGridCode" parameterType="com.jdl.basic.api.domain.workStation.WorkStationBinding">
         update jy_exception_grid_relation
         set
         <if test="updateUser != null" >
@@ -177,15 +177,23 @@
         </if>
         yn = 0
         where
-        <if test="siteCode != null and siteCode != ''" >
-            site_code = #{siteCode,jdbcType=INTEGER}
+        site_code = #{siteCode,jdbcType=INTEGER} and grid_code = #{gridCode,jdbcType=VARCHAR} and floor = #{floor,jdbcType=INTEGER}
+    </update>
+    <update id="deleteByExcpGrid" parameterType="com.jdl.basic.api.domain.workStation.WorkStationBinding">
+        update jy_exception_grid_relation
+        set
+        <if test="updateUser != null" >
+            update_user = #{updateUser,jdbcType=VARCHAR},
         </if>
-        <if test="gridCode != null and gridCode != ''" >
-            and grid_code = #{gridCode,jdbcType=VARCHAR}
+        <if test="updateTime != null" >
+            update_time = #{updateTime,jdbcType=TIMESTAMP},
         </if>
-        <if test="floor != null and floor != ''" >
-            and floor = #{floor,jdbcType=INTEGER}
+        <if test="updateUserName != null" >
+            update_user_name = #{updateUserName,jdbcType=VARCHAR},
         </if>
+        yn = 0
+        where
+        site_code = #{siteCode,jdbcType=INTEGER} and excp_grid_code = #{excpGridCode,jdbcType=VARCHAR} and excp_floor = #{excpFloor,jdbcType=INTEGER}
     </update>
     <update id="update" parameterType="com.jdl.basic.api.domain.workStation.WorkStationBinding">
         update jy_exception_grid_relation

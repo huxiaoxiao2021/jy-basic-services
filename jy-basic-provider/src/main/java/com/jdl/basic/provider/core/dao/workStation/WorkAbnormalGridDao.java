@@ -36,7 +36,7 @@ public interface WorkAbnormalGridDao {
      * 更新绑定关系
      * @param data
      */
-    void updateByGridCode(WorkStationBinding data);
+    int deleteByGridCode(WorkStationBinding data);
 
     void update(WorkStationBinding insertData);
     List<Integer> queryFloor(WorkStationFloorGridQuery query);
@@ -44,4 +44,6 @@ public interface WorkAbnormalGridDao {
     WorkStationFloorGridVo getAbnormalGrid(WorkStationFloorGridQuery query);
 
     long queryCountUnDelete(WorkStationBinding query);
+
+    int deleteByExcpGrid(WorkStationBinding deleteData);
 }
