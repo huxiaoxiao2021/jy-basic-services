@@ -6,6 +6,8 @@ import com.jdl.basic.api.domain.cross.SortCrossUpdateRequest;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 
+import java.util.List;
+
 /**
  * @author liwenji
  * @date 2022-11-09 10:43
@@ -25,4 +27,11 @@ public interface SortCrossJsfService {
      * @return
      */
     Result<Boolean> updateEnableByIds(SortCrossUpdateRequest request);
+
+    /**
+     * 初始化网点数据
+     * @return
+     */
+    Result<Boolean> initSortCross();
+    
 }

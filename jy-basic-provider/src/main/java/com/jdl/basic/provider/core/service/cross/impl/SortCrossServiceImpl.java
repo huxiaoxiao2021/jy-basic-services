@@ -58,5 +58,15 @@ public class SortCrossServiceImpl implements SortCrossService {
         }
         return crossDetailDao.updateEnableByIds(request) > 0;
     }
-    
+
+    @Override
+    public List<SortCrossDetail> queryNotInit(Integer queryLimit) {
+        return crossDetailDao.queryNotInit(queryLimit);
+    }
+
+    @Override
+    public int initSiteTypeById(SortCrossDetail sortCrossDetail) {
+        return crossDetailDao.updateById(sortCrossDetail);
+    }
+
 }

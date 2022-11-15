@@ -4,6 +4,7 @@ import com.jdl.basic.api.domain.cross.SortCrossDetail;
 import com.jdl.basic.api.domain.cross.SortCrossQuery;
 import com.jdl.basic.api.domain.cross.SortCrossUpdateRequest;
 import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
 
 import java.util.List;
 
@@ -26,4 +27,18 @@ public interface SortCrossService {
      * @return
      */
     boolean updateEnableByIds(SortCrossUpdateRequest request);
+
+    /**
+     * 查询没有初始化的数据
+     * @param queryLimit
+     * @return
+     */
+    List<SortCrossDetail> queryNotInit(Integer queryLimit);
+
+    /**
+     * 初始化数据
+     * @param sortCrossDetail
+     * @return
+     */
+    int initSiteTypeById(SortCrossDetail sortCrossDetail);
 }

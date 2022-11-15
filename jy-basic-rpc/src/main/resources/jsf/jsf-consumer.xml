@@ -26,4 +26,8 @@
                   alias="${ldop.basic.jsf.alias}" timeout="${ldop.basic.jsf.timeout}" retries="${jsf.retries}">
     </jsf:consumer>
 
+    <jsf:consumer id="basicSiteQueryWS" interface="com.jd.ql.basic.ws.BasicSiteQueryWS" alias="${basic.jsf.alias}" protocol="jsf"
+                  lazy="${jsf.consumer.lazy}" timeout="${basic.jsf.timeout}" retries="${jsf.retries}">
+        <jsf:parameter key="token" value="${basic.jsf.token}" hide="true" />
+    </jsf:consumer>
 </beans>

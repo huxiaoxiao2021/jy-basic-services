@@ -314,4 +314,28 @@
       #{item,jdbcType=BIGINT}
     </foreach>
   </update>
+  <select id="queryNotInit" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, site_code from sort_cross_detail where site_type = 0 limit #{queryLimit,jdbcType=INTEGER}
+  </select>
+  <update id="updateById" parameterType="com.jdl.basic.api.domain.cross.SortCrossDetail">
+    update sort_cross_detail
+    <set>
+      <if test="siteType != null and siteType != ''" >
+        site_type = #{siteType,jdbcType=INTEGER},
+      </if>
+      <if test="subType != null and subType != ''" >
+        sub_type = #{subType,jdbcType=INTEGER},
+      </if>
+      <if test="thirdType != null and thirdType != ''" >
+        third_type = #{thirdType,jdbcType=INTEGER},
+      </if>
+      <if test="belongCode != null and belongCode != ''" >
+        belong_code = #{belongCode,jdbcType=INTEGER},
+      </if>
+      <if test="belongName != null and belongName != ''" >
+        belong_name = #{belongName,jdbcType=VARCHAR},
+      </if>
+    </set>
+        where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>
