@@ -1,9 +1,7 @@
 package com.jdl.basic.provider.core.provider.cross;
 
 import com.jd.ql.basic.dto.BaseSiteInfoDto;
-import com.jdl.basic.api.domain.cross.SortCrossDetail;
-import com.jdl.basic.api.domain.cross.SortCrossQuery;
-import com.jdl.basic.api.domain.cross.SortCrossUpdateRequest;
+import com.jdl.basic.api.domain.cross.*;
 import com.jdl.basic.api.service.cross.SortCrossJsfService;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
@@ -85,6 +83,68 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
         }
         return Result.success(Boolean.TRUE);
     }
+
+    @Override
+    public Result<CrossDataJsfResp> queryCrossDataByDmsCode(CrossPageQuery query) {
+        log.info("开始分页查询场地滑道信息: {}", JsonHelper.toJSONString(query));
+        Result<CrossDataJsfResp> result = new Result<>();
+        result.toFail("场地滑道分页查询失败");
+        if (query.getDmsId()==null){
+            return result.toFail("未获取到场地信息");
+        }
+        if (query.getPageNumber() < 1 || query.getLimit() < 1) {
+            return result.toFail("分页参数不合法");
+        }
+        try{
+            result.setData(sortCrossService.queryCrossDataByDmsCode(query));
+            return result.toSuccess();
+        }catch (Exception e) {
+            log.info("场地:{}滑道分页查询失败 {}",query.getDmsId(),e);
+        }
+        return result;
+    }
+
+    @Override
+    public Result<TableTrolleyJsfResp> queryTableTrolleyListByCrossCode(TableTrolleyQuery query) {
+        log.info("开始根据滑道分页查询笼车信息: {}", JsonHelper.toJSONString(query));
+        Result<TableTrolleyJsfResp> result = new Result<>();
+        result.toFail("根据滑道分页查询笼车信息失败");
+        if (query.getDmsId() == null) {
+            return result.toFail("未获取到场地信息");
+        }
+        if (query.getCrossCode() == null) {
+            return result.toFail("未获取到滑道信息");
+        }
+        if (query.getPageNumber() < 1 || query.getLimit() < 1) {
+            return result.toFail("分页参数不合法");
+        }
+        try {
+            result.setData(sortCrossService.queryTableTrolleyListByCrossCode(query));
+            return result.toSuccess();
+        } catch (Exception e) {
+            log.info("场地:{}滑道：{} 分页查询失败 {}", query.getDmsId(), query.getCrossCode(), e);
+        }
+        return result;
+    }
+
+    @Override
+    public Result<TableTrolleyJsfResp> queryTableTrolleyListByDmsId(TableTrolleyQuery query) {
+        log.info("开始根据场地分页查询笼车信息: {}", JsonHelper.toJSONString(query));
+        Result<TableTrolleyJsfResp> result = new Result<>();
+        result.toFail("根据场地分页查询笼车信息失败");
+        if (query.getDmsId() == null) {
+            return result.toFail("未获取到场地信息");
+        }
+        if (query.getPageNumber() < 1 || query.getLimit() < 1) {
+            return result.toFail("分页参数不合法");
+        }
+        try {
+            result.setData(sortCrossService.queryTableTrolleyListByDmsId(query));
+            return result.toSuccess();
+        } catch (Exception e) {
+            log.info("场地:{}分页查询失败 {}", query.getDmsId(), e);
+        }
+        return result;    }
 
     private Boolean initSiteType(SortCrossDetail sortCrossDetail) {
         BaseSiteInfoDto baseSiteInfoDto = basicSiteQueryWSManager.getBaseSiteInfoBySiteId(Integer.valueOf(sortCrossDetail.getSiteCode()));

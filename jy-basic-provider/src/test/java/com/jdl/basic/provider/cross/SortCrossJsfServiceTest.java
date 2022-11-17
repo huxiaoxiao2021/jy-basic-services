@@ -1,9 +1,7 @@
 package com.jdl.basic.provider.cross;
 
 import com.jd.ql.basic.dto.BaseSiteInfoDto;
-import com.jdl.basic.api.domain.cross.SortCrossDetail;
-import com.jdl.basic.api.domain.cross.SortCrossQuery;
-import com.jdl.basic.api.domain.cross.SortCrossUpdateRequest;
+import com.jdl.basic.api.domain.cross.*;
 import com.jdl.basic.api.service.cross.SortCrossJsfService;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
@@ -85,4 +83,33 @@ public class SortCrossJsfServiceTest {
         System.out.println(sortCrossJsfService.initSortCross());
     }
     
+    @Test
+    public void queryCrossDataByDmsCodeTest() {
+        CrossPageQuery query = new CrossPageQuery();
+        query.setPageNumber(1);
+        query.setDmsId(910);
+        query.setLimit(4);
+        Result<CrossDataJsfResp> result = sortCrossJsfService.queryCrossDataByDmsCode(query);
+        System.out.println(JsonHelper.toJSONString(result));
+    }
+    
+    @Test
+    public void queryTableTrolleyListByCrossCodeTest() {
+        TableTrolleyQuery query = new TableTrolleyQuery();
+        query.setPageNumber(2);
+        query.setDmsId(910);
+        query.setLimit(4);
+        query.setCrossCode("2002");
+        Result<TableTrolleyJsfResp> result = sortCrossJsfService.queryTableTrolleyListByCrossCode(query);
+        System.out.println(JsonHelper.toJSONString(result));
+    }
+    @Test
+    public void queryTableTrolleyListByDmsIdTest() {
+        TableTrolleyQuery query = new TableTrolleyQuery();
+        query.setPageNumber(3);
+        query.setDmsId(910);
+        query.setLimit(4);
+        Result<TableTrolleyJsfResp> result = sortCrossJsfService.queryTableTrolleyListByDmsId(query);
+        System.out.println(JsonHelper.toJSONString(result));
+    }
 }

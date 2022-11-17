@@ -1,12 +1,8 @@
 package com.jdl.basic.api.service.cross;
 
-import com.jdl.basic.api.domain.cross.SortCrossDetail;
-import com.jdl.basic.api.domain.cross.SortCrossQuery;
-import com.jdl.basic.api.domain.cross.SortCrossUpdateRequest;
+import com.jdl.basic.api.domain.cross.*;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
-
-import java.util.List;
 
 /**
  * @author liwenji
@@ -33,5 +29,26 @@ public interface SortCrossJsfService {
      * @return
      */
     Result<Boolean> initSortCross();
-    
+
+    /**
+     * 分页查询场地滑道列表数据
+     * @param query
+     * @return
+     */
+    Result<CrossDataJsfResp> queryCrossDataByDmsCode(CrossPageQuery query);
+
+    /**
+     * 通过道口号分页查询笼车编号
+     * @param query
+     * @return
+     */
+    Result<TableTrolleyJsfResp> queryTableTrolleyListByCrossCode(TableTrolleyQuery query);
+
+    /**
+     * 通过场地分页查询笼车编号
+     * @param query
+     * @return
+     */
+    Result<TableTrolleyJsfResp> queryTableTrolleyListByDmsId(TableTrolleyQuery query);
+
 }

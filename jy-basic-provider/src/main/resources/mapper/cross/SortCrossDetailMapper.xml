@@ -24,6 +24,12 @@
     <result column="BELONG_NAME" jdbcType="VARCHAR" property="belongName" />
     <result column="enable" jdbcType="INTEGER" property="enable" />
   </resultMap>
+  <resultMap id="tableTrolleyDto" type="com.jdl.basic.api.domain.cross.TableTrolleyJsfDto">
+    <result column="SITE_CODE" jdbcType="VARCHAR" property="endSiteId" />
+    <result column="SITE_NAME" jdbcType="VARCHAR" property="endSiteName" />
+    <result column="CROSS_CODE" jdbcType="VARCHAR" property="crossCode" />
+    <result column="TABLETROLLEY_CODE" jdbcType="VARCHAR" property="tableTrolleyCode" />
+  </resultMap>
   <sql id="Base_Column_List">
     ID, TABLETROLLEY_CODE, CROSS_CODE, SITE_CODE, SITE_NAME, SITE_TYPE, SUB_TYPE, THIRD_TYPE, 
     CREATOR, CREATOR_ACCOUNT, MODIFIER, MODIFIER_ACCOUNT, DMS_ID, ORG_ID, CREATE_TIME, 
@@ -338,4 +344,42 @@
     </set>
         where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="queryCrossDataByDmsCode" parameterType="com.jdl.basic.api.domain.cross.CrossPageQuery"
+          resultType="java.lang.String">
+    select distinct cross_code
+    from sort_cross_detail
+    where dms_id = #{dmsId,jdbcType=INTEGER}
+      and yn = 1 limit #{offset}
+        , #{limit}
+  </select>
+  <select id="queryCrossDataCount" parameterType="com.jdl.basic.api.domain.cross.CrossPageQuery"
+          resultType="java.lang.Long">
+    select count(distinct cross_code) as count
+    from sort_cross_detail
+    where dms_id = #{dmsId,jdbcType=INTEGER} and yn = 1
+  </select>
+  <select id="queryTableTrolleyCount" parameterType="com.jdl.basic.api.domain.cross.TableTrolleyQuery"
+          resultType="java.lang.Long">
+    select count(1) as count
+    from sort_cross_detail
+    where dms_id = #{dmsId,jdbcType=INTEGER}
+    and yn = 1
+    <if test="crossCode != null and crossCode != ''">
+      and cross_code = #{crossCode,jdbcType=VARCHAR}
+    </if>
+    and enable = 1
+  </select>
+  <select id="queryTableTrolleyList" parameterType="com.jdl.basic.api.domain.cross.TableTrolleyQuery"
+          resultMap="tableTrolleyDto">
+    select TABLETROLLEY_CODE, CROSS_CODE, SITE_CODE, SITE_NAME
+    from sort_cross_detail
+    where dms_id = #{dmsId,jdbcType=INTEGER}
+    and yn = 1
+    <if test="crossCode != null and crossCode != ''">
+      and cross_code = #{crossCode,jdbcType=VARCHAR}
+    </if>
+    and enable = 1
+    limit #{offset}
+    , #{limit}
+  </select>
 </mapper>
