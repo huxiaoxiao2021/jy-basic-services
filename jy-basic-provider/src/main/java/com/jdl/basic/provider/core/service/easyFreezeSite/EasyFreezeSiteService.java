@@ -46,4 +46,12 @@ public interface EasyFreezeSiteService {
     PageDto<EasyFreezeSiteDto> getEasyFreezeSiteListBypage(EasyFreezeSiteQueryDto queryDto);
 
     Result<Boolean> importEasyFreezeSiteList(List<EasyFreezeSiteDto> dtoList, LoginUser loginUser);
+
+    /**
+     * 根据站点编码获取单个站点配置信息
+     * @param siteCode
+     * @return
+     */
+    Result<EasyFreezeSiteDto> selectOneBysiteCode(Integer siteCode);
+
 }

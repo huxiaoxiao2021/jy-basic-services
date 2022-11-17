@@ -79,6 +79,7 @@ public class EasyFreezeSiteServiceImpl implements EasyFreezeSiteService {
     @Override
     public PageDto<EasyFreezeSiteDto> getEasyFreezeSiteListBypage(EasyFreezeSiteQueryDto dto) {
         PageDto<EasyFreezeSiteDto> result = new PageDto<>();
+        dto.setOffset();
         int count = easyFreezeSiteDao.countByCondition(dto);
         result.setTotalRow(count);
         if(count == 0){
@@ -125,6 +126,20 @@ public class EasyFreezeSiteServiceImpl implements EasyFreezeSiteService {
         }
         if(CollectionUtils.isNotEmpty(addList)){
             easyFreezeSiteDao.batchInsert(addList);
+        }
+        return result;
+    }
+
+    @Override
+    public Result<EasyFreezeSiteDto> selectOneBysiteCode(Integer siteCode) {
+        log.info("selectOneBysiteCode-获取单个配置信息 入参-{}", siteCode);
+        Result<EasyFreezeSiteDto> result = new Result<>();
+        result.toSuccess("成功");
+        EasyFreezeSitePO po = easyFreezeSiteDao.selectOneConfigBysiteCode(siteCode);
+        EasyFreezeSiteDto dto = new EasyFreezeSiteDto();
+        if(Objects.nonNull(po)){
+            BeanUtils.copyProperties(po,dto);
+            result.setData(dto);
         }
         return result;
     }

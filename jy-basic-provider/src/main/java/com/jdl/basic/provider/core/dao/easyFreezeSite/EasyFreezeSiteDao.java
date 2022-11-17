@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.core.dao.easyFreezeSite;
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jdl.basic.api.domain.easyFreeze.EasyFreezeSiteDto;
 import com.jdl.basic.api.domain.easyFreeze.EasyFreezeSiteQueryDto;
 import com.jdl.basic.provider.core.po.EasyFreezeSitePO;
@@ -70,5 +71,14 @@ public interface EasyFreezeSiteDao {
     int batchUpdateBySiteCode(List<EasyFreezeSitePO> pos);
 
     int batchInsert(List<EasyFreezeSitePO> pos);
+
+    /**
+     * 根据站点id获取站点配置信息
+     * @param siteCode
+     * @return
+     */
+    @Cache(key = "EasyFreezeSiteDao.selectOneConfigBysiteCode@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
+    EasyFreezeSitePO selectOneConfigBysiteCode(Integer siteCode);
 
 }

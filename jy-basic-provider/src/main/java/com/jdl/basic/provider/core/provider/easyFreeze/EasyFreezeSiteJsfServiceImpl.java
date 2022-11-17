@@ -37,7 +37,8 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
             if (Objects.isNull(dto)
                     || Objects.isNull(dto.getRemindStartTime())
                     || Objects.isNull(dto.getRemindEndTime())
-                    || Objects.isNull(dto.getSiteCode())) {
+                    || Objects.isNull(dto.getSiteCode())
+                    || Objects.isNull(dto.getUseState())) {
                 result.toFail("入参不能为空!");
                 return result;
             }
@@ -130,6 +131,23 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
         } catch (Exception e) {
             log.error("数据导入异常! -{}",e.getMessage(),e);
             result.toSuccess("数据导入异常");
+        }
+        return result;
+    }
+
+    @Override
+    public Result<EasyFreezeSiteDto> selectOneBysiteCode(Integer siteCode) {
+        Result<EasyFreezeSiteDto> result = new Result<>();
+        result.toSuccess("成功");
+        try{
+            if(Objects.isNull(siteCode)){
+                result.toFail("站点编码不能为空!");
+                return result;
+            }
+            return easyFreezeSiteService.selectOneBysiteCode(siteCode);
+        } catch (Exception e) {
+            log.error("获取单个易冻品站点配置异常! -{}",e.getMessage(),e);
+            result.toSuccess("获取单个易冻品站点配置异常！");
         }
         return result;
     }

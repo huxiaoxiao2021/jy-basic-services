@@ -40,4 +40,12 @@ public class EasyFreezeSiteQueryDto implements Serializable {
     private Integer pageSize = 20;
 
     private Integer offset = 0;
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset() {
+        this.offset = (this.pageNum - 1) * this.pageSize;
+    }
 }
