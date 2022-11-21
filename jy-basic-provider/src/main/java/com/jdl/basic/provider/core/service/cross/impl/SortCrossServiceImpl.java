@@ -105,19 +105,11 @@ public class SortCrossServiceImpl implements SortCrossService {
     }
 
     @Override
-    @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossServiceImpl.queryTableTrolleyListByDmsId", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public TableTrolleyJsfResp queryTableTrolleyListByDmsId(TableTrolleyQuery query) {
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossServiceImpl.queryTableTrolley", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public TableTrolleyJsfResp queryTableTrolley(TableTrolleyQuery query) {
         TableTrolleyJsfResp tableTrolley = new TableTrolleyJsfResp();
-        List<TableTrolleyJsfDto> tableTrolleyList = new ArrayList<>();
-        Long count = crossDetailDao.queryTableTrolleyCount(query);
-        query.setOffset((query.getPageNumber() - 1) * query.getLimit());
-        if (count > 0 ) {
-            tableTrolleyList = crossDetailDao.queryTableTrolleyList(query);
-            int totalPage = (int) (count% query.getLimit() == 0 ? count/query.getLimit() : count/query.getLimit()+1);
-            tableTrolley.setTotalPage(totalPage);
-        }
+        List<TableTrolleyJsfDto> tableTrolleyList = crossDetailDao.queryTableTrolley(query);
         tableTrolley.setTableTrolleyDtoJsfList(tableTrolleyList);
         return tableTrolley;
     }
-
 }

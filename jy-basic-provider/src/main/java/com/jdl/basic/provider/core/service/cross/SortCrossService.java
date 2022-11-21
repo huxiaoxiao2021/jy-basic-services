@@ -52,11 +52,13 @@ public interface SortCrossService {
      * @return
      */
     TableTrolleyJsfResp queryTableTrolleyListByCrossCode(TableTrolleyQuery query);
+    
 
     /**
-     * 通过场地分页查询笼车编号
+     * 根据条件查询滑道笼车流向信息
      * @param query
      * @return
      */
-    TableTrolleyJsfResp queryTableTrolleyListByDmsId(TableTrolleyQuery query);
+    TableTrolleyJsfResp queryTableTrolley(TableTrolleyQuery query);
+    
 }

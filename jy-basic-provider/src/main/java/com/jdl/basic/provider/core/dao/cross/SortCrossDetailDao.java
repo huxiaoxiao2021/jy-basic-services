@@ -78,5 +78,10 @@ public interface SortCrossDetailDao {
      * @return
      */
     List<TableTrolleyJsfDto> queryTableTrolleyList(TableTrolleyQuery query);
-    
+
+    /**
+     * 根据始发目的地获取滑道笼车信息
+     * @return
+     */
+    List<TableTrolleyJsfDto> queryTableTrolley(TableTrolleyQuery query);
 }

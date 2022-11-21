@@ -112,4 +112,22 @@ public class SortCrossJsfServiceTest {
         Result<TableTrolleyJsfResp> result = sortCrossJsfService.queryTableTrolleyListByDmsId(query);
         System.out.println(JsonHelper.toJSONString(result));
     }
+    
+    @Test
+    public void queryCTTByStartEndSiteCodeTest() {
+        TableTrolleyQuery query = new TableTrolleyQuery();
+        query.setSiteCode(630093);
+        query.setDmsId(910);
+        Result<TableTrolleyJsfResp> result = sortCrossJsfService.queryCTTByStartEndSiteCode(query);
+        System.out.println(JsonHelper.toJSONString(result));
+    }
+
+    @Test
+    public void queryCTTByCTTCodeTest() {
+        TableTrolleyQuery query = new TableTrolleyQuery();
+        query.setCrossCode("102");
+        query.setTabletrolleyCode("102");
+        Result<TableTrolleyJsfResp> result = sortCrossJsfService.queryCTTByCTTCode(query);
+        System.out.println(JsonHelper.toJSONString(result));
+    }
 }

@@ -69,6 +69,7 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
                 try{
                     if (StringUtils.isEmpty(sortCrossDetail.getSiteCode())){
                         sortCrossDetail.setSiteType(-1);
+                        sortCrossDetail.setEnable(0);
                     } else {
                         if (!initSiteType(sortCrossDetail)){
                             log.info("id:{}初始化数据失败",sortCrossDetail.getId());
@@ -139,10 +140,44 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
             return result.toFail("分页参数不合法");
         }
         try {
-            result.setData(sortCrossService.queryTableTrolleyListByDmsId(query));
+            result.setData(sortCrossService.queryTableTrolleyListByCrossCode(query));
             return result.toSuccess();
         } catch (Exception e) {
-            log.info("场地:{}分页查询失败 {}", query.getDmsId(), e);
+            log.error("场地:{}分页查询失败 {}", query.getDmsId(), e);
+        }
+        return result;    
+    }
+
+    @Override
+    public Result<TableTrolleyJsfResp> queryCTTByStartEndSiteCode(TableTrolleyQuery query) {
+        log.info("开始根据始发：{}和目的地：{} 获取滑道笼车信息", query.getDmsId(),query.getSiteCode());
+        Result<TableTrolleyJsfResp> result = new Result<>();
+        result.toFail("根据始发和目的地查询流向信息失败");
+        if (query.getDmsId() == null || query.getSiteCode() == null) {
+            result.toFail("查询参数错误");
+        }
+        try{
+            result.setData(sortCrossService.queryTableTrolley(query));
+            return result.toSuccess();
+        }catch (Exception e){
+            log.error("根据始发和目的地获取滑道笼车信息失败: {}", JsonHelper.toJSONString(query), e);
+        }
+        return result;
+    }
+
+    @Override
+    public Result<TableTrolleyJsfResp> queryCTTByCTTCode(TableTrolleyQuery query) {
+        log.info("开始根据滑道笼车号获取流向信息：{}", JsonHelper.toJSONString(query));
+        Result<TableTrolleyJsfResp> result = new Result<>();
+        result.toFail("根据滑道笼车号获取流向信息失败");
+        if (query.getCrossCode() == null || query.getTabletrolleyCode() == null) {
+            result.toFail("查询参数错误");
+        }
+        try{
+            result.setData(sortCrossService.queryTableTrolley(query));
+            return result.toSuccess();
+        }catch (Exception e){
+            log.error("根据滑道笼车号获取流向信息失败: {}", JsonHelper.toJSONString(query), e);
         }
         return result;    }
 
@@ -154,8 +189,14 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
             sortCrossDetail.setThirdType(baseSiteInfoDto.getThirdType());
             sortCrossDetail.setBelongCode(baseSiteInfoDto.getBelongCode());
             sortCrossDetail.setBelongName(baseSiteInfoDto.getBelongName());
+            if (baseSiteInfoDto.getBelongCode() != null) {
+                sortCrossDetail.setEnable(0);
+            }else {
+                sortCrossDetail.setEnable(1);
+            }
         } else {
             sortCrossDetail.setSiteType(-1);
+            sortCrossDetail.setEnable(0);
         }
         if (sortCrossService.initSiteTypeById(sortCrossDetail) < 1) {
             log.info("id:{}初始化数据失败", sortCrossDetail.getId());

@@ -11,12 +11,22 @@ import lombok.Data;
 public class TableTrolleyQuery extends BasePagerCondition {
 
     /**
+     * 笼车编号
+     */
+    private String tabletrolleyCode;
+    
+    /**
      * 滑道编号
      */
     private String crossCode;
 
     /**
-     * 场地ID
+     * 始发场地ID
      */
     private Integer dmsId;
+
+    /**
+     * 目的地场地ID
+     */
+    private Integer siteCode;
 }

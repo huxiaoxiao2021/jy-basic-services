@@ -51,4 +51,18 @@ public interface SortCrossJsfService {
      */
     Result<TableTrolleyJsfResp> queryTableTrolleyListByDmsId(TableTrolleyQuery query);
 
+    /**
+     * 根据始发和目的地站点查询滑道笼车
+     * @param query
+     * @return
+     */
+    Result<TableTrolleyJsfResp> queryCTTByStartEndSiteCode(TableTrolleyQuery query);
+
+    /**
+     * 根据滑道笼车号获取流向信息
+     * @param query
+     * @return
+     */
+    Result<TableTrolleyJsfResp> queryCTTByCTTCode(TableTrolleyQuery query);
+
 }
