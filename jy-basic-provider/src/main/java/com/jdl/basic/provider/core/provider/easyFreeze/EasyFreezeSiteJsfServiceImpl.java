@@ -42,11 +42,6 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
                 result.toFail("入参不能为空!");
                 return result;
             }
-            if (Objects.isNull(dto)
-                    || StringUtils.isBlank(loginUser.getUserErp())) {
-                result.toFail("操作用户信息不能为空!");
-                return result;
-            }
             return easyFreezeSiteService.insert(dto, loginUser);
         } catch (Exception e) {
             log.error("添加易冻品场地配置异常-{}", e.getMessage(), e);
@@ -75,11 +70,6 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
                     || Objects.isNull(dto.getRemindEndTime())
                     || Objects.isNull(dto.getSiteCode())) {
                 result.toFail("入参不能为空!");
-                return result;
-            }
-            if (Objects.isNull(dto)
-                    || StringUtils.isBlank(loginUser.getUserErp())) {
-                result.toFail("操作用户信息不能为空!");
                 return result;
             }
             return easyFreezeSiteService.updateByPrimaryKeySelective(dto, loginUser);
@@ -122,15 +112,18 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
                 return result;
             }
             for (int i = 0; i < dtoList.size(); i++) {
-                if (Objects.isNull(dtoList.get(i).getSiteCode())) {
-                    result.toFail("部分导入数据siteCode值为空! 请检查后重新导入!");
+                if( Objects.isNull(dtoList.get(i).getSiteCode())
+                    || Objects.isNull(dtoList.get(i).getRemindEndTime())
+                    || Objects.isNull(dtoList.get(i).getRemindStartTime())
+                    || Objects.isNull(dtoList.get(i).getUseState())){
+                    result.toFail("导入数据值不能为空! 请检查后重新导入!");
                     return result;
                 }
             }
             return easyFreezeSiteService.importEasyFreezeSiteList(dtoList,loginUser);
         } catch (Exception e) {
             log.error("数据导入异常! -{}",e.getMessage(),e);
-            result.toSuccess("数据导入异常");
+            result.toFail("数据导入异常!");
         }
         return result;
     }
