@@ -164,6 +164,9 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         if (StringUtils.isNotEmpty(conf.getEndSiteName())) {
             collectBoxFlowDirectionConf.setEndSiteName(conf.getEndSiteName());
         }
+        if (conf.getIfChangeSinceLastUpdate() != null) {
+            collectBoxFlowDirectionConf.setIfChangeSinceLastUpdate(conf.getIfChangeSinceLastUpdate());
+        }
 
         int i = collectBoxFlowDirectionConfMapper.updateByPrimaryKeySelective(collectBoxFlowDirectionConf);
         if (i != 1) {
