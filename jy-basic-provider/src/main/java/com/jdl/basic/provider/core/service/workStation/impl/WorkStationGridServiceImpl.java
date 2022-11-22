@@ -568,7 +568,13 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(!checkResult.isSuccess()){
 		    return Result.fail(checkResult.getMessage());
 		}
-		result.setData(workStationGridDao.queryListForExport(query));
+		List<WorkStationGrid> grids = workStationGridDao.queryListForExport(query);
+		// 查询关联的自动化设备
+		HashMap<String, List<Machine>> machineMap = machineService.getMachineListByRefGridKey(grids);
+		for (WorkStationGrid grid : grids) {
+			grid.setMachine(machineMap.get(grid.getBusinessKey()));
+		}
+		result.setData(grids);
 		return result;
 	}
 	@Override
