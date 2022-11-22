@@ -92,6 +92,9 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	 }
 
 	private void addMachine(WorkStationGrid insertData) {
+		if (CollectionUtils.isEmpty(insertData.getMachine())){
+			return;
+		}
 		List<WorkStationGridMachine> machines = new ArrayList<>();
 		for (Machine m : insertData.getMachine()) {
 			WorkStationGridMachine machine =  new WorkStationGridMachine();
