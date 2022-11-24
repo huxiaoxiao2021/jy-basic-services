@@ -1,6 +1,8 @@
 package com.jdl.basic.provider.core.provider.easyFreeze;
 
 import com.alibaba.fastjson.JSON;
+import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
+import com.jd.ql.basic.ws.BasicSiteQueryWS;
 import com.jdl.basic.api.domain.LoginUser;
 import com.jdl.basic.api.domain.easyFreeze.EasyFreezeSiteDto;
 import com.jdl.basic.api.domain.easyFreeze.EasyFreezeSiteQueryDto;
@@ -8,6 +10,7 @@ import com.jdl.basic.api.service.easyFreeze.EasyFreezeSiteJsfService;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.service.easyFreezeSite.EasyFreezeSiteService;
+import com.jdl.basic.rpc.Rpc.BaseMajorRpc;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +33,9 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
     @Autowired
     private EasyFreezeSiteService easyFreezeSiteService;
 
+    @Autowired
+    private BaseMajorRpc baseMajorRpc;
+
     @Override
     public Result<Boolean> insert(EasyFreezeSiteDto dto, LoginUser loginUser) {
         Result<Boolean> result = new Result<>();
@@ -40,6 +46,15 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
                     || Objects.isNull(dto.getSiteCode())
                     || Objects.isNull(dto.getUseState())) {
                 result.toFail("入参不能为空!");
+                return result;
+            }
+            BaseStaffSiteOrgDto basicDto = baseMajorRpc.getBaseSiteBySiteId(dto.getSiteCode());
+            if(basicDto == null){
+                result.toFail("此站点在基础资料未查到!");
+                return result;
+            }
+            if(!basicDto.getOrgName().equals(dto.getOrgName())){
+                result.toFail("此站点实际所属的大区与实际不一致，请重新选择!");
                 return result;
             }
             return easyFreezeSiteService.insert(dto, loginUser);
@@ -70,6 +85,15 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
                     || Objects.isNull(dto.getRemindEndTime())
                     || Objects.isNull(dto.getSiteCode())) {
                 result.toFail("入参不能为空!");
+                return result;
+            }
+            BaseStaffSiteOrgDto basicDto = baseMajorRpc.getBaseSiteBySiteId(dto.getSiteCode());
+            if(basicDto == null){
+                result.toFail("此站点在基础资料未查到!");
+                return result;
+            }
+            if(!basicDto.getOrgName().equals(dto.getOrgName())){
+                result.toFail("此站点实际所属的大区与实际不一致，请重新选择!");
                 return result;
             }
             return easyFreezeSiteService.updateByPrimaryKeySelective(dto, loginUser);
@@ -119,6 +143,12 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
                     result.toFail("导入数据值不能为空! 请检查后重新导入!");
                     return result;
                 }
+                BaseStaffSiteOrgDto basicDto = baseMajorRpc.getBaseSiteBySiteId(dtoList.get(i).getSiteCode());
+                if(basicDto == null){
+                    result.toFail("无此站点{ "+dtoList.get(i).getSiteCode()+" }信息! 请检查后重新导入!");
+                    return result;
+                }
+
             }
             return easyFreezeSiteService.importEasyFreezeSiteList(dtoList,loginUser);
         } catch (Exception e) {
