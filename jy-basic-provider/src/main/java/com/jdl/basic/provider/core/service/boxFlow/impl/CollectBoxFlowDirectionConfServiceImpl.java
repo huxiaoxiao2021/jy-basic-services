@@ -11,6 +11,7 @@ import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConfChangeLog;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.Pager;
 import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.basic.provider.config.jdq.JDQ4Producer;
 import com.jdl.basic.provider.core.dao.boxFlow.CollectBoxFlowDirectionConfDao;
 import com.jdl.basic.provider.core.service.boxFlow.ICollectBoxFlowDirectionConfService;
@@ -153,6 +154,20 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         collectBoxFlowDirectionConf.setBoxReceiveName(conf.getBoxReceiveName());
         collectBoxFlowDirectionConf.setUpdateTime(new Date());
         collectBoxFlowDirectionConf.setUpdateUserErp(conf.getUpdateUserErp());
+
+        if (conf.getCollectClaim() != null) {
+            collectBoxFlowDirectionConf.setCollectClaim(conf.getCollectClaim());
+        }
+        if (StringUtils.isNotEmpty(conf.getStartSiteName())) {
+            collectBoxFlowDirectionConf.setStartSiteName(conf.getStartSiteName());
+        }
+        if (StringUtils.isNotEmpty(conf.getEndSiteName())) {
+            collectBoxFlowDirectionConf.setEndSiteName(conf.getEndSiteName());
+        }
+        if (conf.getIfChangeSinceLastUpdate() != null) {
+            collectBoxFlowDirectionConf.setIfChangeSinceLastUpdate(conf.getIfChangeSinceLastUpdate());
+        }
+
         int i = collectBoxFlowDirectionConfMapper.updateByPrimaryKeySelective(collectBoxFlowDirectionConf);
         if (i != 1) {
             result.fail("更新失败");
