@@ -7,6 +7,7 @@ import com.jdl.basic.api.domain.LoginUser;
 import com.jdl.basic.api.domain.easyFreeze.EasyFreezeSiteDto;
 import com.jdl.basic.api.domain.easyFreeze.EasyFreezeSiteQueryDto;
 import com.jdl.basic.api.service.easyFreeze.EasyFreezeSiteJsfService;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.service.easyFreezeSite.EasyFreezeSiteService;
@@ -49,10 +50,16 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
                 return result;
             }
             BaseStaffSiteOrgDto basicDto = baseMajorRpc.getBaseSiteBySiteId(dto.getSiteCode());
+            log.info("{}--基础资料basicDto--{}",dto.getSiteCode(),basicDto);
             if(basicDto == null){
                 result.toFail("此站点在基础资料未查到!");
                 return result;
             }
+            dto.setCityName(basicDto.getCityName());
+            dto.setSiteName(basicDto.getSiteName());
+            dto.setSiteType(basicDto.getSubType().equals(Constants.B2B_SITE_TYPE)? "转运":"分拣");
+            dto.setCityName(basicDto.getCityName());
+            dto.setOrgName(basicDto.getOrgName());
             if(!basicDto.getOrgName().equals(dto.getOrgName())){
                 result.toFail("此站点实际所属的大区与实际不一致，请重新选择!");
                 return result;
