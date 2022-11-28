@@ -48,6 +48,7 @@ public class EasyFreezeSiteServiceImpl implements EasyFreezeSiteService {
         EasyFreezeSitePO sitePO = new EasyFreezeSitePO();
         BeanUtils.copyProperties(dto,sitePO);
         sitePO.setCreateTime(new Date());
+        sitePO.setUpdateTime(new Date());
         sitePO.setCreateUser(loginUser.getUserErp());
         sitePO.setUpdateUser(loginUser.getUserErp());
         easyFreezeSiteDao.insert(sitePO);
