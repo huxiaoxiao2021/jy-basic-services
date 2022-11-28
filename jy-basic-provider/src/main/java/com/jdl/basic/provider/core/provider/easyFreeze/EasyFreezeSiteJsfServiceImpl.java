@@ -55,15 +55,12 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
                 result.toFail("此站点在基础资料未查到!");
                 return result;
             }
-            dto.setCityName(basicDto.getCityName());
-            dto.setSiteName(basicDto.getSiteName());
-            dto.setSiteType(basicDto.getSubType().equals(Constants.B2B_SITE_TYPE)? "转运":"分拣");
-            dto.setCityName(basicDto.getCityName());
-            dto.setOrgName(basicDto.getOrgName());
             if(!basicDto.getOrgName().equals(dto.getOrgName())){
                 result.toFail("此站点实际所属的大区与实际不一致，请重新选择!");
                 return result;
             }
+            dto.setCityName(basicDto.getCityName());
+            dto.setSiteType(basicDto.getSubType().equals(Constants.B2B_SITE_TYPE)? "转运":"分拣");;
             return easyFreezeSiteService.insert(dto, loginUser);
         } catch (Exception e) {
             log.error("添加易冻品场地配置异常-{}", e.getMessage(), e);
