@@ -24,6 +24,7 @@ public class EasyFreezeSiteQueryDto implements Serializable {
     //场地所在城市
     private String cityName;
 
+    private Integer orgCode;
     /**
      * 当前所在区域名称
      */

@@ -7,6 +7,7 @@
         <result column="site_name" jdbcType="VARCHAR" property="siteName"/>
         <result column="site_type" jdbcType="INTEGER" property="siteType"/>
         <result column="city_name" jdbcType="VARCHAR" property="cityName"/>
+        <result column="org_code" jdbcType="INTEGER" property="orgCode"/>
         <result column="org_name" jdbcType="VARCHAR" property="orgName"/>
         <result column="remind_start_time" jdbcType="TIMESTAMP" property="remindStartTime"/>
         <result column="remind_end_time" jdbcType="TIMESTAMP" property="remindEndTime"/>
@@ -24,6 +25,7 @@
         site_name,
         site_type,
         city_name,
+        org_code,
         org_name,
         remind_start_time,
         remind_end_time,
@@ -51,6 +53,7 @@
         site_name,
         site_type,
         city_name,
+        org_code,
         org_name,
         remind_start_time,
         remind_end_time,
@@ -65,6 +68,7 @@
         #{siteName,jdbcType=VARCHAR},
         #{siteType,jdbcType=VARCHAR},
         #{cityName,jdbcType=VARCHAR},
+        #{orgCode,jdbcType=INTEGER},
         #{orgName,jdbcType=VARCHAR},
         #{remindStartTime,jdbcType=TIMESTAMP},
         #{remindEndTime,jdbcType=TIMESTAMP},
@@ -82,6 +86,7 @@
         site_name,
         site_type,
         city_name,
+        org_code,
         org_name,
         remind_start_time,
         remind_end_time,
@@ -98,6 +103,7 @@
             #{item.siteName,jdbcType=VARCHAR},
             #{item.siteType,jdbcType=VARCHAR},
             #{item.cityName,jdbcType=VARCHAR},
+            #{item.orgCode,jdbcType=INTEGER},
             #{item.orgName,jdbcType=VARCHAR},
             #{item.remindStartTime,jdbcType=TIMESTAMP},
             #{item.remindEndTime,jdbcType=TIMESTAMP},
@@ -127,6 +133,9 @@
             </if>
             <if test="cityName != null">
                 city_name = #{cityName,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null">
+                org_code = #{orgCode,jdbcType=INTEGER},
             </if>
             <if test="orgName != null">
                 org_name = #{orgName,jdbcType=VARCHAR},
@@ -177,6 +186,9 @@
                 <if test="item.cityName != null">
                     city_name = #{item.cityName,jdbcType=VARCHAR},
                 </if>
+                <if test="item.orgCode != null">
+                    org_code = #{item.orgCode,jdbcType=INTEGER},
+                </if>
                 <if test="item.orgName != null">
                     org_name = #{item.orgName,jdbcType=VARCHAR},
                 </if>
@@ -214,8 +226,8 @@
         from jy_easy_freeze_site_conf
         <where>
             AND yn = 1
-            <if test="orgName != null and orgName !=''">
-                AND org_name = #{orgName}
+            <if test="orgCode != null">
+                AND org_code = #{orgCode}
             </if>
             <if test="siteType != null and  siteType !=''">
                 AND site_type = #{siteType}
@@ -262,8 +274,8 @@
         from jy_easy_freeze_site_conf
         <where>
             AND yn = 1
-            <if test="orgName != null and orgName !=''">
-                AND org_name = #{orgName}
+            <if test="orgCode != null">
+                AND org_code = #{orgCode}
             </if>
             <if test="siteType != null and siteType !=''">
                 AND site_type = #{siteType}

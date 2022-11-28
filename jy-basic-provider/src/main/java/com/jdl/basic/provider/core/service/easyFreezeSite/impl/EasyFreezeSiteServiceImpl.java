@@ -6,6 +6,7 @@ import com.jdl.basic.api.domain.easyFreeze.EasyFreezeSiteDto;
 import com.jdl.basic.api.domain.LoginUser;
 import com.jdl.basic.api.domain.easyFreeze.EasyFreezeSiteQueryDto;
 import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.common.enums.AreaEnum;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.easyFreezeSite.EasyFreezeSiteDao;
@@ -51,6 +52,7 @@ public class EasyFreezeSiteServiceImpl implements EasyFreezeSiteService {
         sitePO.setUpdateTime(new Date());
         sitePO.setCreateUser(loginUser.getUserErp());
         sitePO.setUpdateUser(loginUser.getUserErp());
+        log.info("易冻品场地添加-{}",JSON.toJSONString(sitePO));
         easyFreezeSiteDao.insert(sitePO);
         return result;
     }
@@ -115,6 +117,7 @@ public class EasyFreezeSiteServiceImpl implements EasyFreezeSiteService {
             EasyFreezeSitePO sitePO = easyFreezeSiteDao.selectOneBysiteCode(item.getSiteCode());
             EasyFreezeSitePO po = new EasyFreezeSitePO();
             BeanUtils.copyProperties(item,po);
+
             if(Objects.nonNull(sitePO)){
                 updateList.add(po);
             }else {
@@ -158,7 +161,12 @@ public class EasyFreezeSiteServiceImpl implements EasyFreezeSiteService {
                 dto.setSiteName(baseSite.getSiteName());
                 dto.setSiteType(baseSite.getSubType().equals(Constants.B2B_SITE_TYPE)? "转运":"分拣");
                 dto.setCityName(baseSite.getCityName());
-                dto.setOrgName(baseSite.getOrgName());
+                dto.setOrgCode(baseSite.getOrgId());
+                Arrays.asList(AreaEnum.values()).forEach(item -> {
+                   if(dto.getOrgCode().equals(item.getCode())){
+                       dto.setOrgName(item.getName());
+                   }
+                });
                 dto.setCreateTime(new Date());
                 dto.setUpdateTime(new Date());
                 dto.setCreateUser(loginUser.getUserErp());
