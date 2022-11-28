@@ -47,14 +47,7 @@ public class EasyFreezeSiteServiceImpl implements EasyFreezeSiteService {
         }
         EasyFreezeSitePO sitePO = new EasyFreezeSitePO();
         BeanUtils.copyProperties(dto,sitePO);
-        BaseStaffSiteOrgDto baseSite = baseMajorRpc.getBaseSiteBySiteId(dto.getSiteCode());
-        if(baseSite != null){
-            dto.setSiteType(baseSite.getSubType().equals(Constants.B2B_SITE_TYPE)? "转运":"分拣");
-            dto.setCityName(baseSite.getCityName());
-
-        }
-        dto.setCreateTime(new Date());
-        dto.setUpdateTime(new Date());
+        sitePO.setCreateTime(new Date());
         sitePO.setCreateUser(loginUser.getUserErp());
         sitePO.setUpdateUser(loginUser.getUserErp());
         easyFreezeSiteDao.insert(sitePO);
