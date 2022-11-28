@@ -4,6 +4,7 @@ import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jdl.basic.api.domain.easyFreeze.EasyFreezeSiteDto;
 import com.jdl.basic.api.domain.easyFreeze.EasyFreezeSiteQueryDto;
 import com.jdl.basic.provider.core.po.EasyFreezeSitePO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -75,10 +76,11 @@ public interface EasyFreezeSiteDao {
     /**
      * 根据站点id获取站点配置信息
      * @param siteCode
+     * @param useState
      * @return
      */
     @Cache(key = "EasyFreezeSiteDao.selectOneConfigBysiteCode@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
-            ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
-    EasyFreezeSitePO selectOneConfigBysiteCode(Integer siteCode);
+            , redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
+    EasyFreezeSitePO selectOneConfigBysiteCode(@Param("siteCode") Integer siteCode, @Param("useState") Integer useState);
 
 }

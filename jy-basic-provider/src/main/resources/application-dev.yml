@@ -28,6 +28,10 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 
 
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 ## 云redis配置
 jimdb:
   url: "redis://:erdTest123@redis-nwdwv9zb0ij7-proxy-nlb.jvessel-open-hb.jdcloud.com:6379/0"

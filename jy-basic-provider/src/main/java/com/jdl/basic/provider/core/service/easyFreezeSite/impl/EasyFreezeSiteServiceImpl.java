@@ -140,7 +140,7 @@ public class EasyFreezeSiteServiceImpl implements EasyFreezeSiteService {
         log.info("selectOneBysiteCode-获取单个配置信息 入参-{}", siteCode);
         Result<EasyFreezeSiteDto> result = new Result<>();
         result.toSuccess("成功");
-        EasyFreezeSitePO po = easyFreezeSiteDao.selectOneConfigBysiteCode(siteCode);
+        EasyFreezeSitePO po = easyFreezeSiteDao.selectOneConfigBysiteCode(siteCode, null);
         EasyFreezeSiteDto dto = new EasyFreezeSiteDto();
         if(Objects.nonNull(po)){
             BeanUtils.copyProperties(po,dto);
