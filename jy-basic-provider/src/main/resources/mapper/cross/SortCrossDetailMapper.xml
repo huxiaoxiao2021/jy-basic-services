@@ -385,6 +385,7 @@
             and cross_code = #{crossCode,jdbcType=VARCHAR}
         </if>
         and enable = 1
+        order by CROSS_CODE, TABLETROLLEY_CODE
         limit #{offset}
         , #{limit}
     </select>

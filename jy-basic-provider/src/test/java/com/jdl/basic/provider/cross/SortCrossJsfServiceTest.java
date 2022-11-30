@@ -88,7 +88,7 @@ public class SortCrossJsfServiceTest {
         CrossPageQuery query = new CrossPageQuery();
         query.setPageNumber(1);
         query.setDmsId(910);
-        query.setLimit(4);
+        query.setLimit(1000);
         Result<CrossDataJsfResp> result = sortCrossJsfService.queryCrossDataByDmsCode(query);
         System.out.println(JsonHelper.toJSONString(result));
     }

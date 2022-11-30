@@ -191,8 +191,12 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
             sortCrossDetail.setBelongName(baseSiteInfoDto.getBelongName());
             if (baseSiteInfoDto.getBelongCode() != null) {
                 sortCrossDetail.setEnable(0);
-            }else {
+            }else if (baseSiteInfoDto.getSiteType() != null && baseSiteInfoDto.getSiteType() == 4
+                    && baseSiteInfoDto.getSubType() != null && baseSiteInfoDto.getSubType() == 4 
+                    && baseSiteInfoDto.getThirdType() != null && baseSiteInfoDto.getThirdType() == 1) {
                 sortCrossDetail.setEnable(1);
+            }else {
+                sortCrossDetail.setEnable(0);
             }
         } else {
             sortCrossDetail.setSiteType(-1);
