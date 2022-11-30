@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -57,13 +58,13 @@ public class JyWorkMapFuncConfigJsfServiceImpl implements JyWorkMapFuncConfigJsf
             }
             JyWorkMapFuncConfigEntity entity = new JyWorkMapFuncConfigEntity();
             entity.setRefWorkKey(workStationResult.getData().getBusinessKey());
-            entity.setFuncCode(record.getFuncCode());
-            entity.setCreateUser(record.getCreateUser());
-            entity.setUpdateUser(record.getUpdateUser());
             if(CollectionUtils.isNotEmpty(jyWorkMapFuncConfigService.queryByCondition(entity))){
                 result.toFail("此配置已存在，请勿重复添加!");
                 return result;
             }
+            entity.setFuncCode(record.getFuncCode());
+            entity.setCreateUser(record.getCreateUser());
+            entity.setUpdateUser(record.getUpdateUser());
             result.setData(jyWorkMapFuncConfigService.addWorkMapFunConfig(entity));
         }catch (Exception e){
             logger.error("新增数据:{}异常!", JSON.toJSONString(record), e);
@@ -177,5 +178,10 @@ public class JyWorkMapFuncConfigJsfServiceImpl implements JyWorkMapFuncConfigJsf
             logger.error("根据条件:{}分页查询数据异常!", JSON.toJSONString(query), e);
         }
         return result;
+    }
+
+    @Override
+    public Result<HashMap<String, String>> queryFuncCodeMap() {
+        return Result.success(jyWorkMapFuncConfigService.queryFuncCodeMap());
     }
 }

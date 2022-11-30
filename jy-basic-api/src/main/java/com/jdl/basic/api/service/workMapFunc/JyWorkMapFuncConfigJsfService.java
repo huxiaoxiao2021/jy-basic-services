@@ -6,6 +6,9 @@ import com.jdl.basic.api.domain.workMapFunc.JyWorkMapFuncQuery;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * 拣运功能配置对外jsf服务
  *
@@ -45,4 +48,11 @@ public interface JyWorkMapFuncConfigJsfService {
      * @return
      */
     Result<PageDto<JyWorkMapFuncConfigDetailVO>> queryPageList(JyWorkMapFuncQuery query);
+
+
+    /**
+     * 根据工序编码获取功能编码列表
+     * @return
+     */
+    Result<HashMap<String,String>> queryFuncCodeMap();
 }
