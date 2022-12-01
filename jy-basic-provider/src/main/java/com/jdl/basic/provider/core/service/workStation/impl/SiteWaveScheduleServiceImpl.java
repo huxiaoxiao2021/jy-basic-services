@@ -179,11 +179,11 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
                 || query.getPageSize() <= 0) {
             query.setPageSize(DmsConstants.PAGE_SIZE_DEFAULT);
         }
-        query.setOffset(0);
         query.setLimit(query.getPageSize());
-        if(query.getPageNumber() > 0) {
-            query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
+        if (query.getPageNumber() == 0){
+            query.setPageNumber(1);
         }
+        query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
 
         return result;
     }
