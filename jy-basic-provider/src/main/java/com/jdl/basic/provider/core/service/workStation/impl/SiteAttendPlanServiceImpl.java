@@ -288,9 +288,10 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
         }
         query.setOffset(0);
         query.setLimit(query.getPageSize());
-        if(query.getPageNumber() > 0) {
-            query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
+        if (query.getPageNumber() <= 0){
+            query.setPageNumber(1);
         }
+        query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
 
         return result;
     }
@@ -312,7 +313,6 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
             return result;
         }
         vo.setConfirmTime(new Date());
-        log.info("confirm{}", vo);
         if(siteAttendPlanDao.confirmOneRecord(vo) < Constants.YN_YES){
             log.error("确认场地出勤计划失败！，入参{}", JsonHelper.toJSONString(vo));
             result.toFail("场地出勤计划数据不存在或已确认!");
