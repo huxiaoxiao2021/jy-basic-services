@@ -246,6 +246,7 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
                 }
             }
         });
+        log.info("dayShift{}", dayShift);
         returnVo.setDayShift(dayShift);
         returnVo.setMidShift(midShift);
         returnVo.setNightShift(nightShift);
