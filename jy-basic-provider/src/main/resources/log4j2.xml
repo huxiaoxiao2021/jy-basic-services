@@ -11,7 +11,7 @@
         <!-- %logger{36} 表示 Logger 名字最长36个字符 -->
         <property name="LOG_PATTERN" value="%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %m%n" />
         <!-- 定义日志存储的路径 -->
-        <property name="FILE_PATH" value="/export/Logs/${app_name}" />
+        <property name="FILE_PATH" value="~/Logs/${app_name}" />
         <property name="FILE_NAME" value="jy-basic-provider" />
     </Properties>
 
@@ -90,12 +90,12 @@
 
         <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
         <Logger name="com.jd.coo.ucc" level="ERROR" />
-        <Logger name="java.sql" level="ERROR" />
+        <Logger name="java.sql" level="DEBUG" />
         <Logger name="java.sql.ResultSet" level="ERROR" />
-        <Logger name="org.springframework" level="ERROR" />
-        <Logger name="com.ibatis" level="ERROR" />
+        <Logger name="org.springframework" level="DEBUG" />
+        <Logger name="com.ibatis" level="DEBUG" />
         <Logger name="org.mybatis.spring" level="DEBUG" />
-        <Logger name="org.apache.ibatis" level="ERROR" />
+        <Logger name="org.apache.ibatis" level="DEBUG" />
         <Logger name="org.apache" level="ERROR" />
         <Logger name="org.apache.commons" level="ERROR" />
         <Logger name="io.netty" level="ERROR" />
@@ -105,6 +105,8 @@
         <Logger name="com.jd.jsf" level="ERROR" />
         <Logger name="com.jd.jmq" level="ERROR" />
         <Logger name="com.jd.ql.framework" level="ERROR" />
+
+        <Logger name="com.jdl.basic.provider.core.dao" level="DEBUG"/>
 
         <!--监控系统信息-->
         <!--若是additivity设为false，则 子Logger 只会在自己的appender里输出，而不会在 父Logger 的appender里输出。-->

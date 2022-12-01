@@ -263,6 +263,15 @@ public class CacheKeyConstants {
     /**
      * 网格计划操作-key
      */
-    public static final String CACHE_KEY_WORK_STATION_ATTEND_PLAN_EDIT = "k_work_station_attend_plan_edit";    
+    public static final String CACHE_KEY_WORK_STATION_ATTEND_PLAN_EDIT = "k_work_station_attend_plan_edit";
 
+    /**
+     * 场地纬度出勤计划-key
+     */
+    public static final String CACHE_KEY_SITE_ATTEND_PLAN_EDIT = "k_site_attend_plan_edit";
+
+    /**
+     * 场地班次时间-key
+     */
+    public static final String CACHE_KEY_SITE_WAVE_SCHEDULE_EDIT = "k_site_attend_plan_edit";
 }
