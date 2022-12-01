@@ -198,7 +198,6 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
         log.info("query:{}",query);
         List<Long> totalListCount = siteAttendPlanDao.queryTotalCount(query);
         Long totalCount = totalListCount.stream().count();
-        log.info("total{}", totalCount);
         if(totalCount != null && totalCount > 0){
             List<SiteAttendPlanVo> returnList = new ArrayList<>();
             List<SiteAttendPlan> pageList = siteAttendPlanDao.queryPageList(query);
@@ -226,6 +225,7 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
      * @return
      */
     private SiteAttendPlanVo convertSiteAttendPlanVo(SiteAttendPlan plan){
+        log.info("{}", plan);
         SiteAttendPlanVo returnVo = new SiteAttendPlanVo();
         List<SiteAttendPlan> detailList = siteAttendPlanDao.queryPageDetail(plan);
         log.info("{}", detailList);

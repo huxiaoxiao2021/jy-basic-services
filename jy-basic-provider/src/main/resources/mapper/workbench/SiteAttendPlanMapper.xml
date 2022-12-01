@@ -30,7 +30,7 @@
 
     <sql id="baseColumnList">
         s.id, s.plan_attend_time, s.org_code, s.org_name, s.site_code, s.site_name, s.business_line_code,
-        s.business_line_name, s.status, s.create_user, s.create_user_name, s.create_time, s.confirm_user,
+        s.business_line_name, s.wave_code, s.job_type, s.plan_attend_num, s.status, s.create_user, s.create_user_name, s.create_time, s.confirm_user,
         s.confirm_user_name, s.confirm_time, s.update_user, s.update_user_name, s.update_time, s.version_num, s.yn, s.ts
     </sql>
 
@@ -269,8 +269,7 @@
             s.yn = 1 and
             s.plan_attend_time = #{planAttendTime, jdbcType=TIMESTAMP} and
             s.org_code = #{orgCode, jdbcType=INTEGER} and
-            s.site_code = #{siteCode, jdbcType=INTEGER} and
-            s.status = #{status, jdbcType=TINYINT}
+            s.site_code = #{siteCode, jdbcType=INTEGER}
     </select>
 
     <update id="confirmOneRecord" parameterType="com.jdl.basic.api.domain.workStation.SiteAttendPlanVo">

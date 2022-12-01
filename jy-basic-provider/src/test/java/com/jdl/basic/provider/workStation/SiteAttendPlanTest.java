@@ -179,8 +179,8 @@ public class SiteAttendPlanTest {
     @Test
     public void queryPageList() {
         SiteAttendPlanQuery query = new SiteAttendPlanQuery();
-        query.setStartTimeStr("2022-12-29");
-        query.setEndTimeStr("2022-12-30");
+//        query.setStartTimeStr("2022-12-29");
+//        query.setEndTimeStr("2022-12-30");
         query.setOrgCode(6);
         query.setSiteCode(910);
         System.out.println(JsonHelper.toJSONString(siteAttendPlanService.queryPageList(query)));
