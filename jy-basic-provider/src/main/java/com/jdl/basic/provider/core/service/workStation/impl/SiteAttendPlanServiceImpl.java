@@ -282,18 +282,6 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
 
     private Result<Boolean> checkAndFillQueryParam(SiteAttendPlanQuery query){
         Result<Boolean> result = Result.success();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            if (query.getStartTimeStr() != null) {
-                query.setStartTime(sdf.parse(query.getStartTimeStr()));
-            }
-            if (query.getEndTimeStr() != null){
-                query.setEndTime(sdf.parse(query.getEndTimeStr()));
-            }
-        }catch (Exception e){
-            log.error("查询失败",e);
-            result.toFail("查询失败，请联系分拣小秘进行处理！");
-        }
         if(query.getPageSize() == null
                 || query.getPageSize() <= 0) {
             query.setPageSize(DmsConstants.PAGE_SIZE_DEFAULT);
