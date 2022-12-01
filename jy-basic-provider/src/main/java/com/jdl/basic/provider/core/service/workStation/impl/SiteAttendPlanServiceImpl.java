@@ -291,6 +291,7 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
                 query.setEndTime(sdf.parse(query.getEndTimeStr()));
             }
         }catch (Exception e){
+            log.error("查询失败",e);
             result.toFail("查询失败，请联系分拣小秘进行处理！");
         }
         if(query.getPageSize() == null
