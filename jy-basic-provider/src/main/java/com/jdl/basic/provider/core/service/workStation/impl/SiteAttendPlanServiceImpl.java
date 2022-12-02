@@ -246,6 +246,9 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
         returnVo.setCreateTime(detailList.get(0).getCreateTime());
         returnVo.setConfirmUser(detailList.get(0).getConfirmUser());
         returnVo.setConfirmTime(detailList.get(0).getConfirmTime());
+        returnVo.setUpdateUser(detailList.get(0).getUpdateUser());
+        returnVo.setUpdateUser(detailList.get(0).getUpdateUserName());
+        returnVo.setUpdateTime(detailList.get(0).getUpdateTime());
 
         Integer dayShiftTotalEmployee = 0;
         Integer midShiftTotalEmployee = 0;
