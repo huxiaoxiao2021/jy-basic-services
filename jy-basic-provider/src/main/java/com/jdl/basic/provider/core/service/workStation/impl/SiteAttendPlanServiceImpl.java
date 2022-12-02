@@ -32,7 +32,6 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
     @Transactional
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".SiteAttendPlanServiceImpl.importDatas", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> importDatas(List<SiteAttendPlanVo> dataList) {
-        log.info("导入入参{}", JsonHelper.toJSONString(dataList));
         Result<Boolean> result = Result.success();
         if(CollectionUtils.isEmpty(dataList)){
             result.toFail("导入数据为空！");
@@ -160,7 +159,6 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
             siteAttendPlan.setJobType(WorkerTypeEnum.getJobTypeByName(entry.getKey()));
             SiteAttendPlan oldData = siteAttendPlanDao.queryOldDataByBusinessKey(siteAttendPlan);
             if(oldData != null){
-                log.info("olddata{}", oldData);
                 siteAttendPlan.setCreateUser(oldData.getCreateUser());
                 siteAttendPlan.setCreateUserName(oldData.getCreateUserName());
                 siteAttendPlan.setCreateTime(oldData.getCreateTime());
@@ -185,14 +183,12 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
             return Result.fail(checkResult.getMessage());
         }
         PageDto<SiteAttendPlanVo> pageData = new PageDto<>(query.getPageNumber(), query.getPageSize());
-        log.info("query:{}",query);
         List<Long> totalListCount = siteAttendPlanDao.queryTotalCount(query);
         Long totalCount = totalListCount.stream().count();
         if(totalCount != null && totalCount > 0){
             List<SiteAttendPlanVo> returnList = new ArrayList<>();
             List<SiteAttendPlan> pageList = siteAttendPlanDao.queryPageList(query);
 
-            log.info("pageList{}", JsonHelper.toJSONString(pageList));
             for (SiteAttendPlan plan : pageList){
                 //行转列
                 SiteAttendPlanVo returnVo = convertSiteAttendPlanVo(plan);
@@ -215,10 +211,8 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
      * @return
      */
     private SiteAttendPlanVo convertSiteAttendPlanVo(SiteAttendPlan plan){
-        log.info("{}", plan);
         SiteAttendPlanVo returnVo = new SiteAttendPlanVo();
         List<SiteAttendPlan> detailList = siteAttendPlanDao.queryPageDetail(plan);
-        log.info("{}", detailList);
         if(detailList == null || detailList.size() != 15){
             log.error("数据查询出错！入参{}", JsonHelper.toJSONString(plan));
             throw new RuntimeException("数据出错！");

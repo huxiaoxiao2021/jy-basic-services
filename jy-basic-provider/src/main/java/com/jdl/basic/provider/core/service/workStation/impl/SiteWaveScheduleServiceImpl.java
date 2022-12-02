@@ -47,10 +47,8 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
                 return result.toFail(checkResult.getMessage());
             }
 
-            log.info("before {}", importDatas);
 
             for (SiteWaveSchedule insertData : importDatas){
-                log.info("insert {}", insertData);
                 if (!Objects.equals(siteWaveScheduleDao.insert(insertData), Constants.YN_YES)){
                     log.info("数据插入数据库失败！入参{}", JsonHelper.toJSONString(insertData));
                     return result.toFail("导入失败！");
@@ -123,6 +121,8 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
             newData.setOrgName(vo.getOrgName());
             newData.setSiteCode(vo.getSiteCode());
             newData.setSiteName(vo.getSiteName());
+            newData.setBusinessLineCode(vo.getBusinessLineCode());
+            newData.setBusinessLineName(vo.getBusinessLineName());
             newData.setWaveCode(waveTypeEnum.getCode());
             newData.setWavePeriod(typeEnum.getCode());
             newData.setUpdateUser(vo.getUpdateUser());
@@ -244,7 +244,6 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
                 }
             }
         });
-        log.info("dayShift{}", dayShift);
         returnVo.setDayShift(dayShift);
         returnVo.setMidShift(midShift);
         returnVo.setNightShift(nightShift);
