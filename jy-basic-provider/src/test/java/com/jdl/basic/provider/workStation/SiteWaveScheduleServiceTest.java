@@ -79,6 +79,8 @@ public class SiteWaveScheduleServiceTest {
 
         SiteWaveScheduleQuery query = new SiteWaveScheduleQuery();
         query.setOrgCode(6);
+        query.setSiteCode(null);
+        query.setPageSize(500);
         System.out.println(JsonHelper.toJSONString(siteWaveScheduleService.queryPageList(query)));
     }
 }

@@ -1,5 +1,6 @@
 package com.jdl.basic.api.domain.workStation;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
@@ -65,6 +66,7 @@ public class SiteWaveScheduleVo {
     /**
      * 创建时间
      */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
@@ -80,6 +82,7 @@ public class SiteWaveScheduleVo {
     /**
      * 更新时间
      */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
 }

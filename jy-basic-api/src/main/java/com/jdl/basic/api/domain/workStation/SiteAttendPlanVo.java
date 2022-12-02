@@ -1,5 +1,6 @@
 package com.jdl.basic.api.domain.workStation;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -108,6 +109,7 @@ public class SiteAttendPlanVo implements Serializable {
     /**
      * 创建日期
      */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
@@ -123,6 +125,7 @@ public class SiteAttendPlanVo implements Serializable {
     /**
      * 确认时间
      */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date confirmTime;
 
     /**
@@ -138,6 +141,7 @@ public class SiteAttendPlanVo implements Serializable {
     /**
      * 修改时间
      */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
 }
