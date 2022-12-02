@@ -40,13 +40,11 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
             return result;
         }
 
-        Integer rowNum = 1;
         for (SiteWaveScheduleVo vo : dataList){
-            String rowKey = "第" + rowNum + "行：";
             List<SiteWaveSchedule> importDatas = new ArrayList<>();
             Result<Boolean> checkResult = this.checkAndConvertDto(vo, importDatas);
             if (checkResult.isFail()){
-                return result.toFail(rowKey + checkResult.getMessage());
+                return result.toFail(checkResult.getMessage());
             }
 
             log.info("before {}", importDatas);
@@ -55,7 +53,7 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
                 log.info("insert {}", insertData);
                 if (!Objects.equals(siteWaveScheduleDao.insert(insertData), Constants.YN_YES)){
                     log.info("数据插入数据库失败！入参{}", JsonHelper.toJSONString(insertData));
-                    return result.toFail(rowKey + "导入失败！");
+                    return result.toFail("导入失败！");
                 }
             }
         }
@@ -65,13 +63,13 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
     private Result<Boolean> checkAndConvertDto(SiteWaveScheduleVo vo, List<SiteWaveSchedule> importDatas){
         Result<Boolean> result = Result.success();
         if(CollectionUtils.isEmpty(vo.getDayShift()) && CollectionUtils.isEmpty(vo.getMidShift()) && CollectionUtils.isEmpty(vo.getNightShift())){
-            return result.toFail("时间格式不对或没有出勤时间！");
+            return result.toFail("没有出勤时间！");
         }
         try {
             genSiteWaveSchedule(vo, importDatas);
         }catch (Exception e){
             log.info("时间格式不对！入参{}", JsonHelper.toJSONString(vo));
-            return result.toFail("时间格式不对！");
+            return result.toFail("场地ID为【" + vo.getSiteCode() + "】的班次时间格式不对！");
         }
 
         List<SiteWaveSchedule> copyList = importDatas.stream().filter(item -> item.getStartTime() != null).collect(Collectors.toList());
@@ -84,7 +82,7 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
             long sub = copyList.get(i).getStartTime().getTime() - minTime;
             if (sub < 0){
                 log.info("时间重叠!, 入参{}", JsonHelper.toJSONString(vo));
-                return result.toFail("时间重叠!");
+                return result.toFail("场地ID为【" + vo.getSiteCode() + "】的班次时间重合！");
             }
             minTime = copyList.get(i).getStartTime().getTime();
         }

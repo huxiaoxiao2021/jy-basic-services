@@ -44,18 +44,16 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
             return result.toFail(checkResult.getMessage());
         }
 
-        Integer rowNum = 1;
         for(SiteAttendPlanVo siteAttendPlanVo : dataList){
-            String rowKey = "第" + rowNum + "行:";
             ArrayList<SiteAttendPlan> importDataList = new ArrayList<>();
             checkResult = convertDto(siteAttendPlanVo, importDataList);
             if(checkResult.isFail()){
-                result.toFail(rowKey + checkResult.getMessage());
+                result.toFail(checkResult.getMessage());
                 return result;
             }
 
             if(importDataList.size() < 15){
-                result.toFail(rowKey + "请严格按照导入模板填写数据！");
+                result.toFail("请严格按照导入模板填写数据！");
                 return result;
             }
             for(SiteAttendPlan plan : importDataList){
@@ -71,7 +69,6 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
                     throw  new RuntimeException("新增数据失败！");
                 }
             }
-            rowNum++;
         }
         return result;
     }
@@ -80,31 +77,26 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
         Result<Boolean> result = Result.success();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         Set<Date> uniqueDateSet = new HashSet<>();
-        Integer rowNum = 1;
         for (SiteAttendPlanVo vo : voList){
-            String rowKey = "第" + rowNum + "行:";
             Date planAttendTime;
             try{
                 planAttendTime = sdf.parse(vo.getPlanAttendTime());
                 if(uniqueDateSet.contains(planAttendTime)){
-                    result.toFail(rowKey + "日期重复！");
-                    return result;
+                    return result.toFail("场地ID为【" + vo.getSiteCode() + "】的计划出勤时间重复！");
                 }
                 //出勤日期不能为当日或者历史日期
                 if(planAttendTime.getTime() < new Date().getTime() || sdf.format(planAttendTime).equals(sdf.format(new Date()))){
-                    result.toFail(rowKey + "出勤日期不能为当日或者历史日期！");
-                    return result;
+                    return result.toFail("场地ID为【" + vo.getSiteCode() + "】的计划出勤时间不能当天或历史日期！");
                 }
             } catch (Exception e) {
-                result.toFail(rowKey + "日期格式不对！");
-                return result;
+                return result.toFail("场地ID为【" + vo.getSiteCode() + "】的计划出勤时间格式不对！");
             }
             uniqueDateSet.add(planAttendTime);
 
             if(CollectionUtils.isEmpty(vo.getDayShift())
                     || CollectionUtils.isEmpty(vo.getMidShift()) ||
                     CollectionUtils.isEmpty(vo.getNightShift())){
-                result.toFail(rowKey + "请严格按照导入模板填写数据！");
+                result.toFail("请严格按照导入模板填写数据！");
                 return result;
             }
         }
@@ -118,8 +110,7 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
         try{
             planAttendTime = sdf.parse(vo.getPlanAttendTime());
         } catch (Exception e) {
-            result.toFail("日期格式不对！");
-            return result;
+            return result.toFail("场地ID为【" + vo.getSiteCode() + "】的计划出勤时间格式不对！");
         }
         //白班
         Integer dayShiftEmployeeNum = checkAndInitNewData(vo.getDayShift(), vo, planAttendTime, WaveTypeEnum.DAY, importDataList);
@@ -129,8 +120,7 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
         Integer nightShiftEmployeeNum = checkAndInitNewData(vo.getNightShift(), vo, planAttendTime, WaveTypeEnum.NIGHT, importDataList);
         Integer totalPlanAttendNum = dayShiftEmployeeNum + midShiftEmployeeNum + nightShiftEmployeeNum;
         if(totalPlanAttendNum == 0){
-            result.toFail("计划出勤人数为0，必须要有出勤人！");
-            return result;
+            return result.toFail("场地ID为【" + vo.getSiteCode() + "】的计划出勤人数为0！");
         }
 
         return result;
