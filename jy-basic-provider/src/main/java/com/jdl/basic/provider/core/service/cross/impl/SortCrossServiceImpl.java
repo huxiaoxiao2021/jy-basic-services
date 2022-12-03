@@ -97,6 +97,7 @@ public class SortCrossServiceImpl implements SortCrossService {
         query.setOffset((query.getPageNumber() - 1) * query.getLimit());
         if (count > 0 ) {
             tableTrolleyList = crossDetailDao.queryTableTrolleyList(query);
+            log.info("获取滑道笼车信息：{}",tableTrolleyList.toString());
             int totalPage = (int) (count% query.getLimit() == 0 ? count/query.getLimit() : count/query.getLimit()+1);
             tableTrolley.setTotalPage(totalPage);
         }
