@@ -90,12 +90,12 @@
 
         <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
         <Logger name="com.jd.coo.ucc" level="ERROR" />
-        <Logger name="java.sql" level="ERROR" />
-        <Logger name="java.sql.ResultSet" level="ERROR" />
+        <Logger name="java.sql" level="DEBUG" />
+        <Logger name="java.sql.ResultSet" level="DEBUG" />
         <Logger name="org.springframework" level="ERROR" />
-        <Logger name="com.ibatis" level="ERROR" />
+        <Logger name="com.ibatis" level="DEBUG" />
         <Logger name="org.mybatis.spring" level="DEBUG" />
-        <Logger name="org.apache.ibatis" level="ERROR" />
+        <Logger name="org.apache.ibatis" level="DEBUG" />
         <Logger name="org.apache" level="ERROR" />
         <Logger name="org.apache.commons" level="ERROR" />
         <Logger name="io.netty" level="ERROR" />
@@ -105,14 +105,15 @@
         <Logger name="com.jd.jsf" level="ERROR" />
         <Logger name="com.jd.jmq" level="ERROR" />
         <Logger name="com.jd.ql.framework" level="ERROR" />
+        <Logger name="com.jd" level="DEBUG" />
 
         <!--监控系统信息-->
         <!--若是additivity设为false，则 子Logger 只会在自己的appender里输出，而不会在 父Logger 的appender里输出。-->
-        <Logger name="org.springframework" level="INFO" additivity="false">
+        <!--<Logger name="org.springframework" level="INFO" additivity="true">
             <AppenderRef ref="Console"/>
-        </Logger>
+        </Logger>-->
 
-        <root level="debug">
+        <root level="DEBUG">
             <appender-ref ref="Console"/>
             <appender-ref ref="RollingFileInfo"/>
             <appender-ref ref="RollingFileWarn"/>
