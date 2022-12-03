@@ -29,14 +29,14 @@ public class SiteWaveScheduleServiceTest {
         SiteWaveScheduleVo v1 = new SiteWaveScheduleVo();
 
         Map<String, String> dayShift = new HashMap<>();
-        dayShift.put("time1", "07:00-11:00");
-        dayShift.put("time2", "11:00-12:00");
+        dayShift.put("time1", "19:00-21:00");
+        dayShift.put("time2", "19:00-07:00");
         dayShift.put("time3", "");
 
         Map<String, String> midShift = new HashMap<>();
-        midShift.put("time1", "12:00-14:00");
-        midShift.put("time2", "14:00-16:00");
-        midShift.put("time3", "16:00-17:00");
+        midShift.put("time1", "");
+        midShift.put("time2", "");
+        midShift.put("time3", "");
 
         Map<String, String> nightShift = new HashMap<>();
         nightShift.put("time1", "");
@@ -69,7 +69,6 @@ public class SiteWaveScheduleServiceTest {
         v2.setCreateTime(new Date());
 
         list.add(v1);
-        list.add(v2);
 
         System.out.println(JsonHelper.toJSONString(siteWaveScheduleService.importDatas(list)));
     }

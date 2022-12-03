@@ -14,6 +14,7 @@ import com.jdl.basic.provider.core.dao.workStation.SiteWaveScheduleDao;
 import com.jdl.basic.provider.core.service.workStation.SiteWaveScheduleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,8 +71,9 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
             return result.toFail("场地ID为【" + vo.getSiteCode() + "】的班次时间格式不对！");
         }
 
-        List<SiteWaveSchedule> copyList = importDatas.stream().filter(item -> item.getStartTime() != null).collect(Collectors.toList());
-        //升序
+        //某些时间段可能没事时间表，过滤空对象防止出现空指针异常
+        List<SiteWaveSchedule> copyList = importDatas.stream().filter(item -> item.getStartTime() != null && item.getEndTime() != null).collect(Collectors.toList());
+        //对开始时间升序排序
         Collections.sort(copyList,
                 (op1, op2) -> (int) (op1.getStartTime().getTime() - op2.getStartTime().getTime()));
         //比较各时间段是否重叠
@@ -113,6 +115,10 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
                 String[] timeString = map.get(typeEnum.getName()).split("-");
                 Date startTime = sdf.parse(timeString[0]);
                 Date endTime = sdf.parse(timeString[1]);
+                //时间段跨两天，如22:00-01:00，为当天22:00到次日凌晨01:00
+                if (startTime.getTime() < endTime.getTime()){
+                    DateUtils.addDays(endTime, 1);
+                }
                 newData.setStartTime(startTime);
                 newData.setEndTime(endTime);
             }
@@ -133,10 +139,13 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
     }
 
     private void genSiteWaveSchedule(SiteWaveScheduleVo vo, List<SiteWaveSchedule> importDatas) throws Exception {
+        //白班
         Map<String, String> dayShift = vo.getDayShift();
         getCommonValues(dayShift, vo, WaveTypeEnum.DAY, importDatas);
+        //中班
         Map<String, String> midShift = vo.getMidShift();
         getCommonValues(midShift, vo, WaveTypeEnum.MIDDLE, importDatas);
+        //夜班
         Map<String, String> nightShift = vo.getNightShift();
         getCommonValues(nightShift, vo, WaveTypeEnum.NIGHT, importDatas);
     }
@@ -150,13 +159,15 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
             return Result.fail(checkResult.getMessage());
         }
         PageDto<SiteWaveScheduleVo> pageData = new PageDto<>(query.getPageNumber(), query.getPageSize());
+        //由于插入数据是列转行，每条数据逻辑上的业务主键包括orgCode,siteCode
+        //分页查询需要对业务主键进行group by才能正确分页，返回多个结果
         List<Long> totalList = siteWaveScheduleDao.queryTotalCount(query);
         Long totalCount = totalList.stream().count();
         if(totalCount != null && totalCount > 0){
             List<SiteWaveScheduleVo> returnList = new ArrayList<>();
             List<SiteWaveSchedule> pageList = siteWaveScheduleDao.queryPageList(query);
             for (SiteWaveSchedule schedule : pageList){
-                //行转列
+                //行转列，多行数据拼装成一行给前台展示
                 SiteWaveScheduleVo returnVo = convertSiteWaveScheduleVo(schedule);
                 returnList.add(returnVo);
             }

@@ -85,7 +85,7 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
                 }
                 //出勤日期不能为当日或者历史日期
                 if(planAttendTime.getTime() < new Date().getTime() || sdf.format(planAttendTime).equals(sdf.format(new Date()))){
-                    return result.toFail("场地ID为【" + vo.getSiteCode() + "】的计划出勤时间不能当天或历史日期！");
+                    return result.toFail("场地ID为【" + vo.getSiteCode() + "】的计划出勤时间不能为当天或历史日期！");
                 }
             } catch (Exception e) {
                 return result.toFail("场地ID为【" + vo.getSiteCode() + "】的计划出勤时间格式不对！");
