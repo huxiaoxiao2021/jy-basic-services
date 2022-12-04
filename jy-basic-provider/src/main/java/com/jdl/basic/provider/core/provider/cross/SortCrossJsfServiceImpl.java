@@ -12,9 +12,11 @@ import com.jdl.basic.provider.core.service.cross.SortCrossService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author liwenji
@@ -29,6 +31,16 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
     
     @Autowired
     private IBasicSiteQueryWSManager basicSiteQueryWSManager;
+    
+    
+    @Value("${site.siteType}")
+    protected Integer siteType;
+
+    @Value("${site.subType}")
+    protected Integer subType;
+
+    @Value("${site.thirdType}")
+    protected Integer thirdType;
     
     private static final Integer QUERY_LIMIT = 500;
     
@@ -59,6 +71,7 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
     
     @Override
     public Result<Boolean> initSortCross() {
+        
         while(true) {
             // 查询没有初始化的数据
             List<SortCrossDetail> sortCrossNotInit = sortCrossService.queryNotInit(QUERY_LIMIT);
@@ -180,8 +193,9 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
             log.error("根据滑道笼车号获取流向信息失败: {}", JsonHelper.toJSONString(query), e);
         }
         return result;    }
-
-    private Boolean initSiteType(SortCrossDetail sortCrossDetail) {
+    
+    @Override
+    public Boolean initSiteType(SortCrossDetail sortCrossDetail) {
         BaseSiteInfoDto baseSiteInfoDto = basicSiteQueryWSManager.getBaseSiteInfoBySiteId(Integer.valueOf(sortCrossDetail.getSiteCode()));
         if (baseSiteInfoDto != null) {
             sortCrossDetail.setSiteType(baseSiteInfoDto.getSiteType());
@@ -191,9 +205,9 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
             sortCrossDetail.setBelongName(baseSiteInfoDto.getBelongName());
             if (baseSiteInfoDto.getBelongCode() != null) {
                 sortCrossDetail.setEnable(0);
-            }else if (baseSiteInfoDto.getSiteType() != null && baseSiteInfoDto.getSiteType() == 4
-                    && baseSiteInfoDto.getSubType() != null && baseSiteInfoDto.getSubType() == 4 
-                    && baseSiteInfoDto.getThirdType() != null && baseSiteInfoDto.getThirdType() == 1) {
+            }else if (baseSiteInfoDto.getSiteType() != null && Objects.equals(baseSiteInfoDto.getSiteType(), siteType)
+                    && baseSiteInfoDto.getSubType() != null && Objects.equals(baseSiteInfoDto.getSubType(), subType) 
+                    && baseSiteInfoDto.getThirdType() != null && Objects.equals(baseSiteInfoDto.getThirdType(), thirdType)) {
                 sortCrossDetail.setEnable(1);
             }else {
                 sortCrossDetail.setEnable(0);

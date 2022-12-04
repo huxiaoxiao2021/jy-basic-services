@@ -65,4 +65,10 @@ public interface SortCrossJsfService {
      */
     Result<TableTrolleyJsfResp> queryCTTByCTTCode(TableTrolleyQuery query);
 
+    /**
+     * 初始化滑道笼车信息
+     * @param detail
+     * @return
+     */
+    Boolean initSiteType(SortCrossDetail detail);
 }

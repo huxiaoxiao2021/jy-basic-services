@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.service.cross;
 
 import com.jdl.basic.api.domain.cross.*;
 import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.provider.dto.SortCrossModifyDto;
 
 import java.util.List;
 
@@ -60,5 +61,11 @@ public interface SortCrossService {
      * @return
      */
     TableTrolleyJsfResp queryTableTrolley(TableTrolleyQuery query);
-    
+
+    /**
+     * 同步滑道笼车配置信息
+     * @param sortCrossModifyDto
+     * @return
+     */
+    boolean syncSortCross(SortCrossModifyDto sortCrossModifyDto);    
 }

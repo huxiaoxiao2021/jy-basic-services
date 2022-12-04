@@ -74,3 +74,9 @@ ldop:
       timeout: 10000
 
 ###### jsf config  end######
+
+###### siteType ######
+site:
+  siteType: 4
+  subType: 4
+  thirdType: 2

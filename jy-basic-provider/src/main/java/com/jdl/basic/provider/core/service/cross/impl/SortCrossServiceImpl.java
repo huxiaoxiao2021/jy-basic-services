@@ -3,16 +3,22 @@ package com.jdl.basic.provider.core.service.cross.impl;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.cross.*;
+import com.jdl.basic.api.service.cross.SortCrossJsfService;
 import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.common.utils.BeanUtils;
+import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.provider.core.dao.cross.SortCrossDetailDao;
 import com.jdl.basic.provider.core.service.cross.SortCrossService;
+import com.jdl.basic.provider.dto.ColumnRecord;
+import com.jdl.basic.provider.dto.SortCrossModifyDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,6 +32,9 @@ public class SortCrossServiceImpl implements SortCrossService {
     
     @Autowired
     private SortCrossDetailDao crossDetailDao;
+    
+    @Autowired
+    private SortCrossJsfService sortCrossService;
     
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossServiceImpl.queryPage", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
@@ -112,5 +121,31 @@ public class SortCrossServiceImpl implements SortCrossService {
         List<TableTrolleyJsfDto> tableTrolleyList = crossDetailDao.queryTableTrolley(query);
         tableTrolley.setTableTrolleyDtoJsfList(tableTrolleyList);
         return tableTrolley;
+    }
+    @Override
+    public boolean syncSortCross(SortCrossModifyDto sortCrossModifyDto) {
+        if (sortCrossModifyDto == null) {
+            return false;
+        }
+        if (CollectionUtils.isEmpty(sortCrossModifyDto.getAfterChangeOfColumns())) {
+            return false;
+        }
+        SortCrossDetail sortCrossDetail = BeanUtils.copyByList(sortCrossModifyDto.getAfterChangeOfColumns(), SortCrossDetail.class);
+        if(sortCrossDetail == null) {
+            return false;
+        }
+        SortCrossDetail detail = crossDetailDao.selectByPrimaryKey(sortCrossDetail.getId());
+        
+        if (detail != null ) {
+            if ( crossDetailDao.updateByPrimaryKeySelective(sortCrossDetail) < 0 ) {
+                return false;
+            }
+        }else {
+            sortCrossDetail.setSiteType(-1);
+            if (crossDetailDao.insert(sortCrossDetail) < 0) {
+                return false;
+            }
+        }
+        return sortCrossService.initSiteType(sortCrossDetail);
     }
 }
