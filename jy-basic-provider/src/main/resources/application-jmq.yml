@@ -4,24 +4,24 @@ spring:
     ####--app producer 定义--##########################################################
     producers:
       basic-producer:
-        password: 7CD99CA7
+        password: FBBB11B7
         app: JYBasic
         address: jmq-testcluster.jd.local:50088
         enabled: true
       basic-producer-jmq4:
-        password: 9f67d75400e2493d81fc2e561edccdc1
+        password: FBBB11B7
         app: JYBasic
         address: test-nameserver.jmq.jd.local:50088
         enabled: true
       ####--app consumer 定义--##########################################################
     consumers:
       basic-consumer:
-        password: 7CD99CA7
+        password: FBBB11B7
         app: JYBasic
         address: jmq-testcluster.jd.local:50088
         enabled: true
       basic-consumer-jmq4:
-        password: 9f67d75400e2493d81fc2e561edccdc1
+        password: FBBB11B7
         app: JYBasic
         address: test-nameserver.jmq.jd.local:50088
         enabled: true
