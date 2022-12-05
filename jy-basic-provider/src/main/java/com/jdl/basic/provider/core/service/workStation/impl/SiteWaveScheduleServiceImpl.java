@@ -102,11 +102,17 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
                 insertData.setCreateUser(oldData.getCreateUser());
                 insertData.setCreateUserName(oldData.getCreateUserName());
                 insertData.setCreateTime(oldData.getCreateTime());
+                insertData.setUpdateUser(vo.getUpdateUser());
+                insertData.setUpdateUserName(vo.getUpdateUserName());
+                insertData.setUpdateTime(new Date());
                 insertData.setVersionNum(oldData.getVersionNum() + 1);
             }else {
                 insertData.setCreateUser(vo.getCreateUser());
                 insertData.setCreateUserName(vo.getCreateUserName());
                 insertData.setCreateTime(new Date());
+                insertData.setUpdateUser(vo.getUpdateUser());
+                insertData.setUpdateUserName(vo.getUpdateUserName());
+                insertData.setUpdateTime(new Date());
             }
 
         }
@@ -138,9 +144,6 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
             newData.setBusinessLineName(vo.getBusinessLineName());
             newData.setWaveCode(waveTypeEnum.getCode());
             newData.setWavePeriod(typeEnum.getCode());
-            newData.setUpdateUser(vo.getUpdateUser());
-            newData.setUpdateUserName(vo.getUpdateUserName());
-            newData.setUpdateTime(new Date());
             list.add(newData);
         }
     }

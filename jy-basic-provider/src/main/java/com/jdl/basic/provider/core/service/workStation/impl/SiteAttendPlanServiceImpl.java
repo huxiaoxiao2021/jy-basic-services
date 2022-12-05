@@ -159,15 +159,14 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
             siteAttendPlan.setJobType(WorkerTypeEnum.getJobTypeByName(entry.getKey()));
             SiteAttendPlan oldData = siteAttendPlanDao.queryOldDataByBusinessKey(siteAttendPlan);
             if(oldData != null){
-                siteAttendPlan.setCreateUser(oldData.getCreateUser());
-                siteAttendPlan.setCreateUserName(oldData.getCreateUserName());
-                siteAttendPlan.setCreateTime(oldData.getCreateTime());
+                siteAttendPlan.setUpdateUser(vo.getUpdateUser());
+                siteAttendPlan.setUpdateUserName(vo.getUpdateUserName());
+                siteAttendPlan.setUpdateTime(vo.getUpdateTime());
                 siteAttendPlan.setVersionNum(oldData.getVersionNum() + 1);
-            }else {
-                siteAttendPlan.setCreateUser(vo.getCreateUser());
-                siteAttendPlan.setCreateUserName(vo.getCreateUserName());
-                siteAttendPlan.setCreateTime(new Date());
             }
+            siteAttendPlan.setCreateUser(vo.getCreateUser());
+            siteAttendPlan.setCreateUserName(vo.getCreateUserName());
+            siteAttendPlan.setCreateTime(new Date());
             siteAttendPlan.setPlanAttendNum(entry.getValue());
             importDataList.add(siteAttendPlan);
         }
@@ -227,11 +226,13 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
         returnVo.setBusinessLineName(detailList.get(0).getBusinessLineName());
         returnVo.setStatus(detailList.get(0).getStatus());
         returnVo.setCreateUser(detailList.get(0).getCreateUser());
+        returnVo.setCreateUserName(detailList.get(0).getCreateUserName());
         returnVo.setCreateTime(detailList.get(0).getCreateTime());
         returnVo.setConfirmUser(detailList.get(0).getConfirmUser());
+        returnVo.setConfirmUserName(detailList.get(0).getConfirmUserName());
         returnVo.setConfirmTime(detailList.get(0).getConfirmTime());
         returnVo.setUpdateUser(detailList.get(0).getUpdateUser());
-        returnVo.setUpdateUser(detailList.get(0).getUpdateUserName());
+        returnVo.setUpdateUserName(detailList.get(0).getUpdateUserName());
         returnVo.setUpdateTime(detailList.get(0).getUpdateTime());
 
         Integer dayShiftTotalEmployee = 0;

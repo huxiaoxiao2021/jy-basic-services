@@ -54,7 +54,7 @@ public class SiteAttendPlanTest {
 
         List<SiteAttendPlanVo> list = new ArrayList<>();
         SiteAttendPlanVo vo = new SiteAttendPlanVo();
-        vo.setPlanAttendTime("2022/12/29");
+        vo.setPlanAttendTime("2022/12/30");
         vo.setOrgCode(6);
         vo.setOrgName("华北");
         vo.setSiteCode(910);
@@ -88,16 +88,16 @@ public class SiteAttendPlanTest {
         v1.setNightShift(nightShift);
 
         v1.setStatus(0);
-        v1.setCreateUser("wuyoude");
-        v1.setCreateUserName("吴有德");
-        v1.setConfirmUser("wuyoude");
-        v1.setConfirmUserName("吴有德");
+        v1.setCreateUser("lqc");
+        v1.setCreateUserName("lqc");
+        v1.setConfirmUser("lqc");
+        v1.setConfirmUserName("lqc");
         v1.setCreateTime(new Date());
-        v1.setUpdateUser("wuyoude");
-        v1.setUpdateUserName("吴有德");
+        v1.setUpdateUser("lqc");
+        v1.setUpdateUserName("lqc");
         v1.setUpdateTime(new Date());
 
-        list.add(vo);
+//        list.add(vo);
         list.add(v1);
 
         System.out.println(JsonHelper.toJSONString(siteAttendPlanService.importDatas(list)));
