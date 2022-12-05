@@ -76,15 +76,21 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
         //对开始时间升序排序
         Collections.sort(copyList,
                 (op1, op2) -> (int) (op1.getStartTime().getTime() - op2.getStartTime().getTime()));
+        long minStartTime = copyList.get(0).getStartTime().getTime();
+        long maxEndTime = copyList.get(copyList.size() - 1).getEndTime().getTime();
+        //限制在24小时内
+        if(maxEndTime - minStartTime > 24 * 3600 * 1000){
+            return result.toFail("场地ID为【" + vo.getSiteCode() + "】的班次时间超过24小时！");
+        }
         //比较各时间段是否重叠
-        long minTime = copyList.get(0).getEndTime().getTime();
+        long lastEndTime = copyList.get(0).getEndTime().getTime();
         for (int i = 1; i < copyList.size(); i++){
-            long sub = copyList.get(i).getStartTime().getTime() - minTime;
+            long sub = copyList.get(i).getStartTime().getTime() - lastEndTime;
             if (sub < 0){
                 log.info("时间重叠!, 入参{}", JsonHelper.toJSONString(vo));
                 return result.toFail("场地ID为【" + vo.getSiteCode() + "】的班次时间重合！");
             }
-            minTime = copyList.get(i).getStartTime().getTime();
+            lastEndTime = copyList.get(i).getEndTime().getTime();
         }
         for(SiteWaveSchedule insertData : importDatas){
             SiteWaveSchedule oldData = siteWaveScheduleDao.queryOldDataByBusinessKey(insertData);
@@ -116,8 +122,9 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
                 Date startTime = sdf.parse(timeString[0]);
                 Date endTime = sdf.parse(timeString[1]);
                 //时间段跨两天，如22:00-01:00，为当天22:00到次日凌晨01:00
-                if (startTime.getTime() < endTime.getTime()){
-                    DateUtils.addDays(endTime, 1);
+                if (startTime.getTime() > endTime.getTime()){
+                    log.info("结束时间{}小于开始时间{}", endTime, startTime);
+                    endTime = DateUtils.addDays(endTime, 1);
                 }
                 newData.setStartTime(startTime);
                 newData.setEndTime(endTime);

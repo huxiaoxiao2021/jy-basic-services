@@ -29,18 +29,18 @@ public class SiteWaveScheduleServiceTest {
         SiteWaveScheduleVo v1 = new SiteWaveScheduleVo();
 
         Map<String, String> dayShift = new HashMap<>();
-        dayShift.put("time1", "19:00-21:00");
-        dayShift.put("time2", "19:00-07:00");
+        dayShift.put("time1", "07:00-11:00");
+        dayShift.put("time2", "11:00-12:00");
         dayShift.put("time3", "");
 
         Map<String, String> midShift = new HashMap<>();
-        midShift.put("time1", "");
+        midShift.put("time1", "12:00-17:00");
         midShift.put("time2", "");
         midShift.put("time3", "");
 
         Map<String, String> nightShift = new HashMap<>();
-        nightShift.put("time1", "");
-        nightShift.put("time2", "");
+        nightShift.put("time1", "16:00-21:00");
+        nightShift.put("time2", "21:00-08:00");
         nightShift.put("time3", "");
 
         v1.setOrgCode(6);
@@ -58,15 +58,15 @@ public class SiteWaveScheduleServiceTest {
         SiteWaveScheduleVo v2 = new SiteWaveScheduleVo();
 
 
-        v2.setOrgCode(6);
-        v2.setSiteCode(911);
-        v2.setDayShift(dayShift);
-        v2.setMidShift(midShift);
-        v2.setNightShift(nightShift);
-
-        v2.setCreateUser("wuyoude");
-        v2.setCreateUserName("吴有德");
-        v2.setCreateTime(new Date());
+//        v2.setOrgCode(6);
+//        v2.setSiteCode(911);
+//        v2.setDayShift(dayShift);
+//        v2.setMidShift(midShift);
+//        v2.setNightShift(nightShift);
+//
+//        v2.setCreateUser("wuyoude");
+//        v2.setCreateUserName("吴有德");
+//        v2.setCreateTime(new Date());
 
         list.add(v1);
 
