@@ -2,7 +2,6 @@ package com.jdl.basic.api.service.itBasic;
 
 import com.jd.dms.java.utils.sdk.base.PageData;
 import com.jd.dms.java.utils.sdk.base.Result;
-import com.jdl.basic.api.domain.deivce.DeviceInfo;
 import com.jdl.basic.api.domain.itBasic.ItBasicRegion;
 import com.jdl.basic.api.dto.itBasic.qo.ItBasicRegionQo;
 import com.jdl.basic.api.dto.itBasic.vo.ItBasicRegionVo;

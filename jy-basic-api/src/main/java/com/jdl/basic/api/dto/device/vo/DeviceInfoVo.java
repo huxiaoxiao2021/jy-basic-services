@@ -1,6 +1,6 @@
 package com.jdl.basic.api.dto.device.vo;
 
-import com.jdl.basic.api.domain.deivce.DeviceInfo;
+import com.jdl.basic.api.domain.device.DeviceInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

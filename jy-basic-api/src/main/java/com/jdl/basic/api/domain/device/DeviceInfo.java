@@ -1,4 +1,4 @@
-package com.jdl.basic.api.domain.deivce;
+package com.jdl.basic.api.domain.device;
 
 import com.alibaba.fastjson.JSON;
 import lombok.Data;

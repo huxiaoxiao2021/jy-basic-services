@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jdl.basic.provider.core.dao.device.DeviceInfoDao">
     <!-- table映射实体对象 -->
-    <resultMap id="RM_DeviceInfo" type="com.jdl.basic.api.domain.deivce.DeviceInfo">
+    <resultMap id="RM_DeviceInfo" type="com.jdl.basic.api.domain.device.DeviceInfo">
         <result property="id" column="id"/>
         <result property="deviceCode" column="device_code"/>
         <result property="deviceName" column="device_name"/>
@@ -32,7 +32,7 @@
     </sql>
 
     <!-- 增加 -->
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.jdl.basic.api.domain.deivce.DeviceInfo">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.jdl.basic.api.domain.device.DeviceInfo">
         insert into `device_info`(id,
                                   device_code,
                                   device_name,
@@ -79,7 +79,7 @@
     </insert>
 
     <!-- 增加 -->
-    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.jdl.basic.api.domain.deivce.DeviceInfo">
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.jdl.basic.api.domain.device.DeviceInfo">
         insert into `device_info`
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -266,7 +266,7 @@
         </foreach>
     </insert>
     <!-- 更新 -->
-    <update id="updateByPrimaryKey" parameterType="com.jdl.basic.api.domain.deivce.DeviceInfo">
+    <update id="updateByPrimaryKey" parameterType="com.jdl.basic.api.domain.device.DeviceInfo">
         UPDATE `device_info`
         <set>
             <if test="deviceCode != null and deviceCode != ''">
@@ -404,7 +404,7 @@
         </foreach>
     </update>
     <!-- 按主键查询 -->
-    <select id="selectByPrimaryKey" resultMap="RM_DeviceInfo" parameterType="com.jdl.basic.api.domain.deivce.DeviceInfo">
+    <select id="selectByPrimaryKey" resultMap="RM_DeviceInfo" parameterType="com.jdl.basic.api.domain.device.DeviceInfo">
         SELECT
         <include refid="Base_Column_List"/>
         <![CDATA[
@@ -505,7 +505,7 @@
         </if>
     </select>
     <!-- 伪删除（更新删除行的识别码） -->
-    <update id="deleteByPrimaryKey" parameterType="com.jdl.basic.api.domain.deivce.DeviceInfo">
+    <update id="deleteByPrimaryKey" parameterType="com.jdl.basic.api.domain.device.DeviceInfo">
         UPDATE `device_info` SET yn = 1
         WHERE
         id = #{id} 

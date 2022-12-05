@@ -1,6 +1,6 @@
 package com.jdl.basic.provider.core.dao.device;
 
-import com.jdl.basic.api.domain.deivce.DeviceInfo;
+import com.jdl.basic.api.domain.device.DeviceInfo;
 import com.jdl.basic.api.dto.device.qo.DeviceInfoQo;
 import com.jdl.basic.provider.core.dao.base.BaseDao;
 

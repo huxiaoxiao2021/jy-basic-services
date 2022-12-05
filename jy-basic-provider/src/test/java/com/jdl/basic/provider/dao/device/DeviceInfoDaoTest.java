@@ -1,7 +1,7 @@
 package com.jdl.basic.provider.dao.device;
 
 import com.alibaba.fastjson.JSON;
-import com.jdl.basic.api.domain.deivce.DeviceInfo;
+import com.jdl.basic.api.domain.device.DeviceInfo;
 import com.jdl.basic.api.dto.device.qo.DeviceInfoQo;
 import com.jdl.basic.provider.ApplicationLaunch;
 import com.jdl.basic.provider.core.dao.device.DeviceInfoDao;

@@ -2,7 +2,7 @@ package com.jdl.basic.provider.core.provider.device;
 
 import com.jd.dms.java.utils.sdk.base.PageData;
 import com.jd.dms.java.utils.sdk.base.Result;
-import com.jdl.basic.api.domain.deivce.DeviceInfo;
+import com.jdl.basic.api.domain.device.DeviceInfo;
 import com.jdl.basic.api.dto.device.qo.DeviceInfoQo;
 import com.jdl.basic.api.dto.device.vo.DeviceInfoVo;
 import com.jdl.basic.api.service.device.DeviceInfoApi;
