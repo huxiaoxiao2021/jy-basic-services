@@ -13,8 +13,6 @@ public interface SiteAttendPlanJsfService {
 
     Result<PageDto<SiteAttendPlanVo>> queryPageList(SiteAttendPlanQuery query);
 
-    Result<Boolean> confirmOneRecord(SiteAttendPlanVo vo);
-
     Result<Boolean> confirmRecords(List<SiteAttendPlanVo> dataList);
 
     Result<Long> queryTotalCount(SiteAttendPlanQuery query);

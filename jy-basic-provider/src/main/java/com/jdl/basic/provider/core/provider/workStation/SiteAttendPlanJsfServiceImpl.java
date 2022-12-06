@@ -66,35 +66,6 @@ public class SiteAttendPlanJsfServiceImpl implements SiteAttendPlanJsfService {
     }
 
     @Override
-    public Result<Boolean> confirmOneRecord(SiteAttendPlanVo vo) {
-        if(log.isInfoEnabled()){
-            log.info("场地维度出勤计划 confirmOneRecord 入参-{}", JSON.toJSONString(vo));
-        }
-        final Result<Boolean> result = Result.success();
-        lockService.tryLock(CacheKeyConstants.CACHE_KEY_SITE_ATTEND_PLAN_EDIT, DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
-            @Override
-            public void success() {
-                Result<Boolean> apiResult = siteAttendPlanService.confirmOneRecord(vo);
-                if(!apiResult.isSuccess()) {
-                    result.setCode(apiResult.getCode());
-                    result.setMessage(apiResult.getMessage());
-                    result.setData(apiResult.getData());
-                }
-            }
-            @Override
-            public void fail() {
-                result.toFail("其他用户正在修改出勤计划，请稍后操作！");
-            }
-            @Override
-            public void error(Exception e) {
-                log.error(e.getMessage(), e);
-                result.toFail("操作异常，请稍后重试！");
-            }
-        });
-        return result;
-    }
-
-    @Override
     public Result<Boolean> confirmRecords(List<SiteAttendPlanVo> dataList) {
         if(log.isInfoEnabled()){
             log.info("场地维度出勤计划 confirmRecords 入参-{}", JSON.toJSONString(dataList));
