@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.core.service.itBasic.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.jd.dms.java.utils.sdk.base.PageData;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jd.ump.annotation.JProEnum;
@@ -43,7 +44,7 @@ public class ItBasicRegionServiceImpl implements ItBasicRegionService {
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + "ItBasicRegionServiceImpl.queryCount", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<Long> queryCount(ItBasicRegionQo itBasicRegionQo) {
-        log.info("ItBasicRegionServiceImpl.queryCount param {}", itBasicRegionQo);
+        log.info("ItBasicRegionServiceImpl.queryCount param {}",JSON.toJSONString(itBasicRegionQo));
         final Result<Long> result = Result.success();
         result.setData(0L);
         try {
@@ -67,7 +68,7 @@ public class ItBasicRegionServiceImpl implements ItBasicRegionService {
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + "ItBasicRegionServiceImpl.queryPageList", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<PageData<ItBasicRegionVo>> queryPageList(ItBasicRegionQo itBasicRegionQo) {
-        log.info("DeviceInfoServiceImpl.queryPageList param {}", itBasicRegionQo);
+        log.info("DeviceInfoServiceImpl.queryPageList param {}",JSON.toJSONString(itBasicRegionQo));
         final Result<PageData<ItBasicRegionVo>> result = Result.success();
         final PageData<ItBasicRegionVo> pageData = new PageData<>(itBasicRegionQo.getPageNumber(), itBasicRegionQo.getPageSize());
         result.setData(pageData);
@@ -101,7 +102,7 @@ public class ItBasicRegionServiceImpl implements ItBasicRegionService {
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + "ItBasicRegionServiceImpl.add", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Long> add(ItBasicRegion itBasicRegion) {
-        log.info("ItBasicRegionServiceImpl.add param {}", itBasicRegion);
+        log.info("ItBasicRegionServiceImpl.add param {}",JSON.toJSONString(itBasicRegion));
         final Result<Long> result = Result.success();
         result.setData(0L);
         try {
@@ -125,7 +126,7 @@ public class ItBasicRegionServiceImpl implements ItBasicRegionService {
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + "ItBasicRegionServiceImpl.updateById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> updateById(ItBasicRegion itBasicRegion) {
-        log.info("ItBasicRegionServiceImpl.updateById param {}", itBasicRegion);
+        log.info("ItBasicRegionServiceImpl.updateById param {}",JSON.toJSONString(itBasicRegion));
         final Result<Boolean> result = Result.success();
         result.setData(false);
         try {
@@ -147,7 +148,7 @@ public class ItBasicRegionServiceImpl implements ItBasicRegionService {
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + "ItBasicRegionServiceImpl.logicDeleteById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> logicDeleteById(ItBasicRegion itBasicRegion) {
-        log.info("ItBasicRegionServiceImpl.logicDeleteById param {}", itBasicRegion);
+        log.info("ItBasicRegionServiceImpl.logicDeleteById param {}",JSON.toJSONString(itBasicRegion));
         final Result<Boolean> result = Result.success();
         result.setData(false);
         try {

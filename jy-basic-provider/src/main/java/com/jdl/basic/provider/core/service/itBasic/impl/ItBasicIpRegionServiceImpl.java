@@ -3,6 +3,7 @@ package com.jdl.basic.provider.core.service.itBasic.impl;
 import com.jd.dms.java.utils.core.common.IpUtils;
 import com.jd.dms.java.utils.sdk.base.PageData;
 import com.jd.dms.java.utils.sdk.base.Result;
+import com.jd.fastjson.JSON;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.itBasic.ItBasicRegion;
@@ -51,7 +52,7 @@ public class ItBasicIpRegionServiceImpl implements ItBasicIpRegionService {
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + "ItBasicIpRegionServiceImpl.queryCount", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<Long> queryCount(ItBasicStorageIpRegionQo itBasicStorageIpRegionQo) {
-        log.info("ItBasicIpRegionServiceImpl.queryCount param {}", itBasicStorageIpRegionQo);
+        log.info("ItBasicIpRegionServiceImpl.queryCount param {}", JSON.toJSONString(itBasicStorageIpRegionQo));
         final Result<Long> result = Result.success();
         result.setData(0L);
         try {
@@ -75,7 +76,7 @@ public class ItBasicIpRegionServiceImpl implements ItBasicIpRegionService {
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + "ItBasicIpRegionServiceImpl.queryPageList", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<PageData<ItBasicStorageIpRegionVo>> queryPageList(ItBasicStorageIpRegionQo itBasicStorageIpRegionQo) {
-        log.info("DeviceInfoServiceImpl.queryPageList param {}", itBasicStorageIpRegionQo);
+        log.info("DeviceInfoServiceImpl.queryPageList param {}", JSON.toJSONString(itBasicStorageIpRegionQo));
         final Result<PageData<ItBasicStorageIpRegionVo>> result = Result.success();
         final PageData<ItBasicStorageIpRegionVo> pageData = new PageData<>(itBasicStorageIpRegionQo.getPageNumber(), itBasicStorageIpRegionQo.getPageSize());
         result.setData(pageData);
@@ -109,7 +110,7 @@ public class ItBasicIpRegionServiceImpl implements ItBasicIpRegionService {
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + "ItBasicIpRegionServiceImpl.add", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<Long> add(ItBasicStorageIpRegion itBasicStorageIpRegion) {
-        log.info("ItBasicIpRegionServiceImpl.add param {}", itBasicStorageIpRegion);
+        log.info("ItBasicIpRegionServiceImpl.add param {}", JSON.toJSONString(itBasicStorageIpRegion));
         final Result<Long> result = Result.success();
         result.setData(0L);
         try {
@@ -133,7 +134,7 @@ public class ItBasicIpRegionServiceImpl implements ItBasicIpRegionService {
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + "ItBasicIpRegionServiceImpl.updateById", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<Boolean> updateById(ItBasicStorageIpRegion itBasicStorageIpRegion) {
-        log.info("ItBasicIpRegionServiceImpl.updateById param {}", itBasicStorageIpRegion);
+        log.info("ItBasicIpRegionServiceImpl.updateById param {}", JSON.toJSONString(itBasicStorageIpRegion));
         final Result<Boolean> result = Result.success();
         result.setData(false);
         try {
@@ -155,7 +156,7 @@ public class ItBasicIpRegionServiceImpl implements ItBasicIpRegionService {
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + "ItBasicIpRegionServiceImpl.logicDeleteById", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<Boolean> logicDeleteById(ItBasicStorageIpRegion itBasicStorageIpRegion) {
-        log.info("ItBasicIpRegionServiceImpl.logicDeleteById param {}", itBasicStorageIpRegion);
+        log.info("ItBasicIpRegionServiceImpl.logicDeleteById param {}", JSON.toJSONString(itBasicStorageIpRegion));
         final Result<Boolean> result = Result.success();
         result.setData(false);
         try {
@@ -182,7 +183,7 @@ public class ItBasicIpRegionServiceImpl implements ItBasicIpRegionService {
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + "ItBasicIpRegionServiceImpl.selectMatchRegionByIp", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<MatchIpRegionDto> selectMatchRegionByIp(ItBasicIpRegionPo itBasicIpRegionPo) {
-        log.info("ItBasicIpRegionServiceImpl.selectMatchRegionByIp param {}", itBasicIpRegionPo);
+        log.info("ItBasicIpRegionServiceImpl.selectMatchRegionByIp param {}", JSON.toJSONString(itBasicIpRegionPo));
         final Result<MatchIpRegionDto> result = Result.success();
         try {
             final ItBasicStorageIpRegion itBasicStorageIpRegionExist = itBasicStorageIpRegionDao.selectMatchRegionByIp(itBasicIpRegionPo);

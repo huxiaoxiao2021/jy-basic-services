@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.service.device.impl;
 
 import com.jd.dms.java.utils.sdk.base.PageData;
 import com.jd.dms.java.utils.sdk.base.Result;
+import com.alibaba.fastjson.JSON;
 import com.jdl.basic.api.domain.device.DeviceInfo;
 import com.jdl.basic.api.dto.device.qo.DeviceInfoQo;
 import com.jdl.basic.api.dto.device.vo.DeviceInfoVo;
@@ -40,7 +41,7 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
      */
     @Override
     public Result<Long> queryCount(DeviceInfoQo deviceInfoQo) {
-        log.info("DeviceInfoServiceImpl.queryCount param {}", deviceInfoQo);
+        log.info("DeviceInfoServiceImpl.queryCount param {}", JSON.toJSONString(deviceInfoQo));
         final Result<Long> result = Result.success();
         result.setData(0L);
         try {
@@ -63,7 +64,7 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
      */
     @Override
     public Result<PageData<DeviceInfoVo>> queryPageList(DeviceInfoQo deviceInfoQo) {
-        log.info("DeviceInfoServiceImpl.queryPageList param {}", deviceInfoQo);
+        log.info("DeviceInfoServiceImpl.queryPageList param {}", JSON.toJSONString(deviceInfoQo));
         final Result<PageData<DeviceInfoVo>> result = Result.success();
         final PageData<DeviceInfoVo> pageData = new PageData<>(deviceInfoQo.getPageNumber(), deviceInfoQo.getPageSize());
         result.setData(pageData);
@@ -95,7 +96,7 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
      */
     @Override
     public Result<Long> add(DeviceInfo deviceInfo) {
-        log.info("DeviceInfoServiceImpl.add param {}", deviceInfo);
+        log.info("DeviceInfoServiceImpl.add param {}", JSON.toJSONString(deviceInfo));
         final Result<Long> result = Result.success();
         result.setData(0L);
         try {
@@ -118,7 +119,7 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
      */
     @Override
     public Result<Boolean> updateById(DeviceInfo deviceInfo) {
-        log.info("DeviceInfoServiceImpl.updateById param {}", deviceInfo);
+        log.info("DeviceInfoServiceImpl.updateById param {}", JSON.toJSONString(deviceInfo));
         final Result<Boolean> result = Result.success();
         result.setData(false);
         try {
@@ -139,7 +140,7 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
      */
     @Override
     public Result<Boolean> logicDeleteById(DeviceInfo deviceInfo) {
-        log.info("DeviceInfoServiceImpl.logicDeleteById param {}", deviceInfo);
+        log.info("DeviceInfoServiceImpl.logicDeleteById param {}", JSON.toJSONString(deviceInfo));
         final Result<Boolean> result = Result.success();
         result.setData(false);
         try {
