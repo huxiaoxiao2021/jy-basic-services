@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
 
+import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.utils.PageDto;
@@ -8,6 +9,7 @@ import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.basic.provider.core.dao.workStation.WorkAbnormalGridDao;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationGridDao;
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.workStation.WorkAbnormalGridBindingService;
 import com.jdl.basic.provider.common.Jimdb.CacheService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +43,9 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
     @Resource
     @Qualifier("JimdbCacheService")
     private CacheService cacheService;
+    
+    @Resource
+    private BaseMajorManager baseMajorManager;
 
     @Override
     public Result<PageDto<WorkStationFloorGridVo>> queryListDistinct(WorkStationFloorGridQuery query) {
@@ -286,7 +291,11 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
             workStationFloorGridVo.setOrgCode(data.getOrgCode());
             workStationFloorGridVo.setOrgName(data.getOrgName());
             workStationFloorGridVo.setSiteCode(data.getSiteCode());
-            workStationFloorGridVo.setSiteName(data.getSiteName());
+            // 防止站点名称变更而表中的站点名称未及时更新导致查出的站点名称不对
+            BaseStaffSiteOrgDto baseSite = baseMajorManager.getBaseSiteBySiteId(data.getSiteCode());
+            if(baseSite != null && !StringUtils.isEmpty(baseSite.getSiteName())){
+                workStationFloorGridVo.setSiteName(baseSite.getSiteName());
+            }
             workStationFloorGridVo.setAreaName(data.getAreaName());
             workStationFloorGridVo.setAreaCode(data.getAreaCode());
             WorkStationBinding query = new WorkStationBinding();

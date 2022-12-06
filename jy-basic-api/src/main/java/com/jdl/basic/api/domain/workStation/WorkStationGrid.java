@@ -1,9 +1,11 @@
 package com.jdl.basic.api.domain.workStation;
 
+import com.jdl.basic.api.domain.machine.Machine;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName: WorkStationGrid
@@ -147,4 +149,8 @@ public class WorkStationGrid implements Serializable {
 	 */
 	private Integer areaType;
 
+	/**
+	 * 自动化设备编码
+	 */
+	private List<Machine> machine;
 }
