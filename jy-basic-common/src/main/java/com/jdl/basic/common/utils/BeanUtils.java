@@ -36,7 +36,7 @@ public class BeanUtils {
                         Date date = dateFormat.parse((String) value);
                         org.apache.commons.beanutils.BeanUtils
                                 .copyProperty(t, column, date);
-                        break;
+                        continue;
                     }
                     org.apache.commons.beanutils.BeanUtils
                             .copyProperty(t, column, value);
