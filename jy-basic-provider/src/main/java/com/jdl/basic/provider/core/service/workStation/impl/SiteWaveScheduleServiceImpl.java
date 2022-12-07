@@ -2,7 +2,9 @@ package com.jdl.basic.provider.core.service.workStation.impl;
 
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
-import com.jdl.basic.api.domain.workStation.*;
+import com.jdl.basic.api.domain.workStation.SiteWaveSchedule;
+import com.jdl.basic.api.domain.workStation.SiteWaveScheduleQuery;
+import com.jdl.basic.api.domain.workStation.SiteWaveScheduleVo;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.enums.ScheduleEnum;
@@ -22,7 +24,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service("siteWaveScheduleService")
@@ -71,27 +72,19 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
             return result.toFail("场地ID为【" + vo.getSiteCode() + "】的班次时间格式不对！");
         }
 
-        //某些时间段可能没事时间表，过滤空对象防止出现空指针异常
-        List<SiteWaveSchedule> copyList = importDatas.stream().filter(item -> item.getStartTime() != null && item.getEndTime() != null).collect(Collectors.toList());
-        //对开始时间升序排序
-        Collections.sort(copyList,
-                (op1, op2) -> (int) (op1.getStartTime().getTime() - op2.getStartTime().getTime()));
-        long minStartTime = copyList.get(0).getStartTime().getTime();
-        long maxEndTime = copyList.get(copyList.size() - 1).getEndTime().getTime();
+        long minStartTime = Long.MAX_VALUE;
+        long maxEndTime = Long.MIN_VALUE;
+        for(SiteWaveSchedule schedule : importDatas){
+            if (schedule.getStartTime() != null && schedule.getEndTime() != null){
+                minStartTime = Math.min(schedule.getStartTime().getTime(), minStartTime);
+                maxEndTime = Math.max(schedule.getEndTime().getTime(), maxEndTime);
+            }
+        }
         //限制在24小时内
         if(maxEndTime - minStartTime > 24 * 3600 * 1000){
             return result.toFail("场地ID为【" + vo.getSiteCode() + "】的班次时间超过24小时！");
         }
-        //比较各时间段是否重叠
-        long lastEndTime = copyList.get(0).getEndTime().getTime();
-        for (int i = 1; i < copyList.size(); i++){
-            long sub = copyList.get(i).getStartTime().getTime() - lastEndTime;
-            if (sub < 0){
-                log.info("时间重叠!, 入参{}", JsonHelper.toJSONString(vo));
-                return result.toFail("场地ID为【" + vo.getSiteCode() + "】的班次时间重合！");
-            }
-            lastEndTime = copyList.get(i).getEndTime().getTime();
-        }
+
         for(SiteWaveSchedule insertData : importDatas){
             SiteWaveSchedule oldData = siteWaveScheduleDao.queryOldDataByBusinessKey(insertData);
             if (oldData != null){
@@ -129,7 +122,6 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
                 Date endTime = sdf.parse(timeString[1]);
                 //时间段跨两天，如22:00-01:00，为当天22:00到次日凌晨01:00
                 if (startTime.getTime() > endTime.getTime()){
-                    log.info("结束时间{}小于开始时间{}", endTime, startTime);
                     endTime = DateUtils.addDays(endTime, 1);
                 }
                 newData.setStartTime(startTime);

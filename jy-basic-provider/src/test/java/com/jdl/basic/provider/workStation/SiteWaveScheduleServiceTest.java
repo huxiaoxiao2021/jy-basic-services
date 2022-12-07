@@ -40,7 +40,7 @@ public class SiteWaveScheduleServiceTest {
 
         Map<String, String> nightShift = new HashMap<>();
         nightShift.put("time1", "16:00-21:00");
-        nightShift.put("time2", "21:00-08:00");
+        nightShift.put("time2", "21:00-07:00");
         nightShift.put("time3", "");
 
         v1.setOrgCode(6);
