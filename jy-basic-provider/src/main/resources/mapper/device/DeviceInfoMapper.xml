@@ -501,7 +501,7 @@
         FROM `device_info`
         <include refid="where"/>
         <if test="pageNumber > 0">
-            limit #{startRecord}, #{pageSize}
+            limit #{limitStart}, #{pageSize}
         </if>
     </select>
     <!-- 伪删除（更新删除行的识别码） -->

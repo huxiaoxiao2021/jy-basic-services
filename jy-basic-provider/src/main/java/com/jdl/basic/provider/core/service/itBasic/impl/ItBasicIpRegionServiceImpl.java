@@ -89,6 +89,8 @@ public class ItBasicIpRegionServiceImpl implements ItBasicIpRegionService {
                 for (ItBasicStorageIpRegion itBasicStorageIpRegion : itBasicStorageIpRegions) {
                     final ItBasicStorageIpRegionVo ItBasicStorageIpRegionVo = new ItBasicStorageIpRegionVo();
                     BeanUtils.copyProperties(itBasicStorageIpRegion, ItBasicStorageIpRegionVo);
+                    ItBasicStorageIpRegionVo.setStartIpStr(IpUtils.longToIP(itBasicStorageIpRegion.getStartIp()));
+                    ItBasicStorageIpRegionVo.setEndIpStr(IpUtils.longToIP(itBasicStorageIpRegion.getEndIp()));
                     ItBasicRegionVos.add(ItBasicStorageIpRegionVo);
                 }
                 // todo查询父级信息
