@@ -40,7 +40,7 @@ public class DeviceInfoQo extends BaseQuery implements Serializable{
     /**
      * 设备类型  db_column: device_type
      */
-    private Integer deviceType;
+    private String deviceType;
     /**
      * 生产厂商编码  db_column: manufacturer_code
      */
