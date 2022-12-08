@@ -55,7 +55,7 @@ public class DeviceInfoDaoTest {
             deviceInfo.setDeviceCode("DEVICE-01");
             deviceInfo.setDeviceName("设备01");
             deviceInfo.setDeviceSn("aaaabbb");
-            deviceInfo.setDeviceType(1);
+            deviceInfo.setDeviceType("PDA");
             deviceInfo.setManufacturerCode("fact");
             deviceInfo.setManufacturerName("测试厂家");
             final int insert = deviceInfoDao.insertSelective(deviceInfo);
