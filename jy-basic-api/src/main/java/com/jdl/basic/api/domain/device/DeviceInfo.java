@@ -36,6 +36,10 @@ public class DeviceInfo implements Serializable{
      */
     private String deviceSn;
     /**
+     * 设备类型ID  db_column: device_type_id
+     */
+    private Integer deviceTypeId;
+    /**
      * 设备类型  db_column: device_type
      */
     private String deviceType;
@@ -52,14 +56,6 @@ public class DeviceInfo implements Serializable{
      */
     private String description;
     /**
-     * 场地id  db_column: site_code
-     */
-    private Integer siteCode;
-    /**
-     * 场地名称  db_column: site_name
-     */
-    private String siteName;
-    /**
      * 区域ID  db_column: org_id
      */
     private Integer orgId;
@@ -68,9 +64,17 @@ public class DeviceInfo implements Serializable{
      */
     private String orgName;
     /**
-     * 该条配置是否启用 1启用 0不启用  db_column: is_enable
+     * 场地id  db_column: site_code
      */
-    private Integer isEnable;
+    private Integer siteCode;
+    /**
+     * 场地名称  db_column: site_name
+     */
+    private String siteName;
+    /**
+     * 设备状态
+     */
+    private Integer deviceStatus;
     /**
      * 创建人  db_column: create_user
      */
