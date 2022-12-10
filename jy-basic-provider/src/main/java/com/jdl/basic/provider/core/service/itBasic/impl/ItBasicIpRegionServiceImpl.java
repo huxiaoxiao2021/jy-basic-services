@@ -121,7 +121,7 @@ public class ItBasicIpRegionServiceImpl implements ItBasicIpRegionService {
                 result.setData(itBasicStorageIpRegion.getId());
             }
         } catch (Exception e) {
-            log.error("ItBasicIpRegionServiceImpl.queryCount error ", e);
+            log.error("ItBasicIpRegionServiceImpl.add error ", e);
             result.toFail("添加异常");
         }
         return result;
@@ -143,7 +143,7 @@ public class ItBasicIpRegionServiceImpl implements ItBasicIpRegionService {
             final int total = itBasicStorageIpRegionDao.updateByPrimaryKeySelective(itBasicStorageIpRegion);
             result.setData(total == 1);
         } catch (Exception e) {
-            log.error("ItBasicIpRegionServiceImpl.queryCount error ", e);
+            log.error("ItBasicIpRegionServiceImpl.updateById error ", e);
             result.toFail("更新异常");
         }
         return result;
@@ -168,7 +168,7 @@ public class ItBasicIpRegionServiceImpl implements ItBasicIpRegionService {
                 result.setData(true);
             }
         } catch (Exception e) {
-            log.error("ItBasicIpRegionServiceImpl.queryCount error ", e);
+            log.error("ItBasicIpRegionServiceImpl.logicDeleteById error ", e);
             result.toFail("更新异常");
         }
         return result;

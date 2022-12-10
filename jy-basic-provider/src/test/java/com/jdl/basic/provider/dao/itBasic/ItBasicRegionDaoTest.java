@@ -48,7 +48,7 @@ public class ItBasicRegionDaoTest {
             System.out.println(insert);
             Assert.assertTrue(true);
         }catch (Exception e){
-            log.error("errror ", e);
+            log.error("error ", e);
             Assert.fail();
         }
     }

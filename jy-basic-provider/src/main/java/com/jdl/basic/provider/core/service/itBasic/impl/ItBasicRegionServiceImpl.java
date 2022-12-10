@@ -68,7 +68,7 @@ public class ItBasicRegionServiceImpl implements ItBasicRegionService {
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + "ItBasicRegionServiceImpl.queryPageList", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<PageData<ItBasicRegionVo>> queryPageList(ItBasicRegionQo itBasicRegionQo) {
-        log.info("DeviceInfoServiceImpl.queryPageList param {}",JSON.toJSONString(itBasicRegionQo));
+        log.info("ItBasicRegionServiceImpl.queryPageList param {}",JSON.toJSONString(itBasicRegionQo));
         final Result<PageData<ItBasicRegionVo>> result = Result.success();
         final PageData<ItBasicRegionVo> pageData = new PageData<>(itBasicRegionQo.getPageNumber(), itBasicRegionQo.getPageSize());
         result.setData(pageData);
@@ -87,7 +87,7 @@ public class ItBasicRegionServiceImpl implements ItBasicRegionService {
                 pageData.setRecords(ItBasicRegionVos);
             }
         } catch (Exception e) {
-            log.error("DeviceInfoServiceImpl.queryPageList error ", e);
+            log.error("ItBasicRegionServiceImpl.queryPageList error ", e);
             result.toFail("查询异常");
         }
         return result;
@@ -111,7 +111,7 @@ public class ItBasicRegionServiceImpl implements ItBasicRegionService {
                 result.setData(itBasicRegion.getId());
             }
         } catch (Exception e) {
-            log.error("ItBasicRegionServiceImpl.queryCount error ", e);
+            log.error("ItBasicRegionServiceImpl.add error ", e);
             result.toFail("插入异常");
         }
         return result;
@@ -133,7 +133,7 @@ public class ItBasicRegionServiceImpl implements ItBasicRegionService {
             final int total = itBasicRegionDao.updateByPrimaryKeySelective(itBasicRegion);
             result.setData(total == 1);
         } catch (Exception e) {
-            log.error("ItBasicRegionServiceImpl.queryCount error ", e);
+            log.error("ItBasicRegionServiceImpl.updateById error ", e);
             result.toFail("更新异常");
         }
         return result;
@@ -158,7 +158,7 @@ public class ItBasicRegionServiceImpl implements ItBasicRegionService {
                 result.setData(true);
             }
         } catch (Exception e) {
-            log.error("ItBasicRegionServiceImpl.queryCount error ", e);
+            log.error("ItBasicRegionServiceImpl.logicDeleteById error ", e);
             result.toFail("更新异常");
         }
         return result;
