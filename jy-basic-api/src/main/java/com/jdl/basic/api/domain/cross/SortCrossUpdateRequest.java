@@ -13,5 +13,5 @@ public class SortCrossUpdateRequest {
     
     private List<Long> ids;
     
-    private Integer enable;
+    private Integer enableFlag;
 }

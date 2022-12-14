@@ -43,7 +43,7 @@ public class SortCrossDetail {
 
     private String belongName;
 
-    private Integer enable;
+    private Integer enableFlag;
     
     public Long getId() {
         return id;
@@ -205,11 +205,11 @@ public class SortCrossDetail {
         this.belongName = belongName;
     }
 
-    public Integer getEnable() {
-        return enable;
+    public Integer getEnableFlag() {
+        return enableFlag;
     }
 
-    public void setEnable(Integer enable) {
-        this.enable = enable;
+    public void setEnableFlag(Integer enableFlag) {
+        this.enableFlag = enableFlag;
     }
 }
