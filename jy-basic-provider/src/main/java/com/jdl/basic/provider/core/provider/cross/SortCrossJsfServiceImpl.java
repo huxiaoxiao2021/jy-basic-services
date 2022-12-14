@@ -3,6 +3,7 @@ package com.jdl.basic.provider.core.provider.cross;
 import com.jd.ql.basic.dto.BaseSiteInfoDto;
 import com.jdl.basic.api.domain.cross.*;
 import com.jdl.basic.api.service.cross.SortCrossJsfService;
+import com.jdl.basic.common.enums.SortCrossEnableEnum;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
@@ -82,7 +83,7 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
                 try{
                     if (StringUtils.isEmpty(sortCrossDetail.getSiteCode())){
                         sortCrossDetail.setSiteType(-1);
-                        sortCrossDetail.setEnable(0);
+                        sortCrossDetail.setEnable(SortCrossEnableEnum.DISABLE.getCode());
                     } else {
                         if (!initSiteType(sortCrossDetail)){
                             log.info("id:{}初始化数据失败",sortCrossDetail.getId());
@@ -204,17 +205,17 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
             sortCrossDetail.setBelongCode(baseSiteInfoDto.getBelongCode());
             sortCrossDetail.setBelongName(baseSiteInfoDto.getBelongName());
             if (baseSiteInfoDto.getBelongCode() != null) {
-                sortCrossDetail.setEnable(0);
+                sortCrossDetail.setEnable(SortCrossEnableEnum.DISABLE.getCode());
             }else if (baseSiteInfoDto.getSiteType() != null && Objects.equals(baseSiteInfoDto.getSiteType(), siteType)
                     && baseSiteInfoDto.getSubType() != null && Objects.equals(baseSiteInfoDto.getSubType(), subType) 
                     && baseSiteInfoDto.getThirdType() != null && Objects.equals(baseSiteInfoDto.getThirdType(), thirdType)) {
-                sortCrossDetail.setEnable(1);
+                sortCrossDetail.setEnable(SortCrossEnableEnum.ENABLE.getCode());
             }else {
-                sortCrossDetail.setEnable(0);
+                sortCrossDetail.setEnable(SortCrossEnableEnum.DISABLE.getCode());
             }
         } else {
             sortCrossDetail.setSiteType(-1);
-            sortCrossDetail.setEnable(0);
+            sortCrossDetail.setEnable(SortCrossEnableEnum.DISABLE.getCode());
         }
         if (sortCrossService.initSiteTypeById(sortCrossDetail) < 1) {
             log.info("id:{}初始化数据失败", sortCrossDetail.getId());
