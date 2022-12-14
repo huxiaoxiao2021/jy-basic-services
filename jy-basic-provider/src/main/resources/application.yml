@@ -7,7 +7,6 @@ spring:
     name: dms-workbench-basic-services
   profiles:
     active: '@activatedProperties@'
-    include: jmq
 
 mybatis:
   config-locations: mybatis/mybatis-config.xml
