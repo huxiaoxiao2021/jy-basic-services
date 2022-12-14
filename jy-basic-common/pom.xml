@@ -64,6 +64,15 @@
             <version>1.9.2</version>
         </dependency>
 
+        <dependency>
+            <artifactId>dms-java-utils-sdk</artifactId>
+            <groupId>com.jd.dms.utis</groupId>
+        </dependency>
+        <dependency>
+            <artifactId>dms-java-utils-core</artifactId>
+            <groupId>com.jd.dms.utis</groupId>
+        </dependency>
+
     </dependencies>
 
     <build>

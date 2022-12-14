@@ -133,5 +133,38 @@
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
+
+    <!-- 设备管理接口 -->
+    <jsf:provider id="deviceInfoApiJsf"
+                  interface="com.jdl.basic.api.service.device.DeviceInfoApi"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="deviceInfoApiImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!-- IT区域接口 -->
+    <jsf:provider id="itBasicRegionApiJsf"
+                  interface="com.jdl.basic.api.service.itBasic.ItBasicRegionApi"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="itBasicRegionApiImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!-- IT设备IP对应区域位置接口 -->
+    <jsf:provider id="itBasicIpRegionApiJsf"
+                  interface="com.jdl.basic.api.service.itBasic.ItBasicIpRegionApi"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="itBasicIpRegionApiImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!-- IT设备对应区域接口 -->
+    <jsf:provider id="itBasicStorageNetInfoApiJsf"
+                  interface="com.jdl.basic.api.service.itBasic.ItBasicStorageNetInfoApi"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="itBasicStorageNetInfoApiImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
 </beans>
 

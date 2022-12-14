@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jdl.basic.provider.core.dao.device.DeviceInfoDao">
+    <!-- table映射实体对象 -->
+    <resultMap id="RM_DeviceInfo" type="com.jdl.basic.api.domain.device.DeviceInfo">
+        <result property="id" column="id"/>
+        <result property="deviceCode" column="device_code"/>
+        <result property="deviceName" column="device_name"/>
+        <result property="deviceSn" column="device_sn"/>
+        <result property="deviceTypeId" column="device_type_id"/>
+        <result property="deviceType" column="device_type"/>
+        <result property="manufacturerCode" column="manufacturer_code"/>
+        <result property="manufacturerName" column="manufacturer_name"/>
+        <result property="description" column="description"/>
+        <result property="orgId" column="org_id"/>
+        <result property="orgName" column="org_name"/>
+        <result property="siteCode" column="site_code"/>
+        <result property="siteName" column="site_name"/>
+        <result property="deviceStatus" column="device_status"/>
+        <result property="createUser" column="create_user"/>
+        <result property="createUserName" column="create_user_name"/>
+        <result property="updateUser" column="update_user"/>
+        <result property="updateUserName" column="update_user_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="yn" column="yn"/>
+        <result property="ts" column="ts"/>
+    </resultMap>
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="Base_Column_List">
+        `id`, `device_code`, `device_name`, `device_sn`, `device_type_id`, `device_type`, `manufacturer_code`, `manufacturer_name`, `description`, `org_id`, `org_name`, `site_code`, `site_name`, `device_status`, `create_user`, `create_user_name`, `update_user`, `update_user_name`, `create_time`, `update_time`, `yn`, `ts`
+    </sql>
+
+    <!-- 插入 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.jdl.basic.api.domain.device.DeviceInfo">
+        insert into `device_info`(
+            id,
+            device_code,
+            device_name,
+            device_sn,
+            device_type_id,
+            device_type,
+            manufacturer_code,
+            manufacturer_name,
+            description,
+            org_id,
+            org_name,
+            site_code,
+            site_name,
+            device_status,
+            create_user,
+            create_user_name,
+            update_user,
+            update_user_name,
+            create_time,
+            update_time,
+            yn,
+            ts
+        ) values (
+                     #{id},
+                     #{deviceCode},
+                     #{deviceName},
+                     #{deviceSn},
+                     #{deviceTypeId},
+                     #{deviceType},
+                     #{manufacturerCode},
+                     #{manufacturerName},
+                     #{description},
+                     #{orgId},
+                     #{orgName},
+                     #{siteCode},
+                     #{siteName},
+                     #{deviceStatus},
+                     #{createUser},
+                     #{createUserName},
+                     #{updateUser},
+                     #{updateUserName},
+                     #{createTime},
+                     #{updateTime},
+                     #{yn},
+                     #{ts}
+                 )
+    </insert>
+
+    <!-- 增加 -->
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.jdl.basic.api.domain.device.DeviceInfo">
+        insert into `device_info`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="deviceCode != null and deviceCode != ''">
+                device_code,
+            </if>
+            <if test="deviceName != null and deviceName != ''">
+                device_name,
+            </if>
+            <if test="deviceSn != null and deviceSn != ''">
+                device_sn,
+            </if>
+            <if test="deviceTypeId != null">
+                device_type_id,
+            </if>
+            <if test="deviceType != null and deviceType != ''">
+                device_type,
+            </if>
+            <if test="manufacturerCode != null and manufacturerCode != ''">
+                manufacturer_code,
+            </if>
+            <if test="manufacturerName != null and manufacturerName != ''">
+                manufacturer_name,
+            </if>
+            <if test="description != null and description != ''">
+                description,
+            </if>
+            <if test="orgId != null">
+                org_id,
+            </if>
+            <if test="orgName != null and orgName != ''">
+                org_name,
+            </if>
+            <if test="siteCode != null">
+                site_code,
+            </if>
+            <if test="siteName != null and siteName != ''">
+                site_name,
+            </if>
+            <if test="deviceStatus != null">
+                device_status,
+            </if>
+            <if test="createUser != null and createUser != ''">
+                create_user,
+            </if>
+            <if test="createUserName != null and createUserName != ''">
+                create_user_name,
+            </if>
+            <if test="updateUser != null and updateUser != ''">
+                update_user,
+            </if>
+            <if test="updateUserName != null and updateUserName != ''">
+                update_user_name,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="yn != null">
+                yn,
+            </if>
+            <if test="ts != null">
+                ts,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="deviceCode != null and deviceCode != ''">
+                #{deviceCode},
+            </if>
+            <if test="deviceName != null and deviceName != ''">
+                #{deviceName},
+            </if>
+            <if test="deviceSn != null and deviceSn != ''">
+                #{deviceSn},
+            </if>
+            <if test="deviceTypeId != null">
+                #{deviceTypeId},
+            </if>
+            <if test="deviceType != null and deviceType != ''">
+                #{deviceType},
+            </if>
+            <if test="manufacturerCode != null and manufacturerCode != ''">
+                #{manufacturerCode},
+            </if>
+            <if test="manufacturerName != null and manufacturerName != ''">
+                #{manufacturerName},
+            </if>
+            <if test="description != null and description != ''">
+                #{description},
+            </if>
+            <if test="orgId != null">
+                #{orgId},
+            </if>
+            <if test="orgName != null and orgName != ''">
+                #{orgName},
+            </if>
+            <if test="siteCode != null">
+                #{siteCode},
+            </if>
+            <if test="siteName != null and siteName != ''">
+                #{siteName},
+            </if>
+            <if test="deviceStatus != null">
+                #{deviceStatus},
+            </if>
+            <if test="createUser != null and createUser != ''">
+                #{createUser},
+            </if>
+            <if test="createUserName != null and createUserName != ''">
+                #{createUserName},
+            </if>
+            <if test="updateUser != null and updateUser != ''">
+                #{updateUser},
+            </if>
+            <if test="updateUserName != null and updateUserName != ''">
+                #{updateUserName},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="yn != null">
+                #{yn},
+            </if>
+            <if test="ts != null">
+                #{ts},
+            </if>
+        </trim>
+    </insert>
+    <!-- 批量增加 -->
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+        insert into `device_info`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            device_code,
+            device_name,
+            device_sn,
+            device_type_id,
+            device_type,
+            manufacturer_code,
+            manufacturer_name,
+            description,
+            org_id,
+            org_name,
+            site_code,
+            site_name,
+            device_status,
+            create_user,
+            create_user_name,
+            update_user,
+            update_user_name,
+            create_time,
+            update_time,
+            yn,
+            ts,
+        </trim>
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            <trim prefix=" (" suffix=")" suffixOverrides=",">
+                #{item.id},
+                #{item.deviceCode},
+                #{item.deviceName},
+                #{item.deviceSn},
+                #{item.deviceTypeId},
+                #{item.deviceType},
+                #{item.manufacturerCode},
+                #{item.manufacturerName},
+                #{item.description},
+                #{item.orgId},
+                #{item.orgName},
+                #{item.siteCode},
+                #{item.siteName},
+                #{item.deviceStatus},
+                #{item.createUser},
+                #{item.createUserName},
+                #{item.updateUser},
+                #{item.updateUserName},
+                #{item.createTime},
+                #{item.updateTime},
+                #{item.yn},
+                #{item.ts},
+            </trim>
+        </foreach>
+    </insert>
+    <!-- 更新 -->
+    <update id="updateByPrimaryKey" parameterType="com.jdl.basic.api.domain.device.DeviceInfo">
+        UPDATE `device_info`
+        <set>
+            <if test="deviceCode != null and deviceCode != ''">
+                device_code = #{deviceCode},
+            </if>
+            <if test="deviceName != null and deviceName != ''">
+                device_name = #{deviceName},
+            </if>
+            <if test="deviceSn != null and deviceSn != ''">
+                device_sn = #{deviceSn},
+            </if>
+            <if test="deviceTypeId != null ">
+                device_type_id = #{deviceTypeId},
+            </if>
+            <if test="deviceType != null and deviceType != ''">
+                device_type = #{deviceType},
+            </if>
+            <if test="manufacturerCode != null and manufacturerCode != ''">
+                manufacturer_code = #{manufacturerCode},
+            </if>
+            <if test="manufacturerName != null and manufacturerName != ''">
+                manufacturer_name = #{manufacturerName},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="orgId != null ">
+                org_id = #{orgId},
+            </if>
+            <if test="orgName != null and orgName != ''">
+                org_name = #{orgName},
+            </if>
+            <if test="siteCode != null ">
+                site_code = #{siteCode},
+            </if>
+            <if test="siteName != null and siteName != ''">
+                site_name = #{siteName},
+            </if>
+            <if test="deviceStatus != null ">
+                device_status = #{deviceStatus},
+            </if>
+            <if test="createUser != null and createUser != ''">
+                create_user = #{createUser},
+            </if>
+            <if test="createUserName != null and createUserName != ''">
+                create_user_name = #{createUserName},
+            </if>
+            <if test="updateUser != null and updateUser != ''">
+                update_user = #{updateUser},
+            </if>
+            <if test="updateUserName != null and updateUserName != ''">
+                update_user_name = #{updateUserName},
+            </if>
+            <if test="createTime != null ">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null ">
+                update_time = #{updateTime},
+            </if>
+            <if test="yn != null ">
+                yn = #{yn},
+            </if>
+            <if test="ts != null ">
+                ts = #{ts}
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+    <!-- 批量更新 -->
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index"  separator=";">
+            UPDATE `device_info`
+            <set>
+                <if test="item.deviceCode != null and item.deviceCode != ''">
+                    device_code = #{item.deviceCode},
+                </if>
+                <if test="item.deviceName != null and item.deviceName != ''">
+                    device_name = #{item.deviceName},
+                </if>
+                <if test="item.deviceSn != null and item.deviceSn != ''">
+                    device_sn = #{item.deviceSn},
+                </if>
+                <if test="item.deviceTypeId != null">
+                    device_type_id = #{item.deviceTypeId},
+                </if>
+                <if test="item.deviceType != null and item.deviceType != ''">
+                    device_type = #{item.deviceType},
+                </if>
+                <if test="item.manufacturerCode != null and item.manufacturerCode != ''">
+                    manufacturer_code = #{item.manufacturerCode},
+                </if>
+                <if test="item.manufacturerName != null and item.manufacturerName != ''">
+                    manufacturer_name = #{item.manufacturerName},
+                </if>
+                <if test="item.description != null and item.description != ''">
+                    description = #{item.description},
+                </if>
+                <if test="item.orgId != null">
+                    org_id = #{item.orgId},
+                </if>
+                <if test="item.orgName != null and item.orgName != ''">
+                    org_name = #{item.orgName},
+                </if>
+                <if test="item.siteCode != null">
+                    site_code = #{item.siteCode},
+                </if>
+                <if test="item.siteName != null and item.siteName != ''">
+                    site_name = #{item.siteName},
+                </if>
+                <if test="item.deviceStatus != null">
+                    device_status = #{item.deviceStatus},
+                </if>
+                <if test="item.createUser != null and item.createUser != ''">
+                    create_user = #{item.createUser},
+                </if>
+                <if test="item.createUserName != null and item.createUserName != ''">
+                    create_user_name = #{item.createUserName},
+                </if>
+                <if test="item.updateUser != null and item.updateUser != ''">
+                    update_user = #{item.updateUser},
+                </if>
+                <if test="item.updateUserName != null and item.updateUserName != ''">
+                    update_user_name = #{item.updateUserName},
+                </if>
+                <if test="item.createTime != null">
+                    create_time = #{item.createTime},
+                </if>
+                <if test="item.updateTime != null">
+                    update_time = #{item.updateTime},
+                </if>
+                <if test="item.yn != null">
+                    yn = #{item.yn},
+                </if>
+                <if test="item.ts != null">
+                    ts = #{item.ts}
+                </if>
+            </set>
+            WHERE
+            id = #{item.id}
+        </foreach>
+    </update>
+    <!-- 按主键查询 -->
+    <select id="selectByPrimaryKey" resultMap="RM_DeviceInfo" parameterType="com.jdl.basic.api.domain.device.DeviceInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        <![CDATA[
+            FROM `device_info`
+            WHERE
+                id = #{id} 
+        ]]>
+    </select>
+    <!-- 按条件查询单条记录 -->
+    <select id="selectOne" resultMap="RM_DeviceInfo" parameterType="com.jdl.basic.api.dto.device.qo.DeviceInfoQo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM `device_info`
+        <include refid="where"/>
+    </select>
+    <!-- where条件 -->
+    <sql id="where">
+        <where>
+            <include refid="sql_if_not_null"/>
+        </where>
+    </sql>
+    <!-- 判断空值 -->
+    <sql id="sql_if_not_null">
+        <if test="id != null">
+            AND id = #{id}
+        </if>
+        <if test="deviceCode != null and deviceCode != ''">
+            AND device_code = #{deviceCode}
+        </if>
+        <if test="deviceName != null and deviceName != ''">
+            AND device_name = #{deviceName}
+        </if>
+        <if test="deviceSn != null and deviceSn != ''">
+            AND device_sn = #{deviceSn}
+        </if>
+        <if test="deviceTypeId != null">
+            AND device_type_id = #{deviceTypeId}
+        </if>
+        <if test="deviceType != null and deviceType != ''">
+            AND device_type = #{deviceType}
+        </if>
+        <if test="manufacturerCode != null and manufacturerCode != ''">
+            AND manufacturer_code = #{manufacturerCode}
+        </if>
+        <if test="manufacturerName != null and manufacturerName != ''">
+            AND manufacturer_name = #{manufacturerName}
+        </if>
+        <if test="description != null and description != ''">
+            AND description = #{description}
+        </if>
+        <if test="orgId != null">
+            AND org_id = #{orgId}
+        </if>
+        <if test="orgName != null and orgName != ''">
+            AND org_name = #{orgName}
+        </if>
+        <if test="siteCode != null">
+            AND site_code = #{siteCode}
+        </if>
+        <if test="siteName != null and siteName != ''">
+            AND site_name = #{siteName}
+        </if>
+        <if test="deviceStatus != null">
+            AND device_status = #{deviceStatus}
+        </if>
+        <if test="createUser != null and createUser != ''">
+            AND create_user = #{createUser}
+        </if>
+        <if test="createUserName != null and createUserName != ''">
+            AND create_user_name = #{createUserName}
+        </if>
+        <if test="updateUser != null and updateUser != ''">
+            AND update_user = #{updateUser}
+        </if>
+        <if test="updateUserName != null and updateUserName != ''">
+            AND update_user_name = #{updateUserName}
+        </if>
+        <if test="createTime != null">
+            AND create_time = #{createTime}
+        </if>
+        <if test="updateTime != null">
+            AND update_time = #{updateTime}
+        </if>
+        <if test="yn != null">
+            AND yn = #{yn}
+        </if>
+    </sql>
+    <!-- 查询行数 -->
+    <select id="queryCount" resultType="long" parameterType="com.jdl.basic.api.dto.device.qo.DeviceInfoQo">
+        SELECT count(1) FROM `device_info`
+        <include refid="where"/>
+    </select>
+    <!-- 查询集合 如果pageNumber小于或等于0,则不进行分页操作 -->
+    <select id="queryList" resultMap="RM_DeviceInfo" parameterType="com.jdl.basic.api.dto.device.qo.DeviceInfoQo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM `device_info`
+        <include refid="where"/>
+        <if test="pageNumber > 0">
+            limit #{limitStart}, #{pageSize}
+        </if>
+    </select>
+    <!-- 伪删除（更新删除行的识别码） -->
+    <update id="deleteByPrimaryKey" parameterType="com.jdl.basic.api.domain.device.DeviceInfo">
+        UPDATE `device_info` SET yn = 1
+        WHERE
+            id = #{id}
+    </update>
+    <!-- 批量伪删除 -->
+    <update id="batchDelete" parameterType="com.jdl.basic.api.dto.device.qo.DeviceInfoQo">
+        UPDATE `device_info` SET yn = 1
+        WHERE id IN
+        <foreach collection="columnValueList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+</mapper>
+
