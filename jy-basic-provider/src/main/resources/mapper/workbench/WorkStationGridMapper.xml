@@ -529,7 +529,7 @@
 	</select>
 	<select id="queryListDistinct" parameterType="com.jdl.basic.api.domain.workStation.WorkStationFloorGridQuery" resultMap="WorkStationGrid">
 		select distinct
-		g.org_code,g.org_name,g.site_code,g.site_name,
+		g.org_code,g.org_name,g.site_code,
 		g.floor,g.grid_no,g.grid_code,g.grid_name,
 		s.area_code,s.area_name,ifnull(s.area_type,0) area_type
 		from

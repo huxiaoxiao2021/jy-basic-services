@@ -20,6 +20,7 @@
 		<id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT" />
 		<result column="position_code" property="positionCode" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="remark" property="remark" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="ref_station_key" property="refStationKey" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="ref_grid_key" property="refGridKey" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="org_code" property="orgCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
 		<result column="org_name" property="orgName" javaType="java.lang.String" jdbcType="VARCHAR" />
@@ -47,7 +48,7 @@
 	</sql>
 
 	<sql id="Base_Detail_Column_List" >
-		g.id,g.business_key,g.org_code,g.org_name,g.site_code,g.site_name,
+		g.id,g.ref_station_key,g.org_code,g.org_name,g.site_code,g.site_name,
 		g.floor,g.grid_no,g.grid_code,g.grid_name,g.create_user,g.create_time,g.yn,
 		s.area_code,s.area_name,s.work_code,s.work_name,
 		p.position_code,p.ref_grid_key,p.remark,p.update_user,p.update_time,p.ts

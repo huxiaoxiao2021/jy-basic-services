@@ -28,4 +28,6 @@ public interface JyWorkMapFuncConfigDao {
     int queryCount(JyWorkMapFuncQuery query);
 
     List<JyWorkMapFuncConfigEntity> queryByCondition(JyWorkMapFuncConfigEntity entity);
+
+    List<JyWorkMapFuncConfigEntity> queryFuncCodeMap();
 }

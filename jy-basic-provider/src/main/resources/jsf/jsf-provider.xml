@@ -37,11 +37,29 @@
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
 
-    <!-- 三定场地人员出勤计划管理jsf服务 -->
+    <!-- 三定场地工序维度出勤计划管理jsf服务 -->
     <jsf:provider id="workStationAttendPlanJsfService"
                   interface="com.jdl.basic.api.service.workStation.WorkStationAttendPlanJsfService"
                   alias="${jsf.jy_basic.alias}"
                   ref="workStationAttendPlanJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+
+    <!--  三定场地维度出勤计划jsf服务-->
+    <jsf:provider id="siteAttendPlanJsfService"
+                  interface="com.jdl.basic.api.service.workStation.SiteAttendPlanJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="siteAttendPlanJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+
+    <!--  三定场地班次时间jsf服务-->
+    <jsf:provider id="siteWaveScheduleJsfService"
+                  interface="com.jdl.basic.api.service.workStation.SiteWaveScheduleJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="siteWaveScheduleJsfServiceImpl"
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>

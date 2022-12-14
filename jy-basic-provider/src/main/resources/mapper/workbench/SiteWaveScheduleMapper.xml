@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jdl.basic.provider.core.dao.workStation.SiteWaveScheduleDao">
+    <resultMap id="BaseResultMap" type="com.jdl.basic.api.domain.workStation.SiteWaveSchedule">
+      <id column="id" jdbcType="BIGINT" property="id" />
+      <result column="org_code" jdbcType="INTEGER" property="orgCode" />
+      <result column="org_name" jdbcType="VARCHAR" property="orgName" />
+      <result column="site_code" jdbcType="INTEGER" property="siteCode" />
+      <result column="site_name" jdbcType="VARCHAR" property="siteName" />
+      <result column="business_line_code" jdbcType="VARCHAR" property="businessLineCode" />
+      <result column="business_line_name" jdbcType="VARCHAR" property="businessLineName" />
+      <result column="wave_code" jdbcType="TINYINT" property="waveCode" />
+      <result column="wave_period" jdbcType="INTEGER" property="wavePeriod" />
+      <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+      <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+      <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+      <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+      <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+      <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+      <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+      <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+      <result column="version_num" jdbcType="INTEGER" property="versionNum" />
+      <result column="yn" jdbcType="TINYINT" property="yn" />
+      <result column="ts" jdbcType="TIMESTAMP" property="ts" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+      id, org_code, org_name, site_code, site_name, business_line_code, business_line_name,
+      wave_code, wave_period, start_time, end_time, create_user, create_user_name, create_time,
+      update_user, update_user_name, update_time, version_num, yn, ts
+    </sql>
+
+    <sql id="queryCondition">
+        <where>
+            s.yn = 1
+            <if test="orgCode != null">
+                and org_code = #{orgCode, jdbcType=INTEGER}
+            </if>
+            <if test="siteCode != null">
+                and site_code = #{siteCode, jdbcType=INTEGER}
+            </if>
+        </where>
+    </sql>
+
+    <insert id="insert" parameterType="com.jdl.basic.api.domain.workStation.SiteWaveSchedule">
+        insert into site_wave_schedule
+        (
+        <trim suffixOverrides=",">
+            <if test="orgCode != null">
+                org_code,
+            </if>
+            <if test="orgName != null">
+                org_name,
+            </if>
+            <if test="siteCode != null">
+                site_code,
+            </if>
+            <if test="siteName != null">
+                site_name,
+            </if>
+            <if test="businessLineCode != null">
+                business_line_code,
+            </if>
+            <if test="businessLineName != null">
+                business_line_name,
+            </if>
+            <if test="waveCode != null">
+                wave_code,
+            </if>
+            <if test="wavePeriod != null">
+                wave_period,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="createUserName != null">
+                create_user_name,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateUser != null">
+                update_user,
+            </if>
+            <if test="updateUserName != null">
+                update_user_name,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="versionNum != null">
+                version_num,
+            </if>
+            <if test="yn != null">
+                yn,
+            </if>
+            <if test="ts != null">
+                ts,
+            </if>
+        </trim>
+        )
+        values
+        (
+        <trim suffixOverrides=",">
+            <if test="orgCode != null">
+                #{orgCode,jdbcType=INTEGER},
+            </if>
+            <if test="orgName != null">
+                #{orgName,jdbcType=VARCHAR},
+            </if>
+            <if test="siteCode != null">
+                #{siteCode,jdbcType=INTEGER},
+            </if>
+            <if test="siteName != null">
+                #{siteName,jdbcType=VARCHAR},
+            </if>
+            <if test="businessLineCode != null">
+                #{businessLineCode,jdbcType=VARCHAR},
+            </if>
+            <if test="businessLineName != null">
+                #{businessLineName,jdbcType=VARCHAR},
+            </if>
+            <if test="waveCode != null">
+                #{waveCode,jdbcType=TINYINT},
+            </if>
+            <if test="wavePeriod != null">
+                #{wavePeriod,jdbcType=INTEGER},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createUserName != null">
+                #{createUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUserName != null">
+                #{updateUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="versionNum != null">
+                #{versionNum,jdbcType=INTEGER},
+            </if>
+            <if test="yn != null">
+                #{yn,jdbcType=TINYINT},
+            </if>
+            <if test="ts != null">
+                #{ts,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+        )
+    </insert>
+
+    <select id="queryOldDataByBusinessKey" parameterType="com.jdl.basic.api.domain.workStation.SiteWaveSchedule" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from
+            site_wave_schedule s
+        where
+            s.yn = 1 and
+            s.org_code = #{orgCode, jdbcType=INTEGER} and
+            s.site_code = #{siteCode, jdbcType=INTEGER} and
+            s.wave_code = #{waveCode, jdbcType=TINYINT} and
+            s.wave_period = #{wavePeriod, jdbcType=TINYINT}
+    </select>
+
+    <update id="deleteOldDataByBusinessKey" parameterType="com.jdl.basic.api.domain.workStation.SiteWaveSchedule">
+        update
+            site_wave_schedule s
+        set
+            s.yn = 0,
+            s.update_user = #{updateUser, jdbcType=VARCHAR},
+            s.update_user_name = #{updateUserName, jdbcType=VARCHAR},
+            s.update_time = #{updateTime, jdbcType=VARCHAR}
+        where
+            s.yn = 1 and
+            s.org_code = #{orgCode, jdbcType=INTEGER} and
+            s.site_code = #{siteCode, jdbcType=INTEGER} and
+            s.wave_code = #{waveCode, jdbcType=TINYINT} and
+            s.wave_period = #{wavePeriod, jdbcType=TINYINT}
+    </update>
+
+    <select id="queryTotalCount" parameterType="com.jdl.basic.api.domain.workStation.SiteWaveScheduleQuery" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            site_wave_schedule s
+        <include refid="queryCondition"/>
+        group by s.org_code, s.site_code
+    </select>
+
+    <select id="queryPageList" parameterType="com.jdl.basic.api.domain.workStation.SiteWaveScheduleQuery" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from
+            site_wave_schedule s
+        <include refid="queryCondition"/>
+        group by
+            s.org_code, s.site_code
+        <if test="pageNumber > 0">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryPageDetail" parameterType="com.jdl.basic.api.domain.workStation.SiteWaveSchedule" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from
+            site_wave_schedule s
+        where
+            s.yn = 1 and
+            s.org_code = #{orgCode, jdbcType=INTEGER} and
+            s.site_code = #{siteCode, jdbcType=INTEGER}
+    </select>
+
+</mapper>

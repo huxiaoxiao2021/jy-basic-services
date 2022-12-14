@@ -1,0 +1,22 @@
+package com.jdl.basic.provider.core.dao.workStation;
+
+import com.jdl.basic.api.domain.workStation.SiteWaveSchedule;
+import com.jdl.basic.api.domain.workStation.SiteWaveScheduleQuery;
+
+import java.util.List;
+
+public interface SiteWaveScheduleDao {
+
+    int insert(SiteWaveSchedule siteWaveSchedule);
+
+    SiteWaveSchedule queryOldDataByBusinessKey(SiteWaveSchedule siteWaveSchedule);
+
+    int deleteOldDataByBusinessKey(SiteWaveSchedule siteWaveSchedule);
+
+    List<SiteWaveSchedule> queryPageList(SiteWaveScheduleQuery query);
+
+    List<SiteWaveSchedule> queryPageDetail(SiteWaveSchedule siteWaveSchedule);
+
+    List<Long> queryTotalCount(SiteWaveScheduleQuery query);
+
+}
