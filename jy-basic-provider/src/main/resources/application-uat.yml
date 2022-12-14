@@ -26,6 +26,43 @@ spring:
     maxPoolPreparedStatementPerConnectionSize: 20
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+  jmq:
+    enabled: true
+    ####--app producer 定义--##########################################################
+    producers:
+      basic-producer:
+        password: 599985AD
+        app: JYBasic
+        address: jmq-cluster.jd.local:80
+        enabled: true
+      basic-producer-jmq4:
+        password: 599985AD
+        app: JYBasic
+        address: nameserver.jmq.jd.local:80
+        enabled: true
+      ####--app consumer 定义--##########################################################
+    consumers:
+      basic-consumer:
+        password: 599985AD
+        app: JYBasic
+        address: jmq-cluster.jd.local:80
+        enabled: true
+      basic-consumer-jmq4:
+        password: 599985AD
+        app: JYBasic
+        address: nameserver.jmq.jd.local:80
+        enabled: true
+
+  ####--topic 定义--#############################################################
+mq:
+  topic:
+    #叉车完成
+    fork-lift-topic: ky_fork_lift_complete
+
+  consumer:
+    topic:
+      sort_cross_detail: basic_sort_cross_detail
+
 
 
 
