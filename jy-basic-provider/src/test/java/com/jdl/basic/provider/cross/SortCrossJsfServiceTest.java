@@ -50,7 +50,7 @@ public class SortCrossJsfServiceTest {
     public void updateEnableByIdsTest() {
         SortCrossUpdateRequest request = new SortCrossUpdateRequest();
         List<Long> ids = new ArrayList<Long>(Arrays.asList(2L,3L,4L,5L,6L,7L));
-        request.setEnable(1);
+        request.setEnableFlag(1);
         request.setIds(ids);
         Result<Boolean> result = sortCrossJsfService.updateEnableByIds(request);
     }

@@ -61,9 +61,9 @@ public class SortCrossServiceImpl implements SortCrossService {
     public boolean updateEnableByIds(SortCrossUpdateRequest request) {
         if (request == null 
                 || CollectionUtils.isEmpty(request.getIds()) 
-                || request.getEnable() == null
-                || request.getEnable()< 0
-                || request.getEnable()> 1) {
+                || request.getEnableFlag() == null
+                || request.getEnableFlag()< 0
+                || request.getEnableFlag()> 1) {
             return Boolean.FALSE;
         }
         return crossDetailDao.updateEnableByIds(request) > 0;
