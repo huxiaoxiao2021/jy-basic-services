@@ -52,15 +52,16 @@ spring:
         app: JYBasic
         address: test-nameserver.jmq.jd.local:50088
         enabled: true
-  ####--topic 定义--#############################################################
-  mq:
-    topic:
-      #叉车完成
-      fork-lift-topic: ky_fork_lift_complete
 
-    consumer:
-      topic:
-        sort_cross_detail: basic_sort_cross_detail
+####--topic 定义--#############################################################
+mq:
+  topic:
+    #叉车完成
+    fork-lift-topic: ky_fork_lift_complete
+
+  consumer:
+    topic:
+      sort_cross_detail: basic_sort_cross_detail
 
 
 
