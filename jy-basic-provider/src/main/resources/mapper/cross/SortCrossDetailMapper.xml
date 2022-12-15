@@ -249,6 +249,9 @@
             <if test="belongName != null">
                 BELONG_NAME = #{belongName,jdbcType=VARCHAR},
             </if>
+            <if test="enable_flag != null">
+                enable_flag = #{enableFlag,jdbcType=VARCHAR},
+            </if>
         </set>
         where ID = #{id,jdbcType=BIGINT}
     </update>
@@ -326,7 +329,11 @@
     <select id="queryNotInit" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select id, site_code
         from sort_cross_detail
-        where site_type = 0 limit #{queryLimit,jdbcType=INTEGER}
+        where site_type = 0
+        <if test="dmsId != 0">
+           and DMS_ID = #{dmsId,jdbcType=INTEGER}
+        </if>
+        limit 500
     </select>
     <update id="updateById" parameterType="com.jdl.basic.api.domain.cross.SortCrossDetail">
         update sort_cross_detail

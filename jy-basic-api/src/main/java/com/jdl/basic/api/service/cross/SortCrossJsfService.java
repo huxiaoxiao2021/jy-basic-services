@@ -27,8 +27,9 @@ public interface SortCrossJsfService {
     /**
      * 初始化网点数据
      * @return
+     * @param siteCode
      */
-    Result<Boolean> initSortCross();
+    Result<Boolean> initSortCross(Integer siteCode);
 
     /**
      * 分页查询场地滑道列表数据

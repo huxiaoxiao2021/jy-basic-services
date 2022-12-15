@@ -71,11 +71,13 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
 
     
     @Override
-    public Result<Boolean> initSortCross() {
-        
+    public Result<Boolean> initSortCross(Integer siteCode) {
+        if (siteCode == null ) {
+            return Result.success(Boolean.FALSE);
+        }
         while(true) {
             // 查询没有初始化的数据
-            List<SortCrossDetail> sortCrossNotInit = sortCrossService.queryNotInit(QUERY_LIMIT);
+            List<SortCrossDetail> sortCrossNotInit = sortCrossService.queryNotInit(siteCode);
             if (CollectionUtils.isEmpty(sortCrossNotInit)){
                 break;
             }

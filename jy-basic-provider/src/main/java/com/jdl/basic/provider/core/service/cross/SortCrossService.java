@@ -29,9 +29,10 @@ public interface SortCrossService {
     /**
      * 查询没有初始化的数据
      * @param queryLimit
+     * @param limit
      * @return
      */
-    List<SortCrossDetail> queryNotInit(Integer queryLimit);
+    List<SortCrossDetail> queryNotInit(Integer siteCode);
 
     /**
      * 初始化数据

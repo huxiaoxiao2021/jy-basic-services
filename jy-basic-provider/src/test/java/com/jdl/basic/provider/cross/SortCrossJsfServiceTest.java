@@ -57,7 +57,7 @@ public class SortCrossJsfServiceTest {
     
     @Test
     public void queryNotInitTest() {
-        List<SortCrossDetail> details = sortCrossService.queryNotInit(500);
+        List<SortCrossDetail> details = sortCrossService.queryNotInit(910);
         System.out.println("总数：" + details.size());
         System.out.println(JsonHelper.toJSONString(details));
     }
@@ -80,7 +80,7 @@ public class SortCrossJsfServiceTest {
     
     @Test
     public void initSortCrossTest() {
-        System.out.println(sortCrossJsfService.initSortCross());
+        System.out.println(sortCrossJsfService.initSortCross(910));
     }
     
     @Test

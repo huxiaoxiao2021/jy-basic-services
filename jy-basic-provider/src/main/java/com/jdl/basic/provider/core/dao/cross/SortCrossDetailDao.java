@@ -42,8 +42,9 @@ public interface SortCrossDetailDao {
      * 查询未初始化的信息
      * @return
      * @param queryLimit
+     * @param limit
      */
-    List<SortCrossDetail> queryNotInit(Integer queryLimit);
+    List<SortCrossDetail> queryNotInit(Integer dmsId);
 
     /**
      * 通过Id更新数据
