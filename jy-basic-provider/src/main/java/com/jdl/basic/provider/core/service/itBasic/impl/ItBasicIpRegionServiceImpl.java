@@ -8,6 +8,7 @@ import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.itBasic.ItBasicRegion;
 import com.jdl.basic.api.domain.itBasic.ItBasicStorageIpRegion;
+import com.jdl.basic.api.domain.itBasic.ItBasicStorageNetInfo;
 import com.jdl.basic.api.dto.itBasic.dto.MatchIpRegionDto;
 import com.jdl.basic.api.dto.itBasic.po.ItBasicIpRegionPo;
 import com.jdl.basic.api.dto.itBasic.qo.ItBasicStorageIpRegionQo;
@@ -15,6 +16,7 @@ import com.jdl.basic.api.dto.itBasic.vo.ItBasicStorageIpRegionVo;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.provider.core.dao.itBasic.ItBasicRegionDao;
 import com.jdl.basic.provider.core.dao.itBasic.ItBasicStorageIpRegionDao;
+import com.jdl.basic.provider.core.dao.itBasic.ItBasicStorageNetInfoDao;
 import com.jdl.basic.provider.core.service.itBasic.ItBasicIpRegionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -40,6 +42,9 @@ public class ItBasicIpRegionServiceImpl implements ItBasicIpRegionService {
 
     @Resource
     private ItBasicRegionDao itBasicRegionDao;
+
+    @Resource
+    private ItBasicStorageNetInfoDao itBasicStorageNetInfoDao;
 
     /**
      * 统计个数
@@ -198,14 +203,21 @@ public class ItBasicIpRegionServiceImpl implements ItBasicIpRegionService {
             matchIpRegionDto.setIpNumber(IpUtils.ipToLong(itBasicIpRegionPo.getIp()));
             matchIpRegionDto.setStartIp(IpUtils.longToIP(itBasicStorageIpRegionExist.getStartIp()));
             matchIpRegionDto.setEndIp(IpUtils.longToIP(itBasicStorageIpRegionExist.getStartIp()));
-            matchIpRegionDto.setStorageId(itBasicStorageIpRegionExist.getStorageId());
+
             result.setData(matchIpRegionDto);
             // 遍历查询区域父级树
-            final ItBasicRegion itBasicRegion = itBasicRegionDao.selectByPrimaryKey(itBasicStorageIpRegionExist.getStorageId());
+            final ItBasicStorageNetInfo itBasicStorageNetInfo = itBasicStorageNetInfoDao.selectByPrimaryKey(itBasicStorageIpRegionExist.getStorageId());
+            if(itBasicStorageNetInfo == null){
+                return result;
+            }
+            matchIpRegionDto.setStorageId(itBasicStorageNetInfo.getRegionId());
+
+            final ItBasicRegion itBasicRegion = itBasicRegionDao.selectByPrimaryKey(itBasicStorageNetInfo.getRegionId());
             if(itBasicRegion == null){
                 return result;
             }
             matchIpRegionDto.setStorageName(itBasicRegion.getRegionName());
+
             matchIpRegionDto.setCityId(itBasicRegion.getParentId());
             if (itBasicRegion.getParentId() != null) {
                 final ItBasicRegion itBasicRegionLevel3 = itBasicRegionDao.selectByPrimaryKey(itBasicStorageIpRegionExist.getStorageId());

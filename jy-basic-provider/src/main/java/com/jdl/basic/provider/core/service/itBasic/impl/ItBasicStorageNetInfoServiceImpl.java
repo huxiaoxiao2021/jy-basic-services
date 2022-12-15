@@ -106,7 +106,7 @@ public class ItBasicStorageNetInfoServiceImpl implements ItBasicStorageNetInfoSe
                 result.setData(itBasicStorageNetInfo.getId());
             }
         } catch (Exception e) {
-            log.error("ItBasicStorageNetInfoServiceImpl.queryCount error ", e);
+            log.error("ItBasicStorageNetInfoServiceImpl.add error ", e);
             result.toFail("插入异常");
         }
         return result;
@@ -151,7 +151,7 @@ public class ItBasicStorageNetInfoServiceImpl implements ItBasicStorageNetInfoSe
                 result.setData(true);
             }
         } catch (Exception e) {
-            log.error("ItBasicStorageNetInfoServiceImpl.queryCount error ", e);
+            log.error("ItBasicStorageNetInfoServiceImpl.logicDeleteById error ", e);
             result.toFail("更新异常");
         }
         return result;
