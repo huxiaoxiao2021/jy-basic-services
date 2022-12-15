@@ -62,7 +62,7 @@ jdq:
   #基础服务JSF别名
 jsf:
   jy_basic:
-    alias: jy-basic-server-local
+    alias: jy-basic-server-dev
     token: jy-basic-server-token
 
 basic:
