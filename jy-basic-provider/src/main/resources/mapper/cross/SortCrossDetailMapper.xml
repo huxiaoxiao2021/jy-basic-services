@@ -249,7 +249,7 @@
             <if test="belongName != null">
                 BELONG_NAME = #{belongName,jdbcType=VARCHAR},
             </if>
-            <if test="enable_flag != null">
+            <if test="enableFlag != null">
                 enable_flag = #{enableFlag, jdbcType=INTEGER},
             </if>
         </set>
