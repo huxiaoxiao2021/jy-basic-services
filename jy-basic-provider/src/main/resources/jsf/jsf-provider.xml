@@ -166,5 +166,23 @@
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
+
+    <!-- 交接至德邦配置接口 -->
+    <jsf:provider id="configTransferDpApiJsf"
+                  interface="com.jdl.basic.api.service.transferDp.ConfigTransferDpApi"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="configTransferDpApiImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+
+    <!-- 交接至德邦配置业务接口 -->
+    <jsf:provider id="configTransferDpBusinessApiJsf"
+                  interface="com.jdl.basic.api.service.transferDp.ConfigTransferDpBusinessApi"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="configTransferDpBusinessApiImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
 </beans>
 
