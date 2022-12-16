@@ -2,7 +2,7 @@ package com.jdl.basic.provider.core.service.transferDp;
 
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.transferDp.ConfigTransferDpSite;
-import com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteQo;
+import com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteMatchQo;
 
 /**
  * 交接至德邦配置
@@ -19,6 +19,6 @@ public interface ConfigTransferDpBusinessService {
      * @author fanggang7
      * @time 2022-12-04 10:40:36 周日
      */
-    Result<ConfigTransferDpSite> queryMatchConditionRecord(ConfigTransferDpSiteQo configTransferDpSiteQo);
+    Result<ConfigTransferDpSite> queryMatchConditionRecord(ConfigTransferDpSiteMatchQo configTransferDpSiteMatchQo);
 
 }
