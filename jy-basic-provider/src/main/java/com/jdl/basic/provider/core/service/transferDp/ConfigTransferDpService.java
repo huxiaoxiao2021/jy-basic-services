@@ -7,6 +7,8 @@ import com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteQo;
 import com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteUpdateDto;
 import com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteVo;
 
+import java.util.List;
+
 /**
  * description
  *
@@ -31,6 +33,13 @@ public interface ConfigTransferDpService {
      * @time 2022-12-04 10:40:36 周日
      */
     Result<PageData<ConfigTransferDpSiteVo>> queryPageList(ConfigTransferDpSiteQo configTransferDpSiteQo);
+
+    /**
+     * 批量添加记录
+     * @param configTransferDpSiteList 配置记录
+     * @return 处理结果
+     */
+    Result<Long> batchAdd(List<ConfigTransferDpSite> configTransferDpSiteList);
 
     /**
      * 添加一条记录

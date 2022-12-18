@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * description
@@ -62,6 +63,17 @@ public class ConfigTransferDpApiImpl implements ConfigTransferDpApi {
     @Override
     public Result<Long> add(ConfigTransferDpSite configTransferDpSite) {
         return configTransferDpService.add(configTransferDpSite);
+    }
+
+    /**
+     * 批量添加记录
+     *
+     * @param configTransferDpSiteList 配置记录
+     * @return 处理结果
+     */
+    @Override
+    public Result<Long> batchAdd(List<ConfigTransferDpSite> configTransferDpSiteList) {
+        return configTransferDpService.batchAdd(configTransferDpSiteList);
     }
 
     /**

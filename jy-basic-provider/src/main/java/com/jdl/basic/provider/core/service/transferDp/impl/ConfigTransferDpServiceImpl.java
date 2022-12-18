@@ -186,6 +186,65 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
         return result;
     }
 
+    private static int maxBatchInsertCount = 3000;
+
+    /**
+     * 批量添加记录
+     *
+     * @param configTransferDpSiteList 配置记录
+     * @return 处理结果
+     */
+    @Override
+    public Result<Long> batchAdd(List<ConfigTransferDpSite> configTransferDpSiteList) {
+        log.info("ConfigTransferDpServiceImpl.batchAdd param {}", JSON.toJSONString(configTransferDpSiteList));
+        final Result<Long> result = Result.success();
+        result.setData(0L);
+        try {
+            if(CollectionUtils.isEmpty(configTransferDpSiteList)){
+                return result.toFail("参数错误，参数不能为空");
+            }
+            if(configTransferDpSiteList.size() > maxBatchInsertCount){
+                return result.toFail(String.format("参数错误，一次最多插入%s条", maxBatchInsertCount));
+            }
+            for (ConfigTransferDpSite configTransferDpSite : configTransferDpSiteList) {
+                final Result<Void> checkResult = this.checkParam4Add(configTransferDpSite);
+                if (!checkResult.isSuccess()) {
+                    log.warn("ConfigTransferDpServiceImpl.batchAdd checkParam warn {} {}", JsonHelper.toJSONString(checkResult), JSON.toJSONString(configTransferDpSite));
+                    return result.toFail(checkResult.getMessage(), checkResult.getCode());
+                }
+
+                final BaseStaffSiteOrgDto handoverSiteInfo = baseMajorManager.getBaseSiteBySiteId(configTransferDpSite.getHandoverSiteCode());
+                if (handoverSiteInfo == null) {
+                    return result.toFail(String.format("未找到交接场地ID为%s的数据", configTransferDpSite.getHandoverSiteCode()));
+                }
+                configTransferDpSite.setHandoverSiteName(handoverSiteInfo.getSiteName());
+                configTransferDpSite.setHandoverOrgId(handoverSiteInfo.getOrgId());
+                configTransferDpSite.setHandoverOrgName(handoverSiteInfo.getOrgName());
+
+
+                final BaseStaffSiteOrgDto preSortSiteInfo = baseMajorManager.getBaseSiteBySiteId(configTransferDpSite.getPreSortSiteCode());
+                if (preSortSiteInfo == null) {
+                    return result.toFail(String.format("未找到预分拣场地ID为%s的数据", configTransferDpSite.getPreSortSiteCode()));
+                }
+                configTransferDpSite.setPreSortSiteName(preSortSiteInfo.getSiteName());
+
+                configTransferDpSite.setCreateTime(new Date());
+                configTransferDpSite.setUpdateUser("");
+                configTransferDpSite.setUpdateUserName("");
+                configTransferDpSite.setYn(Constants.YN_YES);
+            }
+
+            final long insertCount = configTransferDpSiteDao.batchInsert(configTransferDpSiteList);
+            if(insertCount == configTransferDpSiteList.size()){
+                result.setData(insertCount);
+            }
+        } catch (Exception e) {
+            log.error("ConfigTransferDpServiceImpl.batchAdd error ", e);
+            result.toFail("插入异常");
+        }
+        return result;
+    }
+
     /**
      * 根据ID更新
      *

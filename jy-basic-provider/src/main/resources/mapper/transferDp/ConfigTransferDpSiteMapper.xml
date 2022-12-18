@@ -47,8 +47,7 @@
             update_user_name,
             create_time,
             update_time,
-            yn,
-            ts
+            yn
         ) values (
              #{id},
              #{handoverOrgId},
@@ -66,8 +65,7 @@
              #{updateUserName},
              #{createTime},
              #{updateTime},
-             #{yn},
-             #{ts}
+             #{yn}
         )
     </insert>
 
@@ -126,9 +124,6 @@
             <if test="yn != null">
                 yn,
             </if>
-            <if test="ts != null">
-                ts,
-            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -182,9 +177,6 @@
             <if test="yn != null">
                 #{yn},
             </if>
-            <if test="ts != null">
-                #{ts},
-            </if>
         </trim>
     </insert>
     <!-- 批量增加 -->
@@ -208,7 +200,6 @@
             create_time,
             update_time,
             yn,
-            ts,
         </trim>
         values
         <foreach collection="list" item="item" index="index" separator=",">
@@ -230,7 +221,6 @@
                 #{item.createTime},
                 #{item.updateTime},
                 #{item.yn},
-                #{item.ts},
             </trim>
         </foreach>
     </insert>
@@ -285,9 +275,6 @@
             </if>
             <if test="yn != null ">
                 yn = #{yn},
-            </if>
-            <if test="ts != null ">
-                ts = #{ts}
             </if>
         </set>
         WHERE
@@ -345,9 +332,6 @@
                 </if>
                 <if test="item.yn != null">
                     yn = #{item.yn},
-                </if>
-                <if test="item.ts != null">
-                    ts = #{item.ts}
                 </if>
             </set>
             WHERE

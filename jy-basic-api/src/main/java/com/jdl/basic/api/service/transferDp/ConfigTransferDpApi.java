@@ -7,6 +7,8 @@ import com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteQo;
 import com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteUpdateDto;
 import com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteVo;
 
+import java.util.List;
+
 /**
  * description
  *
@@ -38,6 +40,13 @@ public interface ConfigTransferDpApi {
      * @return 处理结果
      */
     Result<Long> add(ConfigTransferDpSite configTransferDpSite);
+
+    /**
+     * 批量添加记录
+     * @param configTransferDpSiteList 配置记录
+     * @return 处理结果
+     */
+    Result<Long> batchAdd(List<ConfigTransferDpSite> configTransferDpSiteList);
 
     /**
      * 根据ID更新
