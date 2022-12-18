@@ -102,7 +102,7 @@
         </foreach>
     </insert>
     <!-- 更新 -->
-    <update id="updateByPrimaryKey" parameterType="com.jdl.basic.api.domain.itBasic.ItBasicRegion">
+    <update id="updateByPrimaryKeySelective" parameterType="com.jdl.basic.api.domain.itBasic.ItBasicRegion">
         UPDATE `it_basic_region`
         <set>
             <if test="regionName != null and regionName != ''">
@@ -207,13 +207,13 @@
     </select>
     <!-- 伪删除（更新删除行的识别码） -->
     <update id="deleteByPrimaryKey" parameterType="com.jdl.basic.api.domain.itBasic.ItBasicRegion">
-        UPDATE `it_basic_region` SET yn = 1
+        UPDATE `it_basic_region` SET yn = 0
         WHERE
         id = #{id} 
     </update>
     <!-- 批量伪删除 -->
     <update id="batchDelete" parameterType="com.jdl.basic.api.dto.itBasic.qo.ItBasicRegionQo">
-        UPDATE `it_basic_region` SET yn = 1
+        UPDATE `it_basic_region` SET yn = 0
         WHERE id IN
         <foreach collection="columnValueList" item="item" index="index" open="(" separator="," close=")">
             #{item}
