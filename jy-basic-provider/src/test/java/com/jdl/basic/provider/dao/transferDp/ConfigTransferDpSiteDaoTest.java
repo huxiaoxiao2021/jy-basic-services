@@ -54,8 +54,26 @@ public class ConfigTransferDpSiteDaoTest {
             configTransferDpSite.setEffectiveStopTime(DateUtil.parse("2023-03-14 00:00:00", DateUtil.FORMAT_DATE_TIME));
             configTransferDpSite.setCreateUser("wuyoude");
             configTransferDpSite.setCreateUserName("吴有德");
+            configTransferDpSite.setCreateTime(new Date());
             final int insert = configTransferDpSiteDao.insertSelective(configTransferDpSite);
             System.out.println(insert);
+            Assert.assertTrue(true);
+        }catch (Exception e){
+            log.error("error ", e);
+            Assert.fail();
+        }
+    }
+
+    @Test
+    public void updateByPrimaryKeySelectiveTest(){
+        try {
+            final ConfigTransferDpSite configTransferDpSite = new ConfigTransferDpSite();
+            configTransferDpSite.setId(1L);
+            configTransferDpSite.setUpdateUser("xumigen");
+            configTransferDpSite.setUpdateUserName("徐迷根");
+            configTransferDpSite.setUpdateTime(new Date());
+            final int update = configTransferDpSiteDao.updateByPrimaryKeySelective(configTransferDpSite);
+            System.out.println(update);
             Assert.assertTrue(true);
         }catch (Exception e){
             log.error("error ", e);

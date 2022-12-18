@@ -1,9 +1,7 @@
 package com.jdl.basic.api.dto.transferDp;
 
 import com.alibaba.fastjson.JSON;
-import com.jd.dms.java.utils.sdk.base.BaseQuery;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -17,9 +15,8 @@ import java.util.List;
  * @author fanggang7
  * @time 2022-11-23 17:29:43 周三
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class ConfigTransferDpSiteQo extends BaseQuery implements Serializable {
+public class ConfigTransferDpSiteUpdateDto implements Serializable {
     private static final long serialVersionUID = 5454155825314635342L;
 
     private Long id;
@@ -47,6 +44,10 @@ public class ConfigTransferDpSiteQo extends BaseQuery implements Serializable {
     private Integer yn;
 
     List<Long> ids;
+
+    private String updateUser;
+    private String updateUserName;
+    private Date updateTime;
 
     @Override
     public String toString() {

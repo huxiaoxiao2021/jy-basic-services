@@ -4,6 +4,7 @@ import com.jd.dms.java.utils.sdk.base.PageData;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.transferDp.ConfigTransferDpSite;
 import com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteQo;
+import com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteUpdateDto;
 import com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteVo;
 
 /**
@@ -51,4 +52,11 @@ public interface ConfigTransferDpApi {
      * @return 处理结果
      */
     Result<Boolean> logicDeleteById(ConfigTransferDpSite configTransferDpSite);
+
+    /**
+     * 根据ID逻辑批量删除
+     * @param configTransferDpSiteQo 配置记录
+     * @return 处理结果
+     */
+    Result<Boolean> batchDeleteById(ConfigTransferDpSiteUpdateDto configTransferDpSiteUpdateDto);
 }

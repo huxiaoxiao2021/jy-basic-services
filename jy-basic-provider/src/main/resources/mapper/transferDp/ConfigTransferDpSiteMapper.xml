@@ -235,7 +235,7 @@
         </foreach>
     </insert>
     <!-- 更新 -->
-    <update id="updateByPrimaryKey" parameterType="com.jdl.basic.api.domain.transferDp.ConfigTransferDpSite">
+    <update id="updateByPrimaryKeySelective" parameterType="com.jdl.basic.api.domain.transferDp.ConfigTransferDpSite">
         UPDATE `config_transfer_dp_site`
         <set>
             <if test="handoverOrgId != null ">
@@ -294,7 +294,7 @@
             id = #{id}
     </update>
     <!-- 批量更新 -->
-    <update id="batchUpdate" parameterType="java.util.List">
+    <update id="batchUpdateByPrimaryKeys" parameterType="java.util.List">
         <foreach collection="list" item="item" index="index"  separator=";">
             UPDATE `config_transfer_dp_site`
             <set>
@@ -404,10 +404,10 @@
             AND config_status = #{configStatus}
         </if>
         <if test="effectiveStartTime != null">
-            AND effective_start_time = #{effectiveStartTime}
+            AND effective_start_time &lt;= #{effectiveStartTime}
         </if>
         <if test="effectiveStopTime != null">
-            AND effective_stop_time = #{effectiveStopTime}
+            AND effective_stop_time &gt;= #{effectiveStopTime}
         </if>
         <if test="yn != null">
             AND yn = #{yn}
@@ -430,15 +430,35 @@
     </select>
     <!-- 伪删除（更新删除行的识别码） -->
     <update id="deleteByPrimaryKey" parameterType="com.jdl.basic.api.domain.transferDp.ConfigTransferDpSite">
-        UPDATE `config_transfer_dp_site` SET yn = 1
+        UPDATE `config_transfer_dp_site` SET
+        <if test="updateUser != null and updateUser != ''">
+            update_user = #{updateUser},
+        </if>
+        <if test="updateUserName != null and updateUserName != ''">
+            update_user_name = #{updateUserName},
+        </if>
+        <if test="updateTime != null ">
+            update_time = #{updateTime},
+        </if>
+        yn = 0
         WHERE
         id = #{id} 
     </update>
     <!-- 批量伪删除 -->
-    <update id="batchDelete" parameterType="com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteQo">
-        UPDATE `config_transfer_dp_site` SET yn = 1
+    <update id="batchDeleteByPrimaryKeys" parameterType="com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteQo">
+        UPDATE `config_transfer_dp_site` SET
+        <if test="updateUser != null and updateUser != ''">
+            update_user = #{updateUser},
+        </if>
+        <if test="updateUserName != null and updateUserName != ''">
+            update_user_name = #{updateUserName},
+        </if>
+        <if test="updateTime != null ">
+            update_time = #{updateTime},
+        </if>
+        yn = 0
         WHERE id IN
-        <foreach collection="columnValueList" item="item" index="index" open="(" separator="," close=")">
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
     </update>
