@@ -21,6 +21,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -138,6 +139,17 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
                 log.warn("ConfigTransferDpServiceImpl.add checkParam warn {} {}", JsonHelper.toJSONString(checkResult), JSON.toJSONString(configTransferDpSite));
                 return result.toFail(checkResult.getMessage(), checkResult.getCode());
             }
+
+            final ConfigTransferDpSiteQo configTransferDpSiteQo = new ConfigTransferDpSiteQo();
+            configTransferDpSiteQo.setHandoverSiteCode(configTransferDpSite.getHandoverSiteCode());
+            configTransferDpSiteQo.setPreSortSiteCode(configTransferDpSite.getPreSortSiteCode());
+            // configTransferDpSiteQo.setEffectiveStartTime(configTransferDpSite.getEffectiveStartTime());
+            // configTransferDpSiteQo.setEffectiveStopTime(configTransferDpSite.getEffectiveStopTime());
+            final long existCount = configTransferDpSiteDao.queryCount(configTransferDpSiteQo);
+            if (existCount > 0) {
+                return result.toFail(String.format("已存在交接场地%s-%s, 预分拣站点%s-%s的数据", configTransferDpSite.getHandoverSiteCode(), configTransferDpSite.getHandoverSiteName(), configTransferDpSite.getPreSortSiteCode(), configTransferDpSite.getHandoverSiteName()));
+            }
+
             final BaseStaffSiteOrgDto handoverSiteInfo = baseMajorManager.getBaseSiteBySiteId(configTransferDpSite.getHandoverSiteCode());
             if (handoverSiteInfo == null) {
                 return result.toFail(String.format("未找到交接场地ID为%s的数据", configTransferDpSite.getHandoverSiteCode()));
@@ -195,6 +207,7 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
      * @return 处理结果
      */
     @Override
+    @Transactional
     public Result<Long> batchAdd(List<ConfigTransferDpSite> configTransferDpSiteList) {
         log.info("ConfigTransferDpServiceImpl.batchAdd param {}", JSON.toJSONString(configTransferDpSiteList));
         final Result<Long> result = Result.success();
@@ -211,6 +224,15 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
                 if (!checkResult.isSuccess()) {
                     log.warn("ConfigTransferDpServiceImpl.batchAdd checkParam warn {} {}", JsonHelper.toJSONString(checkResult), JSON.toJSONString(configTransferDpSite));
                     return result.toFail(checkResult.getMessage(), checkResult.getCode());
+                }
+                final ConfigTransferDpSiteQo configTransferDpSiteQo = new ConfigTransferDpSiteQo();
+                configTransferDpSiteQo.setHandoverSiteCode(configTransferDpSite.getHandoverSiteCode());
+                configTransferDpSiteQo.setPreSortSiteCode(configTransferDpSite.getPreSortSiteCode());
+                // configTransferDpSiteQo.setEffectiveStartTime(configTransferDpSite.getEffectiveStartTime());
+                // configTransferDpSiteQo.setEffectiveStopTime(configTransferDpSite.getEffectiveStopTime());
+                final long existCount = configTransferDpSiteDao.queryCount(configTransferDpSiteQo);
+                if (existCount > 0) {
+                    return result.toFail(String.format("已存在交接场地%s-%s, 预分拣站点%s-%s的数据", configTransferDpSite.getHandoverSiteCode(), configTransferDpSite.getHandoverSiteName(), configTransferDpSite.getPreSortSiteCode(), configTransferDpSite.getHandoverSiteName()));
                 }
 
                 final BaseStaffSiteOrgDto handoverSiteInfo = baseMajorManager.getBaseSiteBySiteId(configTransferDpSite.getHandoverSiteCode());
