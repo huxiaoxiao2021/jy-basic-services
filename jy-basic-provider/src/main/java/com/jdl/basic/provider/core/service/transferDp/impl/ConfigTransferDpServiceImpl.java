@@ -6,6 +6,8 @@ import com.jd.dms.java.utils.sdk.base.Result;
 import com.jd.dms.java.utils.sdk.constants.ResultCodeConstant;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jd.ql.basic.util.DateUtil;
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.transferDp.ConfigTransferDpSite;
 import com.jdl.basic.api.dto.enums.ConfigStatusEnum;
 import com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteQo;
@@ -54,6 +56,7 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
      * @time 2022-12-04 10:40:36 周日
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + "ConfigTransferDpServiceImpl.queryCount", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<Long> queryCount(ConfigTransferDpSiteQo configTransferDpSiteQo) {
         log.info("ConfigTransferDpServiceImpl.queryCount param {}", JSON.toJSONString(configTransferDpSiteQo));
         final Result<Long> result = Result.success();
@@ -77,6 +80,7 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
      * @time 2022-12-04 10:40:36 周日
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + "ConfigTransferDpServiceImpl.queryPageList", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<PageData<ConfigTransferDpSiteVo>> queryPageList(ConfigTransferDpSiteQo configTransferDpSiteQo) {
         log.info("ConfigTransferDpServiceImpl.queryPageList param {}",JSON.toJSONString(configTransferDpSiteQo));
         final Result<PageData<ConfigTransferDpSiteVo>> result = Result.success();
@@ -129,6 +133,7 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
      * @return 处理结果
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + "ConfigTransferDpServiceImpl.add", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<Long> add(ConfigTransferDpSite configTransferDpSite) {
         log.info("ConfigTransferDpServiceImpl.add param {}", JSON.toJSONString(configTransferDpSite));
         final Result<Long> result = Result.success();
@@ -207,6 +212,7 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
      */
     @Override
     @Transactional
+    @JProfiler(jKey = Constants.UMP_APP_NAME + "ConfigTransferDpServiceImpl.batchAdd", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<Long> batchAdd(List<ConfigTransferDpSite> configTransferDpSiteList) {
         log.info("ConfigTransferDpServiceImpl.batchAdd param {}", JSON.toJSONString(configTransferDpSiteList));
         final Result<Long> result = Result.success();
@@ -273,6 +279,7 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
      * @return 处理结果
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + "ConfigTransferDpServiceImpl.updateById", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<Boolean> updateById(ConfigTransferDpSite configTransferDpSite) {
         log.info("ConfigTransferDpServiceImpl.updateById param {}",JSON.toJSONString(configTransferDpSite));
         final Result<Boolean> result = Result.success();
@@ -332,6 +339,7 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
      * @return 处理结果
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + "ConfigTransferDpServiceImpl.logicDeleteById", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<Boolean> logicDeleteById(ConfigTransferDpSite configTransferDpSite) {
         log.info("ConfigTransferDpServiceImpl.logicDeleteById param {}",JSON.toJSONString(configTransferDpSite));
         final Result<Boolean> result = Result.success();
@@ -362,6 +370,7 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
      * @return 处理结果
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + "ConfigTransferDpServiceImpl.batchDeleteById", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<Boolean> batchDeleteById(ConfigTransferDpSiteUpdateDto configTransferDpSiteUpdateDto) {
         log.info("ConfigTransferDpServiceImpl.batchDeleteById param {}",JSON.toJSONString(configTransferDpSiteUpdateDto));
         final Result<Boolean> result = Result.success();
