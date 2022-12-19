@@ -382,7 +382,7 @@
             AND pre_sort_site_code = #{preSortSiteCode}
         </if>
         <if test="preSortSiteName != null and preSortSiteName != ''">
-            AND pre_sort_site_name = #{preSortSiteName}
+            AND pre_sort_site_name like CONCAT('%', #{preSortSiteName},'%')
         </if>
         <if test="configStatus != null">
             AND config_status = #{configStatus}

@@ -64,7 +64,7 @@ public interface ConfigTransferDpApi {
 
     /**
      * 根据ID逻辑批量删除
-     * @param configTransferDpSiteQo 配置记录
+     * @param configTransferDpSiteUpdateDto 配置记录
      * @return 处理结果
      */
     Result<Boolean> batchDeleteById(ConfigTransferDpSiteUpdateDto configTransferDpSiteUpdateDto);
