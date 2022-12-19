@@ -141,13 +141,12 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
             }
 
             final ConfigTransferDpSiteQo configTransferDpSiteQo = new ConfigTransferDpSiteQo();
-            configTransferDpSiteQo.setHandoverSiteCode(configTransferDpSite.getHandoverSiteCode());
             configTransferDpSiteQo.setPreSortSiteCode(configTransferDpSite.getPreSortSiteCode());
             // configTransferDpSiteQo.setEffectiveStartTime(configTransferDpSite.getEffectiveStartTime());
             // configTransferDpSiteQo.setEffectiveStopTime(configTransferDpSite.getEffectiveStopTime());
             final long existCount = configTransferDpSiteDao.queryCount(configTransferDpSiteQo);
             if (existCount > 0) {
-                return result.toFail(String.format("已存在交接场地%s-%s, 预分拣站点%s-%s的数据", configTransferDpSite.getHandoverSiteCode(), configTransferDpSite.getHandoverSiteName(), configTransferDpSite.getPreSortSiteCode(), configTransferDpSite.getHandoverSiteName()));
+                return result.toFail(String.format("已存在交接场地%s-%s、预分拣站点%s-%s的数据", configTransferDpSite.getHandoverSiteCode(), configTransferDpSite.getHandoverSiteName(), configTransferDpSite.getPreSortSiteCode(), configTransferDpSite.getHandoverSiteName()));
             }
 
             final BaseStaffSiteOrgDto handoverSiteInfo = baseMajorManager.getBaseSiteBySiteId(configTransferDpSite.getHandoverSiteCode());
@@ -225,14 +224,14 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
                     log.warn("ConfigTransferDpServiceImpl.batchAdd checkParam warn {} {}", JsonHelper.toJSONString(checkResult), JSON.toJSONString(configTransferDpSite));
                     return result.toFail(checkResult.getMessage(), checkResult.getCode());
                 }
+
                 final ConfigTransferDpSiteQo configTransferDpSiteQo = new ConfigTransferDpSiteQo();
-                configTransferDpSiteQo.setHandoverSiteCode(configTransferDpSite.getHandoverSiteCode());
                 configTransferDpSiteQo.setPreSortSiteCode(configTransferDpSite.getPreSortSiteCode());
                 // configTransferDpSiteQo.setEffectiveStartTime(configTransferDpSite.getEffectiveStartTime());
                 // configTransferDpSiteQo.setEffectiveStopTime(configTransferDpSite.getEffectiveStopTime());
                 final long existCount = configTransferDpSiteDao.queryCount(configTransferDpSiteQo);
                 if (existCount > 0) {
-                    return result.toFail(String.format("已存在交接场地%s-%s, 预分拣站点%s-%s的数据", configTransferDpSite.getHandoverSiteCode(), configTransferDpSite.getHandoverSiteName(), configTransferDpSite.getPreSortSiteCode(), configTransferDpSite.getHandoverSiteName()));
+                    return result.toFail(String.format("已存在交接场地%s-%s、预分拣站点%s-%s的数据", configTransferDpSite.getHandoverSiteCode(), configTransferDpSite.getHandoverSiteName(), configTransferDpSite.getPreSortSiteCode(), configTransferDpSite.getHandoverSiteName()));
                 }
 
                 final BaseStaffSiteOrgDto handoverSiteInfo = baseMajorManager.getBaseSiteBySiteId(configTransferDpSite.getHandoverSiteCode());
