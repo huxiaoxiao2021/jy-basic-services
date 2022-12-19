@@ -147,6 +147,7 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
 
             final ConfigTransferDpSiteQo configTransferDpSiteQo = new ConfigTransferDpSiteQo();
             configTransferDpSiteQo.setPreSortSiteCode(configTransferDpSite.getPreSortSiteCode());
+            configTransferDpSiteQo.setYn(Constants.YN_YES);
             // configTransferDpSiteQo.setEffectiveStartTime(configTransferDpSite.getEffectiveStartTime());
             // configTransferDpSiteQo.setEffectiveStopTime(configTransferDpSite.getEffectiveStopTime());
             final long existCount = configTransferDpSiteDao.queryCount(configTransferDpSiteQo);
@@ -233,6 +234,7 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
 
                 final ConfigTransferDpSiteQo configTransferDpSiteQo = new ConfigTransferDpSiteQo();
                 configTransferDpSiteQo.setPreSortSiteCode(configTransferDpSite.getPreSortSiteCode());
+                configTransferDpSiteQo.setYn(Constants.YN_YES);
                 // configTransferDpSiteQo.setEffectiveStartTime(configTransferDpSite.getEffectiveStartTime());
                 // configTransferDpSiteQo.setEffectiveStopTime(configTransferDpSite.getEffectiveStopTime());
                 final long existCount = configTransferDpSiteDao.queryCount(configTransferDpSiteQo);
