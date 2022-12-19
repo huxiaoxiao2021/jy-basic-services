@@ -279,7 +279,7 @@
         </foreach>
     </insert>
     <!-- 更新 -->
-    <update id="updateByPrimaryKey" parameterType="com.jdl.basic.api.domain.device.DeviceInfo">
+    <update id="updateByPrimaryKeySelective" parameterType="com.jdl.basic.api.domain.device.DeviceInfo">
         UPDATE `device_info`
         <set>
             <if test="deviceCode != null and deviceCode != ''">
@@ -528,13 +528,13 @@
     </select>
     <!-- 伪删除（更新删除行的识别码） -->
     <update id="deleteByPrimaryKey" parameterType="com.jdl.basic.api.domain.device.DeviceInfo">
-        UPDATE `device_info` SET yn = 1
+        UPDATE `device_info` SET yn = 0
         WHERE
             id = #{id}
     </update>
     <!-- 批量伪删除 -->
     <update id="batchDelete" parameterType="com.jdl.basic.api.dto.device.qo.DeviceInfoQo">
-        UPDATE `device_info` SET yn = 1
+        UPDATE `device_info` SET yn = 0
         WHERE id IN
         <foreach collection="columnValueList" item="item" index="index" open="(" separator="," close=")">
             #{item}

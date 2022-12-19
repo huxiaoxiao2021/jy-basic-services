@@ -410,7 +410,7 @@
         </foreach>
     </insert>
     <!-- 更新 -->
-    <update id="updateByPrimaryKey" parameterType="com.jdl.basic.api.domain.itBasic.ItBasicStorageNetInfo">
+    <update id="updateByPrimaryKeySelective" parameterType="com.jdl.basic.api.domain.itBasic.ItBasicStorageNetInfo">
         UPDATE `it_basic_storage_netinfo`
         <set>
             <if test="acIpregion != null and acIpregion != ''">
@@ -767,13 +767,13 @@
     </select>
     <!-- 伪删除（更新删除行的识别码） -->
     <update id="deleteByPrimaryKey" parameterType="com.jdl.basic.api.domain.itBasic.ItBasicStorageNetInfo">
-        UPDATE `it_basic_storage_netinfo` SET yn = 1
+        UPDATE `it_basic_storage_netinfo` SET yn = 0
         WHERE
         id = #{id} 
     </update>
     <!-- 批量伪删除 -->
     <update id="batchDelete" parameterType="com.jdl.basic.api.dto.itBasic.qo.ItBasicStorageNetInfoQo">
-        UPDATE `it_basic_storage_netinfo` SET yn = 1
+        UPDATE `it_basic_storage_netinfo` SET yn = 0
         WHERE id IN
         <foreach collection="columnValueList" item="item" index="index" open="(" separator="," close=")">
             #{item}

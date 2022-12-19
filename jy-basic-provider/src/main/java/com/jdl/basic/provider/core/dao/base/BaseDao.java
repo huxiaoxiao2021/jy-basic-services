@@ -39,15 +39,6 @@ public interface BaseDao<T, Q> {
     long batchInsert(List<T> list);
 
     /**
-     * 批量增加，返回插入后的对象
-     * @param list 要增加的对象集合
-     * @return 成功增加的行数
-     * @author fanggang7
-     * @time 2019-12-20 19:21:56 周五
-     */
-    long batchInsertList(List<T> list);
-
-    /**
      * 根据主键选择性更新
      * @param t 主键参数对象
      * @return 更新影响条数，>=1-成功更新，0-未能成功更新
