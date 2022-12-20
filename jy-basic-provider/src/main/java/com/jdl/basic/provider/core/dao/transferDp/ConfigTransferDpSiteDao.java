@@ -16,6 +16,13 @@ import com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteQo;
 public interface ConfigTransferDpSiteDao extends BaseDao<ConfigTransferDpSite, ConfigTransferDpSiteQo> {
 
     /**
+     * 删除数据
+     * @param configTransferDpSite
+     * @return
+     */
+    int deleteByPrimaryKey(ConfigTransferDpSite configTransferDpSite);
+
+    /**
      * 批量删除
      * @return 删除影响条数 >= 1 删除成功，= 0 删除失败
      * @author fanggang7

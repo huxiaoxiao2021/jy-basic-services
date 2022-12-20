@@ -4,3 +4,10 @@ curl -XPOST http://127.0.0.1:22000/com.jdl.basic.api.service.transferDp.ConfigTr
 {"pageSize": 2, "pageNumber": 1}
 ]
 '
+
+#ItBasicRegionApi IT基础区域数据
+curl -XPOST http://127.0.0.1:22000/com.jdl.basic.api.service.transferDp.ConfigTransferDpApi/jy-basic-server-dev/logicDeleteById   -H "token:jy-basic-server-token" -d '
+[
+{"id":13,"updateUser":"wuyoude","updateUserName":"吴有德"}
+]
+'

@@ -308,6 +308,7 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
                 }
                 configTransferDpSite.setPreSortSiteName(preSortSiteInfo.getSiteName());
             }
+            configTransferDpSite.setUpdateTime(new Date());
             final int total = configTransferDpSiteDao.updateByPrimaryKeySelective(configTransferDpSite);
             result.setData(total == 1);
         } catch (Exception e) {
@@ -355,7 +356,7 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
             if (configTransferDpSite.getUpdateTime() == null) {
                 configTransferDpSite.setUpdateTime(new Date());
             }
-            final int updateCount = configTransferDpSiteDao.deleteByPrimaryKey(configTransferDpSite.getId());
+            final int updateCount = configTransferDpSiteDao.deleteByPrimaryKey(configTransferDpSite);
             if(updateCount == 1) {
                 result.setData(true);
             }

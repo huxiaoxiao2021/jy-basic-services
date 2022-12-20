@@ -104,12 +104,12 @@ public interface BaseDao<T, Q> {
 
     /**
      * 按主键删除
-     * @param primaryKey 主键
+     * @param t 删除对象
      * @return 删除影响条数，>=1-成功删除，0-未能成功删除
      * @author fanggang7
      * @time 2019-12-20 18:29:00 周五
      */
-    int deleteByPrimaryKey(long primaryKey);
+    int deleteByPrimaryKey(T t);
 
     /**
      * 批量删除

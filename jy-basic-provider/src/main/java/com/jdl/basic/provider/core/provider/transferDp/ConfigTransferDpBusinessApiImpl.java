@@ -28,7 +28,7 @@ public class ConfigTransferDpBusinessApiImpl implements ConfigTransferDpBusiness
     /**
      * 查询匹配的配置记录
      *
-     * @param configTransferDpSiteQo 查询入参
+     * @param configTransferDpSiteMatchQo 查询入参
      * @return 匹配的数据
      * @author fanggang7
      * @time 2022-12-04 10:40:36 周日
