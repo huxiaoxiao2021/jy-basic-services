@@ -167,7 +167,7 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
             // configTransferDpSiteQo.setEffectiveStopTime(configTransferDpSite.getEffectiveStopTime());
             final long existCount = configTransferDpSiteDao.queryCount(configTransferDpSiteQo);
             if (existCount > 0) {
-                return result.toFail(String.format("已存在交接场地%s-%s、预分拣站点%s-%s的数据", configTransferDpSite.getHandoverSiteCode(), configTransferDpSite.getHandoverSiteName(), configTransferDpSite.getPreSortSiteCode(), configTransferDpSite.getHandoverSiteName()));
+                return result.toFail(String.format("配置重复，已存在交接场地%s-%s、预分拣站点%s-%s的数据", configTransferDpSite.getHandoverSiteCode(), configTransferDpSite.getHandoverSiteName(), configTransferDpSite.getPreSortSiteCode(), configTransferDpSite.getPreSortSiteName()));
             }
 
             configTransferDpSite.setCreateTime(new Date());
@@ -254,7 +254,7 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
                 // configTransferDpSiteQo.setEffectiveStopTime(configTransferDpSite.getEffectiveStopTime());
                 final long existCount = configTransferDpSiteDao.queryCount(configTransferDpSiteQo);
                 if (existCount > 0) {
-                    return result.toFail(String.format("已存在交接场地%s-%s、预分拣站点%s-%s的数据", configTransferDpSite.getHandoverSiteCode(), configTransferDpSite.getHandoverSiteName(), configTransferDpSite.getPreSortSiteCode(), configTransferDpSite.getHandoverSiteName()));
+                    return result.toFail(String.format("配置重复，已存在交接场地%s-%s、预分拣站点%s-%s的数据", configTransferDpSite.getHandoverSiteCode(), configTransferDpSite.getHandoverSiteName(), configTransferDpSite.getPreSortSiteCode(), configTransferDpSite.getPreSortSiteName()));
                 }
 
                 configTransferDpSite.setCreateTime(new Date());
