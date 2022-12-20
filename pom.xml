@@ -29,7 +29,7 @@
         <pagehelper.version>1.3.0</pagehelper.version>
         <jmiss-cli.version>3.0.1-SNAPSHOT</jmiss-cli.version>
         <jdq4-sdk-version>1.0.0-SNAPSHOT</jdq4-sdk-version>
-        <dms-java-utils-sdk.version>1.0.0-SNAPSHOT</dms-java-utils-sdk.version>
+        <dms-java-utils-sdk.version>1.0.1-SNAPSHOT</dms-java-utils-sdk.version>
 <!--        <jd.ump.version>6.2.13-HOTFIX-T1</jd.ump.version>-->
 <!--        <jd.ump-x.version>1.0.2</jd.ump-x.version>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
