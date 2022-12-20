@@ -145,16 +145,6 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
                 return result.toFail(checkResult.getMessage(), checkResult.getCode());
             }
 
-            final ConfigTransferDpSiteQo configTransferDpSiteQo = new ConfigTransferDpSiteQo();
-            configTransferDpSiteQo.setPreSortSiteCode(configTransferDpSite.getPreSortSiteCode());
-            configTransferDpSiteQo.setYn(Constants.YN_YES);
-            // configTransferDpSiteQo.setEffectiveStartTime(configTransferDpSite.getEffectiveStartTime());
-            // configTransferDpSiteQo.setEffectiveStopTime(configTransferDpSite.getEffectiveStopTime());
-            final long existCount = configTransferDpSiteDao.queryCount(configTransferDpSiteQo);
-            if (existCount > 0) {
-                return result.toFail(String.format("已存在交接场地%s-%s、预分拣站点%s-%s的数据", configTransferDpSite.getHandoverSiteCode(), configTransferDpSite.getHandoverSiteName(), configTransferDpSite.getPreSortSiteCode(), configTransferDpSite.getHandoverSiteName()));
-            }
-
             final BaseStaffSiteOrgDto handoverSiteInfo = baseMajorManager.getBaseSiteBySiteId(configTransferDpSite.getHandoverSiteCode());
             if (handoverSiteInfo == null) {
                 return result.toFail(String.format("未找到交接场地ID为%s的数据", configTransferDpSite.getHandoverSiteCode()));
@@ -169,6 +159,16 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
                 return result.toFail(String.format("未找到预分拣场地ID为%s的数据", configTransferDpSite.getPreSortSiteCode()));
             }
             configTransferDpSite.setPreSortSiteName(preSortSiteInfo.getSiteName());
+
+            final ConfigTransferDpSiteQo configTransferDpSiteQo = new ConfigTransferDpSiteQo();
+            configTransferDpSiteQo.setPreSortSiteCode(configTransferDpSite.getPreSortSiteCode());
+            configTransferDpSiteQo.setYn(Constants.YN_YES);
+            // configTransferDpSiteQo.setEffectiveStartTime(configTransferDpSite.getEffectiveStartTime());
+            // configTransferDpSiteQo.setEffectiveStopTime(configTransferDpSite.getEffectiveStopTime());
+            final long existCount = configTransferDpSiteDao.queryCount(configTransferDpSiteQo);
+            if (existCount > 0) {
+                return result.toFail(String.format("已存在交接场地%s-%s、预分拣站点%s-%s的数据", configTransferDpSite.getHandoverSiteCode(), configTransferDpSite.getHandoverSiteName(), configTransferDpSite.getPreSortSiteCode(), configTransferDpSite.getHandoverSiteName()));
+            }
 
             configTransferDpSite.setCreateTime(new Date());
 
@@ -232,16 +232,6 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
                     return result.toFail(checkResult.getMessage(), checkResult.getCode());
                 }
 
-                final ConfigTransferDpSiteQo configTransferDpSiteQo = new ConfigTransferDpSiteQo();
-                configTransferDpSiteQo.setPreSortSiteCode(configTransferDpSite.getPreSortSiteCode());
-                configTransferDpSiteQo.setYn(Constants.YN_YES);
-                // configTransferDpSiteQo.setEffectiveStartTime(configTransferDpSite.getEffectiveStartTime());
-                // configTransferDpSiteQo.setEffectiveStopTime(configTransferDpSite.getEffectiveStopTime());
-                final long existCount = configTransferDpSiteDao.queryCount(configTransferDpSiteQo);
-                if (existCount > 0) {
-                    return result.toFail(String.format("已存在交接场地%s-%s、预分拣站点%s-%s的数据", configTransferDpSite.getHandoverSiteCode(), configTransferDpSite.getHandoverSiteName(), configTransferDpSite.getPreSortSiteCode(), configTransferDpSite.getHandoverSiteName()));
-                }
-
                 final BaseStaffSiteOrgDto handoverSiteInfo = baseMajorManager.getBaseSiteBySiteId(configTransferDpSite.getHandoverSiteCode());
                 if (handoverSiteInfo == null) {
                     return result.toFail(String.format("未找到交接场地ID为%s的数据", configTransferDpSite.getHandoverSiteCode()));
@@ -257,9 +247,19 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
                 }
                 configTransferDpSite.setPreSortSiteName(preSortSiteInfo.getSiteName());
 
+                final ConfigTransferDpSiteQo configTransferDpSiteQo = new ConfigTransferDpSiteQo();
+                configTransferDpSiteQo.setPreSortSiteCode(configTransferDpSite.getPreSortSiteCode());
+                configTransferDpSiteQo.setYn(Constants.YN_YES);
+                // configTransferDpSiteQo.setEffectiveStartTime(configTransferDpSite.getEffectiveStartTime());
+                // configTransferDpSiteQo.setEffectiveStopTime(configTransferDpSite.getEffectiveStopTime());
+                final long existCount = configTransferDpSiteDao.queryCount(configTransferDpSiteQo);
+                if (existCount > 0) {
+                    return result.toFail(String.format("已存在交接场地%s-%s、预分拣站点%s-%s的数据", configTransferDpSite.getHandoverSiteCode(), configTransferDpSite.getHandoverSiteName(), configTransferDpSite.getPreSortSiteCode(), configTransferDpSite.getHandoverSiteName()));
+                }
+
                 configTransferDpSite.setCreateTime(new Date());
-                configTransferDpSite.setUpdateUser("");
-                configTransferDpSite.setUpdateUserName("");
+                configTransferDpSite.setUpdateUser(Constants.EMPTY_FILL);
+                configTransferDpSite.setUpdateUserName(Constants.EMPTY_FILL);
                 configTransferDpSite.setYn(Constants.YN_YES);
             }
 
