@@ -1,6 +1,5 @@
 package com.jdl.basic.api.dto.itBasic.qo;
 
-import com.alibaba.fastjson.JSON;
 import com.jd.dms.java.utils.sdk.base.BaseQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -163,8 +162,4 @@ public class ItBasicStorageNetInfoQo extends BaseQuery implements Serializable{
         this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return JSON.toJSONString(this);
-    }
 }

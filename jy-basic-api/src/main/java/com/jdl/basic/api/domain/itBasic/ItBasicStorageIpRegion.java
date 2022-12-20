@@ -1,6 +1,5 @@
 package com.jdl.basic.api.domain.itBasic;
 
-import com.alibaba.fastjson.JSON;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -49,10 +48,5 @@ public class ItBasicStorageIpRegion implements Serializable{
     }
     public ItBasicStorageIpRegion(Long id){
         this.id = id;
-    }
-
-    @Override
-    public String toString() {
-        return JSON.toJSONString(this);
     }
 }
