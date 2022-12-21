@@ -1,6 +1,5 @@
 package com.jdl.basic.api.domain.transferDp;
 
-import com.alibaba.fastjson.JSON;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -99,8 +98,4 @@ public class ConfigTransferDpSite implements Serializable{
         this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return JSON.toJSONString(this);
-    }
 }

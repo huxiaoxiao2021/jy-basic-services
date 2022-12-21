@@ -1,6 +1,5 @@
 package com.jdl.basic.api.dto.transferDp;
 
-import com.alibaba.fastjson.JSON;
 import com.jdl.basic.api.domain.transferDp.ConfigTransferDpSite;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,8 +29,4 @@ public class ConfigTransferDpSiteVo extends ConfigTransferDpSite implements Seri
     public ConfigTransferDpSiteVo(){
     }
 
-    @Override
-    public String toString() {
-        return JSON.toJSONString(this);
-    }
 }

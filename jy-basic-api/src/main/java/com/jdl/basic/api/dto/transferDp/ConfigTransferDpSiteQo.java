@@ -1,6 +1,5 @@
 package com.jdl.basic.api.dto.transferDp;
 
-import com.alibaba.fastjson.JSON;
 import com.jd.dms.java.utils.sdk.base.BaseQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -48,8 +47,4 @@ public class ConfigTransferDpSiteQo extends BaseQuery implements Serializable {
 
     List<Long> ids;
 
-    @Override
-    public String toString() {
-        return JSON.toJSONString(this);
-    }
 }
