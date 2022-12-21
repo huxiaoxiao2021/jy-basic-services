@@ -7,7 +7,12 @@ import java.util.List;
 
 public interface SiteWaveScheduleDao {
 
-    int insert(SiteWaveSchedule siteWaveSchedule);
+    /**
+     * 插入一条出勤计划--15条记录
+     * @param siteWaveSchedule
+     * @return
+     */
+    int batchInsert(List<SiteWaveSchedule> siteWaveSchedule);
 
     SiteWaveSchedule queryOldDataByBusinessKey(SiteWaveSchedule siteWaveSchedule);
 

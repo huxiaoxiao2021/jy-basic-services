@@ -1,12 +1,11 @@
 package com.jdl.basic.provider.core.provider.workStation;
 
 import com.alibaba.fastjson.JSON;
+import com.jdl.basic.api.domain.workStation.SiteWaveSchedule;
 import com.jdl.basic.api.domain.workStation.SiteWaveScheduleQuery;
-import com.jdl.basic.api.domain.workStation.SiteWaveScheduleVo;
 import com.jdl.basic.api.service.workStation.SiteWaveScheduleJsfService;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.utils.DateHelper;
-import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.config.lock.LockService;
 import com.jdl.basic.provider.core.service.workStation.SiteWaveScheduleService;
@@ -31,7 +30,7 @@ public class SiteWaveScheduleJsfServiceImpl implements SiteWaveScheduleJsfServic
     private SiteWaveScheduleService siteWaveScheduleService;
 
     @Override
-    public Result<Boolean> importDatas(List<SiteWaveScheduleVo> dataList) {
+    public Result<Boolean> importDatas(List<SiteWaveSchedule> dataList) {
         final Result<Boolean> result = Result.success();
         lockService.tryLock(CacheKeyConstants.CACHE_KEY_SITE_WAVE_SCHEDULE_EDIT, DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
             @Override
@@ -57,11 +56,19 @@ public class SiteWaveScheduleJsfServiceImpl implements SiteWaveScheduleJsfServic
     }
 
     @Override
-    public Result<PageDto<SiteWaveScheduleVo>> queryPageList(SiteWaveScheduleQuery query) {
+    public Result<List<SiteWaveSchedule>> queryPageList(SiteWaveScheduleQuery query) {
         if(log.isInfoEnabled()){
             log.info("场地班次时间 queryPageList 入参-{}", JSON.toJSONString(query));
         }
         return siteWaveScheduleService.queryPageList(query);
+    }
+
+    @Override
+    public Result<List<SiteWaveSchedule>> queryPageDetail(SiteWaveSchedule schedule) {
+        if(log.isInfoEnabled()){
+            log.info("场地班次时间 queryPageDetail 入参-{}", JSON.toJSONString(schedule));
+        }
+        return siteWaveScheduleService.queryPageDetail(schedule);
     }
 
     @Override

@@ -1,21 +1,35 @@
 package com.jdl.basic.provider.core.service.workStation;
 
+import com.jdl.basic.api.domain.workStation.SiteAttendPlan;
 import com.jdl.basic.api.domain.workStation.SiteAttendPlanQuery;
-import com.jdl.basic.api.domain.workStation.SiteAttendPlanVo;
-import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 
 import java.util.List;
 
 public interface SiteAttendPlanService {
 
-    Result<Boolean> importDatas(List<SiteAttendPlanVo> dataList);
+    Result<Boolean> importDatas(List<SiteAttendPlan> dataList);
 
-    Result<PageDto<SiteAttendPlanVo>> queryPageList(SiteAttendPlanQuery query);
+    /**
+     * 逻辑分页查询--查询页面显示数据条数
+     * @param query
+     * @return
+     */
+    Result<List<SiteAttendPlan>> queryPageList(SiteAttendPlanQuery query);
 
-    Result<Boolean> confirmOneRecord(SiteAttendPlanVo vo);
+    /**
+     * 逻辑分页查询--查询细节
+     * @param plan
+     * @return
+     */
+    Result<List<SiteAttendPlan>> queryPageDetail(SiteAttendPlan plan);
 
-    Result<Boolean> confirmRecords(List<SiteAttendPlanVo> dataList);
+    /**
+     * 出勤计划确认
+     * @param dataList
+     * @return
+     */
+    Result<Boolean> confirmRecords(List<SiteAttendPlan> dataList);
 
     Result<Long> queryTotalCount(SiteAttendPlanQuery query);
 

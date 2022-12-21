@@ -2,13 +2,10 @@ package com.jdl.basic.provider.core.service.workStation.impl;
 
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
-import com.jdl.basic.api.domain.workStation.*;
+import com.jdl.basic.api.domain.workStation.SiteAttendPlan;
+import com.jdl.basic.api.domain.workStation.SiteAttendPlanQuery;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
-import com.jdl.basic.common.enums.WaveTypeEnum;
-import com.jdl.basic.common.enums.WorkerTypeEnum;
-import com.jdl.basic.common.utils.JsonHelper;
-import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.workStation.SiteAttendPlanDao;
 import com.jdl.basic.provider.core.service.workStation.SiteAttendPlanService;
@@ -18,8 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
 
 @Slf4j
 @Service("siteAttendPlanService")
@@ -31,241 +27,50 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
     @Override
     @Transactional
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".SiteAttendPlanServiceImpl.importDatas", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public Result<Boolean> importDatas(List<SiteAttendPlanVo> dataList) {
+    public Result<Boolean> importDatas(List<SiteAttendPlan> dataList) {
         Result<Boolean> result = Result.success();
         if(CollectionUtils.isEmpty(dataList)){
             result.toFail("导入数据为空！");
             return result;
         }
 
-        Result<Boolean> checkResult = this.checkBeforeImport(dataList);
-        if (checkResult.isFail()){
-            return result.toFail(checkResult.getMessage());
+        //经过列转行后无法直接通过id增删改查
+        //计划出勤时间siteAttendPlanTime、区域编码orgCode、场地编码siteCode确定唯一出勤计划
+        SiteAttendPlan oldData = siteAttendPlanDao.queryOldDataByBusinessKey(dataList.get(0));
+        if(oldData != null){
+            log.info("删除旧数据入参{}", oldData);
+            //先删除旧数据后插入新数据，逻辑上删除一条出勤计划，列转行后数据库删除15条
+            siteAttendPlanDao.deleteOldDataByBusinessKey(oldData);
+            dataList.forEach((item) -> item.setVersionNum(oldData.getVersionNum() + 1));
+        }else {
+            dataList.forEach((item) -> item.setVersionNum(1));
         }
-
-        for(SiteAttendPlanVo siteAttendPlanVo : dataList){
-            ArrayList<SiteAttendPlan> importDataList = new ArrayList<>();
-            checkResult = convertDto(siteAttendPlanVo, importDataList);
-            if(checkResult.isFail()){
-                result.toFail(checkResult.getMessage());
-                return result;
-            }
-
-            if(importDataList.size() < 15){
-                result.toFail("请严格按照导入模板填写数据！");
-                return result;
-            }
-            for(SiteAttendPlan plan : importDataList){
-                if(plan.getVersionNum() != null && plan.getVersionNum() > 0){
-                    log.info("删除旧数据{}", plan);
-                    if(!Objects.equals(siteAttendPlanDao.deleteOldDataByBusinessKey(plan), Constants.YN_YES)){
-                        log.error("删除失败,BusinessKey:【attendPlanTime:{}, orgCode:{}, siteCode:{}】", plan.getPlanAttendTime(), plan.getOrgCode(), plan.getSiteCode());
-                        throw  new RuntimeException("删除旧数据失败！");
-                    }
-                }
-                if(!Objects.equals(siteAttendPlanDao.insert(plan), Constants.YN_YES)){
-                    log.error("新增数据失败,入参{}", JsonHelper.toJSONString(plan));
-                    throw  new RuntimeException("新增数据失败！");
-                }
-            }
-        }
+        siteAttendPlanDao.batchInsert(dataList);
         return result;
-    }
-
-    private Result<Boolean> checkBeforeImport(List<SiteAttendPlanVo> voList){
-        Result<Boolean> result = Result.success();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        Set<Date> uniqueDateSet = new HashSet<>();
-        for (SiteAttendPlanVo vo : voList){
-            Date planAttendTime;
-            try{
-                planAttendTime = sdf.parse(vo.getPlanAttendTime());
-                if(uniqueDateSet.contains(planAttendTime)){
-                    return result.toFail("场地ID为【" + vo.getSiteCode() + "】的计划出勤时间重复！");
-                }
-                //出勤日期不能为当日或者历史日期
-                if(planAttendTime.getTime() < new Date().getTime() || sdf.format(planAttendTime).equals(sdf.format(new Date()))){
-                    return result.toFail("场地ID为【" + vo.getSiteCode() + "】的计划出勤时间不能为当天或历史日期！");
-                }
-            } catch (Exception e) {
-                return result.toFail("场地ID为【" + vo.getSiteCode() + "】的计划出勤时间格式不对！");
-            }
-            uniqueDateSet.add(planAttendTime);
-
-            if(CollectionUtils.isEmpty(vo.getDayShift())
-                    || CollectionUtils.isEmpty(vo.getMidShift()) ||
-                    CollectionUtils.isEmpty(vo.getNightShift())){
-                result.toFail("请严格按照导入模板填写数据！");
-                return result;
-            }
-        }
-        return result;
-    }
-
-    private Result<Boolean> convertDto(SiteAttendPlanVo vo, List<SiteAttendPlan> importDataList){
-        Result<Boolean> result = Result.success();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        Date planAttendTime;
-        try{
-            planAttendTime = sdf.parse(vo.getPlanAttendTime());
-        } catch (Exception e) {
-            return result.toFail("场地ID为【" + vo.getSiteCode() + "】的计划出勤时间格式不对！");
-        }
-        //白班
-        Integer dayShiftEmployeeNum = checkAndInitNewData(vo.getDayShift(), vo, planAttendTime, WaveTypeEnum.DAY, importDataList);
-        //中班
-        Integer midShiftEmployeeNum = checkAndInitNewData(vo.getMidShift(), vo, planAttendTime, WaveTypeEnum.MIDDLE, importDataList);
-        //夜班
-        Integer nightShiftEmployeeNum = checkAndInitNewData(vo.getNightShift(), vo, planAttendTime, WaveTypeEnum.NIGHT, importDataList);
-        Integer totalPlanAttendNum = dayShiftEmployeeNum + midShiftEmployeeNum + nightShiftEmployeeNum;
-        if(totalPlanAttendNum == 0){
-            return result.toFail("场地ID为【" + vo.getSiteCode() + "】的计划出勤人数为0！");
-        }
-
-        return result;
-    }
-
-    private SiteAttendPlan genSiteAttendPlan(SiteAttendPlanVo vo, Date planAttendTime){
-        SiteAttendPlan siteAttendPlan = new SiteAttendPlan();
-        siteAttendPlan.setPlanAttendTime(planAttendTime);
-        siteAttendPlan.setOrgCode(vo.getOrgCode());
-        siteAttendPlan.setOrgName(vo.getOrgName());
-        siteAttendPlan.setSiteCode(vo.getSiteCode());
-        siteAttendPlan.setSiteName(vo.getSiteName());
-        siteAttendPlan.setBusinessLineCode(vo.getBusinessLineCode());
-        siteAttendPlan.setBusinessLineName(vo.getBusinessLineName());
-        siteAttendPlan.setUpdateUser(vo.getUpdateUser());
-        siteAttendPlan.setUpdateUserName(vo.getUpdateUserName());
-        siteAttendPlan.setUpdateTime(new Date());
-        return siteAttendPlan;
-    }
-
-    /**
-     * 列转行--将列数据拆分成数据库行
-     * @param map
-     * @param vo
-     * @param planAttendTime
-     * @param importDataList
-     * @return
-     */
-    private Integer checkAndInitNewData(Map<String, Integer> map, SiteAttendPlanVo vo, Date planAttendTime, WaveTypeEnum wave, List<SiteAttendPlan> importDataList){
-        //一个班次的总人数
-        Integer shiftEmployeeNum = 0;
-        for(Map.Entry<String, Integer> entry : map.entrySet()){
-            shiftEmployeeNum += entry.getValue();
-            //设置查询条件
-            SiteAttendPlan siteAttendPlan = genSiteAttendPlan(vo, planAttendTime);
-            siteAttendPlan.setWaveCode(wave.getCode());
-            siteAttendPlan.setJobType(WorkerTypeEnum.getJobTypeByName(entry.getKey()));
-            SiteAttendPlan oldData = siteAttendPlanDao.queryOldDataByBusinessKey(siteAttendPlan);
-            if(oldData != null){
-                siteAttendPlan.setUpdateUser(vo.getUpdateUser());
-                siteAttendPlan.setUpdateUserName(vo.getUpdateUserName());
-                siteAttendPlan.setUpdateTime(vo.getUpdateTime());
-                siteAttendPlan.setVersionNum(oldData.getVersionNum() + 1);
-            }
-            siteAttendPlan.setCreateUser(vo.getCreateUser());
-            siteAttendPlan.setCreateUserName(vo.getCreateUserName());
-            siteAttendPlan.setCreateTime(new Date());
-            siteAttendPlan.setPlanAttendNum(entry.getValue());
-            importDataList.add(siteAttendPlan);
-        }
-        return shiftEmployeeNum;
     }
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".SiteAttendPlanServiceImpl.queryPageList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public Result<PageDto<SiteAttendPlanVo>> queryPageList(SiteAttendPlanQuery query) {
-        Result<PageDto<SiteAttendPlanVo>> result = Result.success();
+    public Result<List<SiteAttendPlan>> queryPageList(SiteAttendPlanQuery query) {
+        Result<List<SiteAttendPlan>> result = Result.success();
         Result<Boolean> checkResult = checkAndFillQueryParam(query);
         if(!checkResult.isSuccess()){
             return Result.fail(checkResult.getMessage());
         }
-        PageDto<SiteAttendPlanVo> pageData = new PageDto<>(query.getPageNumber(), query.getPageSize());
-        List<Long> totalListCount = siteAttendPlanDao.queryTotalCount(query);
-        Long totalCount = totalListCount.stream().count();
-        if(totalCount != null && totalCount > 0){
-            List<SiteAttendPlanVo> returnList = new ArrayList<>();
-            List<SiteAttendPlan> pageList = siteAttendPlanDao.queryPageList(query);
-
-            for (SiteAttendPlan plan : pageList){
-                //行转列
-                SiteAttendPlanVo returnVo = convertSiteAttendPlanVo(plan);
-                returnList.add(returnVo);
-            }
-            pageData.setResult(returnList);
-            pageData.setTotalRow(totalCount.intValue());
-        }else {
-            pageData.setResult(new ArrayList<SiteAttendPlanVo>());
-            pageData.setTotalRow(0);
-        }
-
-        result.setData(pageData);
+        List<SiteAttendPlan> pageList = siteAttendPlanDao.queryPageList(query);
+        result.setData(pageList);
         return result;
     }
 
-    /**
-     * 数据库行转列--填充详细数据
-     * @param plan
-     * @return
-     */
-    private SiteAttendPlanVo convertSiteAttendPlanVo(SiteAttendPlan plan){
-        SiteAttendPlanVo returnVo = new SiteAttendPlanVo();
+    @Override
+    public Result<List<SiteAttendPlan>> queryPageDetail(SiteAttendPlan plan) {
+        Result<List<SiteAttendPlan>> result = Result.success();
         List<SiteAttendPlan> detailList = siteAttendPlanDao.queryPageDetail(plan);
-        if(detailList == null || detailList.size() != 15){
-            log.error("数据查询出错！入参{}", JsonHelper.toJSONString(plan));
-            throw new RuntimeException("数据出错！");
+        if (CollectionUtils.isEmpty(detailList)){
+            return result.toFail("查询数据为空！");
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        returnVo.setPlanAttendTime(sdf.format(detailList.get(0).getPlanAttendTime()));
-        returnVo.setOrgCode(detailList.get(0).getOrgCode());
-        returnVo.setOrgName(detailList.get(0).getOrgName());
-        returnVo.setSiteCode(detailList.get(0).getSiteCode());
-        returnVo.setSiteName(detailList.get(0).getSiteName());
-        returnVo.setBusinessLineCode(detailList.get(0).getBusinessLineCode());
-        returnVo.setBusinessLineName(detailList.get(0).getBusinessLineName());
-        returnVo.setStatus(detailList.get(0).getStatus());
-        returnVo.setCreateUser(detailList.get(0).getCreateUser());
-        returnVo.setCreateUserName(detailList.get(0).getCreateUserName());
-        returnVo.setCreateTime(detailList.get(0).getCreateTime());
-        returnVo.setConfirmUser(detailList.get(0).getConfirmUser());
-        returnVo.setConfirmUserName(detailList.get(0).getConfirmUserName());
-        returnVo.setConfirmTime(detailList.get(0).getConfirmTime());
-        returnVo.setUpdateUser(detailList.get(0).getUpdateUser());
-        returnVo.setUpdateUserName(detailList.get(0).getUpdateUserName());
-        returnVo.setUpdateTime(detailList.get(0).getUpdateTime());
-
-        Integer dayShiftTotalEmployee = 0;
-        Integer midShiftTotalEmployee = 0;
-        Integer nightShiftTotalEmployee = 0;
-        Map<String, Integer> dayShift = new HashMap<>();
-        Map<String, Integer> midShift = new HashMap<>();
-        Map<String, Integer> nightShift = new HashMap<>();
-
-        for(SiteAttendPlan detail : detailList){
-
-            if(WaveTypeEnum.DAY.getCode().equals(detail.getWaveCode())){
-                dayShiftTotalEmployee += detail.getPlanAttendNum();
-                dayShift.put(WorkerTypeEnum.getNameByJobType(detail.getJobType()), detail.getPlanAttendNum());
-            }
-            if(WaveTypeEnum.MIDDLE.getCode().equals(detail.getWaveCode())){
-                midShiftTotalEmployee += detail.getPlanAttendNum();
-                midShift.put(WorkerTypeEnum.getNameByJobType(detail.getJobType()), detail.getPlanAttendNum());
-            }
-            if(WaveTypeEnum.NIGHT.getCode().equals(detail.getWaveCode())){
-                nightShiftTotalEmployee += detail.getPlanAttendNum();
-                nightShift.put(WorkerTypeEnum.getNameByJobType(detail.getJobType()), detail.getPlanAttendNum());
-            }
-        }
-
-        returnVo.setDayShiftTotalEmployeeNum(dayShiftTotalEmployee);
-        returnVo.setMidShiftTotalEmployeeNum(midShiftTotalEmployee);
-        returnVo.setNightShiftTotalEmployeeNum(nightShiftTotalEmployee);
-        returnVo.setTotalEmployeeNum(dayShiftTotalEmployee + midShiftTotalEmployee + nightShiftTotalEmployee);
-        returnVo.setDayShift(dayShift);
-        returnVo.setMidShift(midShift);
-        returnVo.setNightShift(nightShift);
-        return returnVo;
+        result.setData(detailList);
+        return result;
     }
 
     private Result<Boolean> checkAndFillQueryParam(SiteAttendPlanQuery query){
@@ -284,40 +89,24 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
     }
 
     @Override
-    @JProfiler(jKey = Constants.UMP_APP_NAME + ".SiteAttendPlanServiceImpl.confirmOneRecord", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public Result<Boolean> confirmOneRecord(SiteAttendPlanVo vo) {
-        Result<Boolean> result = Result.success();
-        if(vo.getPlanAttendTime() == null){
-            result.toFail("计划出勤日期不能为空！");
-            return result;
-        }
-        if(vo.getOrgCode() == null){
-            result.toFail("区域不能为空！");
-            return result;
-        }
-        if(vo.getSiteCode() == null){
-            result.toFail("场地ID不能为空！");
-            return result;
-        }
-        vo.setConfirmTime(new Date());
-        if(siteAttendPlanDao.confirmOneRecord(vo) < Constants.YN_YES){
-            log.error("确认场地出勤计划失败！，入参{}", JsonHelper.toJSONString(vo));
-            result.toFail("场地出勤计划数据不存在或已确认!");
-            return result;
-        }
-        return result;
-    }
-
-    @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".SiteAttendPlanServiceImpl.confirmRecords", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public Result<Boolean> confirmRecords(List<SiteAttendPlanVo> dataList) {
+    public Result<Boolean> confirmRecords(List<SiteAttendPlan> dataList) {
         Result<Boolean> result= Result.success();
-        for(SiteAttendPlanVo vo : dataList){
-            Result<Boolean> confirmResult = confirmOneRecord(vo);
-            if(confirmResult.isFail()){
-                result.toFail(confirmResult.getMessage());
+        for(SiteAttendPlan plan : dataList){
+            if(plan.getPlanAttendTime() == null){
+                result.toFail("计划出勤日期不能为空！");
                 return result;
             }
+            if(plan.getOrgCode() == null){
+                result.toFail("区域不能为空！");
+                return result;
+            }
+            if(plan.getSiteCode() == null){
+                result.toFail("场地ID不能为空！");
+                return result;
+            }
+            //逻辑上确认1条出勤计划，列转行后数据库更新15条
+            siteAttendPlanDao.confirmOneRecord(plan);
         }
         return result;
     }
