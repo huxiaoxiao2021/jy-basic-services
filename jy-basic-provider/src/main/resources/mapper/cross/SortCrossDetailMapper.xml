@@ -362,14 +362,18 @@
         select distinct cross_code
         from sort_cross_detail
         where dms_id = #{dmsId,jdbcType=INTEGER}
-          and yn = 1 limit #{offset}
+          and yn = 1
+          and enable_flag = 1
+            limit #{offset}
             , #{limit}
     </select>
     <select id="queryCrossDataCount" parameterType="com.jdl.basic.api.domain.cross.CrossPageQuery"
             resultType="java.lang.Long">
         select count(distinct cross_code) as count
         from sort_cross_detail
-        where dms_id = #{dmsId,jdbcType=INTEGER} and yn = 1
+        where dms_id = #{dmsId,jdbcType=INTEGER} 
+          and yn = 1
+          and enable_flag = 1
     </select>
     <select id="queryTableTrolleyCount" parameterType="com.jdl.basic.api.domain.cross.TableTrolleyQuery"
             resultType="java.lang.Long">
