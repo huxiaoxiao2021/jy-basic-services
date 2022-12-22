@@ -9,15 +9,20 @@ import com.jdl.basic.api.domain.transferDp.ConfigTransferDpSite;
 import com.jdl.basic.api.dto.enums.ConfigStatusEnum;
 import com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteMatchQo;
 import com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteQo;
+import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.JsonHelper;
+import com.jdl.basic.provider.config.cache.CacheService;
 import com.jdl.basic.provider.core.dao.transferDp.ConfigTransferDpSiteDao;
 import com.jdl.basic.provider.core.service.transferDp.ConfigTransferDpBusinessService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 交接至德邦配置
@@ -32,6 +37,10 @@ public class ConfigTransferDpBusinessServiceImpl implements ConfigTransferDpBusi
 
     @Resource
     private ConfigTransferDpSiteDao configTransferDpSiteDao;
+
+    @Autowired
+    @Qualifier("jimdbCacheService")
+    private CacheService cacheService;
 
     /**
      * 查询匹配的配置记录
@@ -52,16 +61,37 @@ public class ConfigTransferDpBusinessServiceImpl implements ConfigTransferDpBusi
                 log.warn("ConfigTransferDpBusinessServiceImpl.queryMatchConditionRecord checkParam warn {} {}", JsonHelper.toJSONString(checkResult), JSON.toJSONString(configTransferDpSiteMatchQo));
                 return result.toFail(checkResult.getMessage(), checkResult.getCode());
             }
-            // todo 主动缓存，通过内存计算
+            String cacheKey = String.format(CacheKeyConstants.CACHE_KEY_CONFIG_TRANSFER_DP, configTransferDpSiteMatchQo.getHandoverSiteCode(), configTransferDpSiteMatchQo.getPreSortSiteCode());
+            final String existVal = cacheService.get(cacheKey);
+            if(existVal != null){
+                if(StringUtils.isEmpty(existVal)){
+                    return result;
+                } else {
+                    return result.setData(JsonHelper.toObject(existVal, ConfigTransferDpSite.class));
+                }
+            }
+
             ConfigTransferDpSiteQo configTransferDpSiteQo = new ConfigTransferDpSiteQo();
             configTransferDpSiteQo.setHandoverSiteCode(configTransferDpSiteMatchQo.getHandoverSiteCode());
             configTransferDpSiteQo.setPreSortSiteCode(configTransferDpSiteMatchQo.getPreSortSiteCode());
             configTransferDpSiteQo.setConfigStatus(ConfigStatusEnum.ENABLE.getCode());
-            Date currentDate = new Date();
-            configTransferDpSiteQo.setEffectiveStartTime(currentDate);
-            configTransferDpSiteQo.setEffectiveStopTime(currentDate);
+            final long currentTimeMillis = System.currentTimeMillis();
+            // Date currentDate = new Date();
+            // configTransferDpSiteQo.setEffectiveStartTime(currentDate);
+            // configTransferDpSiteQo.setEffectiveStopTime(currentDate);
             configTransferDpSiteQo.setYn(Constants.YN_YES);
             final ConfigTransferDpSite configTransferDpSite = configTransferDpSiteDao.selectOne(configTransferDpSiteQo);
+            boolean matchFlag = false;
+            if(configTransferDpSite != null){
+                if (configTransferDpSite.getEffectiveStartTime().getTime() <= currentTimeMillis && configTransferDpSite.getEffectiveStopTime().getTime() >= currentTimeMillis) {
+                    matchFlag = true;
+                }
+            }
+            if(matchFlag){
+                cacheService.setEx(cacheKey, JsonHelper.toJSONString(configTransferDpSite), CacheKeyConstants.CACHE_CONFIG_TRANSFER_DP_TIME_EXPIRE, TimeUnit.MINUTES);
+            } else {
+                cacheService.setEx(cacheKey, Constants.EMPTY_FILL, CacheKeyConstants.CACHE_CONFIG_TRANSFER_DP_TIME_EXPIRE, TimeUnit.MINUTES);
+            }
             result.setData(configTransferDpSite);
         } catch (Exception e) {
             log.error("ConfigTransferDpBusinessServiceImpl.queryMatchConditionRecord error ", e);
