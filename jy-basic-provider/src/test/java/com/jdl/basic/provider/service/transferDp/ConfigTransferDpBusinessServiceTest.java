@@ -30,9 +30,9 @@ public class ConfigTransferDpBusinessServiceTest {
     public ConfigTransferDpBusinessService configTransferDpBusinessService;
 
     @Test
-    public void queryListTest(){
+    public void queryMatchConditionRecordTest(){
         ConfigTransferDpSiteMatchQo configTransferDpSiteMatchQo = new ConfigTransferDpSiteMatchQo();
-        configTransferDpSiteMatchQo.setHandoverSiteCode(910);
+        configTransferDpSiteMatchQo.setHandoverSiteCode(67492);
         configTransferDpSiteMatchQo.setPreSortSiteCode(39);
 
         final Result<ConfigTransferDpSite> configTransferDpSiteResult = configTransferDpBusinessService.queryMatchConditionRecord(configTransferDpSiteMatchQo);
