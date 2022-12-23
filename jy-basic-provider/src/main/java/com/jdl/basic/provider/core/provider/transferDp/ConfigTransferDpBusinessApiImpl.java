@@ -26,7 +26,7 @@ public class ConfigTransferDpBusinessApiImpl implements ConfigTransferDpBusiness
     private ConfigTransferDpBusinessService configTransferDpBusinessService;
 
     /**
-     * 查询匹配的配置记录
+     * 查询匹配的配置记录，不过滤生效时间，由接口调用方自行判断
      *
      * @param configTransferDpSiteMatchQo 查询入参
      * @return 匹配的数据

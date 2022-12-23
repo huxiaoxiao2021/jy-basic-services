@@ -43,7 +43,7 @@ public class ConfigTransferDpBusinessServiceImpl implements ConfigTransferDpBusi
     private CacheService cacheService;
 
     /**
-     * 查询匹配的配置记录
+     * 查询匹配的配置记录，不过滤生效时间，由接口调用方自行判断
      *
      * @param configTransferDpSiteMatchQo 查询入参
      * @return 匹配的数据
@@ -83,9 +83,10 @@ public class ConfigTransferDpBusinessServiceImpl implements ConfigTransferDpBusi
             final ConfigTransferDpSite configTransferDpSite = configTransferDpSiteDao.selectOne(configTransferDpSiteQo);
             boolean matchFlag = false;
             if(configTransferDpSite != null){
-                if (configTransferDpSite.getEffectiveStartTime().getTime() <= currentTimeMillis && configTransferDpSite.getEffectiveStopTime().getTime() >= currentTimeMillis) {
+                /*if (configTransferDpSite.getEffectiveStartTime().getTime() <= currentTimeMillis && configTransferDpSite.getEffectiveStopTime().getTime() >= currentTimeMillis) {
                     matchFlag = true;
-                }
+                }*/
+                matchFlag = true;
             }
             if(matchFlag){
                 cacheService.setEx(cacheKey, JsonHelper.toJSONString(configTransferDpSite), CacheKeyConstants.CACHE_CONFIG_TRANSFER_DP_TIME_EXPIRE, TimeUnit.MINUTES);
