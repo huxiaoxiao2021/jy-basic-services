@@ -2,7 +2,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://mysql-cn-north-1-faa4483a25674aac.rds.jdcloud.com:3358/jybasic_conf?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&failOverReadOnly=false
+    url: jdbc:mysql://mysql-cn-north-1-faa4483a25674aac.rds.jdcloud.com:3358/jybasic_conf?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&failOverReadOnly=false&allowMultiQueries=true
     username: jybasic_conf_rw
     password: yKxYyjAPdVPDYwEnE3Zheeo5Fc4jGfrn
 

@@ -10,6 +10,7 @@ public class ResultCodeConstant {
 
     public static final int SUCCESS = 0;
     public static final int FAIL = -1;
+    public static final int ERROR = -2;
 
     public static final int NULL_ARGUMENT = 1001;
     public static final int ILLEGAL_ARGUMENT = 1002;

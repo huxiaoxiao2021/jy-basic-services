@@ -1,0 +1,783 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jdl.basic.provider.core.dao.itBasic.ItBasicStorageNetInfoDao">
+    <!-- table映射实体对象 -->
+    <resultMap id="RM_ItBasicStorageNetinfo" type="com.jdl.basic.api.domain.itBasic.ItBasicStorageNetInfo">
+        <result property="id" column="id"/>
+        <result property="acIpregion" column="ac_ipregion"/>
+        <result property="apIpregion" column="ap_ipregion"/>
+        <result property="coreSwitchIp" column="core_switch_ip"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="netLevel" column="net_level"/>
+        <result property="pcserverIpregion" column="pcserver_ipregion"/>
+        <result property="regionId" column="region_id"/>
+        <result property="snmpCommunity" column="snmp_community"/>
+        <result property="switchIpregion" column="switch_ipregion"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateUser" column="update_user"/>
+        <result property="fireWallExtranetIp" column="fire_wall_extranet_ip"/>
+        <result property="fireWallIntranetIp" column="fire_wall_intranet_ip"/>
+        <result property="storageName" column="storage_name"/>
+        <result property="auditIp" column="audit_ip"/>
+        <result property="firstExtranetInterface" column="first_extranet_interface"/>
+        <result property="firstExtranetIp" column="first_extranet_ip"/>
+        <result property="firstIsp" column="first_isp"/>
+        <result property="secondExtranetInterface" column="second_extranet_interface"/>
+        <result property="secondExtranetIp" column="second_extranet_ip"/>
+        <result property="secondIsp" column="second_isp"/>
+        <result property="thirdExtranetInterface" column="third_extranet_interface"/>
+        <result property="thirdExtranetIp" column="third_extranet_ip"/>
+        <result property="thirdIsp" column="third_isp"/>
+        <result property="firstExtranetBandwidth" column="first_extranet_bandwidth"/>
+        <result property="secondExtranetBandwidth" column="second_extranet_bandwidth"/>
+        <result property="thirdExtranetBandwidth" column="third_extranet_bandwidth"/>
+        <result property="gateWayIps" column="gate_way_ips"/>
+        <result property="ipVip" column="ip_vip"/>
+        <result property="remarks" column="remarks"/>
+        <result property="yn" column="yn"/>
+        <result property="ts" column="ts"/>
+    </resultMap>
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="Base_Column_List">
+        `id`, `ac_ipregion`, `ap_ipregion`, `core_switch_ip`, `create_time`, `create_user`, `net_level`, `pcserver_ipregion`, `region_id`, `snmp_community`, `switch_ipregion`, `update_time`, `update_user`, `fire_wall_extranet_ip`, `fire_wall_intranet_ip`, `storage_name`, `audit_ip`, `first_extranet_interface`, `first_extranet_ip`, `first_isp`, `second_extranet_interface`, `second_extranet_ip`, `second_isp`, `third_extranet_interface`, `third_extranet_ip`, `third_isp`, `first_extranet_bandwidth`, `second_extranet_bandwidth`, `third_extranet_bandwidth`, `gate_way_ips`, `ip_vip`, `remarks`, `yn`, `ts`
+    </sql>
+
+    <!-- 插入 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.jdl.basic.api.domain.itBasic.ItBasicStorageNetInfo">
+        insert into `it_basic_storage_netinfo`(
+            id,
+            ac_ipregion,
+            ap_ipregion,
+            core_switch_ip,
+            create_time,
+            create_user,
+            net_level,
+            pcserver_ipregion,
+            region_id,
+            snmp_community,
+            switch_ipregion,
+            update_time,
+            update_user,
+            fire_wall_extranet_ip,
+            fire_wall_intranet_ip,
+            storage_name,
+            audit_ip,
+            first_extranet_interface,
+            first_extranet_ip,
+            first_isp,
+            second_extranet_interface,
+            second_extranet_ip,
+            second_isp,
+            third_extranet_interface,
+            third_extranet_ip,
+            third_isp,
+            first_extranet_bandwidth,
+            second_extranet_bandwidth,
+            third_extranet_bandwidth,
+            gate_way_ips,
+            ip_vip,
+            remarks,
+            ts
+        ) values (
+            #{id},
+            #{acIpregion},
+            #{apIpregion},
+            #{coreSwitchIp},
+            #{createTime},
+            #{createUser},
+            #{netLevel},
+            #{pcserverIpregion},
+            #{regionId},
+            #{snmpCommunity},
+            #{switchIpregion},
+            #{updateTime},
+            #{updateUser},
+            #{fireWallExtranetIp},
+            #{fireWallIntranetIp},
+            #{storageName},
+            #{auditIp},
+            #{firstExtranetInterface},
+            #{firstExtranetIp},
+            #{firstIsp},
+            #{secondExtranetInterface},
+            #{secondExtranetIp},
+            #{secondIsp},
+            #{thirdExtranetInterface},
+            #{thirdExtranetIp},
+            #{thirdIsp},
+            #{firstExtranetBandwidth},
+            #{secondExtranetBandwidth},
+            #{thirdExtranetBandwidth},
+            #{gateWayIps},
+            #{ipVip},
+            #{remarks},
+            #{yn},
+            #{ts}
+        )
+    </insert>
+
+    <!-- 增加 -->
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.jdl.basic.api.domain.itBasic.ItBasicStorageNetInfo">
+        insert into `it_basic_storage_netinfo`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="acIpregion != null and acIpregion != ''">
+                ac_ipregion,
+            </if>
+            <if test="apIpregion != null and apIpregion != ''">
+                ap_ipregion,
+            </if>
+            <if test="coreSwitchIp != null and coreSwitchIp != ''">
+                core_switch_ip,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="createUser != null and createUser != ''">
+                create_user,
+            </if>
+            <if test="netLevel != null">
+                net_level,
+            </if>
+            <if test="pcserverIpregion != null and pcserverIpregion != ''">
+                pcserver_ipregion,
+            </if>
+            <if test="regionId != null">
+                region_id,
+            </if>
+            <if test="snmpCommunity != null and snmpCommunity != ''">
+                snmp_community,
+            </if>
+            <if test="switchIpregion != null and switchIpregion != ''">
+                switch_ipregion,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="updateUser != null and updateUser != ''">
+                update_user,
+            </if>
+            <if test="fireWallExtranetIp != null and fireWallExtranetIp != ''">
+                fire_wall_extranet_ip,
+            </if>
+            <if test="fireWallIntranetIp != null and fireWallIntranetIp != ''">
+                fire_wall_intranet_ip,
+            </if>
+            <if test="storageName != null and storageName != ''">
+                storage_name,
+            </if>
+            <if test="auditIp != null and auditIp != ''">
+                audit_ip,
+            </if>
+            <if test="firstExtranetInterface != null and firstExtranetInterface != ''">
+                first_extranet_interface,
+            </if>
+            <if test="firstExtranetIp != null and firstExtranetIp != ''">
+                first_extranet_ip,
+            </if>
+            <if test="firstIsp != null and firstIsp != ''">
+                first_isp,
+            </if>
+            <if test="secondExtranetInterface != null and secondExtranetInterface != ''">
+                second_extranet_interface,
+            </if>
+            <if test="secondExtranetIp != null and secondExtranetIp != ''">
+                second_extranet_ip,
+            </if>
+            <if test="secondIsp != null and secondIsp != ''">
+                second_isp,
+            </if>
+            <if test="thirdExtranetInterface != null and thirdExtranetInterface != ''">
+                third_extranet_interface,
+            </if>
+            <if test="thirdExtranetIp != null and thirdExtranetIp != ''">
+                third_extranet_ip,
+            </if>
+            <if test="thirdIsp != null and thirdIsp != ''">
+                third_isp,
+            </if>
+            <if test="firstExtranetBandwidth != null and firstExtranetBandwidth != ''">
+                first_extranet_bandwidth,
+            </if>
+            <if test="secondExtranetBandwidth != null and secondExtranetBandwidth != ''">
+                second_extranet_bandwidth,
+            </if>
+            <if test="thirdExtranetBandwidth != null and thirdExtranetBandwidth != ''">
+                third_extranet_bandwidth,
+            </if>
+            <if test="gateWayIps != null and gateWayIps != ''">
+                gate_way_ips,
+            </if>
+            <if test="ipVip != null and ipVip != ''">
+                ip_vip,
+            </if>
+            <if test="remarks != null and remarks != ''">
+                remarks,
+            </if>
+            <if test="yn != null">
+                yn,
+            </if>
+            <if test="ts != null">
+                ts,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="acIpregion != null and acIpregion != ''">
+                #{acIpregion},
+            </if>
+            <if test="apIpregion != null and apIpregion != ''">
+                #{apIpregion},
+            </if>
+            <if test="coreSwitchIp != null and coreSwitchIp != ''">
+                #{coreSwitchIp},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="createUser != null and createUser != ''">
+                #{createUser},
+            </if>
+            <if test="netLevel != null">
+                #{netLevel},
+            </if>
+            <if test="pcserverIpregion != null and pcserverIpregion != ''">
+                #{pcserverIpregion},
+            </if>
+            <if test="regionId != null">
+                #{regionId},
+            </if>
+            <if test="snmpCommunity != null and snmpCommunity != ''">
+                #{snmpCommunity},
+            </if>
+            <if test="switchIpregion != null and switchIpregion != ''">
+                #{switchIpregion},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="updateUser != null and updateUser != ''">
+                #{updateUser},
+            </if>
+            <if test="fireWallExtranetIp != null and fireWallExtranetIp != ''">
+                #{fireWallExtranetIp},
+            </if>
+            <if test="fireWallIntranetIp != null and fireWallIntranetIp != ''">
+                #{fireWallIntranetIp},
+            </if>
+            <if test="storageName != null and storageName != ''">
+                #{storageName},
+            </if>
+            <if test="auditIp != null and auditIp != ''">
+                #{auditIp},
+            </if>
+            <if test="firstExtranetInterface != null and firstExtranetInterface != ''">
+                #{firstExtranetInterface},
+            </if>
+            <if test="firstExtranetIp != null and firstExtranetIp != ''">
+                #{firstExtranetIp},
+            </if>
+            <if test="firstIsp != null and firstIsp != ''">
+                #{firstIsp},
+            </if>
+            <if test="secondExtranetInterface != null and secondExtranetInterface != ''">
+                #{secondExtranetInterface},
+            </if>
+            <if test="secondExtranetIp != null and secondExtranetIp != ''">
+                #{secondExtranetIp},
+            </if>
+            <if test="secondIsp != null and secondIsp != ''">
+                #{secondIsp},
+            </if>
+            <if test="thirdExtranetInterface != null and thirdExtranetInterface != ''">
+                #{thirdExtranetInterface},
+            </if>
+            <if test="thirdExtranetIp != null and thirdExtranetIp != ''">
+                #{thirdExtranetIp},
+            </if>
+            <if test="thirdIsp != null and thirdIsp != ''">
+                #{thirdIsp},
+            </if>
+            <if test="firstExtranetBandwidth != null and firstExtranetBandwidth != ''">
+                #{firstExtranetBandwidth},
+            </if>
+            <if test="secondExtranetBandwidth != null and secondExtranetBandwidth != ''">
+                #{secondExtranetBandwidth},
+            </if>
+            <if test="thirdExtranetBandwidth != null and thirdExtranetBandwidth != ''">
+                #{thirdExtranetBandwidth},
+            </if>
+            <if test="gateWayIps != null and gateWayIps != ''">
+                #{gateWayIps},
+            </if>
+            <if test="ipVip != null and ipVip != ''">
+                #{ipVip},
+            </if>
+            <if test="remarks != null and remarks != ''">
+                #{remarks},
+            </if>
+            <if test="yn != null">
+                #{yn},
+            </if>
+            <if test="ts != null">
+                #{ts},
+            </if>
+        </trim>
+    </insert>
+    <!-- 批量增加 -->
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+        insert into `it_basic_storage_netinfo`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            ac_ipregion,
+            ap_ipregion,
+            core_switch_ip,
+            create_time,
+            create_user,
+            net_level,
+            pcserver_ipregion,
+            region_id,
+            snmp_community,
+            switch_ipregion,
+            update_time,
+            update_user,
+            fire_wall_extranet_ip,
+            fire_wall_intranet_ip,
+            storage_name,
+            audit_ip,
+            first_extranet_interface,
+            first_extranet_ip,
+            first_isp,
+            second_extranet_interface,
+            second_extranet_ip,
+            second_isp,
+            third_extranet_interface,
+            third_extranet_ip,
+            third_isp,
+            first_extranet_bandwidth,
+            second_extranet_bandwidth,
+            third_extranet_bandwidth,
+            gate_way_ips,
+            ip_vip,
+            remarks,
+            yn,
+            ts,
+        </trim>
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            <trim prefix=" (" suffix=")" suffixOverrides=",">
+                    #{item.id},
+                    #{item.acIpregion},
+                    #{item.apIpregion},
+                    #{item.coreSwitchIp},
+                    #{item.createTime},
+                    #{item.createUser},
+                    #{item.netLevel},
+                    #{item.pcserverIpregion},
+                    #{item.regionId},
+                    #{item.snmpCommunity},
+                    #{item.switchIpregion},
+                    #{item.updateTime},
+                    #{item.updateUser},
+                    #{item.fireWallExtranetIp},
+                    #{item.fireWallIntranetIp},
+                    #{item.storageName},
+                    #{item.auditIp},
+                    #{item.firstExtranetInterface},
+                    #{item.firstExtranetIp},
+                    #{item.firstIsp},
+                    #{item.secondExtranetInterface},
+                    #{item.secondExtranetIp},
+                    #{item.secondIsp},
+                    #{item.thirdExtranetInterface},
+                    #{item.thirdExtranetIp},
+                    #{item.thirdIsp},
+                    #{item.firstExtranetBandwidth},
+                    #{item.secondExtranetBandwidth},
+                    #{item.thirdExtranetBandwidth},
+                    #{item.gateWayIps},
+                    #{item.ipVip},
+                    #{item.remarks},
+                    #{item.yn},
+                    #{item.ts},
+            </trim>
+        </foreach>
+    </insert>
+    <!-- 更新 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.jdl.basic.api.domain.itBasic.ItBasicStorageNetInfo">
+        UPDATE `it_basic_storage_netinfo`
+        <set>
+            <if test="acIpregion != null and acIpregion != ''">
+            ac_ipregion = #{acIpregion},
+            </if>
+            <if test="apIpregion != null and apIpregion != ''">
+            ap_ipregion = #{apIpregion},
+            </if>
+            <if test="coreSwitchIp != null and coreSwitchIp != ''">
+            core_switch_ip = #{coreSwitchIp},
+            </if>
+            <if test="createTime != null ">
+            create_time = #{createTime},
+            </if>
+            <if test="createUser != null and createUser != ''">
+            create_user = #{createUser},
+            </if>
+            <if test="netLevel != null ">
+            net_level = #{netLevel},
+            </if>
+            <if test="pcserverIpregion != null and pcserverIpregion != ''">
+            pcserver_ipregion = #{pcserverIpregion},
+            </if>
+            <if test="regionId != null ">
+            region_id = #{regionId},
+            </if>
+            <if test="snmpCommunity != null and snmpCommunity != ''">
+            snmp_community = #{snmpCommunity},
+            </if>
+            <if test="switchIpregion != null and switchIpregion != ''">
+            switch_ipregion = #{switchIpregion},
+            </if>
+            <if test="updateTime != null ">
+            update_time = #{updateTime},
+            </if>
+            <if test="updateUser != null and updateUser != ''">
+            update_user = #{updateUser},
+            </if>
+            <if test="fireWallExtranetIp != null and fireWallExtranetIp != ''">
+            fire_wall_extranet_ip = #{fireWallExtranetIp},
+            </if>
+            <if test="fireWallIntranetIp != null and fireWallIntranetIp != ''">
+            fire_wall_intranet_ip = #{fireWallIntranetIp},
+            </if>
+            <if test="storageName != null and storageName != ''">
+            storage_name = #{storageName},
+            </if>
+            <if test="auditIp != null and auditIp != ''">
+            audit_ip = #{auditIp},
+            </if>
+            <if test="firstExtranetInterface != null and firstExtranetInterface != ''">
+            first_extranet_interface = #{firstExtranetInterface},
+            </if>
+            <if test="firstExtranetIp != null and firstExtranetIp != ''">
+            first_extranet_ip = #{firstExtranetIp},
+            </if>
+            <if test="firstIsp != null and firstIsp != ''">
+            first_isp = #{firstIsp},
+            </if>
+            <if test="secondExtranetInterface != null and secondExtranetInterface != ''">
+            second_extranet_interface = #{secondExtranetInterface},
+            </if>
+            <if test="secondExtranetIp != null and secondExtranetIp != ''">
+            second_extranet_ip = #{secondExtranetIp},
+            </if>
+            <if test="secondIsp != null and secondIsp != ''">
+            second_isp = #{secondIsp},
+            </if>
+            <if test="thirdExtranetInterface != null and thirdExtranetInterface != ''">
+            third_extranet_interface = #{thirdExtranetInterface},
+            </if>
+            <if test="thirdExtranetIp != null and thirdExtranetIp != ''">
+            third_extranet_ip = #{thirdExtranetIp},
+            </if>
+            <if test="thirdIsp != null and thirdIsp != ''">
+            third_isp = #{thirdIsp},
+            </if>
+            <if test="firstExtranetBandwidth != null and firstExtranetBandwidth != ''">
+            first_extranet_bandwidth = #{firstExtranetBandwidth},
+            </if>
+            <if test="secondExtranetBandwidth != null and secondExtranetBandwidth != ''">
+            second_extranet_bandwidth = #{secondExtranetBandwidth},
+            </if>
+            <if test="thirdExtranetBandwidth != null and thirdExtranetBandwidth != ''">
+            third_extranet_bandwidth = #{thirdExtranetBandwidth},
+            </if>
+            <if test="gateWayIps != null and gateWayIps != ''">
+            gate_way_ips = #{gateWayIps},
+            </if>
+            <if test="ipVip != null and ipVip != ''">
+            ip_vip = #{ipVip},
+            </if>
+            <if test="remarks != null and remarks != ''">
+            remarks = #{remarks},
+            </if>
+            <if test="yn != null ">
+            yn = #{yn}
+            </if>
+            <if test="ts != null ">
+            ts = #{ts}
+            </if>
+        </set>
+        WHERE
+            id = #{id}
+    </update>
+    <!-- 批量更新 -->
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index"  separator=";">
+            UPDATE `it_basic_storage_netinfo`
+            <set>
+                <if test="item.acIpregion != null and item.acIpregion != ''">
+                ac_ipregion = #{item.acIpregion},
+                </if>
+                <if test="item.apIpregion != null and item.apIpregion != ''">
+                ap_ipregion = #{item.apIpregion},
+                </if>
+                <if test="item.coreSwitchIp != null and item.coreSwitchIp != ''">
+                core_switch_ip = #{item.coreSwitchIp},
+                </if>
+                <if test="item.createTime != null">
+                create_time = #{item.createTime},
+                </if>
+                <if test="item.createUser != null and item.createUser != ''">
+                create_user = #{item.createUser},
+                </if>
+                <if test="item.netLevel != null">
+                net_level = #{item.netLevel},
+                </if>
+                <if test="item.pcserverIpregion != null and item.pcserverIpregion != ''">
+                pcserver_ipregion = #{item.pcserverIpregion},
+                </if>
+                <if test="item.regionId != null">
+                region_id = #{item.regionId},
+                </if>
+                <if test="item.snmpCommunity != null and item.snmpCommunity != ''">
+                snmp_community = #{item.snmpCommunity},
+                </if>
+                <if test="item.switchIpregion != null and item.switchIpregion != ''">
+                switch_ipregion = #{item.switchIpregion},
+                </if>
+                <if test="item.updateTime != null">
+                update_time = #{item.updateTime},
+                </if>
+                <if test="item.updateUser != null and item.updateUser != ''">
+                update_user = #{item.updateUser},
+                </if>
+                <if test="item.fireWallExtranetIp != null and item.fireWallExtranetIp != ''">
+                fire_wall_extranet_ip = #{item.fireWallExtranetIp},
+                </if>
+                <if test="item.fireWallIntranetIp != null and item.fireWallIntranetIp != ''">
+                fire_wall_intranet_ip = #{item.fireWallIntranetIp},
+                </if>
+                <if test="item.storageName != null and item.storageName != ''">
+                storage_name = #{item.storageName},
+                </if>
+                <if test="item.auditIp != null and item.auditIp != ''">
+                audit_ip = #{item.auditIp},
+                </if>
+                <if test="item.firstExtranetInterface != null and item.firstExtranetInterface != ''">
+                first_extranet_interface = #{item.firstExtranetInterface},
+                </if>
+                <if test="item.firstExtranetIp != null and item.firstExtranetIp != ''">
+                first_extranet_ip = #{item.firstExtranetIp},
+                </if>
+                <if test="item.firstIsp != null and item.firstIsp != ''">
+                first_isp = #{item.firstIsp},
+                </if>
+                <if test="item.secondExtranetInterface != null and item.secondExtranetInterface != ''">
+                second_extranet_interface = #{item.secondExtranetInterface},
+                </if>
+                <if test="item.secondExtranetIp != null and item.secondExtranetIp != ''">
+                second_extranet_ip = #{item.secondExtranetIp},
+                </if>
+                <if test="item.secondIsp != null and item.secondIsp != ''">
+                second_isp = #{item.secondIsp},
+                </if>
+                <if test="item.thirdExtranetInterface != null and item.thirdExtranetInterface != ''">
+                third_extranet_interface = #{item.thirdExtranetInterface},
+                </if>
+                <if test="item.thirdExtranetIp != null and item.thirdExtranetIp != ''">
+                third_extranet_ip = #{item.thirdExtranetIp},
+                </if>
+                <if test="item.thirdIsp != null and item.thirdIsp != ''">
+                third_isp = #{item.thirdIsp},
+                </if>
+                <if test="item.firstExtranetBandwidth != null and item.firstExtranetBandwidth != ''">
+                first_extranet_bandwidth = #{item.firstExtranetBandwidth},
+                </if>
+                <if test="item.secondExtranetBandwidth != null and item.secondExtranetBandwidth != ''">
+                second_extranet_bandwidth = #{item.secondExtranetBandwidth},
+                </if>
+                <if test="item.thirdExtranetBandwidth != null and item.thirdExtranetBandwidth != ''">
+                third_extranet_bandwidth = #{item.thirdExtranetBandwidth},
+                </if>
+                <if test="item.gateWayIps != null and item.gateWayIps != ''">
+                gate_way_ips = #{item.gateWayIps},
+                </if>
+                <if test="item.ipVip != null and item.ipVip != ''">
+                ip_vip = #{item.ipVip},
+                </if>
+                <if test="item.remarks != null and item.remarks != ''">
+                remarks = #{item.remarks},
+                </if>
+                <if test="item.yn != null">
+                    yn = #{item.yn}
+                </if>
+                <if test="item.ts != null">
+                ts = #{item.ts}
+                </if>
+            </set>
+            WHERE
+                id = #{item.id}
+        </foreach>
+    </update>
+    <!-- 按主键查询 -->
+    <select id="selectByPrimaryKey" resultMap="RM_ItBasicStorageNetinfo" parameterType="com.jdl.basic.api.domain.itBasic.ItBasicStorageNetInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        <![CDATA[
+            FROM `it_basic_storage_netinfo`
+            WHERE
+                id = #{id} 
+        ]]>
+    </select>
+    <!-- 按条件查询单条记录 -->
+    <select id="selectOne" resultMap="RM_ItBasicStorageNetinfo" parameterType="com.jdl.basic.api.dto.itBasic.qo.ItBasicStorageNetInfoQo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM `it_basic_storage_netinfo`
+        <include refid="where"/>
+    </select>
+    <!-- where条件 -->
+    <sql id="where">
+        <where>
+            <include refid="sql_if_not_null"/>
+        </where>
+    </sql>
+    <!-- 判断空值 -->
+    <sql id="sql_if_not_null">
+        <if test="id != null">
+        AND id = #{id}
+        </if>
+        <if test="acIpregion != null and acIpregion != ''">
+        AND ac_ipregion = #{acIpregion}
+        </if>
+        <if test="apIpregion != null and apIpregion != ''">
+        AND ap_ipregion = #{apIpregion}
+        </if>
+        <if test="coreSwitchIp != null and coreSwitchIp != ''">
+        AND core_switch_ip = #{coreSwitchIp}
+        </if>
+        <if test="createTime != null">
+        AND create_time = #{createTime}
+        </if>
+        <if test="createUser != null and createUser != ''">
+        AND create_user = #{createUser}
+        </if>
+        <if test="netLevel != null">
+        AND net_level = #{netLevel}
+        </if>
+        <if test="pcserverIpregion != null and pcserverIpregion != ''">
+        AND pcserver_ipregion = #{pcserverIpregion}
+        </if>
+        <if test="regionId != null">
+        AND region_id = #{regionId}
+        </if>
+        <if test="snmpCommunity != null and snmpCommunity != ''">
+        AND snmp_community = #{snmpCommunity}
+        </if>
+        <if test="switchIpregion != null and switchIpregion != ''">
+        AND switch_ipregion = #{switchIpregion}
+        </if>
+        <if test="updateTime != null">
+        AND update_time = #{updateTime}
+        </if>
+        <if test="updateUser != null and updateUser != ''">
+        AND update_user = #{updateUser}
+        </if>
+        <if test="fireWallExtranetIp != null and fireWallExtranetIp != ''">
+        AND fire_wall_extranet_ip = #{fireWallExtranetIp}
+        </if>
+        <if test="fireWallIntranetIp != null and fireWallIntranetIp != ''">
+        AND fire_wall_intranet_ip = #{fireWallIntranetIp}
+        </if>
+        <if test="storageName != null and storageName != ''">
+        AND storage_name = #{storageName}
+        </if>
+        <if test="auditIp != null and auditIp != ''">
+        AND audit_ip = #{auditIp}
+        </if>
+        <if test="firstExtranetInterface != null and firstExtranetInterface != ''">
+        AND first_extranet_interface = #{firstExtranetInterface}
+        </if>
+        <if test="firstExtranetIp != null and firstExtranetIp != ''">
+        AND first_extranet_ip = #{firstExtranetIp}
+        </if>
+        <if test="firstIsp != null and firstIsp != ''">
+        AND first_isp = #{firstIsp}
+        </if>
+        <if test="secondExtranetInterface != null and secondExtranetInterface != ''">
+        AND second_extranet_interface = #{secondExtranetInterface}
+        </if>
+        <if test="secondExtranetIp != null and secondExtranetIp != ''">
+        AND second_extranet_ip = #{secondExtranetIp}
+        </if>
+        <if test="secondIsp != null and secondIsp != ''">
+        AND second_isp = #{secondIsp}
+        </if>
+        <if test="thirdExtranetInterface != null and thirdExtranetInterface != ''">
+        AND third_extranet_interface = #{thirdExtranetInterface}
+        </if>
+        <if test="thirdExtranetIp != null and thirdExtranetIp != ''">
+        AND third_extranet_ip = #{thirdExtranetIp}
+        </if>
+        <if test="thirdIsp != null and thirdIsp != ''">
+        AND third_isp = #{thirdIsp}
+        </if>
+        <if test="firstExtranetBandwidth != null and firstExtranetBandwidth != ''">
+        AND first_extranet_bandwidth = #{firstExtranetBandwidth}
+        </if>
+        <if test="secondExtranetBandwidth != null and secondExtranetBandwidth != ''">
+        AND second_extranet_bandwidth = #{secondExtranetBandwidth}
+        </if>
+        <if test="thirdExtranetBandwidth != null and thirdExtranetBandwidth != ''">
+        AND third_extranet_bandwidth = #{thirdExtranetBandwidth}
+        </if>
+        <if test="gateWayIps != null and gateWayIps != ''">
+        AND gate_way_ips = #{gateWayIps}
+        </if>
+        <if test="ipVip != null and ipVip != ''">
+        AND ip_vip = #{ipVip}
+        </if>
+        <if test="remarks != null and remarks != ''">
+        AND remarks = #{remarks}
+        </if>
+        <if test="yn != null">
+        AND yn = #{yn}
+        </if>
+    </sql>
+    <!-- 查询行数 -->
+    <select id="queryCount" resultType="long" parameterType="com.jdl.basic.api.dto.itBasic.qo.ItBasicStorageNetInfoQo">
+        SELECT count(1) FROM `it_basic_storage_netinfo`
+        <include refid="where"/>
+    </select>
+    <!-- 查询集合 如果pageNumber小于或等于0,则不进行分页操作 -->
+    <select id="queryList" resultMap="RM_ItBasicStorageNetinfo" parameterType="com.jdl.basic.api.dto.itBasic.qo.ItBasicStorageNetInfoQo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM `it_basic_storage_netinfo`
+        <include refid="where"/>
+        <if test="pageNumber > 0">
+            limit #{limitStart}, #{pageSize}
+        </if>
+    </select>
+    <!-- 伪删除（更新删除行的识别码） -->
+    <update id="deleteByPrimaryKey" parameterType="com.jdl.basic.api.domain.itBasic.ItBasicStorageNetInfo">
+        UPDATE `it_basic_storage_netinfo` SET yn = 0
+        WHERE
+        id = #{id} 
+    </update>
+    <!-- 批量伪删除 -->
+    <update id="batchDelete" parameterType="com.jdl.basic.api.dto.itBasic.qo.ItBasicStorageNetInfoQo">
+        UPDATE `it_basic_storage_netinfo` SET yn = 0
+        WHERE id IN
+        <foreach collection="columnValueList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+</mapper>
+
