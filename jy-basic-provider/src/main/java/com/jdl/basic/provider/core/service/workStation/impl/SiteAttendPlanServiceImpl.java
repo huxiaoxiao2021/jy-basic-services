@@ -112,6 +112,7 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".SiteAttendPlanServiceImpl.queryTotalCount", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Long> queryTotalCount(SiteAttendPlanQuery query) {
         List<Long> totalListCount = siteAttendPlanDao.queryTotalCount(query);
         Long totalCount = totalListCount.stream().count();
