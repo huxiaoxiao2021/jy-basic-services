@@ -261,6 +261,9 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
                 configTransferDpSite.setUpdateUser(Constants.EMPTY_FILL);
                 configTransferDpSite.setUpdateUserName(Constants.EMPTY_FILL);
                 configTransferDpSite.setYn(Constants.YN_YES);
+                if (configTransferDpSite.getConfigStatus() == null) {
+                    configTransferDpSite.setConfigStatus(Constants.YN_YES);
+                }
             }
 
             final long insertCount = configTransferDpSiteDao.batchInsert(configTransferDpSiteList);
