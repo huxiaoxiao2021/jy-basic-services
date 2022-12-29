@@ -598,4 +598,12 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	public WorkStationGrid queryByGridKeyWithCache(WorkStationGridQuery workStationGridQuery) {
 		return workStationGridDao.queryByGridKey(workStationGridQuery);
 	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryWorkStationGridBybusinessKeyWithCache", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<WorkStationGrid> queryWorkStationGridBybusinessKeyWithCache(String businessKey) {
+		Result<WorkStationGrid> result = Result.success();
+		result.setData(workStationGridDao.queryWorkStationGridBybusinessKeyWithCache(businessKey));
+		return result;
+	}
 }

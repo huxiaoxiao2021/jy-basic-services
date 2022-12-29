@@ -104,4 +104,12 @@ public interface WorkStationJsfService {
 	 */
 	Result<WorkStation> queryByRealBusinessKey(String businessKey);
 
+
+	/**
+	 * 根据businessKey查询 单条数据
+	 * @param businessKey
+	 * @return
+	 */
+	Result<WorkStation> queryWorkStationBybusinessKeyWithCache(String businessKey);
+
 }

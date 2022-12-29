@@ -367,4 +367,15 @@
 			#{item.id,jdbcType=BIGINT}
 		</foreach>
 	</update>
+
+
+	<select id="queryWorkStationBybusinessKeyWithCache" parameterType="String" resultMap="WorkStation">
+		select
+		<include refid="Base_Column_List"/>
+		from
+		work_station
+		where
+		business_key = #{businessKey,jdbcType=VARCHAR}
+		order by ts desc limit 1
+	</select>
 </mapper>

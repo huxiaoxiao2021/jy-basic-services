@@ -2,10 +2,7 @@ package com.jdl.basic.provider.core.provider.workStation;
 
 
 import com.alibaba.fastjson.JSON;
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkStationGrid;
-import com.jdl.basic.api.domain.workStation.WorkStationGridCountVo;
-import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
+import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.service.workStation.WorkStationGridJsfService;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.utils.DateHelper;
@@ -15,6 +12,7 @@ import com.jdl.basic.provider.config.lock.LockService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.hander.ResultHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -296,5 +294,24 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 		Result<WorkStationGrid> result = Result.success();
 		result.setData(workStationGridService.queryByGridKeyWithCache(workStationGridCheckQuery));
 		return result;		
+	}
+
+	@Override
+	public Result<WorkStationGrid> queryWorkStationGridBybusinessKeyWithCache(String businessKey) {
+		Result<WorkStationGrid> result = new Result<>();
+		try {
+			if(log.isInfoEnabled()) {
+				log.info("场地网格工序管理 queryWorkStationGridBybusinessKeyWithCache 入参-{}", JSON.toJSONString(businessKey));
+			}
+			if(StringUtils.isEmpty(businessKey)){
+				result.toFail("业务主键不能为空!");
+				return result;
+			}
+			return workStationGridService.queryWorkStationGridBybusinessKeyWithCache(businessKey);
+		}catch (Exception e){
+			log.error("获取场地网格工序异常! 入参-{}-{}",businessKey,e.getMessage(),e);
+			result.toError("获取场地网格工序异常!");
+		}
+		return result;
 	}
 }

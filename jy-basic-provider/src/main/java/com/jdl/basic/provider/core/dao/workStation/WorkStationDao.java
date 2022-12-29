@@ -1,10 +1,7 @@
 package com.jdl.basic.provider.core.dao.workStation;
 
 import com.jd.etms.framework.utils.cache.annotation.Cache;
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkStation;
-import com.jdl.basic.api.domain.workStation.WorkStationCountVo;
-import com.jdl.basic.api.domain.workStation.WorkStationQuery;
+import com.jdl.basic.api.domain.workStation.*;
 
 import java.util.List;
 
@@ -133,4 +130,13 @@ public interface WorkStationDao {
      * @return
      */
     int deleteByIds(DeleteRequest<WorkStation> deleteRequest);
+
+    /**
+     * 根据businessKey查询 单条数据
+     * @param businessKey
+     * @return
+     */
+    @Cache(key = "WorkStationGridDao.queryWorkStationBybusinessKeyWithCache@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
+    WorkStation queryWorkStationBybusinessKeyWithCache(String businessKey);
 }

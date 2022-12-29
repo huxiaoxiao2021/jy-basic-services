@@ -575,4 +575,16 @@
 		<include refid="joinSql"/>
 		<include refid="queryDistinctCondition"/>) A
 	</select>
+
+
+	<select id="queryWorkStationGridBybusinessKeyWithCache" parameterType="String" resultMap="WorkStationGrid">
+		select
+		<include refid="Base_Column_List"/>
+		from
+		work_station_grid
+		where
+		business_key = #{businessKey,jdbcType=VARCHAR}
+		 order by ts desc limit 1
+
+	</select>
 </mapper>

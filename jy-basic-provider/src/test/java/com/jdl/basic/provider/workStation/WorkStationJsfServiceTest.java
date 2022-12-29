@@ -28,4 +28,10 @@ public class WorkStationJsfServiceTest {
         Result<WorkStation> workStationResult = workStationJsfService.queryById(10L);
         System.out.println(JSON.toJSONString(workStationResult));
     }
+
+    @Test
+    public void queryWorkStationBybusinessKeyWithCacheTest(){
+        Result<WorkStation> result = workStationJsfService.queryWorkStationBybusinessKeyWithCache("GX00000005006");
+        System.out.println(JSON.toJSONString(result));
+    }
 }

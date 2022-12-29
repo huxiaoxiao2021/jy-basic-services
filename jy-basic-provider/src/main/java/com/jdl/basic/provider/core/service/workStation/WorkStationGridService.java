@@ -150,4 +150,6 @@ public interface WorkStationGridService {
 	 * @return
 	 */
 	WorkStationGrid queryByGridKeyWithCache(WorkStationGridQuery workStationGridCheckQuery);
+
+	Result<WorkStationGrid> queryWorkStationGridBybusinessKeyWithCache(String businessKey);
 }

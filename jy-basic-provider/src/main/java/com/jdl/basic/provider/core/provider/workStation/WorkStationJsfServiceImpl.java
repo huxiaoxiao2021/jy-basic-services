@@ -273,4 +273,23 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 		result.setData(workStationService.queryByRealBusinessKeyWithCache(businessKey));
 		return result;	
 	}
+
+	@Override
+	public Result<WorkStation> queryWorkStationBybusinessKeyWithCache(String businessKey) {
+		Result<WorkStation> result = new Result<>();
+		try {
+			if(log.isInfoEnabled()) {
+				log.info("网格工序管理 queryWorkStationBybusinessKeyWithCache 入参-{}", JSON.toJSONString(businessKey));
+			}
+			if(StringUtils.isEmpty(businessKey)){
+				result.toFail("业务主键不能为空!");
+				return result;
+			}
+			return workStationService.queryWorkStationBybusinessKeyWithCache(businessKey);
+		}catch (Exception e){
+			log.error("获取网格工序异常! 入参-{}-{}",businessKey,e.getMessage(),e);
+			result.toError("获取网格工序异常!");
+		}
+		return result;
+	}
 }

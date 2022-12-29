@@ -119,5 +119,13 @@ public interface WorkStationService {
 	 * @param query
 	 * @return
 	 */
-	Result<List<WorkStation>> queryListForExport(WorkStationQuery query);	
+	Result<List<WorkStation>> queryListForExport(WorkStationQuery query);
+
+
+	/**
+	 * 根据businessKey查询 单条数据
+	 * @param businessKey
+	 * @return
+	 */
+	Result<WorkStation> queryWorkStationBybusinessKeyWithCache(String businessKey);
 }

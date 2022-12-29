@@ -401,4 +401,12 @@ public class WorkStationServiceImpl implements WorkStationService {
 		result.setData(workStationDao.queryListForExport(query));
 		return result;
 	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.queryWorkStationBybusinessKeyWithCache", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<WorkStation> queryWorkStationBybusinessKeyWithCache(String businessKey) {
+		Result<WorkStation> result = Result.success();
+		result.setData(workStationDao.queryWorkStationBybusinessKeyWithCache(businessKey));
+		return result;
+	}
 }

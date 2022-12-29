@@ -125,4 +125,11 @@ public interface WorkStationGridJsfService {
 	 * @return
 	 */
 	Result<WorkStationGrid> queryByGridKey(WorkStationGridQuery workStationGridCheckQuery);
+
+	/**
+	 * 根据businessKey获取数据
+	 * @param businessKey
+	 * @return
+	 */
+	Result<WorkStationGrid> queryWorkStationGridBybusinessKeyWithCache(String businessKey);
 }
