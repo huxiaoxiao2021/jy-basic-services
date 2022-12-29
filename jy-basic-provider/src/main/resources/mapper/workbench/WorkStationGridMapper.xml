@@ -45,6 +45,13 @@
 		s.area_code,s.area_name,s.work_code,s.work_name
 	</sql>
 
+	<sql id="Base_Column_List_WorkStationGrid" >
+		g.id,g.business_key,g.org_code,g.org_name,g.site_code,g.site_name,
+		g.floor,g.grid_no,g.grid_code,g.grid_name,g.standard_num,
+		g.owner_user_erp,g.ref_station_key,g.create_user,g.create_user_name,g.update_user,
+		g.update_user_name,g.create_time,g.update_time,g.yn,g.ts
+	</sql>
+
 	<insert id="insert" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGrid" useGeneratedKeys="true" keyProperty="id">
 		insert into work_station_grid
 			(
@@ -579,7 +586,7 @@
 
 	<select id="queryWorkStationGridBybusinessKeyWithCache" parameterType="String" resultMap="WorkStationGrid">
 		select
-		<include refid="Base_Column_List"/>
+		<include refid="Base_Column_List_WorkStationGrid"/>
 		from
 		work_station_grid g
 		where
