@@ -42,131 +42,49 @@
         </where>
     </sql>
 
-    <insert id="insert" parameterType="com.jdl.basic.api.domain.workStation.SiteWaveSchedule">
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
         insert into site_wave_schedule
         (
-        <trim suffixOverrides=",">
-            <if test="orgCode != null">
-                org_code,
-            </if>
-            <if test="orgName != null">
-                org_name,
-            </if>
-            <if test="siteCode != null">
-                site_code,
-            </if>
-            <if test="siteName != null">
-                site_name,
-            </if>
-            <if test="businessLineCode != null">
-                business_line_code,
-            </if>
-            <if test="businessLineName != null">
-                business_line_name,
-            </if>
-            <if test="waveCode != null">
-                wave_code,
-            </if>
-            <if test="wavePeriod != null">
-                wave_period,
-            </if>
-            <if test="startTime != null">
-                start_time,
-            </if>
-            <if test="endTime != null">
-                end_time,
-            </if>
-            <if test="createUser != null">
-                create_user,
-            </if>
-            <if test="createUserName != null">
-                create_user_name,
-            </if>
-            <if test="createTime != null">
-                create_time,
-            </if>
-            <if test="updateUser != null">
-                update_user,
-            </if>
-            <if test="updateUserName != null">
-                update_user_name,
-            </if>
-            <if test="updateTime != null">
-                update_time,
-            </if>
-            <if test="versionNum != null">
-                version_num,
-            </if>
-            <if test="yn != null">
-                yn,
-            </if>
-            <if test="ts != null">
-                ts,
-            </if>
-        </trim>
+            org_code,
+            org_name,
+            site_code,
+            site_name,
+            business_line_code,
+            business_line_name,
+            wave_code,
+            wave_period,
+            start_time,
+            end_time,
+            create_user,
+            create_user_name,
+            create_time,
+            update_user,
+            update_user_name,
+            update_time,
+            version_num
         )
         values
+        <foreach collection="list" item="item" separator=",">
         (
-        <trim suffixOverrides=",">
-            <if test="orgCode != null">
-                #{orgCode,jdbcType=INTEGER},
-            </if>
-            <if test="orgName != null">
-                #{orgName,jdbcType=VARCHAR},
-            </if>
-            <if test="siteCode != null">
-                #{siteCode,jdbcType=INTEGER},
-            </if>
-            <if test="siteName != null">
-                #{siteName,jdbcType=VARCHAR},
-            </if>
-            <if test="businessLineCode != null">
-                #{businessLineCode,jdbcType=VARCHAR},
-            </if>
-            <if test="businessLineName != null">
-                #{businessLineName,jdbcType=VARCHAR},
-            </if>
-            <if test="waveCode != null">
-                #{waveCode,jdbcType=TINYINT},
-            </if>
-            <if test="wavePeriod != null">
-                #{wavePeriod,jdbcType=INTEGER},
-            </if>
-            <if test="startTime != null">
-                #{startTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="endTime != null">
-                #{endTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="createUser != null">
-                #{createUser,jdbcType=VARCHAR},
-            </if>
-            <if test="createUserName != null">
-                #{createUserName,jdbcType=VARCHAR},
-            </if>
-            <if test="createTime != null">
-                #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="updateUser != null">
-                #{updateUser,jdbcType=VARCHAR},
-            </if>
-            <if test="updateUserName != null">
-                #{updateUserName,jdbcType=VARCHAR},
-            </if>
-            <if test="updateTime != null">
-                #{updateTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="versionNum != null">
-                #{versionNum,jdbcType=INTEGER},
-            </if>
-            <if test="yn != null">
-                #{yn,jdbcType=TINYINT},
-            </if>
-            <if test="ts != null">
-                #{ts,jdbcType=TIMESTAMP},
-            </if>
-        </trim>
+            #{item.orgCode,jdbcType=INTEGER},
+            #{item.orgName,jdbcType=VARCHAR},
+            #{item.siteCode,jdbcType=INTEGER},
+            #{item.siteName,jdbcType=VARCHAR},
+            #{item.businessLineCode,jdbcType=VARCHAR},
+            #{item.businessLineName,jdbcType=VARCHAR},
+            #{item.waveCode,jdbcType=TINYINT},
+            #{item.wavePeriod,jdbcType=INTEGER},
+            #{item.startTime,jdbcType=TIMESTAMP},
+            #{item.endTime,jdbcType=TIMESTAMP},
+            #{item.createUser,jdbcType=VARCHAR},
+            #{item.createUserName,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateUser,jdbcType=VARCHAR},
+            #{item.updateUserName,jdbcType=VARCHAR},
+            #{item.updateTime,jdbcType=TIMESTAMP},
+            #{item.versionNum,jdbcType=INTEGER}
         )
+        </foreach>
     </insert>
 
     <select id="queryOldDataByBusinessKey" parameterType="com.jdl.basic.api.domain.workStation.SiteWaveSchedule" resultMap="BaseResultMap">
@@ -177,9 +95,10 @@
         where
             s.yn = 1 and
             s.org_code = #{orgCode, jdbcType=INTEGER} and
-            s.site_code = #{siteCode, jdbcType=INTEGER} and
-            s.wave_code = #{waveCode, jdbcType=TINYINT} and
-            s.wave_period = #{wavePeriod, jdbcType=TINYINT}
+            s.site_code = #{siteCode, jdbcType=INTEGER}
+        group by
+            s.org_code,
+            s.site_code
     </select>
 
     <update id="deleteOldDataByBusinessKey" parameterType="com.jdl.basic.api.domain.workStation.SiteWaveSchedule">
@@ -193,9 +112,7 @@
         where
             s.yn = 1 and
             s.org_code = #{orgCode, jdbcType=INTEGER} and
-            s.site_code = #{siteCode, jdbcType=INTEGER} and
-            s.wave_code = #{waveCode, jdbcType=TINYINT} and
-            s.wave_period = #{wavePeriod, jdbcType=TINYINT}
+            s.site_code = #{siteCode, jdbcType=INTEGER}
     </update>
 
     <select id="queryTotalCount" parameterType="com.jdl.basic.api.domain.workStation.SiteWaveScheduleQuery" resultType="java.lang.Long">

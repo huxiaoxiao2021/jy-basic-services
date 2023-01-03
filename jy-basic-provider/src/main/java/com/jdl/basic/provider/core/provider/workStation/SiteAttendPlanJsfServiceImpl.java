@@ -1,12 +1,11 @@
 package com.jdl.basic.provider.core.provider.workStation;
 
 import com.alibaba.fastjson.JSON;
+import com.jdl.basic.api.domain.workStation.SiteAttendPlan;
 import com.jdl.basic.api.domain.workStation.SiteAttendPlanQuery;
-import com.jdl.basic.api.domain.workStation.SiteAttendPlanVo;
 import com.jdl.basic.api.service.workStation.SiteAttendPlanJsfService;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.utils.DateHelper;
-import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.config.lock.LockService;
 import com.jdl.basic.provider.core.service.workStation.SiteAttendPlanService;
@@ -32,7 +31,7 @@ public class SiteAttendPlanJsfServiceImpl implements SiteAttendPlanJsfService {
 
 
     @Override
-    public Result<Boolean> importDatas(List<SiteAttendPlanVo> dataList) {
+    public Result<Boolean> importDatas(List<SiteAttendPlan> dataList) {
         final Result<Boolean> result = Result.success();
         lockService.tryLock(CacheKeyConstants.CACHE_KEY_SITE_ATTEND_PLAN_EDIT, DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
             @Override
@@ -58,7 +57,7 @@ public class SiteAttendPlanJsfServiceImpl implements SiteAttendPlanJsfService {
     }
 
     @Override
-    public Result<PageDto<SiteAttendPlanVo>> queryPageList(SiteAttendPlanQuery query) {
+    public Result<List<SiteAttendPlan>> queryPageList(SiteAttendPlanQuery query) {
         if(log.isInfoEnabled()){
             log.info("场地维度出勤计划 queryPageList 入参-{}", JSON.toJSONString(query));
         }
@@ -66,7 +65,15 @@ public class SiteAttendPlanJsfServiceImpl implements SiteAttendPlanJsfService {
     }
 
     @Override
-    public Result<Boolean> confirmRecords(List<SiteAttendPlanVo> dataList) {
+    public Result<List<SiteAttendPlan>> queryPageDetail(SiteAttendPlan plan){
+        if(log.isInfoEnabled()){
+            log.info("场地维度出勤计划 queryPageDetail 入参-{}", JSON.toJSONString(plan));
+        }
+        return siteAttendPlanService.queryPageDetail(plan);
+    }
+
+    @Override
+    public Result<Boolean> confirmRecords(List<SiteAttendPlan> dataList) {
         if(log.isInfoEnabled()){
             log.info("场地维度出勤计划 confirmRecords 入参-{}", JSON.toJSONString(dataList));
         }
