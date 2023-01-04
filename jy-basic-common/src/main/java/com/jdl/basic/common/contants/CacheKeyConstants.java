@@ -274,4 +274,10 @@ public class CacheKeyConstants {
      * 场地班次时间-key
      */
     public static final String CACHE_KEY_SITE_WAVE_SCHEDULE_EDIT = "k_site_wave_schedule_edit";
+
+    /**
+     * 交接至德邦配置-key:交接场地:预分拣站点ID
+     */
+    public static final String CACHE_KEY_CONFIG_TRANSFER_DP = "k_c_transfer_dp:%s:%s";
+    public static final Integer CACHE_CONFIG_TRANSFER_DP_TIME_EXPIRE = 5;
 }
