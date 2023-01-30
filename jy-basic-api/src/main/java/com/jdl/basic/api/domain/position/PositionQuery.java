@@ -3,6 +3,8 @@ package com.jdl.basic.api.domain.position;
 import com.jdl.basic.api.domain.BasePagerCondition;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 类的描述
  *
@@ -53,5 +55,15 @@ public class PositionQuery extends BasePagerCondition {
      * 分页-pageSize
      */
     private Integer pageSize;
+
+    /**
+     * 功能编码
+     */
+    private String funcCode;
+
+    /**
+     * 工序主键列表
+     */
+    private List<String> refStationKeyList;
 
 }

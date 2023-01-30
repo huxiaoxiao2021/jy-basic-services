@@ -6,16 +6,21 @@ import com.jdl.basic.api.domain.position.PositionData;
 import com.jdl.basic.api.domain.position.PositionDetailRecord;
 import com.jdl.basic.api.domain.position.PositionQuery;
 import com.jdl.basic.api.domain.position.PositionRecord;
+import com.jdl.basic.api.domain.workMapFunc.JyWorkMapFuncConfigEntity;
 import com.jdl.basic.api.response.JDResponse;
 import com.jdl.basic.api.service.position.PositionQueryJsfService;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.service.position.PositionRecordService;
+import com.jdl.basic.provider.core.service.workMapFunc.JyWorkMapFuncConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 岗位查询对外jsf服务
@@ -31,11 +36,27 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
     @Autowired
     private PositionRecordService positionRecordService;
 
+    @Autowired
+    private JyWorkMapFuncConfigService jyWorkMapFuncConfigService;
+    
     @Override
     public Result<PageDto<PositionDetailRecord>> queryPageList(PositionQuery query) {
         if(log.isInfoEnabled()){
             log.info("岗位管理-queryPageList-{}",JSON.toJSONString(query));
         }
+        
+        if (query.getFuncCode() != null) {
+            JyWorkMapFuncConfigEntity condition = new JyWorkMapFuncConfigEntity();
+            condition.setFuncCode(query.getFuncCode());
+            List<JyWorkMapFuncConfigEntity> funcConfigEntities = jyWorkMapFuncConfigService.queryByFuncCode(condition);
+            
+            List<String> refStationKeyList = new ArrayList<>();
+            for (JyWorkMapFuncConfigEntity funcConfigEntity : funcConfigEntities) {
+                refStationKeyList.add(funcConfigEntity.getRefWorkKey());
+            }
+            query.setRefStationKeyList(refStationKeyList);
+        }
+        
         Result<PageDto<PositionDetailRecord>> result = new Result<PageDto<PositionDetailRecord>>();
         result.toFail();
         try {

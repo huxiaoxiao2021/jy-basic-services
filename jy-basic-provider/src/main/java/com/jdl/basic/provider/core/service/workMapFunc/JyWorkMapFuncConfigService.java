@@ -63,4 +63,12 @@ public interface JyWorkMapFuncConfigService {
      * @return
      */
     HashMap<String, String> queryFuncCodeMap();
+
+    /**
+     * 根据功能编码获取工序
+     * @param query
+     * @return
+     */
+    List<JyWorkMapFuncConfigEntity> queryByFuncCode(JyWorkMapFuncConfigEntity query);
+
 }

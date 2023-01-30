@@ -95,4 +95,12 @@ public class JyWorkMapFuncConfigServiceImpl implements JyWorkMapFuncConfigServic
         }
         return funcCodeMap;
     }
+
+    @Override
+    public List<JyWorkMapFuncConfigEntity> queryByFuncCode(JyWorkMapFuncConfigEntity entity) {
+        if(entity == null || StringUtils.isEmpty(entity.getFuncCode())){
+            throw new RuntimeException("请求参数不合法!");
+        }
+        return jyWorkMapFuncConfigDao.queryByCondition(entity);    
+    }
 }
