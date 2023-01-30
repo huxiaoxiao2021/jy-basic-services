@@ -46,7 +46,7 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
             log.info("岗位管理-queryPageList-{}",JSON.toJSONString(query));
         }
         
-        if (StringUtils.isEmpty(query.getFuncCode())) {
+        if (!StringUtils.isEmpty(query.getFuncCode())) {
             JyWorkMapFuncConfigEntity condition = new JyWorkMapFuncConfigEntity();
             condition.setFuncCode(query.getFuncCode());
             List<JyWorkMapFuncConfigEntity> funcConfigEntities = jyWorkMapFuncConfigService.queryByFuncCode(condition);
