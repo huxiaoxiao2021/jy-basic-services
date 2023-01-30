@@ -243,7 +243,7 @@
 			<if test="workCode != null and workCode != ''" >
 				and s.work_code = #{workCode,jdbcType=VARCHAR}
 			</if>
-			<if test="refStationKeyList != null" >
+			<if test="refStationKeyList != null and refStationKeyList != ''" >
 				and g.ref_station_key in
 				<foreach collection="refStationKeyList" item="item" index="index" open="(" separator="," close=")">
 					#{item,jdbcType=VARCHAR}
