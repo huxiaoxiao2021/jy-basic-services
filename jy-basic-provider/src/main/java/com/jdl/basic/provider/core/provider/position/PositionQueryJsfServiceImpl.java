@@ -14,6 +14,7 @@ import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.service.position.PositionRecordService;
 import com.jdl.basic.provider.core.service.workMapFunc.JyWorkMapFuncConfigService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
             log.info("岗位管理-queryPageList-{}",JSON.toJSONString(query));
         }
         
-        if (query.getFuncCode() != null) {
+        if (StringUtils.isEmpty(query.getFuncCode())) {
             JyWorkMapFuncConfigEntity condition = new JyWorkMapFuncConfigEntity();
             condition.setFuncCode(query.getFuncCode());
             List<JyWorkMapFuncConfigEntity> funcConfigEntities = jyWorkMapFuncConfigService.queryByFuncCode(condition);
