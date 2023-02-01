@@ -32,7 +32,6 @@ public class PositionQueryJsfServiceTest {
         positionQuery.setSiteCode(910);
         positionQuery.setPageSize(10);
         positionQuery.setPageNumber(1);
-        positionQuery.setFuncCode("UNSEAL_CAR_POSITION");
         Result<PageDto<PositionDetailRecord>> pageDtoResult = positionQueryJsfService.queryPageList(positionQuery);
         System.out.println(JSON.toJSONString(pageDtoResult));
     }
