@@ -130,6 +130,16 @@
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.jd.joyqueue</groupId>
+            <artifactId>jmq2-client-spring-boot-starter</artifactId>
+            <version>4.2.7-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jd.jmq</groupId>
+            <artifactId>jmq-client-core</artifactId>
+            <version>2.3.1</version>
+        </dependency>
 
         <!-- Cache -->
         <dependency>
@@ -233,7 +243,6 @@
             <groupId>com.jd.ump</groupId>
             <artifactId>profiler</artifactId>
         </dependency>
-
 <!--        &lt;!&ndash; UMP 增强组件接入 &ndash;&gt;-->
 <!--        <dependency>-->
 <!--            <groupId>com.jd.ump.x</groupId>-->
