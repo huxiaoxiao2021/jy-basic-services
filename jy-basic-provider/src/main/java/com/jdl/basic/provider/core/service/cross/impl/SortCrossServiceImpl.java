@@ -142,7 +142,10 @@ public class SortCrossServiceImpl implements SortCrossService {
             if (crossDetailDao.insert(sortCrossDetail) < 0) {
                 return false;
             }
+            if (!sortCrossService.initSiteType(sortCrossDetail)) {
+                return false;
+            }
         }
-        return sortCrossService.initSiteType(sortCrossDetail);
+        return true;
     }
 }
