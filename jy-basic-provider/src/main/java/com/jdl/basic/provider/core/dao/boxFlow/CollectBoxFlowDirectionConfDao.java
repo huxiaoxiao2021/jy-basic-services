@@ -33,5 +33,7 @@ public interface CollectBoxFlowDirectionConfDao {
 
 
     List<CollectBoxFlowDirectionConf> selectByStartSiteIdAndEndSiteIds(CollectBoxFlowDirectionConfQuery query);
+    
+    int deleteOldVersion(@Param("version") String version);
 
 }

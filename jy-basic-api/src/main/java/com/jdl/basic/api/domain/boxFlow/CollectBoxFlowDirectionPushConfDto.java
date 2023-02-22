@@ -85,5 +85,8 @@ public class CollectBoxFlowDirectionPushConfDto {
      */
     private String updateDate;
 
-
+    /**
+     * 版本
+     */
+    private String version;
 }

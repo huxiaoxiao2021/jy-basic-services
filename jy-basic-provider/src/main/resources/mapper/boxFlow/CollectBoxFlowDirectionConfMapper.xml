@@ -132,6 +132,9 @@
             <if test="ifChangeSinceLastUpdate != null">
                 if_change_since_last_update
             </if>
+            <if test="version != null">
+                version
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="startOrgId != null">
@@ -196,6 +199,9 @@
             </if>
             <if test="ifChangeSinceLastUpdate != null">
                 #{ifChangeSinceLastUpdate,jdbcType=INTEGER}
+            </if>
+            <if test="version != null">
+                #{version,javaType=VARCHAR}
             </if>
         </trim>
     </insert>
@@ -266,6 +272,9 @@
             </if>
             <if test="ifChangeSinceLastUpdate != null">
                 if_change_since_last_update = #{ifChangeSinceLastUpdate,jdbcType=INTEGER}
+            </if>
+            <if test="version != null">
+                version = #{version,javaType=VARCHAR}
             </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
@@ -344,6 +353,9 @@
         <if test="ifChangeSinceLastUpdate != null">
             and if_change_since_last_update = #{ifChangeSinceLastUpdate,jdbcType=INTEGER}
         </if>
+        <if test="version != null">
+            and version = #{version,javaType=VARCHAR}
+        </if>
     </select>
 
     <select id="select" resultMap="BaseResultMap">
@@ -391,6 +403,9 @@
         </if>
         <if test="ifChangeSinceLastUpdate != null">
             and if_change_since_last_update = #{ifChangeSinceLastUpdate,jdbcType=INTEGER}
+        </if>
+        <if test="version != null">
+            and version = #{version,javaType=VARCHAR}
         </if>
     </select>
 
@@ -533,4 +548,8 @@
             </foreach>
         </if>
     </select>
+    <delete id="deleteOldVersion" parameterType="java.lang.String">
+        delete from collect_box_flow_direction_conf 
+        where version &lt; #{version,javaType=VARCHAR}
+    </delete>
 </mapper>

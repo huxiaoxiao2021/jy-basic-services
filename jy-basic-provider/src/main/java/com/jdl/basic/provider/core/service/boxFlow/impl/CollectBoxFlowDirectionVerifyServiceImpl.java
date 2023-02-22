@@ -37,7 +37,7 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
         Integer boxReceiveId = confToBeVerifyed.getBoxReceiveId();
         Integer transportType = confToBeVerifyed.getTransportType();
         Integer flowType = confToBeVerifyed.getFlowType();
-
+        String version = confToBeVerifyed.getVersion();
         Result<CollectBoxFlowDirectionConf> checkPageResult = new Result();
 
         if (startSiteId == null || endSiteId == null || boxReceiveId == null || transportType == null || flowType == null) {
@@ -52,6 +52,7 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
         collectBoxFlowDirectionConf.setEndSiteId(endSiteId);
         collectBoxFlowDirectionConf.setTransportType(transportType);
         collectBoxFlowDirectionConf.setFlowType(flowType);
+        collectBoxFlowDirectionConf.setVersion(version);
         List<CollectBoxFlowDirectionConf> lists = collectBoxFlowDirectionConfMapper.selectConfiged(collectBoxFlowDirectionConf);
         //没配置
         if (CollectionUtils.isEmpty(lists)) {
@@ -174,10 +175,12 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
 
             ArrayList<CollectBoxFlowDirectionConf> mixs = (ArrayList<CollectBoxFlowDirectionConf>) groupByCollectClaim.get(CollectBoxFlowDirectionConf.COLLECT_CLAIM_MIX);
             ArrayList<CollectBoxFlowDirectionConf> finishs = (ArrayList<CollectBoxFlowDirectionConf>) groupByCollectClaim.get(CollectBoxFlowDirectionConf.COLLECT_CLAIM_FINISH);
-
+            ArrayList<CollectBoxFlowDirectionConf> specifyMixs = (ArrayList<CollectBoxFlowDirectionConf>) groupByCollectClaim.get(CollectBoxFlowDirectionConf.COLLECT_CLAIM_SPECIFY_MIX);
+            
             resp.setMixSites(mixs);
             resp.setFinishSites(finishs);
-            if (CollectionUtils.isNotEmpty(mixs)) {
+            resp.setSpecifyMixs(specifyMixs);
+            if (CollectionUtils.isNotEmpty(mixs) || CollectionUtils.isNotEmpty(specifyMixs)) {
                 resp.setResult(false);
             } else {
                 resp.setResult(true);

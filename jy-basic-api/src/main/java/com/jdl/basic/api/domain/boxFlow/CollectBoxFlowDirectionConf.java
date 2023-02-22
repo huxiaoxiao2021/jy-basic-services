@@ -23,6 +23,8 @@ public class CollectBoxFlowDirectionConf {
 
     public static Integer COLLECT_CLAIM_MIX = 2;//可混包
     public static Integer COLLECT_CLAIM_FINISH = 1;//成品包
+    
+    public static Integer COLLECT_CLAIM_SPECIFY_MIX = 3;//指定混包
 
 
     /**
@@ -131,8 +133,14 @@ public class CollectBoxFlowDirectionConf {
     private Integer collectClaim;
 
     /**
-     * 根据本次推送数据，是否有变化，0无变化/1更新为成品包/2更新为可混包
+     * 根据本次推送数据，是否有变化，0无变化/1更新为成品包/2更新为可混包/3更新为指定混包
      */
     private Integer ifChangeSinceLastUpdate;
 
+    /**
+     * 版本
+     */
+    private String version;
+    
+    
 }

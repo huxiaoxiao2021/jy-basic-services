@@ -89,7 +89,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
             select.setTransportType(conf.getTransportType());
             select.setStartSiteId(conf.getStartSiteId());
             select.setEndSiteId(conf.getEndSiteId());
-
+            select.setVersion(conf.getVersion());
             List<CollectBoxFlowDirectionConf> contains = collectBoxFlowDirectionConfMapper.select(select);
             if (CollectionUtils.isNotEmpty(contains)) {
                 result.fail("已存在相同的规则");
@@ -129,6 +129,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         query.setTransportType(conf.getTransportType());
         query.setFlowType(conf.getFlowType());
         query.setYn(true);
+        query.setVersion(conf.getVersion());
 
         //存在检验
         List<CollectBoxFlowDirectionConf> collectBoxFlowDirectionConfs = collectBoxFlowDirectionConfMapper.select(query);
@@ -239,7 +240,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
             query.setEndOrgId(conf.getEndOrgId());
             query.setEndSiteId(endSiteId);
             query.setTransportType(transportType);
-
+            
             List<CollectBoxFlowDirectionConf> select = collectBoxFlowDirectionConfMapper.select(query);
             if (CollectionUtils.isNotEmpty(select)) {
                 return updateConfig(conf);
@@ -260,6 +261,10 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
             result.fail("更新或新规则异常" + e.getMessage());
         }
         return result;
+    }
+    @Override
+    public int deleteOldVersion(String version){
+        return collectBoxFlowDirectionConfMapper.deleteOldVersion(version);
     }
 
 }

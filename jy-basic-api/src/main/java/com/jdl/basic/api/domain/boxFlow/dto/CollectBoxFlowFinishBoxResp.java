@@ -19,5 +19,7 @@ public class CollectBoxFlowFinishBoxResp {
 
     //可混包
     private ArrayList<CollectBoxFlowDirectionConf> mixSites;
+    //指定混包
+    private ArrayList<CollectBoxFlowDirectionConf> specifyMixs;
 
 }

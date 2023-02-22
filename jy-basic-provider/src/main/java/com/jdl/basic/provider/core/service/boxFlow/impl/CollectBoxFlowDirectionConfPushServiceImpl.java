@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Service("collectBoxFlowDirectionConfPushService")
 @Slf4j
@@ -46,6 +47,8 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
     BasicPrimaryWS basicPrimaryWS;
 
     public static String COLLECT_BOX_FLOW_DIRECTION_LASTEST_CONF_TIME = "COLLECT_BOX_FLOW_DIRECTION_LASTEST_CONF_TIME";
+    
+    public static String COLLECT_BOX_FLOW_DIRECTION_VERSION_UPDATE = "COLLECT_BOX_FLOW_DIRECTION_VERSION_UPDATE-";
 
 
     @Override
@@ -67,7 +70,8 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
                 dto.getTransportType() == null ||
                 dto.getFlowType() == null ||
                 dto.getCollectClaim() == null ||
-                StringUtils.isEmpty(dto.getUpdateDate())) {
+                StringUtils.isEmpty(dto.getUpdateDate()) ||
+                StringUtils.isEmpty(dto.getVersion())) {
             result.setCode(2);
             result.setMessage("参数不能为空");
             return result;
@@ -98,7 +102,7 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
         conf.setEndOrgName(endOrgEnum == null ? "" : endOrgEnum.getOrgName());
 
         Result<CollectBoxFlowDirectionConf> verifyResult = verifyService.verifyBoxFlowDirectionConf(conf);
-        //  1.看是否更新了可混包和成品包
+        //  1.看是否更新了可混包和成品包 指定可混包
         Integer originCollectClaim = verifyResult.getData() == null ? null : verifyResult.getData().getCollectClaim();
         Integer collectClaim = conf.getCollectClaim();
         //未更新
@@ -109,6 +113,8 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
         }
         conf.setCreateUserErp(verifyResult.getData() == null ? "大数据推送规则" : verifyResult.getData().getCreateUserErp());
         conf.setYn(true);
+        //删除老版本数据
+        deleteAllOldVersion(dto.getVersion());
 
         Result<Boolean> booleanBaseEntity = confService.updateOrNewConfig(conf);
         boolean success = booleanBaseEntity.isSuccess();
@@ -120,6 +126,17 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
             result.setMessage(booleanBaseEntity.getMessage());
         }
         return result;
+    }
+    
+    private void deleteAllOldVersion(String version){
+        String key = COLLECT_BOX_FLOW_DIRECTION_VERSION_UPDATE + version;
+        String isUpdate = cluster.get(key);
+        if(isUpdate != null){
+           return; 
+        }
+        if(cluster.set(key, "1", 15, TimeUnit.DAYS, false)){
+            confService.deleteOldVersion(version);
+        }
     }
 
 }
