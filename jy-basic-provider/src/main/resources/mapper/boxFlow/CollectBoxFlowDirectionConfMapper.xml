@@ -201,7 +201,7 @@
                 #{ifChangeSinceLastUpdate,jdbcType=INTEGER}
             </if>
             <if test="version != null">
-                #{version,javaType=VARCHAR}
+                #{version,jdbcType=VARCHAR}
             </if>
         </trim>
     </insert>
@@ -274,7 +274,7 @@
                 if_change_since_last_update = #{ifChangeSinceLastUpdate,jdbcType=INTEGER}
             </if>
             <if test="version != null">
-                version = #{version,javaType=VARCHAR}
+                version = #{version,jdbcType=VARCHAR}
             </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
@@ -354,7 +354,7 @@
             and if_change_since_last_update = #{ifChangeSinceLastUpdate,jdbcType=INTEGER}
         </if>
         <if test="version != null">
-            and version = #{version,javaType=VARCHAR}
+            and version = #{version,jdbcType=VARCHAR}
         </if>
     </select>
 
@@ -405,7 +405,7 @@
             and if_change_since_last_update = #{ifChangeSinceLastUpdate,jdbcType=INTEGER}
         </if>
         <if test="version != null">
-            and version = #{version,javaType=VARCHAR}
+            and version = #{version,jdbcType=VARCHAR}
         </if>
     </select>
 
@@ -550,6 +550,6 @@
     </select>
     <delete id="deleteOldVersion" parameterType="java.lang.String">
         delete from collect_box_flow_direction_conf 
-        where version &lt; #{version,javaType=VARCHAR}
+        where version &lt; #{version,jdbcType=VARCHAR}
     </delete>
 </mapper>
