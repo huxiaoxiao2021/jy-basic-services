@@ -70,8 +70,7 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
                 dto.getTransportType() == null ||
                 dto.getFlowType() == null ||
                 dto.getCollectClaim() == null ||
-                StringUtils.isEmpty(dto.getUpdateDate()) ||
-                StringUtils.isEmpty(dto.getVersion())) {
+                StringUtils.isEmpty(dto.getUpdateDate())) {
             result.setCode(2);
             result.setMessage("参数不能为空");
             return result;
@@ -94,7 +93,7 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
         conf.setUpdateTime(new Date());
 
         conf.setUpdateUserErp("大数据更新规则");
-
+        conf.setVersion(dto.getUpdateDate());
         OrgEnum startOrgEnum = OrgEnum.getOrgEnum(dto.getStartOrgId());
         OrgEnum endOrgEnum = OrgEnum.getOrgEnum(dto.getEndOrgId());
 
@@ -114,7 +113,7 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
         conf.setCreateUserErp(verifyResult.getData() == null ? "大数据推送规则" : verifyResult.getData().getCreateUserErp());
         conf.setYn(true);
         //删除老版本数据
-        deleteAllOldVersion(dto.getVersion());
+        deleteAllOldVersion(dto.getUpdateDate());
 
         Result<Boolean> booleanBaseEntity = confService.updateOrNewConfig(conf);
         boolean success = booleanBaseEntity.isSuccess();
@@ -131,11 +130,13 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
     private void deleteAllOldVersion(String version){
         String key = COLLECT_BOX_FLOW_DIRECTION_VERSION_UPDATE + version;
         String isUpdate = cluster.get(key);
+        log.info("查询缓存判断历史版本是否已清除key:{},isUpdate:{}", key, isUpdate);
         if(isUpdate != null){
            return; 
         }
         if(cluster.set(key, "1", 15, TimeUnit.DAYS, false)){
-            confService.deleteOldVersion(version);
+            int count = confService.deleteOldVersion(version);
+            log.info("删除历史版本数据key:{},isUpdate:{},count:{}", key, isUpdate, count);
         }
     }
 
