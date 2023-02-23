@@ -130,7 +130,7 @@
                 collect_claim,
             </if>
             <if test="ifChangeSinceLastUpdate != null">
-                if_change_since_last_update
+                if_change_since_last_update,
             </if>
             <if test="version != null">
                 version
@@ -198,7 +198,7 @@
                 #{collectClaim,jdbcType=INTEGER},
             </if>
             <if test="ifChangeSinceLastUpdate != null">
-                #{ifChangeSinceLastUpdate,jdbcType=INTEGER}
+                #{ifChangeSinceLastUpdate,jdbcType=INTEGER},
             </if>
             <if test="version != null">
                 #{version,jdbcType=VARCHAR}
