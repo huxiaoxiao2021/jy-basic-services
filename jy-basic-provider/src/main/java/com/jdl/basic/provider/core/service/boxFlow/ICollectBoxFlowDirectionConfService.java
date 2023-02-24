@@ -25,5 +25,5 @@ public interface ICollectBoxFlowDirectionConfService {
 
     Result<Boolean> updateOrNewConfig(CollectBoxFlowDirectionConf conf);
 
-    int deleteOldVersion(String version);
+    int deleteOldVersion(String version, Integer deleteCount);
 }

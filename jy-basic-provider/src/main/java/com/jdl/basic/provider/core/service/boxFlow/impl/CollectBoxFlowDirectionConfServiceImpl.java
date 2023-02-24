@@ -9,6 +9,7 @@ import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConfChangeLog;
 import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.Pager;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringUtils;
@@ -71,6 +72,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
                     || conf.getStartOrgId() == null || conf.getEndOrgId() == null
                     || conf.getFlowType() == null || conf.getTransportType() == null) {
                 result.fail("参数错误，不能为空");
+                log.error("newConfig未通过校验version{},参数:{}", conf.getVersion(), JsonHelper.toJSONString(conf));
                 return result;
             }
             if (!Arrays.asList(CollectBoxFlowDirectionConf.FLOW_TYPE_IN,
@@ -263,8 +265,8 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         return result;
     }
     @Override
-    public int deleteOldVersion(String version){
-        return collectBoxFlowDirectionConfMapper.deleteOldVersion(version);
+    public int deleteOldVersion(String version, Integer deleteCount){
+        return collectBoxFlowDirectionConfMapper.deleteOldVersion(version, deleteCount);
     }
 
 }

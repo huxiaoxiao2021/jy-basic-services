@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -30,6 +31,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxFlowDirectionConfPushService {
 
+    private static Integer DELETE_COUNT = 2000;
+    
     @Resource
     private CollectBoxFlowDirectionConfDao collectBoxFlowDirectionConfMapper;
 
@@ -45,6 +48,7 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     BasicPrimaryWS basicPrimaryWS;
+    
 
     public static String COLLECT_BOX_FLOW_DIRECTION_LASTEST_CONF_TIME = "COLLECT_BOX_FLOW_DIRECTION_LASTEST_CONF_TIME";
     
@@ -138,9 +142,16 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
         if(isUpdate != null){
            return; 
         }
+        //todo 批量删除
         if(cluster.set(key, "1", 15, TimeUnit.DAYS, false)){
-            int count = confService.deleteOldVersion(version);
-            log.info("删除历史版本数据key:{},isUpdate:{},count:{}", key, isUpdate, count);
+            int count = 0;
+            int sum = 0;
+            do {
+                count = confService.deleteOldVersion(version, DELETE_COUNT);
+                sum += count;
+            }while (count > 0);
+            
+            log.info("删除历史版本数据key:{},isUpdate:{},count:{}", key, isUpdate, sum);
         }
     }
 
