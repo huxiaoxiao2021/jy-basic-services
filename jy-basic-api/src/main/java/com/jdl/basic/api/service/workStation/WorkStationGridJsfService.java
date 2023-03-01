@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * 工序岗位网格表--JsfService接口
- * 
+ *
  * @author wuyoude
  * @date 2021年12月30日 14:30:43
  *
@@ -53,7 +53,7 @@ public interface WorkStationGridJsfService {
 	 * 按条件查询统计信息
 	 * @param query
 	 * @return
-	 */	
+	 */
 	Result<WorkStationGridCountVo> queryPageCount(WorkStationGridQuery query);
 	/**
 	 * 查询站点下所有网格
@@ -132,4 +132,7 @@ public interface WorkStationGridJsfService {
 	 * @return
 	 */
 	Result<WorkStationGrid> queryWorkStationGridBybusinessKeyWithCache(String businessKey);
+
+    Result<PageDto<WorkStationGrid>> queryAllWorkGridList(WorkStationGridQuery query);
+
 }

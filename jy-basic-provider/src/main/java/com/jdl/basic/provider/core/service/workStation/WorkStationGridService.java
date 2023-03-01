@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * 工序岗位网格表--Service接口
- * 
+ *
  * @author wuyoude
  * @date 2021年12月30日 14:30:43
  *
@@ -73,7 +73,7 @@ public interface WorkStationGridService {
 	 * @param data
 	 * @return
 	 */
-	WorkStationGrid queryByBusinessKeyWithCache(WorkStationGrid data);	
+	WorkStationGrid queryByBusinessKeyWithCache(WorkStationGrid data);
 	/**
 	 * 根据业务主键判断是否存在
 	 * @param data
@@ -111,7 +111,7 @@ public interface WorkStationGridService {
 	 */
 	Result<WorkStationGridCountVo> queryPageCount(WorkStationGridQuery query);
 	/**
-	 * 
+	 *
 	 * @param stationKey
 	 * @return
 	 */
@@ -143,7 +143,7 @@ public interface WorkStationGridService {
 	 * 查询erp列表
 	 * @param query
 	 */
-	List<String> queryOwnerUserErpListBySiteCode(WorkStationGridQuery query);	
+	List<String> queryOwnerUserErpListBySiteCode(WorkStationGridQuery query);
 	/**
 	 * 根据gridKey查询
 	 * @param workStationGridCheckQuery
@@ -152,4 +152,7 @@ public interface WorkStationGridService {
 	WorkStationGrid queryByGridKeyWithCache(WorkStationGridQuery workStationGridCheckQuery);
 
 	Result<WorkStationGrid> queryWorkStationGridBybusinessKeyWithCache(String businessKey);
+
+    Result<PageDto<WorkStationGrid>> queryAllWorkGridList(WorkStationGridQuery query);
+
 }
