@@ -6,15 +6,22 @@ import com.jdl.basic.api.domain.workStation.SiteAttendPlan;
 import com.jdl.basic.api.domain.workStation.SiteAttendPlanQuery;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
+import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.workStation.SiteAttendPlanDao;
 import com.jdl.basic.provider.core.service.workStation.SiteAttendPlanService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -57,9 +64,21 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
         if(!checkResult.isSuccess()){
             return Result.fail(checkResult.getMessage());
         }
-        List<SiteAttendPlan> pageList = siteAttendPlanDao.queryPageList(query);
+        List<Date> dateList = getDate(query);
+        log.info("dates {}", JsonHelper.toJSONString(dateList));
+        List<SiteAttendPlan> pageList = siteAttendPlanDao.queryPageList(query, dateList);
         result.setData(pageList);
         return result;
+    }
+
+    private List<Date> getDate(SiteAttendPlanQuery query) {
+        List<Date> dates = new ArrayList<>();
+        Date date = DateUtils.truncate(query.getStartTime(), Calendar.DATE);
+        do {
+            dates.add(date);
+            date = DateUtils.addDays(date, 1);
+        } while (date.before(query.getEndTime()));
+        return dates;
     }
 
     @Override
@@ -114,7 +133,8 @@ public class SiteAttendPlanServiceImpl implements SiteAttendPlanService {
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".SiteAttendPlanServiceImpl.queryTotalCount", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Long> queryTotalCount(SiteAttendPlanQuery query) {
-        List<Long> totalListCount = siteAttendPlanDao.queryTotalCount(query);
+        List<Date> dates = getDate(query);
+        List<Long> totalListCount = siteAttendPlanDao.queryTotalCount(query, dates);
         Long totalCount = totalListCount.stream().count();
         Result<Long> result = Result.success();
         return result.setData(totalCount);
