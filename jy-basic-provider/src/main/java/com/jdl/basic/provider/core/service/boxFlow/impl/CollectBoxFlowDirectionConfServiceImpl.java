@@ -65,25 +65,22 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
             Long id = conf.getId();
             //新规则，id校验
             if (id != null) {
-                result.fail("新规则不能有id");
-                return result;
+                return Result.fail("新规则不能有id");
             }
             if (conf.getStartSiteId() == null || conf.getEndSiteId() == null
                     || conf.getStartOrgId() == null || conf.getEndOrgId() == null
                     || conf.getFlowType() == null || conf.getTransportType() == null) {
-                result.fail("参数错误，不能为空");
                 log.error("newConfig未通过校验version{},参数:{}", conf.getVersion(), JsonHelper.toJSONString(conf));
-                return result;
+                return Result.fail("参数错误，不能为空");
             }
             if (!Arrays.asList(CollectBoxFlowDirectionConf.FLOW_TYPE_IN,
                     CollectBoxFlowDirectionConf.FLOW_TYPE_OUT).contains(conf.getFlowType())) {
-                result.fail("流向类型错误");
-                return result;
+                return Result.fail("流向类型错误");
             }
             if (!Arrays.asList(CollectBoxFlowDirectionConf.TRANSPORT_TYPE_AIR,
                     CollectBoxFlowDirectionConf.TRANSPORT_TYPE_HIGHWAY).contains(conf.getTransportType())) {
-                result.fail("运输类型错误");
-                return result;
+                
+                return Result.fail("运输类型错误");
             }
             //存在相同的规则校验
             CollectBoxFlowDirectionConf select = new CollectBoxFlowDirectionConf();
@@ -91,11 +88,9 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
             select.setTransportType(conf.getTransportType());
             select.setStartSiteId(conf.getStartSiteId());
             select.setEndSiteId(conf.getEndSiteId());
-            select.setVersion(conf.getVersion());
             List<CollectBoxFlowDirectionConf> contains = collectBoxFlowDirectionConfMapper.select(select);
             if (CollectionUtils.isNotEmpty(contains)) {
-                result.fail("已存在相同的规则");
-                return result;
+                return Result.fail("已存在此目的网点的规则，不能重复添加");
             }
             //新增
             if (conf.getCreateTime() == null) {
@@ -105,13 +100,12 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
             int i = collectBoxFlowDirectionConfMapper.insertSelective(conf);
             if (i != 1) {
                 log.info("新增配置失败，参数：{}", JSONObject.toJSONString(conf));
-                result.fail("新增失败");
-                return result;
+                return Result.fail("新增失败");
             }
             result.toSuccess();
         } catch (Exception e) {
             log.info("新增配置失败", e);
-            result.fail("新增失败" + e.getMessage());
+            return Result.fail("新增失败" + e.getMessage());
         }
         return result;
     }
@@ -122,8 +116,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         if (conf.getStartSiteId() == null || conf.getEndSiteId() == null
                 || conf.getStartOrgId() == null || conf.getEndOrgId() == null
                 || conf.getFlowType() == null || conf.getTransportType() == null) {
-            result.fail("参数错误，不能为空");
-            return result;
+            return result.toFail("参数错误，不能为空");
         }
         CollectBoxFlowDirectionConf query = new CollectBoxFlowDirectionConf();
         query.setStartSiteId(conf.getStartSiteId());
@@ -131,13 +124,11 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         query.setTransportType(conf.getTransportType());
         query.setFlowType(conf.getFlowType());
         query.setYn(true);
-        query.setVersion(conf.getVersion());
 
         //存在检验
         List<CollectBoxFlowDirectionConf> collectBoxFlowDirectionConfs = collectBoxFlowDirectionConfMapper.select(query);
         if (CollectionUtils.isEmpty(collectBoxFlowDirectionConfs)) {
-            result.fail("没有找到该配置");
-            return result;
+            return result.toFail("没有找到该配置");
         }
 
         CollectBoxFlowDirectionConf collectBoxFlowDirectionConf = collectBoxFlowDirectionConfs.get(0);
@@ -170,11 +161,11 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         if (conf.getIfChangeSinceLastUpdate() != null) {
             collectBoxFlowDirectionConf.setIfChangeSinceLastUpdate(conf.getIfChangeSinceLastUpdate());
         }
+        collectBoxFlowDirectionConf.setVersion(conf.getVersion());
 
         int i = collectBoxFlowDirectionConfMapper.updateByPrimaryKeySelective(collectBoxFlowDirectionConf);
         if (i != 1) {
-            result.fail("更新失败");
-            return result;
+            return result.toFail("更新失败");
         }
         log.setNewBoxReceiveId(conf.getBoxReceiveId());
         log.setNewBoxPkgName(conf.getBoxPkgName());
@@ -189,8 +180,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
 
         jdq4Producer.produce(collectBoxFlowDirectionConf.getId().toString(), log);//日志消息发送到消息队列
 
-        result.success(true);
-        return result;
+        return result.toSuccess();
     }
 
     @Override
@@ -260,7 +250,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
 
         } catch (Exception e) {
             log.error("更新或新规则异常，参数:{}", JSONObject.toJSONString(conf), e);
-            result.fail("更新或新规则异常" + e.getMessage());
+            return Result.fail("更新或新规则异常" + e.getMessage());
         }
         return result;
     }

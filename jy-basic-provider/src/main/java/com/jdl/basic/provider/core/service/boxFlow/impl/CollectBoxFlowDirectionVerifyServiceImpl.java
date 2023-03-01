@@ -52,7 +52,6 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
         collectBoxFlowDirectionConf.setEndSiteId(endSiteId);
         collectBoxFlowDirectionConf.setTransportType(transportType);
         collectBoxFlowDirectionConf.setFlowType(flowType);
-        collectBoxFlowDirectionConf.setVersion(version);
         List<CollectBoxFlowDirectionConf> lists = collectBoxFlowDirectionConfMapper.selectConfiged(collectBoxFlowDirectionConf);
         //没配置
         if (CollectionUtils.isEmpty(lists)) {

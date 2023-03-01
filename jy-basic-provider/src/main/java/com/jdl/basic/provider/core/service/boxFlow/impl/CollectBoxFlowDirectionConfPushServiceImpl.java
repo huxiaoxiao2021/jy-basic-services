@@ -62,7 +62,6 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
         log.info("大数据更新集包规则:{}", JSONObject.toJSONString(dto));
         try {
             cluster.set(COLLECT_BOX_FLOW_DIRECTION_LASTEST_CONF_TIME, DateHelper.getDateOfyyMMddHHmmss(new Date()));
-
             // 校验参数
             if (dto.getStartSiteId() == null ||
                     dto.getEndSiteId() == null ||
@@ -91,7 +90,9 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
                     dto.setEndOrgId(baseSiteBySiteId.getOrgId());
                 }
             }
-
+            //删除老版本数据
+            deleteAllOldVersion(dto.getUpdateDate());
+            
             CollectBoxFlowDirectionConf conf = new CollectBoxFlowDirectionConf();
             BeanUtils.copyProperties(dto, conf);
             conf.setUpdateTime(new Date());
@@ -116,8 +117,7 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
             }
             conf.setCreateUserErp(verifyResult.getData() == null ? "大数据推送规则" : verifyResult.getData().getCreateUserErp());
             conf.setYn(true);
-            //删除老版本数据
-            deleteAllOldVersion(dto.getUpdateDate());
+
 
             Result<Boolean> booleanBaseEntity = confService.updateOrNewConfig(conf);
             boolean success = booleanBaseEntity.isSuccess();
@@ -130,6 +130,7 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
             }
         }catch (Exception e){
             log.error("大数据更新集包规则异常",e);
+            result.toError("系统异常");
         }
         
         return result;
@@ -142,16 +143,20 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
         if(isUpdate != null){
            return; 
         }
-        //todo 批量删除
-        if(cluster.set(key, "1", 15, TimeUnit.DAYS, false)){
-            int count = 0;
-            int sum = 0;
-            do {
-                count = confService.deleteOldVersion(version, DELETE_COUNT);
-                sum += count;
-            }while (count > 0);
-            
-            log.info("删除历史版本数据key:{},isUpdate:{},count:{}", key, isUpdate, sum);
+        try {
+            if(cluster.set(key, "1", 15, TimeUnit.DAYS, false)){
+                int count = 0;
+                int sum = 0;
+                do {
+                    count = confService.deleteOldVersion(version, DELETE_COUNT);
+                    sum += count;
+                }while (count > 0);
+
+                log.info("删除历史版本数据key:{},isUpdate:{},count:{}", key, isUpdate, sum);
+            }
+        }catch (Exception e){
+            cluster.del(key);
+            throw e;
         }
     }
 
