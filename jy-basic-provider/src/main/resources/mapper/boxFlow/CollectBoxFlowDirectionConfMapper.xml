@@ -550,6 +550,6 @@
     </select>
     <delete id="deleteOldVersion" parameterType="java.util.Map">
         delete from collect_box_flow_direction_conf 
-        where version &lt; #{version,jdbcType=VARCHAR} and version is not null limit  #{deleteCount,jdbcType=INTEGER}
+        where version &lt; #{version,jdbcType=VARCHAR} limit  #{deleteCount,jdbcType=INTEGER}
     </delete>
 </mapper>
