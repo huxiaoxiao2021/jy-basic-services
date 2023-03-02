@@ -39,7 +39,7 @@ import java.util.*;
 
 /**
  * 工序岗位网格表--Service接口实现
- * 
+ *
  * @author wuyoude
  * @date 2021年12月30日 14:30:43
  *
@@ -51,14 +51,14 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	@Autowired
 	@Qualifier("workStationGridDao")
 	private WorkStationGridDao workStationGridDao;
-	
+
 	@Autowired
 	private WorkAbnormalGridBindingService workAbnormalGridBindingService;
-	
+
 	@Autowired
 	@Qualifier("workStationService")
 	WorkStationService workStationService;
-	
+
 	@Autowired
 	private BaseMajorRpc baseMajorManager;
 	@Autowired
@@ -66,10 +66,10 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 
 	@Autowired
 	private PositionRecordService positionRecordService;
-	
+
 	@Autowired
 	private WorkStationGridMachineService machineService;
-	
+
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -173,7 +173,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		}
 		if(!CheckHelper.checkStr("作业区ID", areaCode, 50, result).isSuccess()) {
 			return result;
-		}		
+		}
 		if(!CheckHelper.checkStr("工序ID", workCode, 50, result).isSuccess()) {
 			return result;
 		}
@@ -194,7 +194,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		}
 		data.setOrgName(orgName);
 		data.setSiteName(siteInfo.getSiteName());
-		
+
 		WorkStation workStationCheckQuery = new WorkStation();
 		workStationCheckQuery.setWorkCode(workCode);
 		workStationCheckQuery.setAreaCode(areaCode);
@@ -264,10 +264,10 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 
 		// 同步删除异常网格绑定数据
 		deleteWorkAbnormalGridBinding(queryResult.getData(),deleteData);
-		
+
 		// 同步删除绑定自动化设备
 		deleteMachineByRefGridKey(deleteData);
-		
+
 		// 同步删除岗位记录
 		String businessKey = queryResult.getData().getBusinessKey();
 		PositionRecord positionRecord = new PositionRecord();
@@ -350,7 +350,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(query.getPageNumber() > 0) {
 			query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
 		}
-		
+
 		return result;
 	 }
 
@@ -383,7 +383,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 				data.setBusinessKey(oldData.getBusinessKey());
 			}else {
 				data.setBusinessKey(generalBusinessKey());
-			}			
+			}
 			if(!Objects.equals(workStationGridDao.insert(data), Constants.YN_YES)){
 				throw  new RuntimeException("新增businessKey为:" + data.getBusinessKey() + "的数据失败");
 			}
@@ -441,9 +441,9 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(data != null ) {
 			return data.getSiteCode().toString()
 					.concat(DmsConstants.KEYS_SPLIT)
-					.concat(data.getFloor().toString())	
+					.concat(data.getFloor().toString())
 					.concat(DmsConstants.KEYS_SPLIT)
-					.concat(data.getGridNo())		
+					.concat(data.getGridNo())
 					.concat(DmsConstants.KEYS_SPLIT)
 					.concat(data.getRefStationKey());
 		}
@@ -606,4 +606,25 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		result.setData(workStationGridDao.queryWorkStationGridBybusinessKeyWithCache(businessKey));
 		return result;
 	}
+
+    @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryAllWorkGridList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<PageDto<WorkStationGrid>> queryAllWorkGridList(WorkStationGridQuery query) {
+        Result<PageDto<WorkStationGrid>> result = Result.success();
+        Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
+        if(!checkResult.isSuccess()){
+            return Result.fail(checkResult.getMessage());
+        }
+        PageDto<WorkStationGrid> pageData = new PageDto<>(query.getPageNumber(), query.getPageSize());
+        Long totalCount = workStationGridDao.queryCount(query);
+        if(totalCount != null && totalCount > 0){
+            pageData.setResult(workStationGridDao.queryList(query));
+            pageData.setTotalRow(totalCount.intValue());
+        }else {
+            pageData.setResult(new ArrayList<WorkStationGrid>());
+            pageData.setTotalRow(0);
+        }
+        result.setData(pageData);
+        return result;
+    }
 }

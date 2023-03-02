@@ -17,3 +17,5 @@
 /jy-basic-common/.project
 /jy-basic-provider/.project
 /jy-basic-rpc/.project
+*.iml
+*.DS_Store
