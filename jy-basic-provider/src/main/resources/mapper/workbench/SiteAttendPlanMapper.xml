@@ -37,20 +37,20 @@
     <sql id="queryCondition">
         <where>
             s.yn = 1
-            <if test="startTime != null">
-                and plan_attend_time <![CDATA[ >= ]]> #{startTime, jdbcType=TIMESTAMP}
+            <if test="query.orgCode != null">
+                and org_code = #{query.orgCode, jdbcType=INTEGER}
             </if>
-            <if test="endTime != null">
-                and plan_attend_time <![CDATA[ <= ]]> #{endTime, jdbcType=TIMESTAMP}
+            <if test="query.siteCode != null">
+                and site_code = #{query.siteCode, jdbcType=INTEGER}
             </if>
-            <if test="orgCode != null">
-                and org_code = #{orgCode, jdbcType=INTEGER}
+            <if test="query.status != null">
+                and status = #{query.status, jdbcType=TINYINT}
             </if>
-            <if test="siteCode != null">
-                and site_code = #{siteCode, jdbcType=INTEGER}
-            </if>
-            <if test="status != null">
-                and status = #{status, jdbcType=TINYINT}
+            <if test="dates != null and dates.size() > 0">
+                and plan_attend_time in
+                <foreach collection="dates" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
             </if>
         </where>
     </sql>
@@ -147,8 +147,8 @@
         <include refid="queryCondition"/>
         group by
             s.plan_attend_time, s.org_code, s.site_code
-        <if test="pageNumber > 0">
-            limit #{offset}, #{limit}
+        <if test="query.pageNumber > 0">
+            limit #{query.offset}, #{query.limit}
         </if>
     </select>
 

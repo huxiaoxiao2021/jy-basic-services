@@ -21,7 +21,7 @@ import java.util.List;
 
 /**
  * 工序岗位网格表--JsfService接口实现
- * 
+ *
  * @author wuyoude
  * @date 2021年12月30日 14:30:43
  *
@@ -155,12 +155,12 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 	 * 按条件查询统计信息
 	 * @param query
 	 * @return
-	 */	
-	@Override	
+	 */
+	@Override
 	public Result<WorkStationGridCountVo> queryPageCount(WorkStationGridQuery query){
 		log.info("场地网格工序管理 queryPageCount 入参-{}", JSON.toJSONString(query));
 		return workStationGridService.queryPageCount(query);
-	 }	
+	 }
 	@Override
 	public Result<List<WorkStationGrid>> queryAllGridBySiteCode(WorkStationGridQuery query) {
 		if(log.isInfoEnabled()){
@@ -293,7 +293,7 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 		}
 		Result<WorkStationGrid> result = Result.success();
 		result.setData(workStationGridService.queryByGridKeyWithCache(workStationGridCheckQuery));
-		return result;		
+		return result;
 	}
 
 	@Override
@@ -314,4 +314,12 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 		}
 		return result;
 	}
+
+    @Override
+    public Result<PageDto<WorkStationGrid>> queryAllWorkGridList(WorkStationGridQuery query) {
+        if(log.isInfoEnabled()){
+            log.info("场地网格工序管理 queryAllWorkGridList 入参-{}", JSON.toJSONString(query));
+        }
+        return workStationGridService.queryAllWorkGridList(query);
+    }
 }
