@@ -95,4 +95,12 @@ public interface PositionRecordService {
      */
     Result<PositionData> queryPositionInfo(String positionCode);
 
+    /**
+     * 根据业务主键查询岗位
+     *
+     * @param refGridKey
+     * @return
+     */
+    PositionRecord queryPositionByRefGridKey(String refGridKey);
+
 }

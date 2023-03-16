@@ -153,4 +153,20 @@ public class WorkStationGrid implements Serializable {
 	 * 自动化设备编码
 	 */
 	private List<Machine> machine;
+
+	/**
+	 * 月台号
+	 */
+	private String dockCode;
+
+	/**
+	 * 供应商编码
+	 */
+	private String supplierCode;
+
+	/**
+	 * 供应商名称
+	 */
+	private String supplierName;
+
 }

@@ -34,6 +34,14 @@ public interface PositionQueryJsfService {
     Result<Long> queryCountByCondition(PositionQuery query);
 
     /**
+     * 根据业务主键查询岗位码
+     *
+     * @param refGridKey
+     * @return
+     */
+    Result<String> queryPositionCodeByRefGridKey(String refGridKey);
+
+    /**
      * 根据岗位编码更新
      *
      * @param positionRecord

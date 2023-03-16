@@ -72,6 +72,8 @@ public interface PositionRecordDao {
      * @param businessKey
      * @return
      */
+    @Cache(key = "PositionRecordDao.queryByBusinessKey@args0", memoryEnable = true, memoryExpiredTime = 5 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 10 * 60 * 1000)
     PositionRecord queryByBusinessKey(String businessKey);
 
     /**
