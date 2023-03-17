@@ -593,8 +593,8 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 
 	@Override
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryByGridKeyWithCache", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-	@Cache(key = "WorkStationGridService.queryByGridKeyWithCache@args0", memoryEnable = true, memoryExpiredTime = 5 * 60 * 1000
-	,redisEnable = true, redisExpiredTime = 10 * 60 * 1000)
+	@Cache(key = "WorkStationGridService.queryByGridKeyWithCache@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+	,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
 	public WorkStationGrid queryByGridKeyWithCache(WorkStationGridQuery workStationGridQuery) {
 		return workStationGridDao.queryByGridKey(workStationGridQuery);
 	}

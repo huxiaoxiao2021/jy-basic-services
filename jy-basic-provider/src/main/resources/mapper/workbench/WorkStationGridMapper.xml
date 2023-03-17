@@ -52,7 +52,7 @@
 		g.id,g.business_key,g.org_code,g.org_name,g.site_code,g.site_name,
 		g.floor,g.grid_no,g.grid_code,g.grid_name,g.standard_num,
 		g.owner_user_erp,g.ref_station_key,g.create_user,g.create_user_name,g.update_user,
-		g.update_user_name,g.create_time,g.update_time,g.yn,g.ts
+		g.update_user_name,g.create_time,g.update_time,g.yn,g.ts,g.dock_code,g.supplier_code,g.supplier_name
 	</sql>
 
 	<insert id="insert" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGrid" useGeneratedKeys="true" keyProperty="id">
