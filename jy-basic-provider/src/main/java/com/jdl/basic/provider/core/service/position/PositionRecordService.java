@@ -94,5 +94,11 @@ public interface PositionRecordService {
      * @return
      */
     Result<PositionData> queryPositionInfo(String positionCode);
+    /**
+     * 根据gridKey-查询岗位信息
+     * @param gridKey
+     * @return
+     */
+    PositionData queryPositionByGridKeyWithCache(String gridKey);
 
 }

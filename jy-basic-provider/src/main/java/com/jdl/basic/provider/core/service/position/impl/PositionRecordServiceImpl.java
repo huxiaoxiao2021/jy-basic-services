@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.core.service.position.impl;
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
@@ -245,5 +246,18 @@ public class PositionRecordServiceImpl implements PositionRecordService {
         }
         positionData.setDefaultMenuCode(entity.getFuncCode());
     }
+
+	@Override
+    @Cache(key = "PositionRecordServiceImpl.queryPositionByGridKeyWithCache@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+    ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
+	public PositionData queryPositionByGridKeyWithCache(String gridKey) {
+		PositionRecord data = positionRecordDao.queryByBusinessKey(gridKey);
+		if(data != null) {
+			PositionData returnData = new PositionData();
+			BeanUtils.copyProperties(data, returnData);
+			return returnData;
+		}
+		return null;
+	}
 
 }
