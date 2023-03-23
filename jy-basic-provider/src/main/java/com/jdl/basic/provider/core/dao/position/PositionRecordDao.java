@@ -89,4 +89,11 @@ public interface PositionRecordDao {
      * @return
      */
     Long queryCount(PositionQuery query);
+    /**
+     * 根据gridKey查询数据
+     *
+     * @param gridKey
+     * @return
+     */
+    PositionRecord queryByGridKey(String gridKey);
 }

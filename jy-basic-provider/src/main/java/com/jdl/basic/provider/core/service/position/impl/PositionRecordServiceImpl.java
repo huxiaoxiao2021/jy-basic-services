@@ -251,7 +251,7 @@ public class PositionRecordServiceImpl implements PositionRecordService {
     @Cache(key = "PositionRecordServiceImpl.queryPositionByGridKeyWithCache@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
     ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
 	public PositionData queryPositionByGridKeyWithCache(String gridKey) {
-		PositionRecord data = positionRecordDao.queryByBusinessKey(gridKey);
+		PositionRecord data = positionRecordDao.queryByGridKey(gridKey);
 		if(data != null) {
 			PositionData returnData = new PositionData();
 			BeanUtils.copyProperties(data, returnData);
