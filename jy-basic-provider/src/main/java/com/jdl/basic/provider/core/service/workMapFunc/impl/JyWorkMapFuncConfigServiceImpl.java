@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.service.workMapFunc.impl;
 
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.workMapFunc.JyWorkMapFuncConfigDetailVO;
@@ -87,6 +88,8 @@ public class JyWorkMapFuncConfigServiceImpl implements JyWorkMapFuncConfigServic
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyWorkMapFuncConfigServiceImpl.queryFuncCodeMap", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    @Cache(key = "JyWorkMapFuncConfigServiceImpl.queryFuncCodeMap", memoryEnable = true, memoryExpiredTime = 60 * 1000,
+            redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
     public HashMap<String, String> queryFuncCodeMap() {
         HashMap<String, String> funcCodeMap = new HashMap<>();
         List<JyWorkMapFuncConfigEntity> entities = jyWorkMapFuncConfigDao.queryFuncCodeMap();
