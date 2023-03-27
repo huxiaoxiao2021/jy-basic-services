@@ -195,7 +195,7 @@
                   timeout="100000000"
                   interface="com.jd.lsb.task.handler.Handler"
                   ref="epfExpInfoTask"
-                  alias="${lsf.jsf.ExpInfoTask.alias}"
+                  alias="${jsf.ExpInfoTask.alias}"
                   server="jsf">
     </jsf:provider>
 </beans>

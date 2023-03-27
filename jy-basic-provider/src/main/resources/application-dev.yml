@@ -109,6 +109,8 @@ jsf:
   jy_basic:
     alias: jy-basic-server-dev
     token: jy-basic-server-token
+  ExpInfoTask:
+    alias: jy-basic-server-dev
 
 basic:
   jsf:
