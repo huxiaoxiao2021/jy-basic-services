@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jdl.basic.provider.core.dao.boxFlow.CollectBoxFlowInfoDao">
+  <resultMap id="BaseResultMap" type="com.jdl.basic.api.domain.boxFlow.CollectBoxFlowInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="version" jdbcType="VARCHAR" property="version" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="operate_type" jdbcType="TINYINT" property="operateType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="yn" jdbcType="TINYINT" property="yn" />
+    <result column="ts" jdbcType="TIMESTAMP" property="ts" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from collect_box_flow_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.jdl.basic.api.domain.boxFlow.CollectBoxFlowInfo">
+    insert into collect_box_flow_info (version, status,
+                                       operate_type, create_time, update_time,
+                                       yn)
+    values (#{version,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT},
+            #{operateType,jdbcType=TINYINT}, now(), now(),
+            1)
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.jdl.basic.api.domain.boxFlow.CollectBoxFlowInfo">
+    update collect_box_flow_info
+    set 
+        
+        version = #{version,jdbcType=VARCHAR},
+        status = #{status,jdbcType=TINYINT},
+        operate_type = #{operateType,jdbcType=TINYINT},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        yn = #{yn,jdbcType=TINYINT},
+        ts = #{ts,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, version, status, operate_type, create_time, update_time, yn, ts
+    from collect_box_flow_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, version, status, operate_type, create_time, update_time, yn, ts
+    from collect_box_flow_info
+  </select>
+  <select id="selectByVersion" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select id, version, create_time, status
+    from collect_box_flow_info
+    where yn = 1
+    and version = #{version,jdbcType=VARCHAR}
+  </select>
+    <select id="selectByCreateTimeAndStatus" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select id, version, create_time, status
+        from collect_box_flow_info
+        where yn = 1
+        <if test="startTime != null">
+            and create_time &gt;= #{startTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="endTime != null">
+            and create_time &lt; #{endTime,jdbcType=TIMESTAMP}
+        </if>
+        and status = #{status,jdbcType=TINYINT}
+        order by id asc 
+        limit 1
+    </select>
+    <update id="updateByPrimaryKeySelective" parameterType="com.jdl.basic.api.domain.boxFlow.CollectBoxFlowInfo">
+        update collect_box_flow_info
+        <set>
+            <if test="version != null">
+                version = #{version,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="operateType != null">
+                operate_type = #{operateType,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="yn != null">
+                yn = #{yn,jdbcType=TINYINT},
+            </if>
+            <if test="ts != null">
+                ts = #{ts,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

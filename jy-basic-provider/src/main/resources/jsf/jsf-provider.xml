@@ -191,5 +191,12 @@
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
+    <jsf:provider id="lspEpfExpInfoTask"
+                  timeout="100000000"
+                  interface="com.jd.lsb.task.handler.Handler"
+                  ref="epfExpInfoTask"
+                  alias="${lsf.jsf.ExpInfoTask.alias}"
+                  server="jsf">
+    </jsf:provider>
 </beans>
 

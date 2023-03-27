@@ -24,4 +24,7 @@ public interface CollectBoxFlowDirectionConfJsfService {
      */
     Result<Pager<CollectBoxFlowDirectionConf>> listByParamAndWhetherConfiged(Pager<CollectBoxFlowDirectionConf> pager, Boolean configed);
 
+    Result<Boolean> rollbackVersion();
+    
+
 }

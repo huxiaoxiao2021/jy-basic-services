@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+    http://code.jd.com/schema/jmq
+    http://code.jd.com/schema/jmq/jmq-1.1.xsd"
+       xmlns:jmq="http://code.jd.com/schema/jmq"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans">
+
+    <jmq:transport id="jmq4.transport"
+                   address="${jmq.producers.basic-producer-jmq4.address}"
+                   user="${jmq.producers.basic-producer-jmq4.app}"
+                   password="${jmq.producers.basic-producer-jmq4.password}"
+                   app="${jmq.producers.basic-producer-jmq4.app}"/>
+
+
+    <jmq:producer id="messageSenderParent" transport="jmq4.transport" />
+
+    <!--dms生产者配置，适配JMQ分离组件-->
+    <bean id="jyBasicProducerSplit" class="com.jd.jspliter.jmq.producer.EnvMessageProducer" parent="messageSenderParent">
+        <property name="uat" value="${jmq.split.uat.switch}"/>
+    </bean>
+</beans>

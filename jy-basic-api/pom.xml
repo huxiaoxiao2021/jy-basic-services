@@ -12,7 +12,7 @@
 
     <groupId>com.jdl.basic</groupId>
     <artifactId>jy-basic-api</artifactId>
-    <version>1.4.3-SNAPSHOT</version>
+    <version>1.4.4.dev-SNAPSHOT</version>
     <name>jy-basic-api</name>
     <description>基础信息服务api</description>
 
