@@ -6,17 +6,24 @@ import com.jdl.basic.api.domain.cross.*;
 import com.jdl.basic.api.service.cross.SortCrossJsfService;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.BeanUtils;
+import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.provider.common.Jimdb.CacheService;
 import com.jdl.basic.provider.core.dao.cross.SortCrossDetailDao;
 import com.jdl.basic.provider.core.service.cross.SortCrossService;
 import com.jdl.basic.provider.dto.SortCrossModifyDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static com.jdl.basic.common.contants.CacheKeyConstants.CACHE_KEY_INSERT_OR_UPDATE_SORT_CROSS;
 
 /**
  * @author liwenji
@@ -32,6 +39,12 @@ public class SortCrossServiceImpl implements SortCrossService {
     
     @Autowired
     private SortCrossJsfService sortCrossService;
+
+    @Resource
+    @Qualifier("JimdbCacheService")
+    private CacheService cacheService;
+    
+    private static final String INSERT_EVENT = "INSERT";
     
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossServiceImpl.queryPage", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
@@ -131,20 +144,46 @@ public class SortCrossServiceImpl implements SortCrossService {
         if(sortCrossDetail == null) {
             return false;
         }
-        SortCrossDetail detail = crossDetailDao.selectByPrimaryKey(sortCrossDetail.getId());
         
-        if (detail != null ) {
-            if ( crossDetailDao.updateByPrimaryKeySelective(sortCrossDetail) < 0 ) {
+        if (sortCrossDetail.getId() == null) {
+            log.error("新增或更新滑道笼车数据没有主键ID：{}",JsonHelper.toJSONString(sortCrossModifyDto));
+            return true;
+        }
+        String key = String.format(CACHE_KEY_INSERT_OR_UPDATE_SORT_CROSS,sortCrossDetail.getId());
+
+        try{
+            boolean getLock = cacheService.setNx(key, 1 + "", 60, TimeUnit.SECONDS);
+
+            if (!getLock) {
+                log.info("新增或更新滑道笼车数据获取锁失败{}",key);
                 return false;
             }
-        }else {
-            sortCrossDetail.setSiteType(0);
-            if (crossDetailDao.insert(sortCrossDetail) < 0) {
-                return false;
+
+            SortCrossDetail detail = crossDetailDao.selectByPrimaryKey(sortCrossDetail.getId());
+
+            if (detail != null ) {
+                
+                // 并发消费insert和update场景：先消费update消息再消费insert消息时，忽略insert消息
+                if (sortCrossModifyDto.getEventType().equals(INSERT_EVENT)) {
+                    return true;
+                }
+                
+                if ( crossDetailDao.updateByPrimaryKeySelective(sortCrossDetail) < 0 ) {
+                    return false;
+                }
+            }else {
+                sortCrossDetail.setSiteType(0);
+                if (crossDetailDao.insert(sortCrossDetail) < 0) {
+                    return false;
+                }
+                if (!sortCrossService.initSiteType(sortCrossDetail)) {
+                    return false;
+                }
             }
-            if (!sortCrossService.initSiteType(sortCrossDetail)) {
-                return false;
-            }
+        }catch (Exception e){
+            log.error("新增或更新滑道笼车数据异常：{}", JsonHelper.toJSONString(sortCrossModifyDto),e);
+        }finally {
+            cacheService.del(key);
         }
         return true;
     }

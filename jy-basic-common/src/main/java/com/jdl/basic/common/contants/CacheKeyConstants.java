@@ -280,4 +280,9 @@ public class CacheKeyConstants {
      */
     public static final String CACHE_KEY_CONFIG_TRANSFER_DP = "k_c_transfer_dp:%s:%s";
     public static final Integer CACHE_CONFIG_TRANSFER_DP_TIME_EXPIRE = 5;
+
+    /**
+     * 消费滑道笼车mq锁
+     */
+    public static final String CACHE_KEY_INSERT_OR_UPDATE_SORT_CROSS = "k_sort_cross_upsert:%s";
 }
