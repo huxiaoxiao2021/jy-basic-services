@@ -17,6 +17,6 @@
 
     <!--dms生产者配置，适配JMQ分离组件-->
     <bean id="jyBasicProducerSplit" class="com.jd.jspliter.jmq.producer.EnvMessageProducer" parent="messageSenderParent">
-        <property name="uat" value="${jmq.split.uat.switch}"/>
+<!--        <property name="uat" value="${spring.jmq.split.uat.switch}"/>-->
     </bean>
 </beans>

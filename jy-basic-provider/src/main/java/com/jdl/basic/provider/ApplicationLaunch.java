@@ -31,8 +31,7 @@ import org.springframework.context.annotation.PropertySource;
 //)
 @ImportResource(value = {
         "classpath:jsf/jsf-provider.xml",
-        "classpath:jsf/jsf-consumer.xml",
-        "classpath:jmq/jmq-conf.xml"
+        "classpath:jsf/jsf-consumer.xml"
 })
 @ImportAutoConfiguration(value = SpringBootConfiguration.class)
 @Slf4j

@@ -52,12 +52,16 @@ spring:
         app: JYBasic
         address: test-nameserver.jmq.jd.local:50088
         enabled: true
+    split:
+      uat:
+        switch: false
 
 ####--topic 定义--#############################################################
 mq:
   topic:
     #叉车完成
     fork-lift-topic: ky_fork_lift_complete
+    collectBoxFlowNotice: collect_box_flow_notice
 
   consumer:
     topic:
