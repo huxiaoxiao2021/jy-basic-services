@@ -180,9 +180,9 @@
 		<include refid="Base_Detail_Column_List"/>
 		from
 			position_record p
-		left join
+		inner join
 			work_station_grid g on g.business_key = p.ref_grid_key and g.yn = 1
-		left join
+		inner join
 			work_station s on g.ref_station_key = s.business_key and s.yn = 1
 		where p.yn = 1
 		and p.position_code = #{positionCode,jdbcType=VARCHAR}
@@ -202,9 +202,9 @@
 			<include refid="Base_Detail_Column_List"/>
 		from
 			position_record p
-		left join
+		inner join
 			work_station_grid g on g.business_key = p.ref_grid_key and g.yn = 1
-		left join
+		inner join
 			work_station s on g.ref_station_key = s.business_key and s.yn = 1
 		<include refid="queryCondition"/>
 		limit #{offset}, #{limit}
@@ -215,9 +215,9 @@
 		       count(1)
 		from
 			position_record p
-		left join
+		inner join
 			work_station_grid g on g.business_key = p.ref_grid_key and g.yn = 1
-		left join
+		inner join
 			work_station s on g.ref_station_key = s.business_key and s.yn = 1
 		<include refid="queryCondition"/>
 	</select>
