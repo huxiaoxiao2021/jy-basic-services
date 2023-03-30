@@ -206,55 +206,61 @@
 <!--            </dependency>-->
 
             <!--jmq-->
-<!--            <dependency>-->
-<!--                <groupId>com.jd.jmq</groupId>-->
-<!--                <artifactId>jmq-client-spring</artifactId>-->
-<!--                <version>${jd.jmq.version}</version>-->
-<!--                <exclusions>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.springframework</groupId>-->
-<!--                        <artifactId>spring-beans</artifactId>-->
-<!--                    </exclusion>-->
-<!--                </exclusions>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>com.jd.jmq</groupId>-->
-<!--                <artifactId>jmq-client-core</artifactId>-->
-<!--                <version>${jd.jmq.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>com.jd.jmq</groupId>-->
-<!--                <artifactId>jmq-client-ump</artifactId>-->
-<!--                <version>${jd.jmq.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>com.jd.jspliter</groupId>-->
-<!--                <artifactId>jspliter-jmq</artifactId>-->
-<!--                <version>${jd.jmq.jspliter.version}</version>-->
-<!--                <exclusions>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.springframework</groupId>-->
-<!--                        <artifactId>spring-context</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.springframework</groupId>-->
-<!--                        <artifactId>spring-beans</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.springframework</groupId>-->
-<!--                        <artifactId>spring-context-support</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.springframework</groupId>-->
-<!--                        <artifactId>spring-test</artifactId>-->
-<!--                    </exclusion>-->
-<!--                </exclusions>-->
-<!--            </dependency>-->
+            <dependency>
+                <groupId>com.jd.jmq</groupId>
+                <artifactId>jmq-client-spring</artifactId>
+                <version>${jd.jmq.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-beans</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.jd.jmq</groupId>
+                <artifactId>jmq-client-core</artifactId>
+                <version>${jd.jmq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jd.jmq</groupId>
+                <artifactId>jmq-client-ump</artifactId>
+                <version>${jd.jmq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jd.jspliter</groupId>
+                <artifactId>jspliter-jmq</artifactId>
+                <version>${jd.jmq.jspliter.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-context</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-beans</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-context-support</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-test</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
             <!-- lsb 任务引擎 -->
             <dependency>
                 <groupId>com.jd.lsb</groupId>
                 <artifactId>lsb-task-api</artifactId>
                 <version>${jd.lsb.task.api}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.jd</groupId>
+                        <artifactId>jsf</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>

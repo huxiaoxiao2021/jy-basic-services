@@ -3,8 +3,6 @@ package com.jdl.basic.provider.core.service.boxFlow.impl;
 import com.alibaba.fastjson.JSONObject;
 
 import com.jd.jim.cli.Cluster;
-import com.jd.jmq.client.producer.MessageProducer;
-import com.jd.jmq.common.message.Message;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jd.ql.basic.util.DateUtil;
 import com.jd.ql.basic.ws.BasicPrimaryWS;
@@ -41,6 +39,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.jdl.basic.common.enums.CollectBoxFlowInfoOperateTypeEnum.ACTIVATE;
 import static com.jdl.basic.common.enums.CollectBoxFlowInfoOperateTypeEnum.ADD;
+import static com.jdl.basic.common.enums.CollectBoxFlowInfoStatusEnum.HISTORY;
 import static com.jdl.basic.common.enums.CollectBoxFlowInfoStatusEnum.UNACTIVATED;
 
 @Service("collectBoxFlowDirectionConfPushService")
@@ -75,6 +74,8 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
     public static String COLLECT_BOX_FLOW_DIRECTION_LASTEST_CONF_TIME = "COLLECT_BOX_FLOW_DIRECTION_LASTEST_CONF_TIME";
     
     public static String COLLECT_BOX_FLOW_DIRECTION_VERSION_UPDATE = "COLLECT_BOX_FLOW_DIRECTION_VERSION_UPDATE-";
+    public static String COLLECT_BOX_FLOW_ADD_AND_DELETE_HISTORY = "COLLECT_BOX_FLOW_ADD_AND_DELETE_HISTORY-";
+    
 
 
     @Override
@@ -114,7 +115,7 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
                 }
             }
             //删除老版本数据
-            addCollectBoxFlowInfo(dto.getUpdateDate());
+            addAndDeleteHistory(dto.getUpdateDate());
             
             
             CollectBoxFlowDirectionConf conf = new CollectBoxFlowDirectionConf();
@@ -160,33 +161,46 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
         return result;
     }
     
-    private void deleteAllOldVersion(String version){
-        String key = COLLECT_BOX_FLOW_DIRECTION_VERSION_UPDATE + version;
-        String isUpdate = cluster.get(key);
-        log.info("查询缓存判断历史版本是否已清除key:{},isUpdate:{}", key, isUpdate);
-        if(isUpdate != null){
-           return; 
-        }
+    private void addAndDeleteHistory(String version){
+        String key = COLLECT_BOX_FLOW_ADD_AND_DELETE_HISTORY + version;
         try {
-            if(cluster.set(key, "1", 15, TimeUnit.DAYS, false)){
-                int count = 0;
-                int sum = 0;
-                do {
-                    count = confService.deleteOldVersion(version, DELETE_COUNT);
-                    sum += count;
-                }while (count > 0);
-
-                log.info("删除历史版本数据key:{},isUpdate:{},count:{}", key, isUpdate, sum);
+            if(cluster.set(key, "1", 5, TimeUnit.MINUTES, false)){
+                boolean isNew = addCollectBoxFlowInfo(version);
+                if(isNew){
+                    deleteHistory();
+                }
             }
         }catch (Exception e){
-            cluster.del(key);
+            log.error("大数据推送小件集包新版本，新增版本信息删除历史时异常", e);
             throw e;
+        }finally {
+            cluster.del(key);
         }
     }
+    
+    private void deleteHistory(){
+        CollectBoxFlowInfo history = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null, HISTORY.getCode());
+        if(history == null){
+            log.info("大数据推送小件集包新版本，未查到历史版本数据");
+            return;
+        }
+        int count = 0;
+        int sum = 0;
+        do {
+            count = confService.deleteByVersion(history.getVersion(), DELETE_COUNT);
+            sum += count;
+        }while (count > 0);
+
+        log.info("大数据推送小件集包新版本,删除历史版本数据version:{},sum:{}", history.getVersion(), sum);
+    }
     //新增集包规则主表信息
-    private void addCollectBoxFlowInfo(String version){
+    private boolean addCollectBoxFlowInfo(String version){
         
         CollectBoxFlowInfo collectBoxFlowInfo = collectBoxFlowInfoDao.selectByVersion(version);
+        if(collectBoxFlowInfo != null){
+            log.error("大数据推送小件集包新版本:{}", version);
+            return false;
+        }
 
         //发jmq center消费推送消息
         CollectBoxFlowNoticDto noticDto = initCollectBoxFlowNoticDto(version);
@@ -194,14 +208,12 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
             collectBoxFlowNoticeMQ.send(version, JsonHelper.toJSONString(noticDto));
         } catch (Exception ex) {
             log.error("大数据推送新箱号规则，MQ发送通知失败:{}",version, ex);
-            return;
+            return false;
         }
         // 新增版本
-        if(collectBoxFlowInfo == null){
-            CollectBoxFlowInfo entity = initCollectBoxFlowInfo(version);
-            collectBoxFlowInfoDao.insert(entity);
-        }
-        
+        CollectBoxFlowInfo entity = initCollectBoxFlowInfo(version);
+        collectBoxFlowInfoDao.insert(entity);
+        return true;
     }
     
     

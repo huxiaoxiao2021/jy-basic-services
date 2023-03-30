@@ -125,6 +125,8 @@ public class CollectBoxFlowDirectionConfQuery {
      * 目的站点ids
      */
     private List<Integer> endSiteIds;
+    
+    private String version;
 
 
 }

@@ -191,11 +191,11 @@
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
-    <jsf:provider id="lspEpfExpInfoTask"
+    <jsf:provider id="lspBoxFlowDirectionConfTask"
                   timeout="100000000"
                   interface="com.jd.lsb.task.handler.Handler"
-                  ref="epfExpInfoTask"
-                  alias="${jsf.ExpInfoTask.alias}"
+                  ref="collectBoxFlowDirectionConfJsfServiceImpl"
+                  alias="${jsf.jy_basic.alias}"
                   server="jsf">
     </jsf:provider>
 </beans>

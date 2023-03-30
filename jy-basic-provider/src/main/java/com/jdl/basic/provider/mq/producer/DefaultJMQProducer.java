@@ -16,7 +16,7 @@ import java.util.List;
 public class DefaultJMQProducer {
 
 
-    @Autowired
+    @Autowired(required = false)
     @Qualifier("jyBasicProducerSplit")
     private MessageProducer envMessageProducer;
 

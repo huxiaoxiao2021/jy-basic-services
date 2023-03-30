@@ -25,4 +25,5 @@ public interface CollectBoxFlowInfoDao {
                                                    @Param("status")Integer status);
 
     int updateByPrimaryKeySelective(CollectBoxFlowInfo record);
+
 }

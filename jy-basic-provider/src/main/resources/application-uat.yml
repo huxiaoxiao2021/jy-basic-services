@@ -52,9 +52,6 @@ spring:
         app: JYBasic
         address: nameserver.jmq.jd.local:80
         enabled: true
-    split:
-      uat:
-        switch: true
 
   ####--topic 定义--#############################################################
 mq:
@@ -66,7 +63,9 @@ mq:
   consumer:
     topic:
       sort_cross_detail: basic_sort_cross_detail
-
+  split:
+    uat:
+      switch: true
 
 
 
@@ -102,8 +101,7 @@ jsf:
   jy_basic:
     alias: jy-basic-server-uat
     token: anktYmFzaWMtc2VydmVyLXRva2Vu
-  ExpInfoTask:
-    alias: jy-basic-server-uat
+
 basic:
   jsf:
     token: 96KYOS24GJ

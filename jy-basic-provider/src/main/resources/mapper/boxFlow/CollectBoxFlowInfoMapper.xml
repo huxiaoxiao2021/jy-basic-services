@@ -44,6 +44,8 @@
   <select id="selectAll" resultMap="BaseResultMap">
     select id, version, status, operate_type, create_time, update_time, yn, ts
     from collect_box_flow_info
+    where yn = 1
+    order by status desc 
   </select>
   <select id="selectByVersion" resultMap="BaseResultMap" parameterType="java.lang.String">
     select id, version, create_time, status

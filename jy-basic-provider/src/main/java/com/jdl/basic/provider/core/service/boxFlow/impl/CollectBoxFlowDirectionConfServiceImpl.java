@@ -5,8 +5,6 @@ import com.github.pagehelper.PageHelper;
 
 import com.jd.fastjson.JSONObject;
 import com.jd.jim.cli.Cluster;
-import com.jd.jmq.client.producer.MessageProducer;
-import com.jd.jmq.common.message.Message;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf;
@@ -20,6 +18,7 @@ import com.jdl.basic.provider.config.jdq.JDQ4Producer;
 import com.jdl.basic.provider.core.dao.boxFlow.CollectBoxFlowDirectionConfDao;
 import com.jdl.basic.provider.core.dao.boxFlow.CollectBoxFlowInfoDao;
 import com.jdl.basic.provider.core.service.boxFlow.ICollectBoxFlowDirectionConfService;
+import com.jdl.basic.provider.mq.producer.DefaultJMQProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +53,10 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
     private CollectBoxFlowInfoDao collectBoxFlowInfoDao;
 
     @Autowired(required = false)
-    @Qualifier("messageSender")
-    private MessageProducer messageSender;
+    @Qualifier("collectBoxFlowNoticeMQ")
+    private DefaultJMQProducer collectBoxFlowNoticeMQ;
 
-    @Value("${jmq.topic.collectBoxFlowNotic}")
+    @Value("${mq.topic.collectBoxFlowNotice:}")
     private String collectBoxFlowNoticTopic;
 
     @Override
@@ -108,6 +107,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
             select.setTransportType(conf.getTransportType());
             select.setStartSiteId(conf.getStartSiteId());
             select.setEndSiteId(conf.getEndSiteId());
+            select.setVersion(conf.getVersion());
             List<CollectBoxFlowDirectionConf> contains = collectBoxFlowDirectionConfMapper.select(select);
             if (CollectionUtils.isNotEmpty(contains)) {
                 return Result.fail("已存在此目的网点的规则，不能重复添加");
@@ -275,8 +275,8 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         return result;
     }
     @Override
-    public int deleteOldVersion(String version, Integer deleteCount){
-        return collectBoxFlowDirectionConfMapper.deleteOldVersion(version, deleteCount);
+    public int deleteByVersion(String version, Integer deleteCount){
+        return collectBoxFlowDirectionConfMapper.deleteByVersion(version, deleteCount);
     }
 
     /**
@@ -303,24 +303,25 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         log.info("根据时间查询参数开始:{},结束:{}未查到待激活版本", DateHelper.getDateOfyyMMddHHmmss(startTime),
                 DateHelper.getDateOfyyMMddHHmmss(endTime));
         //历史版本
-        CollectBoxFlowInfo history = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null,
-                HISTORY.getCode());
-        //删除历史版本
-        if(history != null){
-            collectBoxFlowInfoDao.deleteByPrimaryKey(history.getId());
-            int count = 0;
-            int sum = 0;
-            do {
-                count = deleteOldVersion(history.getVersion(), DELETE_COUNT);
-                sum += count;
-            }while (count > 0);
-            log.info("删除历史版本数据version:{},count:{}", history.getVersion(), sum);
-        }
+//        CollectBoxFlowInfo history = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null,
+//                HISTORY.getCode());
+//        //删除历史版本
+//        if(history != null){
+//            collectBoxFlowInfoDao.deleteByPrimaryKey(history.getId());
+//            int count = 0;
+//            int sum = 0;
+//            do {
+//                count = deleteByVersion(history.getVersion(), DELETE_COUNT);
+//                sum += count;
+//            }while (count > 0);
+//            log.info("删除历史版本数据version:{},count:{}", history.getVersion(), sum);
+//        }
 
         //当前版本
         CollectBoxFlowInfo current = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null,
                 CURRENT.getCode());
         if(current == null){
+            log.error("小件集包规则，定时切换时未查到已激活版本");
             throw new Exception("未查到激活的版本");
         }
         //当前版本改成历史版本
@@ -385,13 +386,17 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         
         //发送通知
         CollectBoxFlowNoticDto dto = initCollectBoxFlowNoticDto(history.getVersion());
-        Message message = new Message(collectBoxFlowNoticTopic, JsonHelper.toJSONString(dto),history.getVersion());
         try {
-            messageSender.send(message);
+            collectBoxFlowNoticeMQ.send(history.getVersion(), JsonHelper.toJSONString(dto));
         } catch (Exception ex) {
             log.error("回滚箱号版本MQ发送通知失败:{}",history.getVersion(), ex);
         }
         return result;
+    }
+
+    @Override
+    public List<CollectBoxFlowInfo> selectAllCollectBoxFlowInfo() {
+        return collectBoxFlowInfoDao.selectAll();
     }
 
     private CollectBoxFlowNoticDto initCollectBoxFlowNoticDto(String version){

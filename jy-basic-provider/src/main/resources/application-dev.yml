@@ -52,9 +52,6 @@ spring:
         app: JYBasic
         address: test-nameserver.jmq.jd.local:50088
         enabled: true
-#    split:
-#      uat:
-#        switch: false
 
 
 ####--topic 定义--#############################################################
@@ -62,7 +59,7 @@ mq:
   topic:
     #叉车完成
     fork-lift-topic: ky_fork_lift_complete
-#    collectBoxFlowNotice: collect_box_flow_notice
+    collectBoxFlowNotice: collect_box_flow_notice
 
   consumer:
     topic:
@@ -109,8 +106,6 @@ jsf:
   jy_basic:
     alias: jy-basic-server-dev
     token: jy-basic-server-token
-  ExpInfoTask:
-    alias: jy-basic-server-dev
 
 basic:
   jsf:

@@ -2,8 +2,11 @@ package com.jdl.basic.provider.core.service.boxFlow;
 
 
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf;
+import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowInfo;
 import com.jdl.basic.common.utils.Pager;
 import com.jdl.basic.common.utils.Result;
+
+import java.util.List;
 
 
 public interface ICollectBoxFlowDirectionConfService {
@@ -25,10 +28,12 @@ public interface ICollectBoxFlowDirectionConfService {
 
     Result<Boolean> updateOrNewConfig(CollectBoxFlowDirectionConf conf);
 
-    int deleteOldVersion(String version, Integer deleteCount);
+    int deleteByVersion(String version, Integer deleteCount);
 
     void switchNewVersion() throws Exception;
 
     Result<Boolean> rollbackVersion();
+
+    List<CollectBoxFlowInfo> selectAllCollectBoxFlowInfo();
     
 }

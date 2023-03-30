@@ -26,6 +26,7 @@
         <result column="yn" jdbcType="BOOLEAN" property="yn"/>
         <result column="collect_claim" jdbcType="INTEGER" property="collectClaim"/>
         <result column="if_change_since_last_update" jdbcType="INTEGER" property="ifChangeSinceLastUpdate"/>
+        <result column="version" jdbcType="VARCHAR" property="version"/>
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
@@ -490,9 +491,10 @@
         <if test="configed==false">
             and (box_receive_id is  null or box_receive_id=-1)
         </if>
-        <if test="configed == null">
+        <if test="conf.version != null">
+            and version = #{conf.version,jdbcType=VARCHAR}
         </if>
-
+        
     </select>
 
     <select id="selectByStartSiteIdAndEndSiteIds" resultMap="BaseResultMap">
@@ -548,8 +550,8 @@
             </foreach>
         </if>
     </select>
-    <delete id="deleteOldVersion" parameterType="java.util.Map">
+    <delete id="deleteByVersion" parameterType="java.util.Map">
         delete from collect_box_flow_direction_conf 
-        where version &lt; #{version,jdbcType=VARCHAR} limit  #{deleteCount,jdbcType=INTEGER}
+        where version = #{version,jdbcType=VARCHAR} limit  #{deleteCount,jdbcType=INTEGER}
     </delete>
 </mapper>

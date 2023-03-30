@@ -9,16 +9,24 @@ import com.jd.lsb.task.handler.Handler;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf;
+import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowInfo;
+import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowInfoDto;
 import com.jdl.basic.api.service.boxFlow.CollectBoxFlowDirectionConfJsfService;
 import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.common.enums.CollectBoxFlowInfoStatusEnum;
+import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.Pager;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.service.boxFlow.ICollectBoxFlowDirectionConfService;
-import com.jdl.basic.provider.core.service.boxFlow.impl.CollectBoxFlowDirectionConfServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -96,5 +104,35 @@ public class CollectBoxFlowDirectionConfJsfServiceImpl implements CollectBoxFlow
         }
         
     }
+    @Override
+    public Result<List<CollectBoxFlowInfoDto>> selectAllCollectBoxFlowInfo(){
+        Result<List<CollectBoxFlowInfoDto>> result = new Result<>();
+        result.toSuccess();
+        try {
+            List<CollectBoxFlowInfo> collectBoxFlowInfos = collectBoxFlowDirectionConfService.selectAllCollectBoxFlowInfo();
+            if(CollectionUtils.isNotEmpty(collectBoxFlowInfos)){
+                List<CollectBoxFlowInfoDto> dtos = new ArrayList<>(collectBoxFlowInfos.size());
+                for(CollectBoxFlowInfo conf : collectBoxFlowInfos){
+                    CollectBoxFlowInfoDto dto = new CollectBoxFlowInfoDto();
+                    dtos.add(dto);
+                    BeanUtils.copyProperties(conf, dto);
+                    if(conf.getStatus().equals(CollectBoxFlowInfoStatusEnum.UNACTIVATED.getCode())){
+                        Date todayFistTime = DateHelper.transTimeMinOfDate(conf.getCreateTime());
+                        Date after3Day = DateHelper.addDays(todayFistTime, 3);
+                        String after3DayStr = DateHelper.getDateOfyyMMdd2(after3Day);
+                        dto.setEffectTime(after3DayStr + " 10:00");
+                    }
+                    dto.setStatusName(CollectBoxFlowInfoStatusEnum.getNameByCode(conf.getStatus()));
+                }
+                result.setData(dtos);
+            }
+           
+        }catch (Exception e){
+            result.toError("查询集包规则版本状态时，服务器异常，请稍后重试");
+            log.error("查询集包规则版本状态时，服务器异常，请稍后重试");
+        }
+        return result;
+    }
+    
     
 }

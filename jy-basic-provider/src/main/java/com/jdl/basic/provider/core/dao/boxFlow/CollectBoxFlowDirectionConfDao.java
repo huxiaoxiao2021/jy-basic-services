@@ -34,6 +34,6 @@ public interface CollectBoxFlowDirectionConfDao {
 
     List<CollectBoxFlowDirectionConf> selectByStartSiteIdAndEndSiteIds(CollectBoxFlowDirectionConfQuery query);
     
-    int deleteOldVersion(@Param("version") String version, @Param("deleteCount") Integer deleteCount);
+    int deleteByVersion(@Param("version") String version, @Param("deleteCount") Integer deleteCount);
 
 }

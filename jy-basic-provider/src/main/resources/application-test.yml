@@ -52,9 +52,7 @@ spring:
         app: JYBasic
         address: test-nameserver.jmq.jd.local:50088
         enabled: true
-    split:
-      uat:
-        switch: false
+
 
 ####--topic 定义--#############################################################
 mq:
@@ -66,7 +64,6 @@ mq:
   consumer:
     topic:
       sort_cross_detail: basic_sort_cross_detail
-
 
 
 
@@ -106,8 +103,6 @@ jsf:
   jy_basic:
     alias: jy-basic-server-test
     token: jy-basic-server-token
-  ExpInfoTask:
-    alias: jy-basic-server-test
 
 basic:
   jsf:

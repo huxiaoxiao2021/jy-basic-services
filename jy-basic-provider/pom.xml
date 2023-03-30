@@ -136,26 +136,22 @@
             <version>4.2.7-SNAPSHOT</version>
         </dependency>
         <!--jmq-->
-<!--        <dependency>-->
-<!--            <groupId>com.jd.jmq</groupId>-->
-<!--            <artifactId>jmq-client-spring</artifactId>-->
-<!--            <version>${jd.jmq.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.jd.jmq</groupId>-->
-<!--            <artifactId>jmq-client-core</artifactId>-->
-<!--            <version>${jd.jmq.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.jd.jmq</groupId>-->
-<!--            <artifactId>jmq-client-ump</artifactId>-->
-<!--            <version>${jd.jmq.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.jd.jspliter</groupId>-->
-<!--            <artifactId>jspliter-jmq</artifactId>-->
-<!--            <version>${jd.jmq.jspliter.version}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.jd.jmq</groupId>
+            <artifactId>jmq-client-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jd.jmq</groupId>
+            <artifactId>jmq-client-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jd.jmq</groupId>
+            <artifactId>jmq-client-ump</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jd.jspliter</groupId>
+            <artifactId>jspliter-jmq</artifactId>
+        </dependency>
 
         <!-- Cache -->
         <dependency>
