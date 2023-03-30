@@ -4,7 +4,6 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
 import com.jd.fastjson.JSONObject;
-import com.jd.jim.cli.Cluster;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf;
@@ -12,7 +11,6 @@ import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConfChangeLog;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowInfo;
 import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowNoticDto;
 import com.jdl.basic.common.contants.Constants;
-import com.jdl.basic.common.enums.CollectBoxFlowInfoOperateTypeEnum;
 import com.jdl.basic.common.utils.*;
 import com.jdl.basic.provider.config.jdq.JDQ4Producer;
 import com.jdl.basic.provider.core.dao.boxFlow.CollectBoxFlowDirectionConfDao;
@@ -27,7 +25,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.activation.DataHandler;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
@@ -404,6 +401,14 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         dto.setVersion(version);
         dto.setOperateType(ROLLBACK.getCode());
         return dto;
+    }
+    @Override
+    public String getCurrentVersion(){
+        CollectBoxFlowInfo collectBoxFlowInfo = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null, CURRENT.getCode());
+        if(collectBoxFlowInfo != null){
+            return collectBoxFlowInfo.getVersion();
+        }
+        return null;
     }
 
 }

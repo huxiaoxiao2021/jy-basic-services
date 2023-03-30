@@ -35,5 +35,6 @@ public interface ICollectBoxFlowDirectionConfService {
     Result<Boolean> rollbackVersion();
 
     List<CollectBoxFlowInfo> selectAllCollectBoxFlowInfo();
-    
+
+    String getCurrentVersion();
 }

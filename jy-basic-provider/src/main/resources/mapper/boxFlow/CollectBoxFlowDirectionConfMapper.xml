@@ -549,6 +549,9 @@
                 #{item,jdbcType=BIGINT}
             </foreach>
         </if>
+        <if test="version != null">
+            and version = #{version,jdbcType=VARCHAR}
+        </if>
     </select>
     <delete id="deleteByVersion" parameterType="java.util.Map">
         delete from collect_box_flow_direction_conf 
