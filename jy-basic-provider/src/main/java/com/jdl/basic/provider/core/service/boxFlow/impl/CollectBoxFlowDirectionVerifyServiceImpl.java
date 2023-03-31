@@ -50,7 +50,12 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
             checkPageResult.setMessage("参数不能为空");
             return checkPageResult;
         }
-        String version = collectBoxFlowDirectionConfService.getCurrentVersion();
+        //大数据推送时调用此方法 传的版本号
+        String version = confToBeVerifyed.getVersion();
+        if(StringUtils.isBlank(confToBeVerifyed.getVersion())){
+            //分拣计划配置时的版本号
+            version = collectBoxFlowDirectionConfService.getCurrentVersion();
+        }
         if(StringUtils.isBlank(version)){
             checkPageResult.setCode(CollectBoxFlowDirectionConf.SUCCESS);
             checkPageResult.setMessage("未查到激活的集包规则版本");

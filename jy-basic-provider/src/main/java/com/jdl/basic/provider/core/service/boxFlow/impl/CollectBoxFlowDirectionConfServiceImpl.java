@@ -141,7 +141,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         query.setTransportType(conf.getTransportType());
         query.setFlowType(conf.getFlowType());
         query.setYn(true);
-
+        query.setVersion(conf.getVersion());
         //存在检验
         List<CollectBoxFlowDirectionConf> collectBoxFlowDirectionConfs = collectBoxFlowDirectionConfMapper.select(query);
         if (CollectionUtils.isEmpty(collectBoxFlowDirectionConfs)) {
@@ -249,7 +249,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
             query.setEndOrgId(conf.getEndOrgId());
             query.setEndSiteId(endSiteId);
             query.setTransportType(transportType);
-            
+            query.setVersion(conf.getVersion());
             List<CollectBoxFlowDirectionConf> select = collectBoxFlowDirectionConfMapper.select(query);
             if (CollectionUtils.isNotEmpty(select)) {
                 return updateConfig(conf);
