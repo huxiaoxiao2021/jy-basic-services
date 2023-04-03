@@ -36,8 +36,8 @@ public class KaCoefficientConfigServiceImpl implements KaCoefficientConfigServic
             tmp.setMerchantCode(obj.getMerchantCode());
             tmp.setMerchantName(obj.getMerchantName());
             tmp.setCoefficient(obj.getCoefficient());
-            tmp.setStatue(obj.getStatue());
-            tmp.setStatueName(obj.getStatueName());
+            tmp.setStatus(obj.getStatus());
+            tmp.setStatusName(obj.getStatusName());
             tmp.setCreateUser(obj.getCreateUser());
             tmp.setCreateUserName(obj.getCreateUserName());
             tmp.setUpdateUserName(obj.getUpdateUser());

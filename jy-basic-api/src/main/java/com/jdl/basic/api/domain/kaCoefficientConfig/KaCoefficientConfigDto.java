@@ -17,9 +17,9 @@ public class KaCoefficientConfigDto implements Serializable {
 
     private BigDecimal coefficient;//积分卸车系数（分/每包裹）
 
-    private String statue;//状态编码
+    private String status;//状态编码
 
-    private String statueName;//状态名
+    private String statusName;//状态名
 
     private String createUser;//创建人
 

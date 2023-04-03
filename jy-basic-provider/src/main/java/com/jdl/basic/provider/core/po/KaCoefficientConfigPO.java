@@ -18,9 +18,9 @@ public class KaCoefficientConfigPO implements Serializable {
 
     private BigDecimal coefficient;//积分卸车系数（分/每包裹）
 
-    private String statue;//状态编码
+    private String status;//状态编码
 
-    private String statueName;//状态名
+    private String statusName;//状态名
 
     private String createUser;//创建人
 
@@ -42,8 +42,8 @@ public class KaCoefficientConfigPO implements Serializable {
         this.merchantCode = param.getMerchantCode();
         this.merchantName = param.getMerchantName();
         this.coefficient = param.getCoefficient();
-        this.statue = param.getStatue();
-        this.statueName = param.getStatueName();
+        this.status = param.getStatus();
+        this.statusName = param.getStatusName();
         this.createUser = param.getCreateUser();
         this.createUserName = param.getCreateUserName();
         this.updateUser = param.getUpdateUser();

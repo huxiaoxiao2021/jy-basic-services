@@ -8,5 +8,5 @@ public class KaCoefficientConfigQueryDto extends BasePagerCondition {
 
     private String merchantCode;//商家编码
 
-    private String statue;//状态编码
+    private String status;//状态编码
 }

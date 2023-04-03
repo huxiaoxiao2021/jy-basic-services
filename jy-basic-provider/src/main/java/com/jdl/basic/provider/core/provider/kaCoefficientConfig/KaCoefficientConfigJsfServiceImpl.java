@@ -28,6 +28,7 @@ public class KaCoefficientConfigJsfServiceImpl implements KaCoefficientConfigJsf
 
             result.toSuccess(data,"success");
         }catch (Exception ex){
+            log.error("KaCoefficientConfigJsfServiceImpl.getConfigByMerchantCodeAndStatus has error.",ex);
             result.toFail(String.format("查询数据失败，失败原因:{}", ex.getMessage()));
         }
         return result;

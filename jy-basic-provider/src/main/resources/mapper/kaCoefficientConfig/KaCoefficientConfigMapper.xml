@@ -6,8 +6,8 @@
         <result column="merchant_code" jdbcType="INTEGER" property="merchantCode"/>
         <result column="merchant_name" jdbcType="VARCHAR" property="merchantName"/>
         <result column="coefficient" jdbcType="DECIMAL" property="coefficient"/>
-        <result column="statue" jdbcType="VARCHAR" property="statue"/>
-        <result column="statue_name" jdbcType="INTEGER" property="statueName"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="status_name" jdbcType="INTEGER" property="statusName"/>
         <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
         <result column="create_user_name" jdbcType="VARCHAR" property="createUserName"/>
         <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
@@ -23,8 +23,8 @@
         merchant_code,
         merchant_name,
         coefficient,
-        statue,
-        statue_name,
+        status,
+        status_name,
         create_user,
         create_user_name,
         update_user,
@@ -42,8 +42,8 @@
             merchant_code,
             merchant_name,
             coefficient,
-            statue,
-            statue_name,
+            status,
+            status_name,
             create_user,
             create_user_name,
             update_user,
@@ -55,8 +55,8 @@
             #{merchantCode},
             #{merchantName},
             #{coefficient},
-            #{statue},
-            #{statueName},
+            #{status},
+            #{statusName},
             #{createUser},
             #{createUserName},
             #{updateUser},
