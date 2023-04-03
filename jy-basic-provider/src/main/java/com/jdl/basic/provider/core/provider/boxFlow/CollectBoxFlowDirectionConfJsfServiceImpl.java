@@ -133,6 +133,20 @@ public class CollectBoxFlowDirectionConfJsfServiceImpl implements CollectBoxFlow
         }
         return result;
     }
-    
-    
+
+    @Override
+    public Result<String> getCurrentVersion() {
+        Result<String> result = new Result<>();
+        result.toSuccess();
+        try {
+            String version = collectBoxFlowDirectionConfService.getCurrentVersion();
+            result.setData(version);
+        }catch (Exception e){
+            log.error("集包规则查询当前版本号异常",e);
+            result.toError("集包规则查询当前版本号异常,请稍后再试");
+        }
+        return result;
+    }
+
+
 }
