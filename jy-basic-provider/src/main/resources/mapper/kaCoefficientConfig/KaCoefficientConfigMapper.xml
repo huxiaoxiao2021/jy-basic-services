@@ -73,10 +73,13 @@
         where
             id = #{id}
     </update>
-    <delete id="delById">
+    <delete id="delById" parameterType="com.jdl.basic.provider.core.po.KaCoefficientConfigPO">
         update ka_coefficient_config
-            set yn = 0
-
+            set status = #{status},
+                status_name = #{statusName},
+                update_user =  #{updateUser},
+                update_user_name = #{updateUserName},
+                update_time = #{updateTime}
         where
             id = #{id}
     </delete>
@@ -93,7 +96,7 @@
         <if test="status != null and status != ''">
             and status = #{status,jdbcType=VARCHAR}
         </if>
-        ORDER BY update_time DESC
+        ORDER BY status DESC,update_time DESC
         <if test="pageNumber > 0">
             limit #{offset}, #{limit}
         </if>

@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.service.kaCoefficientConfig.impl;
 
 import com.jdl.basic.api.domain.kaCoefficientConfig.KaCoefficientConfigDto;
 import com.jdl.basic.api.domain.kaCoefficientConfig.KaCoefficientConfigQueryDto;
+import com.jdl.basic.api.enums.KaCoefficientStatusEnum;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.provider.core.dao.kaCoefficientConfig.KaCoefficientConfigDao;
 import com.jdl.basic.provider.core.po.KaCoefficientConfigPO;
@@ -40,7 +41,7 @@ public class KaCoefficientConfigServiceImpl implements KaCoefficientConfigServic
             tmp.setStatusName(obj.getStatusName());
             tmp.setCreateUser(obj.getCreateUser());
             tmp.setCreateUserName(obj.getCreateUserName());
-            tmp.setUpdateUserName(obj.getUpdateUser());
+            tmp.setUpdateUser(obj.getUpdateUser());
             tmp.setUpdateUserName(obj.getUpdateUserName());
             tmp.setCreateTime(obj.getCreateTime());
             tmp.setUpdateTime(obj.getUpdateTime());
@@ -71,6 +72,11 @@ public class KaCoefficientConfigServiceImpl implements KaCoefficientConfigServic
     public Integer delCoefficientById(KaCoefficientConfigDto param) {
         KaCoefficientConfigPO data = new KaCoefficientConfigPO();
         data.setId(param.getId());
+        data.setStatus(KaCoefficientStatusEnum.LOSE_EFFICACY.getCode());
+        data.setStatusName(KaCoefficientStatusEnum.LOSE_EFFICACY.getName());
+        data.setUpdateUser(param.getUpdateUser());
+        data.setUpdateUserName(param.getUpdateUserName());
+        data.setUpdateTime(new Date());
         return kaCoefficientConfigDao.delById(data);
     }
 }
