@@ -86,11 +86,12 @@
             <include refid="Base_Column_List"/>
         from ka_coefficient_config
         where
+            1=1
         <if test="merchantCode != null and merchantCode != ''">
-            merchant_code = #{merchantCode,jdbcType=VARCHAR}
+            AND merchant_code = #{merchantCode,jdbcType=VARCHAR}
         </if>
         <if test="status != null and status != ''">
-            status = #{status,jdbcType=VARCHAR}
+            and status = #{status,jdbcType=VARCHAR}
         </if>
         ORDER BY update_time DESC
         <if test="pageNumber > 0">
@@ -104,11 +105,12 @@
             count(1) as num
         from ka_coefficient_config
         where
+            1=1
         <if test="merchantCode != null and merchantCode != ''">
-            merchant_code = #{merchantCode,jdbcType=VARCHAR}
+            and merchant_code = #{merchantCode,jdbcType=VARCHAR}
         </if>
         <if test="status != null and status != ''">
-            status = #{status,jdbcType=VARCHAR}
+            and status = #{status,jdbcType=VARCHAR}
         </if>
     </select>
 
