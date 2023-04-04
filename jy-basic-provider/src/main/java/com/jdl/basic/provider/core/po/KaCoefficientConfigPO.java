@@ -38,6 +38,8 @@ public class KaCoefficientConfigPO implements Serializable {
 
     private Integer yn;//是否删除 0：删除，1：正常
 
+
+
     public KaCoefficientConfigPO(KaCoefficientConfigDto param) {
         this.merchantCode = param.getMerchantCode();
         this.merchantName = param.getMerchantName();

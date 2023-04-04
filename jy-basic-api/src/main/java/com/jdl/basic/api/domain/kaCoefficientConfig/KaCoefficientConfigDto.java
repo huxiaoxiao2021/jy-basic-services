@@ -36,4 +36,6 @@ public class KaCoefficientConfigDto implements Serializable {
     private Date ts;//时间戳
 
     private Integer yn;//是否删除 0：删除，1：正常
+
+    private Integer kaConfigCount;//有效配置数
 }

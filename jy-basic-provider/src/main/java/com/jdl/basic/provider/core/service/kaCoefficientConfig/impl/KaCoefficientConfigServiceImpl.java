@@ -28,6 +28,8 @@ public class KaCoefficientConfigServiceImpl implements KaCoefficientConfigServic
     public PageDto<KaCoefficientConfigDto> geConfigByMerchantCodeAndStatus(KaCoefficientConfigQueryDto param) {
         PageDto<KaCoefficientConfigDto> result = new PageDto<>();
 
+        // 查询有效数据条数
+        Integer kaConfigCount = kaCoefficientConfigDao.getCountOfInEffectState();
         //查询分页数据
         List<KaCoefficientConfigPO> data = kaCoefficientConfigDao.selectByMerchantCodeAndStatus(param);
         List<KaCoefficientConfigDto> dataTmp = new ArrayList<>();
@@ -45,6 +47,7 @@ public class KaCoefficientConfigServiceImpl implements KaCoefficientConfigServic
             tmp.setUpdateUserName(obj.getUpdateUserName());
             tmp.setCreateTime(obj.getCreateTime());
             tmp.setUpdateTime(obj.getUpdateTime());
+            tmp.setKaConfigCount(kaConfigCount);
             dataTmp.add(tmp);
         });
         //统计总条数
