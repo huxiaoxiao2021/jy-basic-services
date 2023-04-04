@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jdl.basic.provider.core.dao.businessWhite.BusinessWhiteListDao" >
+    <resultMap id="BaseResultMap" type="com.jdl.basic.api.domain.businessWhite.BusinessWhiteList" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="class_id" property="classId" jdbcType="INTEGER" />
+        <result column="class_name" property="className" jdbcType="VARCHAR" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="business_type" property="businessType" jdbcType="INTEGER" />
+        <result column="create_user_erp" property="createUserErp" jdbcType="VARCHAR" />
+        <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="DATE" />
+        <result column="update_user_erp" property="updateUserErp" jdbcType="VARCHAR" />
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="yn" property="yn" jdbcType="INTEGER" />
+        <result column="ts" property="ts" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id,class_id,class_name,content,business_type,create_user_erp,create_user,create_time,update_user_erp,
+        update_user,update_time,yn,ts
+    </sql>
+
+    <!-- where条件 -->
+    <sql id="where">
+        <where>
+            <include refid="sql_if_not_null"/>
+        </where>
+    </sql>
+    <!-- 判断空值 -->
+    <sql id="sql_if_not_null">
+        <if test="classId != null">
+            AND class_id = #{classId}
+        </if>
+        <if test="beginTime != null">
+            AND update_time >= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            AND update_time <![CDATA[ <= ]]> #{endTime}
+        </if>
+        AND yn = 1
+        AND business_type = 2
+    </sql>
+
+    <select id="selectByParam" resultMap="BaseResultMap" parameterType="com.jdl.basic.api.domain.businessWhite.BusinessWhiteListCondition" >
+        select
+        <include refid="Base_Column_List" />
+        from business_white_list
+        <include refid="where"/>
+        order by update_time desc
+        <if test="limitStart != null and pageSize != null">
+            LIMIT #{limitStart},#{pageSize};
+        </if>
+    </select>
+
+    <!-- 查询行数 -->
+    <select id="count" resultType="long" parameterType="com.jdl.basic.api.domain.businessWhite.BusinessWhiteListCondition">
+        SELECT count(1) FROM `business_white_list`
+        <include refid="where"/>
+    </select>
+    <select id="selectByClasAndContent" resultType="com.jdl.basic.api.domain.businessWhite.BusinessWhiteList">
+        select
+        <include refid="Base_Column_List" />
+        from business_white_list
+        where yn =1 AND business_type = 2
+        and class_id = #{classId} and content = #{content}
+    </select>
+
+    <update id="deleteById" parameterType="java.lang.Long" >
+        update business_white_list
+        set yn = 0
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <insert id="insert" parameterType="com.jdl.basic.api.domain.businessWhite.BusinessWhiteList" useGeneratedKeys="true" keyProperty="id" >
+        insert into business_white_list
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="po.id != null">
+                id,
+            </if>
+            <if test="po.classId != null">
+                class_id,
+            </if>
+            <if test="po.className != null">
+                class_name,
+            </if>
+            <if test="po.content != null">
+                content,
+            </if>
+            <if test="po.businessType != null">
+                business_type,
+            </if>
+            <if test="po.createUserErp != null">
+                create_user_erp,
+            </if>
+            <if test="po.createUser != null">
+                create_user,
+            </if>
+            <if test="po.createTime != null">
+                create_time,
+            </if>
+            <if test="po.updateUserErp != null">
+                update_user_erp,
+            </if>
+            <if test="po.updateUser != null">
+                update_user,
+            </if>
+            <if test="po.updateTime != null">
+                update_time,
+            </if>
+            <if test="po.yn != null">
+                yn,
+            </if>
+            <if test="po.ts != null">
+                ts
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="po.id != null">
+                #{po.id},
+            </if>
+            <if test="po.classId != null">
+                #{po.classId},
+            </if>
+            <if test="po.className != null">
+                #{po.className},
+            </if>
+            <if test="po.content != null">
+                #{po.content},
+            </if>
+            <if test="po.businessType != null">
+                #{po.businessType},
+            </if>
+            <if test="po.createUserErp != null">
+                #{po.createUserErp},
+            </if>
+            <if test="po.createUser != null">
+                #{po.createUser},
+            </if>
+            <if test="po.createTime != null">
+                #{po.createTime},
+            </if>
+            <if test="po.updateUserErp != null">
+                #{po.updateUserErp},
+            </if>
+            <if test="po.updateUser != null">
+                #{po.updateUser},
+            </if>
+            <if test="po.updateTime != null">
+                #{po.updateTime},
+            </if>
+            <if test="po.yn != null">
+                #{po.yn},
+            </if>
+            <if test="po.ts != null">
+                #{po.ts}
+            </if>
+        </trim>
+    </insert>
+</mapper>
