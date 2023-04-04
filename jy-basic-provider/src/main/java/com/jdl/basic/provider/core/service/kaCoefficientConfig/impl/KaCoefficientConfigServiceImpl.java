@@ -79,4 +79,9 @@ public class KaCoefficientConfigServiceImpl implements KaCoefficientConfigServic
         data.setUpdateTime(new Date());
         return kaCoefficientConfigDao.delById(data);
     }
+
+    @Override
+    public Integer getCountOfInEffectState() {
+        return kaCoefficientConfigDao.getCountOfInEffectState();
+    }
 }

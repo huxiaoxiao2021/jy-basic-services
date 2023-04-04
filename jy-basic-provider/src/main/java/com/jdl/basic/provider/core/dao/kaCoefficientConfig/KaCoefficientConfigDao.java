@@ -39,4 +39,10 @@ public interface KaCoefficientConfigDao {
      * @return
      */
     Integer delById(KaCoefficientConfigPO param);
+
+    /**
+     * 查询生效的数据条数
+     * @return
+     */
+    Integer getCountOfInEffectState();
 }

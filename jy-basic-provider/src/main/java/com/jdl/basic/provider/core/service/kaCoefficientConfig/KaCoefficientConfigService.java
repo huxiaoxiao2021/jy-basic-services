@@ -31,4 +31,10 @@ public interface KaCoefficientConfigService {
      * @return
      */
     Integer delCoefficientById(KaCoefficientConfigDto param);
+
+    /**
+     * 查询生效的数据量
+     * @return
+     */
+    Integer getCountOfInEffectState();
 }

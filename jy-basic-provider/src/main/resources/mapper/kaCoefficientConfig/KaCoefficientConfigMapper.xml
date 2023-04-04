@@ -116,6 +116,14 @@
             and status = #{status,jdbcType=VARCHAR}
         </if>
     </select>
+    <select id="getCountOfInEffectState" resultType="java.lang.Integer">
+        select
+            count(1) as num
+        from ka_coefficient_config
+        where
+            status = 1
+
+    </select>
 
 
 </mapper>

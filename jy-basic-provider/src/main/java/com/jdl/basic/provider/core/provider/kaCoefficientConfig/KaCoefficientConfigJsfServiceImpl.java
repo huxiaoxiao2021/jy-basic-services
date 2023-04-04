@@ -16,6 +16,8 @@ import java.util.List;
 @Slf4j
 public class KaCoefficientConfigJsfServiceImpl implements KaCoefficientConfigJsfService {
 
+    private static final Integer limitNum = 50;
+
 
     @Autowired
     private KaCoefficientConfigService kaCoefficientConfigService;
@@ -38,8 +40,15 @@ public class KaCoefficientConfigJsfServiceImpl implements KaCoefficientConfigJsf
     public Result<Boolean> addKaCoefficientConfig(KaCoefficientConfigDto param) {
         Result<Boolean> result = new Result<>();
         try {
-            Integer resultData = kaCoefficientConfigService.addKaCoefficientConfig(param);
-            result.toSuccess(resultData > 0 ? Boolean.TRUE:Boolean.FALSE,"success");
+            //校验有效配置数
+            Integer numOfRecords = kaCoefficientConfigService.getCountOfInEffectState();
+
+            if (numOfRecords >= limitNum){
+                result.toFail("有效数据最多50条！");
+            }else{
+                Integer resultData = kaCoefficientConfigService.addKaCoefficientConfig(param);
+                result.toSuccess(resultData > 0 ? Boolean.TRUE:Boolean.FALSE,"success");
+            }
         }catch (Exception ex){
             result.toFail(String.format("新增数据失败，失败原因:{}", ex.getMessage()));
         }
