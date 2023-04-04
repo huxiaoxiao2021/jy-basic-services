@@ -67,7 +67,12 @@ public class KaCoefficientConfigServiceImpl implements KaCoefficientConfigServic
     public Integer modifyCoefficient(KaCoefficientConfigDto param) {
         KaCoefficientConfigPO data = new KaCoefficientConfigPO();
         data.setCoefficient(param.getCoefficient());
+        data.setMerchantCode(param.getMerchantCode());
+        data.setMerchantName(param.getMerchantName());
+        data.setUpdateUserName(param.getUpdateUserName());
+        data.setUpdateUser(param.getUpdateUser());
         data.setId(param.getId());
+        data.setUpdateTime(param.getUpdateTime());
         return kaCoefficientConfigDao.modifyCoefficient(data);
     }
 
