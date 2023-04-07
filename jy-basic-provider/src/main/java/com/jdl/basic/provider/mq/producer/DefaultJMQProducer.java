@@ -9,16 +9,18 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Slf4j
+@Component
 public class DefaultJMQProducer {
 
 
     @Autowired(required = false)
-    @Qualifier("jyBasicProducerSplit")
-    private MessageProducer envMessageProducer;
+    @Qualifier("messageSender")
+    private MessageProducer messageSender;
 
     /**
      * 消息主题
@@ -51,7 +53,7 @@ public class DefaultJMQProducer {
             log.debug("推送MQ数据为topic:{}->body:{}", this.topic, body);
         }
         Message message = new Message(this.topic, body, businessId);
-        envMessageProducer.send(message, this.timeout);
+        messageSender.send(message, this.timeout);
     }
 
     public void sendOnFailPersistent(String businessId, String body) {
@@ -82,11 +84,11 @@ public class DefaultJMQProducer {
             messages.forEach(msg -> msg.setTopic(topic));
             int size = messages.size();
             if (size <= this.batchSize) {
-                envMessageProducer.send(messages, this.timeout);
+                messageSender.send(messages, this.timeout);
             } else {
                 List<List<Message>> partition = Lists.partition(messages, batchSize);
                 for(List<Message> list: partition){
-                    envMessageProducer.send(list, this.timeout);
+                    messageSender.send(list, this.timeout);
                 }
             }
         }
