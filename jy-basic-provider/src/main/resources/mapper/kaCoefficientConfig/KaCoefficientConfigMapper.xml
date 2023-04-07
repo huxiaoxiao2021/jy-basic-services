@@ -69,7 +69,12 @@
 
     <update id="modifyCoefficient">
         update ka_coefficient_config
-            set coefficient = #{coefficient}
+            set coefficient = #{coefficient},
+                update_user =  #{updateUser},
+                update_user_name = #{updateUserName},
+                update_time = #{updateTime},
+                merchant_code = #{merchantCode},
+                merchant_name = #{merchantName}
         where
             id = #{id}
     </update>
