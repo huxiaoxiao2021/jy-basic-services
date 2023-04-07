@@ -37,4 +37,11 @@ public interface KaCoefficientConfigService {
      * @return
      */
     Integer getCountOfInEffectState();
+
+    /**
+     * 根据商家编码查询生效数据
+     * @param param
+     * @return
+     */
+    KaCoefficientConfigDto getInEffectKaCoefficientConfig(KaCoefficientConfigDto param);
 }

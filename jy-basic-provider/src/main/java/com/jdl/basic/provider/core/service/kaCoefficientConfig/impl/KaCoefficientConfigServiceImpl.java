@@ -92,4 +92,24 @@ public class KaCoefficientConfigServiceImpl implements KaCoefficientConfigServic
     public Integer getCountOfInEffectState() {
         return kaCoefficientConfigDao.getCountOfInEffectState();
     }
+
+    @Override
+    public KaCoefficientConfigDto getInEffectKaCoefficientConfig(KaCoefficientConfigDto param) {
+        KaCoefficientConfigPO data = kaCoefficientConfigDao.getInEffectKaCoefficientConfig(param);
+        KaCoefficientConfigDto tmp = new KaCoefficientConfigDto();
+        tmp.setId(data.getId());
+        tmp.setMerchantCode(data.getMerchantCode());
+        tmp.setMerchantName(data.getMerchantName());
+        tmp.setCoefficient(data.getCoefficient());
+        tmp.setStatus(data.getStatus());
+        tmp.setStatusName(data.getStatusName());
+        tmp.setCreateUser(data.getCreateUser());
+        tmp.setCreateUserName(data.getCreateUserName());
+        tmp.setUpdateUser(data.getUpdateUser());
+        tmp.setUpdateUserName(data.getUpdateUserName());
+        tmp.setCreateTime(data.getCreateTime());
+        tmp.setUpdateTime(data.getUpdateTime());
+
+        return tmp;
+    }
 }

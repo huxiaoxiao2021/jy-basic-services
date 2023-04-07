@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @Slf4j
@@ -40,6 +41,14 @@ public class KaCoefficientConfigJsfServiceImpl implements KaCoefficientConfigJsf
     public Result<Boolean> addKaCoefficientConfig(KaCoefficientConfigDto param) {
         Result<Boolean> result = new Result<>();
         try {
+
+            //判断是否已经有生效的商家编码
+            KaCoefficientConfigDto savedData =  kaCoefficientConfigService.getInEffectKaCoefficientConfig(param);
+            if(Objects.nonNull(savedData)){
+                result.toFail("已经有已生效的数据了！");
+                return result;
+            }
+
             //校验有效配置数
             Integer numOfRecords = kaCoefficientConfigService.getCountOfInEffectState();
 

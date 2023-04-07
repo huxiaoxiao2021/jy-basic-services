@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.dao.kaCoefficientConfig;
 import java.util.List;
 
+import com.jdl.basic.api.domain.kaCoefficientConfig.KaCoefficientConfigDto;
 import com.jdl.basic.api.domain.kaCoefficientConfig.KaCoefficientConfigQueryDto;
 import com.jdl.basic.provider.core.po.KaCoefficientConfigPO;
 
@@ -45,4 +46,11 @@ public interface KaCoefficientConfigDao {
      * @return
      */
     Integer getCountOfInEffectState();
+
+    /**
+     * 根据商家编码查询生效数据
+     * @param param
+     * @return
+     */
+    KaCoefficientConfigPO getInEffectKaCoefficientConfig(KaCoefficientConfigDto param);
 }
