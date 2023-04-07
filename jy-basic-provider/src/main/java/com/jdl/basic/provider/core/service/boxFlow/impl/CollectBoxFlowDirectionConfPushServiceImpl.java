@@ -208,7 +208,6 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
             collectBoxFlowNoticeMQ.send(version, JsonHelper.toJSONString(noticDto));
         } catch (Exception ex) {
             log.error("大数据推送新箱号规则，MQ发送通知失败:{}",version, ex);
-            return false;
         }
         // 新增版本
         CollectBoxFlowInfo entity = initCollectBoxFlowInfo(version);

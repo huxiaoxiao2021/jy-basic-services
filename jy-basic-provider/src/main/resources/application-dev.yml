@@ -36,7 +36,7 @@ spring:
         address: jmq-testcluster.jd.local:50088
         enabled: true
       basic-producer-jmq4:
-        password: FBBB11B7
+        password: 809375866c4842f28d7e4eec04da1e41
         app: JYBasic
         address: test-nameserver.jmq.jd.local:50088
         enabled: true
@@ -48,7 +48,7 @@ spring:
         address: jmq-testcluster.jd.local:50088
         enabled: true
       basic-consumer-jmq4:
-        password: FBBB11B7
+        password: 809375866c4842f28d7e4eec04da1e41
         app: JYBasic
         address: test-nameserver.jmq.jd.local:50088
         enabled: true

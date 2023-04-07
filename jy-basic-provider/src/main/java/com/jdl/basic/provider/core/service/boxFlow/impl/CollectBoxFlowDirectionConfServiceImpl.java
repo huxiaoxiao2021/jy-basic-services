@@ -287,17 +287,17 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         log.info("小件集包切换版本，开始执行");
         Date todayEndTime = DateHelper.transTimeMaxOfDate(new Date());
         Date todayStartTime = DateHelper.transTimeMinOfDate(new Date());
-        Date startTime = DateHelper.addDays(todayStartTime, -3);
+        //Date startTime = DateHelper.addDays(todayStartTime, -3);
         Date endTime = DateHelper.addDays(todayEndTime, -3);
-        CollectBoxFlowInfo unactivated = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(startTime, endTime, 
+        CollectBoxFlowInfo unactivated = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, endTime, 
                 UNACTIVATED.getCode());
         if(unactivated == null){
-            log.info("根据时间查询参数开始:{},结束:{}未查到待激活版本", DateHelper.getDateOfyyMMddHHmmss(startTime),
+            log.info("根据时间查询结束时间:{}未查到待激活版本", 
                     DateHelper.getDateOfyyMMddHHmmss(endTime));
             return;
         }
         
-        log.info("根据时间查询参数开始:{},结束:{}未查到待激活版本", DateHelper.getDateOfyyMMddHHmmss(startTime),
+        log.info("根据时间查询结束时间:{}未查到待激活版本", 
                 DateHelper.getDateOfyyMMddHHmmss(endTime));
         //历史版本
 //        CollectBoxFlowInfo history = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null,
