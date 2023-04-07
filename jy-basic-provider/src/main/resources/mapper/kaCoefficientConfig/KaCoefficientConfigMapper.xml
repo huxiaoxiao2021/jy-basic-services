@@ -137,6 +137,7 @@
         where
             status = 1
             AND merchant_code = #{merchantCode,jdbcType=VARCHAR}
+        limit 1
     </select>
 
 
