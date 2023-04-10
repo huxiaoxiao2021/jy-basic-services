@@ -60,7 +60,7 @@ public interface KaCoefficientConfigDao {
      * @param merchantCode
      * @return
      */
-    @Cache(key = "KaCoefficientConfigDao.getInEffectKaCoefficientConfigWithCache@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
-        , redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
+    @Cache(key = "KaCoefficientConfigDao.getInEffectKaCoefficientConfigWithCache@args0", memoryEnable = true, memoryExpiredTime = 5 * 60 * 1000
+        , redisEnable = true, redisExpiredTime = 10 * 60 * 1000)
     KaCoefficientConfigPO getInEffectKaCoefficientConfigWithCache(String merchantCode);
 }
