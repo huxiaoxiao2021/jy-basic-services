@@ -116,5 +116,4 @@ public class KaCoefficientConfigServiceImpl implements KaCoefficientConfigServic
         KaCoefficientConfigDto tmp = assertDto(data);
         return tmp;
     }
-    }
 }
