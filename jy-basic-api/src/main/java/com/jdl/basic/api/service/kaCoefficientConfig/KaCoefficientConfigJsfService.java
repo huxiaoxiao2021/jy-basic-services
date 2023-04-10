@@ -36,4 +36,11 @@ public interface KaCoefficientConfigJsfService {
      * @return
      */
     Result<Boolean> delCoefficientById(KaCoefficientConfigDto param);
+
+    /**
+     * 根据商家编码获取有效配置数据
+     * @param param
+     * @return
+     */
+    Result<KaCoefficientConfigDto> getConfigByMerchantCode(KaCoefficientConfigDto param);
 }

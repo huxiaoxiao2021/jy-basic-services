@@ -34,19 +34,7 @@ public class KaCoefficientConfigServiceImpl implements KaCoefficientConfigServic
         List<KaCoefficientConfigPO> data = kaCoefficientConfigDao.selectByMerchantCodeAndStatus(param);
         List<KaCoefficientConfigDto> dataTmp = new ArrayList<>();
         data.stream().forEach(obj -> {
-            KaCoefficientConfigDto tmp = new KaCoefficientConfigDto();
-            tmp.setId(obj.getId());
-            tmp.setMerchantCode(obj.getMerchantCode());
-            tmp.setMerchantName(obj.getMerchantName());
-            tmp.setCoefficient(obj.getCoefficient());
-            tmp.setStatus(obj.getStatus());
-            tmp.setStatusName(obj.getStatusName());
-            tmp.setCreateUser(obj.getCreateUser());
-            tmp.setCreateUserName(obj.getCreateUserName());
-            tmp.setUpdateUser(obj.getUpdateUser());
-            tmp.setUpdateUserName(obj.getUpdateUserName());
-            tmp.setCreateTime(obj.getCreateTime());
-            tmp.setUpdateTime(obj.getUpdateTime());
+            KaCoefficientConfigDto tmp = assertDto(obj);
             tmp.setKaConfigCount(kaConfigCount);
             dataTmp.add(tmp);
         });
@@ -96,6 +84,16 @@ public class KaCoefficientConfigServiceImpl implements KaCoefficientConfigServic
     @Override
     public KaCoefficientConfigDto getInEffectKaCoefficientConfig(KaCoefficientConfigDto param) {
         KaCoefficientConfigPO data = kaCoefficientConfigDao.getInEffectKaCoefficientConfig(param);
+        KaCoefficientConfigDto tmp = assertDto(data);
+        return tmp;
+    }
+
+    /**
+     * 转化dto
+     * @param data
+     * @return
+     */
+    private static KaCoefficientConfigDto assertDto(KaCoefficientConfigPO data) {
         KaCoefficientConfigDto tmp = new KaCoefficientConfigDto();
         tmp.setId(data.getId());
         tmp.setMerchantCode(data.getMerchantCode());
@@ -109,7 +107,14 @@ public class KaCoefficientConfigServiceImpl implements KaCoefficientConfigServic
         tmp.setUpdateUserName(data.getUpdateUserName());
         tmp.setCreateTime(data.getCreateTime());
         tmp.setUpdateTime(data.getUpdateTime());
-
         return tmp;
+    }
+
+    @Override
+    public KaCoefficientConfigDto getInEffectKaCoefficientConfigWithCache(String merchantCode) {
+        KaCoefficientConfigPO data = kaCoefficientConfigDao.getInEffectKaCoefficientConfigWithCache(merchantCode);
+        KaCoefficientConfigDto tmp = assertDto(data);
+        return tmp;
+    }
     }
 }

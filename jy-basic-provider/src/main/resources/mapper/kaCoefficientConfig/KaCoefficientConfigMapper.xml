@@ -140,5 +140,14 @@
         limit 1
     </select>
 
-
+    <select id="getInEffectKaCoefficientConfigWithCache"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ka_coefficient_config
+        where
+        status = 1
+        AND merchant_code = #{merchantCode,jdbcType=VARCHAR}
+        limit 1
+    </select>
 </mapper>

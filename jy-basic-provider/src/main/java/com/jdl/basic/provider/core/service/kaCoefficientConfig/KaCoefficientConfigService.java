@@ -44,4 +44,11 @@ public interface KaCoefficientConfigService {
      * @return
      */
     KaCoefficientConfigDto getInEffectKaCoefficientConfig(KaCoefficientConfigDto param);
+
+    /**
+     * 根据商家编码查询生效数据-带缓存
+     * @param merchantCode
+     * @return
+     */
+    KaCoefficientConfigDto getInEffectKaCoefficientConfigWithCache(String merchantCode);
 }

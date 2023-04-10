@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.dao.kaCoefficientConfig;
 import java.util.List;
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jdl.basic.api.domain.kaCoefficientConfig.KaCoefficientConfigDto;
 import com.jdl.basic.api.domain.kaCoefficientConfig.KaCoefficientConfigQueryDto;
 import com.jdl.basic.provider.core.po.KaCoefficientConfigPO;
@@ -53,4 +54,13 @@ public interface KaCoefficientConfigDao {
      * @return
      */
     KaCoefficientConfigPO getInEffectKaCoefficientConfig(KaCoefficientConfigDto param);
+
+    /**
+     * 根据商家编码查询生效数据-带缓存
+     * @param merchantCode
+     * @return
+     */
+    @Cache(key = "KaCoefficientConfigDao.getInEffectKaCoefficientConfigWithCache@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+        , redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
+    KaCoefficientConfigPO getInEffectKaCoefficientConfigWithCache(String merchantCode);
 }

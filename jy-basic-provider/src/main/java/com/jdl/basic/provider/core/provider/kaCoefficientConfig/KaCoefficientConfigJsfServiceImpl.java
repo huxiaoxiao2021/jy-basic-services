@@ -87,4 +87,17 @@ public class KaCoefficientConfigJsfServiceImpl implements KaCoefficientConfigJsf
         }
         return result;
     }
+
+    @Override
+    public Result<KaCoefficientConfigDto> getConfigByMerchantCode(KaCoefficientConfigDto param) {
+        Result<KaCoefficientConfigDto> result = new Result<>();
+        try {
+            KaCoefficientConfigDto resultData = kaCoefficientConfigService.getInEffectKaCoefficientConfigWithCache(param.getMerchantCode());
+            result.toSuccess(resultData,"success");
+        } catch (Exception ex) {
+            result.toFail(String.format("查询失败，失败原因:{}", ex.getMessage()));
+        }
+        return result;
+    }
+
 }
