@@ -29,6 +29,9 @@
 		<result column="area_name" property="areaName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="work_code" property="workCode" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="work_name" property="workName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="dock_code" property="dockCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="supplier_code" property="supplierCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="supplier_name" property="supplierName" javaType="java.lang.String" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<resultMap id="WorkStationGridCountVo" type="com.jdl.basic.api.domain.workStation.WorkStationGridCountVo" >
@@ -41,7 +44,7 @@
 		g.id,g.business_key,g.org_code,g.org_name,g.site_code,g.site_name,
 		g.floor,g.grid_no,g.grid_code,g.grid_name,g.standard_num,
 		g.owner_user_erp,g.ref_station_key,g.create_user,g.create_user_name,g.update_user,
-		g.update_user_name,g.create_time,g.update_time,g.yn,g.ts,
+		g.update_user_name,g.create_time,g.update_time,g.yn,g.ts,g.dock_code,g.supplier_code,g.supplier_name,
 		s.area_code,s.area_name,s.work_code,s.work_name
 	</sql>
 
@@ -49,7 +52,7 @@
 		g.id,g.business_key,g.org_code,g.org_name,g.site_code,g.site_name,
 		g.floor,g.grid_no,g.grid_code,g.grid_name,g.standard_num,
 		g.owner_user_erp,g.ref_station_key,g.create_user,g.create_user_name,g.update_user,
-		g.update_user_name,g.create_time,g.update_time,g.yn,g.ts
+		g.update_user_name,g.create_time,g.update_time,g.yn,g.ts,g.dock_code,g.supplier_code,g.supplier_name
 	</sql>
 
 	<insert id="insert" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGrid" useGeneratedKeys="true" keyProperty="id">
@@ -119,6 +122,15 @@
 				<if test="ts != null" >
 					ts,
 				</if>
+				<if test="dockCode != null" >
+					dock_code,
+				</if>
+				<if test="supplierCode != null" >
+					supplier_code,
+				</if>
+				<if test="supplierName != null" >
+					supplier_name,
+				</if>
 			</trim>
 			)
 			values
@@ -186,6 +198,15 @@
 				</if>
 				<if test="ts != null" >
 					#{ts,jdbcType=TIMESTAMP},
+				</if>
+				<if test="dockCode != null" >
+					#{dockCode,jdbcType=VARCHAR},
+				</if>
+				<if test="supplierCode != null" >
+					#{supplierCode,jdbcType=VARCHAR},
+				</if>
+				<if test="supplierName != null" >
+					#{supplierName,jdbcType=VARCHAR},
 				</if>
 			</trim>
 			)
@@ -256,6 +277,15 @@
 				</if>
 				<if test="ts != null" >
 					ts = #{ts,jdbcType=TIMESTAMP},
+				</if>
+				<if test="dockCode != null" >
+					dock_code = #{dockCode,jdbcType=VARCHAR},
+				</if>
+				<if test="supplierCode != null" >
+					supplier_code = #{supplierCode,jdbcType=VARCHAR},
+				</if>
+				<if test="supplierName != null" >
+					supplier_name = #{supplierName,jdbcType=VARCHAR},
 				</if>
 			</set>
 		where id = #{id,jdbcType=BIGINT}
@@ -380,6 +410,12 @@
 		</if>
 		<if test="areaCode != null and areaCode != ''" >
 			and s.area_code = #{areaCode,jdbcType=VARCHAR}
+		</if>
+		<if test="dockCode != null and dockCode != ''" >
+			and g.dock_code = #{dockCode,jdbcType=VARCHAR}
+		</if>
+		<if test="supplierCode != null and supplierCode != ''" >
+			and g.supplier_code = #{supplierCode,jdbcType=VARCHAR}
 		</if>
 		</where>
 	</sql>

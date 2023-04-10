@@ -228,6 +228,12 @@ public class PositionRecordServiceImpl implements PositionRecordService {
         return result;
     }
 
+    @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.queryPositionByRefGridKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public PositionRecord queryPositionByRefGridKey(String refGridKey) {
+        return positionRecordDao.queryByBusinessKey(refGridKey);
+    }
+
     private void setDefaultMenuCode(String positionCode, Result<PositionData> result) {
         PositionData positionData = result.getData();
         WorkStation workStation = new WorkStation();
