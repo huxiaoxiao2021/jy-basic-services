@@ -11,7 +11,7 @@ import java.util.List;
  * @date 2022-12-04 16:02
  */
 public class BeanUtils {
-    
+
     public static <T> T copyByList(List sourceList, Class<T> tClass) {
         try {
             T t = tClass.newInstance();
@@ -48,7 +48,40 @@ public class BeanUtils {
         }
         return null;
     }
-    
+
+    public static <T> T copy(Object source, Class<T> tClass) {
+
+        try {
+            T t = tClass.newInstance();
+            Field[] sourceFields = source.getClass().getDeclaredFields();
+            for (Field field : sourceFields) {
+                field.setAccessible(true);
+                String type = containFieldName(t, field.getName());
+                if (!"".equals(type) && field.getType().toString().equals(type) && null!=field.get(source)) {
+                    org.apache.commons.beanutils.BeanUtils
+                        .copyProperty(t, field.getName(), field.get(source));
+                }
+            }
+            return t;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String containFieldName(Object obj, String filedName)
+        throws Exception {
+        String type = "";
+        Field[] fields = obj.getClass().getDeclaredFields();
+        for (Field f : fields) {
+            if (filedName.equals(f.getName())) {
+                type = f.getType().toString();
+                break;
+            }
+        }
+        return type;
+    }
+
     public static String toCamelCase(String s) {
         if (s == null) {
             return null;
