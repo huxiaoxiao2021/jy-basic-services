@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jdl.basic.provider.core.dao.vehicle.VehicleVolumeDicDao">
-  <resultMap id="BaseResultMap" type="com.jdl.basic.provider.core.dao.vehicle.VehicleVolumeDic">
+  <resultMap id="BaseResultMap" type="com.jdl.basic.api.domain.vehicle.VehicleVolumeDic">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="vehicle_type_name" jdbcType="VARCHAR" property="vehicleTypeName" />
     <result column="vehicle_type" jdbcType="INTEGER" property="vehicleType" />
@@ -25,7 +25,7 @@
     delete from vehicle_volume_dic
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jdl.basic.provider.core.dao.vehicle.VehicleVolumeDic">
+  <insert id="insert" parameterType="com.jdl.basic.api.domain.vehicle.VehicleVolumeDic">
     insert into vehicle_volume_dic (id, vehicle_type_name, vehicle_type,
       length, volume_trunk_c, volume_trunk_b,
       volume_branch_c, volume_branch_b)
@@ -33,7 +33,7 @@
       #{length,jdbcType=VARCHAR}, #{volumeTrunkC,jdbcType=INTEGER}, #{volumeTrunkB,jdbcType=INTEGER},
       #{volumeBranchC,jdbcType=INTEGER}, #{volumeBranchB,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.jdl.basic.provider.core.dao.vehicle.VehicleVolumeDic">
+  <insert id="insertSelective" parameterType="com.jdl.basic.api.domain.vehicle.VehicleVolumeDic">
     insert into vehicle_volume_dic
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -88,7 +88,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jdl.basic.provider.core.dao.vehicle.VehicleVolumeDic">
+  <update id="updateByPrimaryKeySelective" parameterType="com.jdl.basic.api.domain.vehicle.VehicleVolumeDic">
     update vehicle_volume_dic
     <set>
       <if test="vehicleTypeName != null">
@@ -115,7 +115,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jdl.basic.provider.core.dao.vehicle.VehicleVolumeDic">
+  <update id="updateByPrimaryKey" parameterType="com.jdl.basic.api.domain.vehicle.VehicleVolumeDic">
     update vehicle_volume_dic
     set vehicle_type_name = #{vehicleTypeName,jdbcType=VARCHAR},
       vehicle_type = #{vehicleType,jdbcType=INTEGER},
