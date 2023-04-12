@@ -411,4 +411,9 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         return null;
     }
 
+    @Override
+    public int updateCollectBoxFlowInfo(CollectBoxFlowInfo collectBoxFlowInfo) {
+        return collectBoxFlowInfoDao.updateByPrimaryKeySelective(collectBoxFlowInfo);
+    }
+
 }

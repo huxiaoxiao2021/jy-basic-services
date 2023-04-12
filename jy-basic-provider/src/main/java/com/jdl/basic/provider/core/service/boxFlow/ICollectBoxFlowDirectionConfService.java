@@ -37,4 +37,6 @@ public interface ICollectBoxFlowDirectionConfService {
     List<CollectBoxFlowInfo> selectAllCollectBoxFlowInfo();
 
     String getCurrentVersion();
+
+    int updateCollectBoxFlowInfo(CollectBoxFlowInfo collectBoxFlowInfo);
 }

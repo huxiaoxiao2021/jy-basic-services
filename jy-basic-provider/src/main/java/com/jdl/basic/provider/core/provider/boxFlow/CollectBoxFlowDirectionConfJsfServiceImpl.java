@@ -148,5 +148,19 @@ public class CollectBoxFlowDirectionConfJsfServiceImpl implements CollectBoxFlow
         return result;
     }
 
+    @Override
+    public Result<Integer> updateCollectBoxFlowInfo(CollectBoxFlowInfo collectBoxFlowInfo) {
+        Result<Integer> result = new Result<>();
+        result.toSuccess();
+        try {
+            int num = collectBoxFlowDirectionConfService.updateCollectBoxFlowInfo(collectBoxFlowInfo);
+            result.setData(num);
+        }catch (Exception e){
+            log.error("集包规则查询当前版本号异常",e);
+            result.toError("集包规则查询当前版本号异常,请稍后再试");
+        }
+        return result;
+    }
+
 
 }

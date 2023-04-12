@@ -34,4 +34,6 @@ public interface CollectBoxFlowDirectionConfJsfService {
     Result<List<CollectBoxFlowInfoDto>> selectAllCollectBoxFlowInfo();
 
     Result<String> getCurrentVersion();
+
+    Result<Integer> updateCollectBoxFlowInfo(CollectBoxFlowInfo collectBoxFlowInfo);
 }
