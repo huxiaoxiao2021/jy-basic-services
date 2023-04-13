@@ -20,6 +20,7 @@
 		<result column="area_type" property="areaType" javaType="java.lang.Integer" jdbcType="TINYINT" />
 		<result column="yn" property="yn" javaType="java.lang.Integer" jdbcType="TINYINT" />
 		<result column="ts" property="ts" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result column="have_job_type" property="haveJobType" javaType="java.lang.Integer" jdbcType="TINYINT" />
 	</resultMap>
 
 	<resultMap id="WorkStationCountVo" type="com.jdl.basic.api.domain.workStation.WorkStationCountVo" >
@@ -30,7 +31,7 @@
 	<sql id="Base_Column_List" >
 		id,business_key,business_line_code,business_line_name,area_code,area_name,work_code,work_name,
 		create_user,create_user_name,update_user,update_user_name,create_time,
-		update_time,yn,ts,area_type
+		update_time,yn,ts,area_type,have_job_type
 	</sql>
 
 	<insert id="insert" parameterType="com.jdl.basic.api.domain.workStation.WorkStation" useGeneratedKeys="true" keyProperty="id">
@@ -88,6 +89,9 @@
 				<if test="areaType == 1" >
 					area_type,
 				</if>
+				<if test="haveJobType != null" >
+					have_job_type,
+				</if>
 			</trim>
 			)
 			values
@@ -144,6 +148,9 @@
 				<if test="areaType == 1" >
 					#{areaType,jdbcType=TINYINT},
 				</if>
+				<if test="haveJobType != null" >
+					#{haveJobType,jdbcType=TINYINT},
+				</if>
 			</trim>
 			)
 	</insert>
@@ -198,6 +205,9 @@
 				</if>
 				<if test="ts != null" >
 					ts = #{ts,jdbcType=TIMESTAMP},
+				</if>
+				<if test="haveJobType != null" >
+					#{haveJobType,jdbcType=TINYINT},
 				</if>
 			</set>
 		where id = #{id,jdbcType=BIGINT}
