@@ -22,4 +22,6 @@ public interface WorkStationJobTypeDao {
     int updateByPrimaryKey(WorkStationJobTypePO record);
 
     int deleteByRefBusinessKey(String refBusinessKey);
+
+    List<WorkStationJobTypePO> selectAll();
 }

@@ -110,5 +110,5 @@ public class WorkStation implements Serializable {
 	/**
 	 * 工种类型集合
 	 */
-	private List<Integer> jobTyps;
+	private List<Integer> jobTypes;
 }

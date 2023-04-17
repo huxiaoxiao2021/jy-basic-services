@@ -16,6 +16,10 @@
     id, ref_business_key, job_code, create_user, update_user, create_time, update_time, 
     yn, ts
   </sql>
+
+  <sql id="Part_Column_List" >
+    id, ref_business_key, job_code
+  </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
@@ -23,11 +27,11 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
 
-  <select id="selectByBusinessKey" resultType="list" parameterType="java.lang.String" >
+  <select id="selectByBusinessKey"  parameterType="java.lang.String" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List" />
     from work_station_job_type
-    where ref_business_key = #{refBusinessKey,jdbcType=BIGINT}
+    where yn =1 and  ref_business_key = #{refBusinessKey,jdbcType=BIGINT}
   </select>
 
   <insert id="insert" parameterType="com.jdl.basic.provider.core.po.WorkStationJobTypePO" >
@@ -163,4 +167,11 @@
     update work_station_job_type set yn=0
     where yn =1 and ref_business_key = #{refBusinessKey,jdbcType=VARCHAR}
   </update>
+
+  <select id="selectAll"   resultMap="BaseResultMap" >
+    select
+    <include refid="Part_Column_List" />
+    from work_station_job_type
+    where yn =1
+  </select>
 </mapper>

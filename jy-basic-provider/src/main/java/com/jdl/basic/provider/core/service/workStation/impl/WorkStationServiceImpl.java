@@ -73,7 +73,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 		}
 		generateAndSetBusinessKey(insertData);
 		//判断有无设置工种类型 并设置
-		if(CollectionUtils.isNotEmpty(insertData.getJobTyps())){
+		if(CollectionUtils.isNotEmpty(insertData.getJobTypes())){
 			insertData.setHaveJobType(1);
 		}
 		insertWorkStationJobTypePO(insertData,insertData.getBusinessKey());
@@ -85,11 +85,15 @@ public class WorkStationServiceImpl implements WorkStationService {
 	 * 组装网格工序工种数据并插入
 	 */
 	private int insertWorkStationJobTypePO(WorkStation dto ,String businessKey){
-		if(CollectionUtils.isEmpty(dto.getJobTyps())){
+		if(CollectionUtils.isEmpty(dto.getJobTypes())){
 			return 0;
 		}
 		List<WorkStationJobTypePO> pos = new ArrayList<>();
-		dto.getJobTyps().stream().forEach(item ->{
+
+		dto.getJobTypes().stream().forEach(item ->{
+			if(StringUtils.isBlank(businessKey) || Objects.isNull(item)){
+				throw new RuntimeException("添加网格工序工种异常,请检查后重新操作!");
+			}
 			WorkStationJobTypePO jobTypePO = new WorkStationJobTypePO();
 			jobTypePO.setRefBusinessKey(businessKey);
 			jobTypePO.setJobCode(item);
@@ -121,15 +125,15 @@ public class WorkStationServiceImpl implements WorkStationService {
 			}
 			data.setBusinessLineName(BusinessLineTypeEnum.getNameByCode(data.getBusinessLineCode()));
 			//判断有无设置工种类型 并设置
-			if(CollectionUtils.isNotEmpty(data.getJobTyps())){
+			if(CollectionUtils.isNotEmpty(data.getJobTypes())){
 				data.setHaveJobType(1);
 			}else {
 				data.setHaveJobType(0);
 			}
-			workStationDao.insert(data);
 			//删除所有老的与businessKey关联的JobType 然后再插入
 			workStationJobTypeDao.deleteByRefBusinessKey(data.getBusinessKey());
 			insertWorkStationJobTypePO(data,data.getBusinessKey());
+			workStationDao.insert(data);
 		}
 		return result;
 	}
@@ -234,7 +238,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 		updateData.setId(null);
 		updateData.setBusinessLineName(BusinessLineTypeEnum.getNameByCode(updateData.getBusinessLineCode()));
 		//判断有无设置工种类型 并设置
-		if(CollectionUtils.isNotEmpty(updateData.getJobTyps())){
+		if(CollectionUtils.isNotEmpty(updateData.getJobTypes())){
 			updateData.setHaveJobType(1);
 		}else {
 			updateData.setHaveJobType(0);
@@ -282,7 +286,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 		List<WorkStationJobTypePO> jobTypes = workStationJobTypeDao.selectByBusinessKey(workStation.getBusinessKey());
 		if(CollectionUtils.isNotEmpty(jobTypes)){
 			List<Integer> types = jobTypes.stream().map(WorkStationJobTypePO::getJobCode).collect(Collectors.toList());
-			workStation.setJobTyps(types);
+			workStation.setJobTypes(types);
 		}
 		result.setData(workStation);
 		return result;
@@ -309,7 +313,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 					List<WorkStationJobTypePO> jobTypes = workStationJobTypeDao.selectByBusinessKey(item.getBusinessKey());
 					if(CollectionUtils.isNotEmpty(jobTypes)){
 						List<Integer> types = jobTypes.stream().map(WorkStationJobTypePO::getJobCode).collect(Collectors.toList());
-						item.setJobTyps(types);
+						item.setJobTypes(types);
 					}
 				});
 			}
@@ -467,7 +471,19 @@ public class WorkStationServiceImpl implements WorkStationService {
 		if(!checkResult.isSuccess()){
 		    return Result.fail(checkResult.getMessage());
 		}
-		result.setData(workStationDao.queryListForExport(query));
+		List<WorkStationJobTypePO> pos = workStationJobTypeDao.selectAll();
+		List<WorkStation> list = workStationDao.queryListForExport(query);
+		for (WorkStation station:list){
+			if(station.getHaveJobType() != null && station.getHaveJobType().equals(1)){
+				List<WorkStationJobTypePO> jobTypes = workStationJobTypeDao.selectByBusinessKey(station.getBusinessKey());
+				if(CollectionUtils.isNotEmpty(jobTypes)){
+					List<Integer> collect = jobTypes.stream().map(WorkStationJobTypePO::getJobCode).collect(Collectors.toList());
+					station.setJobTypes(collect);
+				}
+
+			}
+		}
+		result.setData(list);
 		return result;
 	}
 

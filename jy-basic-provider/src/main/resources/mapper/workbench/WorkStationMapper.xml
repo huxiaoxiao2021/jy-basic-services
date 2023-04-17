@@ -321,6 +321,9 @@
 		<if test="areaName != null and areaName != ''" >
 			and area_name like concat('%', #{areaName}, '%')
 		</if>
+		<if test="haveJobType != null" >
+			and have_job_type = #{haveJobType,jdbcType=TINYINT}
+		</if>
 		</where>
 	</sql>
 	<select id="queryWorkDictList" parameterType="com.jdl.basic.api.domain.workStation.WorkStationQuery" resultMap="WorkStation">
