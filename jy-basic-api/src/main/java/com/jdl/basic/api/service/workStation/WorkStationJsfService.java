@@ -1,9 +1,6 @@
 package com.jdl.basic.api.service.workStation;
 
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkStation;
-import com.jdl.basic.api.domain.workStation.WorkStationCountVo;
-import com.jdl.basic.api.domain.workStation.WorkStationQuery;
+import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 
@@ -111,5 +108,12 @@ public interface WorkStationJsfService {
 	 * @return
 	 */
 	Result<WorkStation> queryWorkStationBybusinessKeyWithCache(String businessKey);
+
+	/**
+	 * 根据businessKey查询 网格工种
+	 * @param businessKey
+	 * @return
+	 */
+	Result<List<WorkStationJobTypeDto>> queryWorkStationJobTypeBybusinessKey(String businessKey);
 
 }

@@ -4,10 +4,7 @@ package com.jdl.basic.provider.core.service.workStation.impl;
 import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkStation;
-import com.jdl.basic.api.domain.workStation.WorkStationCountVo;
-import com.jdl.basic.api.domain.workStation.WorkStationQuery;
+import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.enums.BusinessLineTypeEnum;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
@@ -494,4 +491,22 @@ public class WorkStationServiceImpl implements WorkStationService {
 		result.setData(workStationDao.queryWorkStationBybusinessKeyWithCache(businessKey));
 		return result;
 	}
+
+	@Override
+	public Result<List<WorkStationJobTypeDto>> queryWorkStationJobTypeBybusinessKey(String businessKey) {
+		Result<List<WorkStationJobTypeDto> > result = Result.success();
+		List<WorkStationJobTypeDto> list = new ArrayList<>();
+		List<WorkStationJobTypePO> pos = workStationJobTypeDao.selectByBusinessKey(businessKey);
+		if(CollectionUtils.isNotEmpty(pos)){
+			pos.stream().forEach(item->{
+				WorkStationJobTypeDto dto = new WorkStationJobTypeDto();
+				BeanUtils.copyProperties(item,dto);
+				list.add(dto);
+			});
+		}
+		result.setData(list);
+		return result;
+	}
+
+
 }

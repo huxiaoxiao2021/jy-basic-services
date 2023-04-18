@@ -4,6 +4,7 @@ package com.jdl.basic.provider.core.service.workStation;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.provider.core.po.WorkStationJobTypePO;
 
 import java.util.List;
 
@@ -125,4 +126,11 @@ public interface WorkStationService {
 	 * @return
 	 */
 	Result<WorkStation> queryWorkStationBybusinessKeyWithCache(String businessKey);
+
+	/**
+	 * 根据businessKey查询 网格工种
+	 * @param businessKey
+	 * @return
+	 */
+	Result<List<WorkStationJobTypeDto>> queryWorkStationJobTypeBybusinessKey(String businessKey);
 }
