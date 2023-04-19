@@ -355,7 +355,7 @@
             and if_change_since_last_update = #{ifChangeSinceLastUpdate,jdbcType=INTEGER}
         </if>
         <if test="version != null">
-            and version = #{version,jdbcType=VARCHAR}
+            and (version = #{version,jdbcType=VARCHAR} or version is null)
         </if>
     </select>
 
@@ -406,7 +406,7 @@
             and if_change_since_last_update = #{ifChangeSinceLastUpdate,jdbcType=INTEGER}
         </if>
         <if test="version != null">
-            and version = #{version,jdbcType=VARCHAR}
+            and (version = #{version,jdbcType=VARCHAR} or version is null)
         </if>
     </select>
 
@@ -492,7 +492,7 @@
             and (box_receive_id is  null or box_receive_id=-1)
         </if>
         <if test="conf.version != null">
-            and version = #{conf.version,jdbcType=VARCHAR}
+            and (version = #{conf.version,jdbcType=VARCHAR} or version is null)
         </if>
         
     </select>
@@ -550,7 +550,7 @@
             </foreach>
         </if>
         <if test="version != null">
-            and version = #{version,jdbcType=VARCHAR}
+            and (version = #{version,jdbcType=VARCHAR} or version is null)
         </if>
     </select>
     <delete id="deleteByVersion" parameterType="java.util.Map">

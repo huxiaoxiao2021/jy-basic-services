@@ -52,8 +52,8 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
         }
         //大数据推送时调用此方法 传的版本号
         String version = confToBeVerifyed.getVersion();
+        //分拣计划配置时的版本号
         if(StringUtils.isBlank(confToBeVerifyed.getVersion())){
-            //分拣计划配置时的版本号
             version = collectBoxFlowDirectionConfService.getCurrentVersion();
         }
         if(StringUtils.isBlank(version)){
