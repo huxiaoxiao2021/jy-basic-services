@@ -3,7 +3,7 @@
 <mapper namespace="com.jdl.basic.provider.core.dao.workStation.WorkStationJobTypeDao" >
   <resultMap id="BaseResultMap" type="com.jdl.basic.provider.core.po.WorkStationJobTypePO" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="ref_business_key" property="refBusinessKey" jdbcType="VARCHAR" />
+    <result column="ref_station_key" property="refBusinessKey" jdbcType="VARCHAR" />
     <result column="job_code" property="jobCode" jdbcType="BIT" />
     <result column="create_user" property="createUser" jdbcType="VARCHAR" />
     <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
@@ -13,12 +13,12 @@
     <result column="ts" property="ts" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, ref_business_key, job_code, create_user, update_user, create_time, update_time, 
+    id, ref_station_key, job_code, create_user, update_user, create_time, update_time, 
     yn, ts
   </sql>
 
   <sql id="Part_Column_List" >
-    id, ref_business_key, job_code
+    id, ref_station_key, job_code
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -31,11 +31,11 @@
     select
     <include refid="Base_Column_List" />
     from work_station_job_type
-    where yn =1 and  ref_business_key = #{refBusinessKey,jdbcType=BIGINT}
+    where yn =1 and  ref_station_key = #{refBusinessKey,jdbcType=BIGINT}
   </select>
 
   <insert id="insert" parameterType="com.jdl.basic.provider.core.po.WorkStationJobTypePO" >
-    insert into work_station_job_type (id, ref_business_key, job_code, 
+    insert into work_station_job_type (id, ref_station_key, job_code, 
       create_user, update_user, create_time, 
       update_time, yn)
     values (#{id,jdbcType=BIGINT}, #{refBusinessKey,jdbcType=VARCHAR}, #{jobCode,jdbcType=BIT}, 
@@ -49,7 +49,7 @@
         id,
       </if>
       <if test="refBusinessKey != null" >
-        ref_business_key,
+        ref_station_key,
       </if>
       <if test="jobCode != null" >
         job_code,
@@ -107,7 +107,7 @@
   <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
     insert into work_station_job_type
     <trim prefix="(" suffix=")" suffixOverrides=",">
-    ref_business_key, job_code,create_user, create_time,
+    ref_station_key, job_code,create_user, create_time,
     </trim>
     values
     <foreach collection="list" item="item" index="index" separator=",">
@@ -124,7 +124,7 @@
     update work_station_job_type
     <set >
       <if test="refBusinessKey != null" >
-        ref_business_key = #{refBusinessKey,jdbcType=VARCHAR},
+        ref_station_key = #{refBusinessKey,jdbcType=VARCHAR},
       </if>
       <if test="jobCode != null" >
         job_code = #{jobCode,jdbcType=BIT},
@@ -152,7 +152,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.jdl.basic.provider.core.po.WorkStationJobTypePO" >
     update work_station_job_type
-    set ref_business_key = #{refBusinessKey,jdbcType=VARCHAR},
+    set ref_station_key = #{refBusinessKey,jdbcType=VARCHAR},
       job_code = #{jobCode,jdbcType=BIT},
       create_user = #{createUser,jdbcType=VARCHAR},
       update_user = #{updateUser,jdbcType=VARCHAR},
@@ -165,13 +165,17 @@
 
   <update id="deleteByRefBusinessKey" parameterType="java.lang.String">
     update work_station_job_type set yn=0
-    where yn =1 and ref_business_key = #{refBusinessKey,jdbcType=VARCHAR}
+    where yn =1 and ref_station_key = #{refBusinessKey,jdbcType=VARCHAR}
   </update>
 
-  <select id="selectAll"   resultMap="BaseResultMap" >
+
+  <select id="selectByBusinessKeys"   parameterType="java.util.List" resultMap="BaseResultMap" >
     select
-    <include refid="Part_Column_List" />
+    ref_station_key,job_code
     from work_station_job_type
-    where yn =1
+    where yn =1 and  ref_station_key in
+    <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+      #{item}
+    </foreach>
   </select>
 </mapper>

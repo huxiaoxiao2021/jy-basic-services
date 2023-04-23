@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
 
+import com.google.common.collect.Lists;
 import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
@@ -280,10 +281,13 @@ public class WorkStationServiceImpl implements WorkStationService {
 	public Result<WorkStation> queryById(Long id){
 		Result<WorkStation> result = Result.success();
 		WorkStation workStation = workStationDao.queryById(id);
-		List<WorkStationJobTypePO> jobTypes = workStationJobTypeDao.selectByBusinessKey(workStation.getBusinessKey());
-		if(CollectionUtils.isNotEmpty(jobTypes)){
-			List<Integer> types = jobTypes.stream().map(WorkStationJobTypePO::getJobCode).collect(Collectors.toList());
-			workStation.setJobTypes(types);
+		//判断是否已经维护工种
+		if(Objects.equals(workStation.getHaveJobType(),1)){
+			List<WorkStationJobTypePO> jobTypes = workStationJobTypeDao.selectByBusinessKey(workStation.getBusinessKey());
+			if(CollectionUtils.isNotEmpty(jobTypes)){
+				List<Integer> types = jobTypes.stream().map(WorkStationJobTypePO::getJobCode).collect(Collectors.toList());
+				workStation.setJobTypes(types);
+			}
 		}
 		result.setData(workStation);
 		return result;
@@ -469,14 +473,20 @@ public class WorkStationServiceImpl implements WorkStationService {
 		    return Result.fail(checkResult.getMessage());
 		}
 		List<WorkStation> list = workStationDao.queryListForExport(query);
-		for (WorkStation station:list){
-			if(station.getHaveJobType() != null && station.getHaveJobType().equals(1)){
-				List<WorkStationJobTypePO> jobTypes = workStationJobTypeDao.selectByBusinessKey(station.getBusinessKey());
-				if(CollectionUtils.isNotEmpty(jobTypes)){
-					List<Integer> collect = jobTypes.stream().map(WorkStationJobTypePO::getJobCode).collect(Collectors.toList());
-					station.setJobTypes(collect);
+		if(CollectionUtils.isNotEmpty(list)){
+			List<List<WorkStation>> partition = Lists.partition(list, 50);
+			for (int i = 0; i < partition.size(); i++) {
+				List<String> stationBusinessKeys = partition.get(i).stream().map(WorkStation::getBusinessKey).collect(Collectors.toList());
+				List<WorkStationJobTypePO> workStationJobTypes = workStationJobTypeDao.selectByBusinessKeys(stationBusinessKeys);
+				for (WorkStation workStation : partition.get(i)) {
+					List<Integer> joyTypes = new ArrayList<>();
+					for (int j = 0; j < workStationJobTypes.size(); j++) {
+						if(Objects.equals(workStation.getBusinessKey(),workStationJobTypes.get(j).getRefBusinessKey())){
+							joyTypes.add(workStationJobTypes.get(j).getJobCode());
+						}
+					}
+					workStation.setJobTypes(joyTypes);
 				}
-
 			}
 		}
 		result.setData(list);

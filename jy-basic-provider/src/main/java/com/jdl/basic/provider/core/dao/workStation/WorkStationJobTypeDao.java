@@ -23,5 +23,5 @@ public interface WorkStationJobTypeDao {
 
     int deleteByRefBusinessKey(String refBusinessKey);
 
-    List<WorkStationJobTypePO> selectAll();
+    List<WorkStationJobTypePO> selectByBusinessKeys(List<String> businessKey);
 }
