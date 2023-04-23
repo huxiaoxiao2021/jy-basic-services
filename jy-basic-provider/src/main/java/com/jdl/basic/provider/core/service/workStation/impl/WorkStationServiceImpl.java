@@ -468,7 +468,6 @@ public class WorkStationServiceImpl implements WorkStationService {
 		if(!checkResult.isSuccess()){
 		    return Result.fail(checkResult.getMessage());
 		}
-		List<WorkStationJobTypePO> pos = workStationJobTypeDao.selectAll();
 		List<WorkStation> list = workStationDao.queryListForExport(query);
 		for (WorkStation station:list){
 			if(station.getHaveJobType() != null && station.getHaveJobType().equals(1)){
