@@ -202,7 +202,7 @@
     </jsf:provider>
 
     <!-- nc件白名单 -->
-    <jsf:provider id="NCWhiteListJsfService"
+    <jsf:provider id="ncWhiteListJsfService"
                   interface="com.jdl.basic.api.service.ncWhiteList.NCWhiteListJsfService"
                   alias="${jsf.jy_basic.alias}"
                   ref="NCWhiteListJsfServiceImpl"

@@ -29,6 +29,7 @@ public class NCWhiteListServiceImpl implements NCWhiteListService {
 
     @Override
     public List<NCWhiteList> queryWhiteListByCondition(NCWhiteListQuery query) {
+        query.setOffset(query.getOffset());
         return ncWhiteListDao.queryByCondition(query);
     }
 

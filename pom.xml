@@ -30,7 +30,6 @@
         <jmiss-cli.version>3.0.1-SNAPSHOT</jmiss-cli.version>
         <jdq4-sdk-version>1.0.0-SNAPSHOT</jdq4-sdk-version>
         <dms-java-utils-sdk.version>1.0.0-SNAPSHOT</dms-java-utils-sdk.version>
-        <redisson.version>3.14.1</redisson.version>
 <!--        <jd.ump.version>6.2.13-HOTFIX-T1</jd.ump.version>-->
 <!--        <jd.ump-x.version>1.0.2</jd.ump-x.version>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -202,17 +201,6 @@
 <!--                <artifactId>ump-x</artifactId>-->
 <!--                <version>${jd.ump-x.version}</version>-->
 <!--            </dependency>-->
-            <dependency>
-                <groupId>org.redisson</groupId>
-                <artifactId>redisson-spring-boot-starter</artifactId>
-                <version>${redisson.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>spring-boot-starter-actuator</artifactId>
-                        <groupId>org.springframework.boot</groupId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
