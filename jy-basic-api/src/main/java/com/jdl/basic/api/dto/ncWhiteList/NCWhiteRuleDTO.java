@@ -9,7 +9,7 @@ public class NCWhiteRuleDTO {
 
     private Integer refId;
 
-    private Integer quotaName;
+    private String quotaName;
 
     private Integer gt;
 

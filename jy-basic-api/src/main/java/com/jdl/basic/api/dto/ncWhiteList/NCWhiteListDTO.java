@@ -7,9 +7,9 @@ import java.util.List;
 @Data
 public class NCWhiteListDTO {
 
-    private int id;
+    private Integer id;
 
-    private int ruleType;
+    private Integer ruleType;
 
     private String class1;
 

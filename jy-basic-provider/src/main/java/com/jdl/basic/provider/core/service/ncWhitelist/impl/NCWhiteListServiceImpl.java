@@ -46,6 +46,8 @@ public class NCWhiteListServiceImpl implements NCWhiteListService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED,rollbackFor = {Exception.class})
     public int add(NCWhiteList ncWhiteList, List<NCWhiteRule> rules) {
+        log.info("ncWhiteList:{}", ncWhiteList);
+        log.info("rules:{}", rules);
         updateRuleDetail(ncWhiteList,rules);
         int id = ncWhiteListDao.insert(ncWhiteList);
 
