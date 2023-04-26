@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.service.ncWhitelist.impl;
 
 import com.jdl.basic.api.domain.ncWhiteList.NCWhiteListQuery;
+import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.core.dao.ncWhiteList.NCWhiteListDao;
 import com.jdl.basic.provider.core.dao.ncWhiteList.NCWhiteRuleDao;
 import com.jdl.basic.provider.core.po.NCWhiteList;
@@ -29,7 +30,8 @@ public class NCWhiteListServiceImpl implements NCWhiteListService {
 
     @Override
     public List<NCWhiteList> queryWhiteListByCondition(NCWhiteListQuery query) {
-        query.setOffset(query.getOffset());
+        log.info("query:{}", JsonHelper.toJSONString(query));
+        query.setOffset();
         return ncWhiteListDao.queryByCondition(query);
     }
 
@@ -49,11 +51,11 @@ public class NCWhiteListServiceImpl implements NCWhiteListService {
         log.info("ncWhiteList:{}", ncWhiteList);
         log.info("rules:{}", rules);
         updateRuleDetail(ncWhiteList,rules);
-        int id = ncWhiteListDao.insert(ncWhiteList);
+        int inserted = ncWhiteListDao.insert(ncWhiteList);
 
-        rules.forEach(e->e.setRefId(id));
+        rules.forEach(e->e.setRefId(ncWhiteList.getId()));
         ncWhiteRuleDao.insert(rules);
-        return id;
+        return inserted;
     }
 
     @Override

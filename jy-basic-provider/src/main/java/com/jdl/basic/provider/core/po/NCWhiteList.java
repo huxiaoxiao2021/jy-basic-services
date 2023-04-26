@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class NCWhiteList {
 
-    private int id;
+    private Integer id;
 
-    private int ruleType;
+    private Integer ruleType;
 
     private String class1;
 

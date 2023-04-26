@@ -13,8 +13,6 @@
         <result column="gt_value" jdbcType="INTEGER" property="gtValue"/>
         <result column="lt_value" jdbcType="INTEGER" property="ltValue"/>
         <result column="unit" jdbcType="VARCHAR" property="unit"/>
-        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
-        <result column="operator_erp" jdbcType="VARCHAR" property="operatorErp"/>
     </resultMap>
 
     <update id="deleteByRefId" parameterType="java.lang.Integer">
@@ -26,22 +24,21 @@
     <insert id="insert" parameterType="com.jdl.basic.provider.core.po.NCWhiteRule">
         insert into nc_white_rule
         (`ref_id`, `quota_name`, `gt`, `gte`,
-         `lt`, `lte`, `gt_value`, `lt_value`,
-         `unit`, `update_time`, `operator_erp`)
+        `lt`, `lte`, `gt_value`, `lt_value`,
+        `unit`)
         values
         <foreach collection="list" item="item" separator=",">
             (#{item.refId,jdbcType=INTEGER}, #{item.quotaName,jdbcType=VARCHAR},
-             #{item.gt,jdbcType=TINYINT}, #{item.gte,jdbcType=TINYINT},
+            #{item.gt,jdbcType=TINYINT}, #{item.gte,jdbcType=TINYINT},
             #{item.lt,jdbcType=TINYINT}, #{item.lte,jdbcType=TINYINT},
-             #{item.gtValue,jdbcType=INTEGER},#{item.ltValue,jdbcType=INTEGER},#{item.unit,jdbcType=VARCHAR},
-             #{item.updateTime,jdbcType=TIMESTAMP}, #{item.operatorErp,jdbcType=VARCHAR})
+            #{item.gtValue,jdbcType=INTEGER},#{item.ltValue,jdbcType=INTEGER},
+            #{item.unit,jdbcType=VARCHAR})
         </foreach>
     </insert>
 
     <select id="queryByRefId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select `id`,
                `ref_id`,
-               `quota_id`,
                `quota_name`,
                `gt`,
                `gte`,
@@ -49,12 +46,10 @@
                `lte`,
                `gt_value`,
                `lt_value`,
-               `unit`,
-               `update_time`,
-               `operator_erp`
+               `unit`
         from nc_white_rule
         where `ref_id` = #{refId,jdbcType=INTEGER}
-		and yn = 1
+          and yn = 1
     </select>
 
 </mapper>

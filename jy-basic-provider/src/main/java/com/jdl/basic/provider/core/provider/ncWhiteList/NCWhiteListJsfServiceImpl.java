@@ -4,6 +4,7 @@ import com.jdl.basic.api.domain.ncWhiteList.NCWhiteListQuery;
 import com.jdl.basic.api.dto.ncWhiteList.NCWhiteListDTO;
 import com.jdl.basic.api.dto.ncWhiteList.NCWhiteRuleDTO;
 import com.jdl.basic.api.service.ncWhiteList.NCWhiteListJsfService;
+import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.po.NCWhiteList;
@@ -47,8 +48,9 @@ public class NCWhiteListJsfServiceImpl implements NCWhiteListJsfService {
         List<NCWhiteList> ncWhiteLists = ncWhiteListService.queryWhiteListByCondition(query);
         int total = ncWhiteListService.countByCondition(query);
         PageDto<NCWhiteListDTO> pageDto = new PageDto<>();
-        pageDto.setTotalPage(total);
+        pageDto.setTotalRow(total);
         pageDto.setResult(makeWhiteListDTO(ncWhiteLists));
+        log.info("pageDto:{}",JsonHelper.toJSONString(pageDto));
         return Result.success(pageDto);
     }
 
