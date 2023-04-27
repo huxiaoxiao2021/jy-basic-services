@@ -5,6 +5,7 @@ import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
+import com.jdl.basic.api.domain.workStation.WorkArea;
 import com.jdl.basic.api.domain.workStation.WorkStation;
 import com.jdl.basic.api.domain.workStation.WorkStationCountVo;
 import com.jdl.basic.api.domain.workStation.WorkStationQuery;
@@ -17,12 +18,14 @@ import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringHelper;
 import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationDao;
+import com.jdl.basic.provider.core.service.workStation.WorkAreaService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -53,7 +56,10 @@ public class WorkStationServiceImpl implements WorkStationService {
 	@Autowired
 	@Qualifier("workStationGridService")
 	private WorkStationGridService workStationGridService;
-
+	
+	@Autowired
+	@Qualifier("workAreaService")
+	private WorkAreaService workAreaService;
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -67,8 +73,28 @@ public class WorkStationServiceImpl implements WorkStationService {
 		}
 		generateAndSetBusinessKey(insertData);
 		result.setData(workStationDao.insert(insertData) == 1);
+		//新增成功，同步保存workArea
+		if(result.getData()) {
+			saveWorkArea(insertData);
+		}
 		return result;
 	 }
+	private boolean saveWorkArea(WorkStation workStation) {
+		WorkArea workArea = new WorkArea();
+		workArea.setAreaCode(workStation.getAreaCode());
+		workArea.setAreaName(workStation.getAreaName());
+		workArea.setBusinessLineCode(workStation.getBusinessLineCode());
+		workArea.setBusinessLineName(workStation.getBusinessLineName());
+		workArea.setAreaType(workStation.getAreaType());
+		workArea.setCreateUser(workStation.getCreateUser());
+		workArea.setCreateUserName(workStation.getCreateUserName());
+		workArea.setUpdateUser(workStation.getUpdateUser());
+		workArea.setUpdateUserName(workStation.getUpdateUserName());
+		workArea.setCreateTime(workStation.getCreateTime());
+		workArea.setUpdateTime(workStation.getUpdateTime());
+		workAreaService.saveData(workArea);
+		return true;
+	}
 	@Override
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.importDatas", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> importDatas(List<WorkStation> dataList) {
@@ -90,6 +116,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 			}
 			data.setBusinessLineName(BusinessLineTypeEnum.getNameByCode(data.getBusinessLineCode()));
 			workStationDao.insert(data);
+			saveWorkArea(data);
 		}
 		return result;
 	}
@@ -194,6 +221,9 @@ public class WorkStationServiceImpl implements WorkStationService {
 		updateData.setId(null);
 		updateData.setBusinessLineName(BusinessLineTypeEnum.getNameByCode(updateData.getBusinessLineCode()));
 		result.setData(workStationDao.insert(updateData) == 1);
+		if(result.getData()) {
+			saveWorkArea(updateData);
+		}
 		return result;
 	 }
 	/**
@@ -408,5 +438,29 @@ public class WorkStationServiceImpl implements WorkStationService {
 		Result<WorkStation> result = Result.success();
 		result.setData(workStationDao.queryWorkStationBybusinessKeyWithCache(businessKey));
 		return result;
+	}
+	
+	public void initAllWorkArea() {
+		int pageNum = 1;
+		WorkStationQuery query = new WorkStationQuery();
+		List<WorkStation> dataList = null;
+		do {
+			query.setPageNumber(pageNum);
+			query.setPageSize(100);
+			Result<PageDto<WorkStation>>  pageResult = this.queryPageList(query);
+			if(pageResult != null 
+					&& pageResult.getData() != null) {
+				dataList = pageResult.getData().getResult();
+				if((!CollectionUtils.isEmpty(dataList))) {
+					for(WorkStation data : dataList) {
+						this.saveWorkArea(data);
+					}
+				}
+			}
+			pageNum++;
+		}while(!CollectionUtils.isEmpty(dataList));
+	}
+	public void initWorkArea(Long id) {
+		this.saveWorkArea(workStationDao.queryById(id));
 	}
 }

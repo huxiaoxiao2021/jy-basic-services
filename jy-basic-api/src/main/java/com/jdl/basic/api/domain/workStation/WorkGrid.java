@@ -1,24 +1,23 @@
 package com.jdl.basic.api.domain.workStation;
 
-import com.jdl.basic.api.domain.machine.Machine;
-import lombok.Data;
-
-import java.io.Serializable;
+import lombok.Setter;
+import lombok.Getter;
 import java.util.Date;
-import java.util.List;
+import java.io.Serializable;
 
 /**
- * @ClassName: WorkStationGrid
- * @Description: 网格表-实体类
+ * 场地网格表-实体类
+ * 
  * @author wuyoude
- * @date 2022年02月23日 11:01:53
+ * @date 2023年04月25日 00:18:56
  *
  */
-@Data
+@Setter
+@Getter
 public class WorkGrid implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	/**
 	 * 主键ID
 	 */
@@ -70,19 +69,49 @@ public class WorkGrid implements Serializable {
 	private String gridName;
 
 	/**
-	 * 编制人数
+	 * 作业区编码
 	 */
-	private Integer standardNum;
+	private String areaCode;
 
 	/**
-	 * 负责人erp
+	 * 作业区名称
 	 */
-	private String ownerUserErp;
+	private String areaName;
 
 	/**
-	 * 关联：work_station业务主键
+	 * 自动化设备编码
 	 */
-	private String refStationKey;
+	private String machineCode;
+
+	/**
+	 * 自动化设备类型编码
+	 */
+	private String machineTypeCode;
+
+	/**
+	 * 月台编号
+	 */
+	private String dockCode;
+
+	/**
+	 * 供应商编码
+	 */
+	private String supplierCode;
+
+	/**
+	 * 供应商名称
+	 */
+	private String supplierName;
+
+	/**
+	 * 锁定操作人
+	 */
+	private String lockUser;
+
+	/**
+	 * 锁定时间
+	 */
+	private Date lockTime;
 
 	/**
 	 * 创建人ERP
@@ -124,49 +153,5 @@ public class WorkGrid implements Serializable {
 	 */
 	private Date ts;
 
-	/**
-	 * 作业区编码
-	 */
-	private String areaCode;
-
-	/**
-	 * 作业区名称
-	 */
-	private String areaName;
-
-	/**
-	 * 工序编码
-	 */
-	private String workCode;
-
-	/**
-	 * 工序名称
-	 */
-	private String workName;
-
-	/**
-	 * 异常网格标志
-	 */
-	private Integer areaType;
-
-	/**
-	 * 自动化设备编码
-	 */
-	private List<Machine> machine;
-
-	/**
-	 * 月台号
-	 */
-	private String dockCode;
-
-	/**
-	 * 供应商编码
-	 */
-	private String supplierCode;
-
-	/**
-	 * 供应商名称
-	 */
-	private String supplierName;
 
 }

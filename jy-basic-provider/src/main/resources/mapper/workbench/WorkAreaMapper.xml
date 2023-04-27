@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jdl.basic.provider.core.dao.workStation.WorkAreaDao" >
+
+	<resultMap id="WorkArea" type="com.jdl.basic.api.domain.workStation.WorkArea" >
+		<id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+		<result column="area_code" property="areaCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="area_name" property="areaName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="business_line_code" property="businessLineCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="business_line_name" property="businessLineName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="area_type" property="areaType" javaType="java.lang.Integer" jdbcType="TINYINT" />
+		<result column="flow_direction_type" property="flowDirectionType" javaType="java.lang.Integer" jdbcType="INTEGER" />
+		<result column="create_user" property="createUser" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="create_user_name" property="createUserName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="update_user" property="updateUser" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="update_user_name" property="updateUserName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result column="yn" property="yn" javaType="java.lang.Integer" jdbcType="TINYINT" />
+		<result column="ts" property="ts" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+		id,area_code,area_name,business_line_code,business_line_name,area_type,
+		flow_direction_type,create_user,create_user_name,update_user,update_user_name,
+		create_time,update_time,yn,ts
+	</sql>
+
+	<insert id="insert" parameterType="com.jdl.basic.api.domain.workStation.WorkArea" useGeneratedKeys="true" keyProperty="id">
+		insert into work_area
+			(
+			<trim suffixOverrides=",">
+				<if test="id != null" >
+					id,
+				</if>
+				<if test="areaCode != null" >
+					area_code,
+				</if>
+				<if test="areaName != null" >
+					area_name,
+				</if>
+				<if test="businessLineCode != null" >
+					business_line_code,
+				</if>
+				<if test="businessLineName != null" >
+					business_line_name,
+				</if>
+				<if test="areaType != null" >
+					area_type,
+				</if>
+				<if test="flowDirectionType != null" >
+					flow_direction_type,
+				</if>
+				<if test="createUser != null" >
+					create_user,
+				</if>
+				<if test="createUserName != null" >
+					create_user_name,
+				</if>
+				<if test="updateUser != null" >
+					update_user,
+				</if>
+				<if test="updateUserName != null" >
+					update_user_name,
+				</if>
+				<if test="createTime != null" >
+					create_time,
+				</if>
+				<if test="updateTime != null" >
+					update_time,
+				</if>
+				<if test="yn != null" >
+					yn,
+				</if>
+				<if test="ts != null" >
+					ts,
+				</if>
+			</trim>
+			)
+			values
+			(
+			<trim suffixOverrides=",">
+				<if test="id != null" >
+					#{id,jdbcType=BIGINT},
+				</if>
+				<if test="areaCode != null" >
+					#{areaCode,jdbcType=VARCHAR},
+				</if>
+				<if test="areaName != null" >
+					#{areaName,jdbcType=VARCHAR},
+				</if>
+				<if test="businessLineCode != null" >
+					#{businessLineCode,jdbcType=VARCHAR},
+				</if>
+				<if test="businessLineName != null" >
+					#{businessLineName,jdbcType=VARCHAR},
+				</if>
+				<if test="areaType != null" >
+					#{areaType,jdbcType=TINYINT},
+				</if>
+				<if test="flowDirectionType != null" >
+					#{flowDirectionType,jdbcType=INTEGER},
+				</if>
+				<if test="createUser != null" >
+					#{createUser,jdbcType=VARCHAR},
+				</if>
+				<if test="createUserName != null" >
+					#{createUserName,jdbcType=VARCHAR},
+				</if>
+				<if test="updateUser != null" >
+					#{updateUser,jdbcType=VARCHAR},
+				</if>
+				<if test="updateUserName != null" >
+					#{updateUserName,jdbcType=VARCHAR},
+				</if>
+				<if test="createTime != null" >
+					#{createTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="updateTime != null" >
+					#{updateTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="yn != null" >
+					#{yn,jdbcType=TINYINT},
+				</if>
+				<if test="ts != null" >
+					#{ts,jdbcType=TIMESTAMP},
+				</if>
+			</trim>
+			)
+	</insert>
+
+	<update id="updateById" parameterType="com.jdl.basic.api.domain.workStation.WorkArea">
+		update work_area
+			<set>
+				<if test="areaCode != null" >
+					area_code = #{areaCode,jdbcType=VARCHAR},
+				</if>
+				<if test="areaName != null" >
+					area_name = #{areaName,jdbcType=VARCHAR},
+				</if>
+				<if test="businessLineCode != null" >
+					business_line_code = #{businessLineCode,jdbcType=VARCHAR},
+				</if>
+				<if test="businessLineName != null" >
+					business_line_name = #{businessLineName,jdbcType=VARCHAR},
+				</if>
+				<if test="areaType != null" >
+					area_type = #{areaType,jdbcType=TINYINT},
+				</if>
+				<if test="flowDirectionType != null" >
+					flow_direction_type = #{flowDirectionType,jdbcType=INTEGER},
+				</if>
+				<if test="createUser != null" >
+					create_user = #{createUser,jdbcType=VARCHAR},
+				</if>
+				<if test="createUserName != null" >
+					create_user_name = #{createUserName,jdbcType=VARCHAR},
+				</if>
+				<if test="updateUser != null" >
+					update_user = #{updateUser,jdbcType=VARCHAR},
+				</if>
+				<if test="updateUserName != null" >
+					update_user_name = #{updateUserName,jdbcType=VARCHAR},
+				</if>
+				<if test="createTime != null" >
+					create_time = #{createTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="updateTime != null" >
+					update_time = #{updateTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="yn != null" >
+					yn = #{yn,jdbcType=TINYINT},
+				</if>
+				<if test="ts != null" >
+					ts = #{ts,jdbcType=TIMESTAMP},
+				</if>
+			</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<update id="deleteById" parameterType="com.jdl.basic.api.domain.workStation.WorkArea">
+		update work_area
+			set 
+			<if test="updateUser != null" >
+				update_user = #{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			   yn = 0
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<select id="queryById" parameterType="java.lang.Long" resultMap="WorkArea">
+		select
+			<include refid="Base_Column_List"/>
+		from
+			work_area t
+		where yn = 1 and id = #{id,jdbcType=BIGINT}
+	</select>
+    <select id="queryByAreaCode" parameterType="java.lang.String" resultMap="WorkArea">
+        select
+            <include refid="Base_Column_List"/>
+        from
+            work_area t
+        where yn = 1 
+          and area_code = #{areaCode,jdbcType=VARCHAR} 
+        limit 1
+    </select>
+	<select id="queryList" resultMap="WorkArea">
+		select
+			<include refid="Base_Column_List"/>
+		from
+			work_area t
+		<include refid="queryCondition"/>
+		limit #{offset}, #{limit}
+	</select>
+
+	<select id="queryCount" resultType="long">
+		select
+			count(1)
+		from
+			work_area t
+		<include refid="queryCondition"/>
+	</select>
+
+	<sql id="queryCondition">
+		<where>
+			yn = 1 
+		</where>
+	</sql>
+</mapper>

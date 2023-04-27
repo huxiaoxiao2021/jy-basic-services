@@ -11,8 +11,8 @@ public enum ScheduleEnum {
     private Integer code;
     private String name;
 
-    private static HashMap<Integer, String> codeToNameMap = new HashMap<>();
-    private static HashMap<String, Integer> nameToCodeMap = new HashMap<>();
+    private static HashMap<Integer, String> codeToNameMap = new HashMap<Integer, String>();
+    private static HashMap<String, Integer> nameToCodeMap = new HashMap<String, Integer>();
 
     static {
         for (ScheduleEnum waveTypeEnum : ScheduleEnum.values()){

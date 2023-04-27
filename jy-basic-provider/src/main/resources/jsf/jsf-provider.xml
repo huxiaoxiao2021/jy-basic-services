@@ -18,7 +18,14 @@
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
-
+    <!-- 三定网格工序管理jsf服务 -->
+    <jsf:provider id="workAreaJsfServiceServer"
+                  interface="com.jdl.basic.api.service.workStation.WorkAreaJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workAreaJsfService"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
     <!-- 三定网格工序管理jsf服务 -->
     <jsf:provider id="workStationJsfService"
                   interface="com.jdl.basic.api.service.workStation.WorkStationJsfService"
@@ -27,7 +34,14 @@
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
-
+    <!-- 三定网格管理jsf服务 -->
+    <jsf:provider id="workGridJsfServiceServer"
+                  interface="com.jdl.basic.api.service.workStation.WorkGridJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workGridJsfService"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
     <!-- 三定网格工序管理jsf服务 -->
     <jsf:provider id="workStationGridJsfService"
                   interface="com.jdl.basic.api.service.workStation.WorkStationGridJsfService"
@@ -36,7 +50,14 @@
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
-
+    <!-- 三定网格工序管理jsf服务 -->
+    <jsf:provider id="workGridFlowDirectionJsfServiceServer"
+                  interface="com.jdl.basic.api.service.workStation.WorkGridFlowDirectionJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workGridFlowDirectionJsfService"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
     <!-- 三定场地工序维度出勤计划管理jsf服务 -->
     <jsf:provider id="workStationAttendPlanJsfService"
                   interface="com.jdl.basic.api.service.workStation.WorkStationAttendPlanJsfService"
