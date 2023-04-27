@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,18 +54,21 @@ public class NCWhiteListServiceImpl implements NCWhiteListService {
         updateRuleDetail(ncWhiteList,rules);
         int inserted = ncWhiteListDao.insert(ncWhiteList);
 
-        rules.forEach(e->e.setRefId(ncWhiteList.getId()));
-        ncWhiteRuleDao.insert(rules);
+        if (Objects.nonNull(rules) && rules.size() > 0) {
+            rules.forEach(e->e.setRefId(ncWhiteList.getId()));
+            ncWhiteRuleDao.insert(rules);
+        }
         return inserted;
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED,rollbackFor = {Exception.class})
     public int modify(NCWhiteList ncWhiteList, List<NCWhiteRule> rules) {
-
-        ncWhiteRuleDao.deleteByRefId(ncWhiteList.getId());
-        rules.forEach(e->e.setRefId(ncWhiteList.getId()));
-        ncWhiteRuleDao.insert(rules);
+        if (Objects.nonNull(rules) && rules.size() > 0) {
+            ncWhiteRuleDao.deleteByRefId(ncWhiteList.getId());
+            rules.forEach(e->e.setRefId(ncWhiteList.getId()));
+            ncWhiteRuleDao.insert(rules);
+        }
 
         updateRuleDetail(ncWhiteList,rules);
         int inserted = ncWhiteListDao.updateByPK(ncWhiteList);
@@ -80,6 +84,10 @@ public class NCWhiteListServiceImpl implements NCWhiteListService {
     }
 
     private void updateRuleDetail(NCWhiteList ncWhiteList, List<NCWhiteRule> rules) {
+        if (Objects.isNull(rules) || rules.size() == 0) {
+            ncWhiteList.setRuleDetail("");
+            return;
+        }
         String ruleDetail = generateRuleDetail(rules);
         ncWhiteList.setRuleDetail(ruleDetail);
     }

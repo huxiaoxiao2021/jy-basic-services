@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service("NCWhiteListJsfServiceImpl")
 @Slf4j
@@ -62,6 +63,7 @@ public class NCWhiteListJsfServiceImpl implements NCWhiteListJsfService {
 
     private List<NCWhiteRule> getRulesPo(NCWhiteListDTO ncWhiteListDTO) {
         List<NCWhiteRuleDTO> rulesDTO = ncWhiteListDTO.getRules();
+        if (Objects.isNull(rulesDTO) || rulesDTO.size() == 0) return null;
         List<NCWhiteRule> ncWhiteRules = new ArrayList<>();
         for (NCWhiteRuleDTO item : rulesDTO) {
             NCWhiteRule ncWhiteRule = new NCWhiteRule();
