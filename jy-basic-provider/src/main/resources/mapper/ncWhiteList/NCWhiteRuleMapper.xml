@@ -10,8 +10,8 @@
         <result column="gte" jdbcType="TINYINT" property="gte"/>
         <result column="lt" jdbcType="TINYINT" property="lt"/>
         <result column="lte" jdbcType="TINYINT" property="lte"/>
-        <result column="gt_value" jdbcType="INTEGER" property="gtValue"/>
-        <result column="lt_value" jdbcType="INTEGER" property="ltValue"/>
+        <result column="gt_value" jdbcType="DOUBLE" property="gtValue"/>
+        <result column="lt_value" jdbcType="DOUBLE" property="ltValue"/>
         <result column="unit" jdbcType="VARCHAR" property="unit"/>
     </resultMap>
 
@@ -31,7 +31,7 @@
             (#{item.refId,jdbcType=INTEGER}, #{item.quotaName,jdbcType=VARCHAR},
             #{item.gt,jdbcType=TINYINT}, #{item.gte,jdbcType=TINYINT},
             #{item.lt,jdbcType=TINYINT}, #{item.lte,jdbcType=TINYINT},
-            #{item.gtValue,jdbcType=INTEGER},#{item.ltValue,jdbcType=INTEGER},
+            #{item.gtValue,jdbcType=DOUBLE},#{item.ltValue,jdbcType=DOUBLE},
             #{item.unit,jdbcType=VARCHAR})
         </foreach>
     </insert>

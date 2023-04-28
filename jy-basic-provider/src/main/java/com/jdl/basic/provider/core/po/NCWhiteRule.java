@@ -19,9 +19,9 @@ public class NCWhiteRule {
 
     private Integer lte;
 
-    private Integer gtValue;
+    private Double gtValue;
 
-    private Integer ltValue;
+    private Double ltValue;
 
     private String unit;
 
