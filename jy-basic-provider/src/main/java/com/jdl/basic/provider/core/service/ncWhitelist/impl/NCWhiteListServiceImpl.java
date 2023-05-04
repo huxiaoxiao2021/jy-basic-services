@@ -68,6 +68,8 @@ public class NCWhiteListServiceImpl implements NCWhiteListService {
             ncWhiteRuleDao.deleteByRefId(ncWhiteList.getId());
             rules.forEach(e->e.setRefId(ncWhiteList.getId()));
             ncWhiteRuleDao.insert(rules);
+        } else {
+            ncWhiteRuleDao.deleteByRefId(ncWhiteList.getId());
         }
 
         updateRuleDetail(ncWhiteList,rules);
