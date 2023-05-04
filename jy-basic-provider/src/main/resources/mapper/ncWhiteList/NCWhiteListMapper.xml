@@ -35,7 +35,9 @@
 				and keyword like CONCAT('%', #{keyword, jdbcType=VARCHAR}, '%')
 			</if>
 		</where>
-		limit #{offset}, #{pageSize}
+		<if test="pageSize != 0 and offset != 0" >
+			limit #{offset}, #{pageSize}
+		</if>
 	</select>
 
 	<select id="countByCondition" parameterType="com.jdl.basic.api.domain.ncWhiteList.NCWhiteListQuery" resultType="java.lang.Long">

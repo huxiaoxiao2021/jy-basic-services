@@ -19,4 +19,5 @@ public interface NCWhiteListJsfService {
 
     Result<Integer> countByCondition(NCWhiteListQuery query);
 
+    Result<Integer> evaluate(String length, String width, String height, String volume, String weight, String description);
 }

@@ -1,6 +1,9 @@
 package com.jdl.basic.provider.core.service.ncWhitelist.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.jdl.basic.api.domain.ncWhiteList.NCWhiteListQuery;
+import com.jdl.basic.api.dto.ncWhiteList.NCWhiteListDTO;
+import com.jdl.basic.api.dto.ncWhiteList.NCWhiteRuleDTO;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.core.dao.ncWhiteList.NCWhiteListDao;
 import com.jdl.basic.provider.core.dao.ncWhiteList.NCWhiteRuleDao;
@@ -31,7 +34,6 @@ public class NCWhiteListServiceImpl implements NCWhiteListService {
 
     @Override
     public List<NCWhiteList> queryWhiteListByCondition(NCWhiteListQuery query) {
-        log.info("query:{}", JsonHelper.toJSONString(query));
         query.setOffset();
         return ncWhiteListDao.queryByCondition(query);
     }
@@ -47,10 +49,8 @@ public class NCWhiteListServiceImpl implements NCWhiteListService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED,rollbackFor = {Exception.class})
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE,rollbackFor = {Exception.class})
     public int add(NCWhiteList ncWhiteList, List<NCWhiteRule> rules) {
-        log.info("ncWhiteList:{}", ncWhiteList);
-        log.info("rules:{}", rules);
         updateRuleDetail(ncWhiteList,rules);
         int inserted = ncWhiteListDao.insert(ncWhiteList);
 
@@ -62,7 +62,7 @@ public class NCWhiteListServiceImpl implements NCWhiteListService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED,rollbackFor = {Exception.class})
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE,rollbackFor = {Exception.class})
     public int modify(NCWhiteList ncWhiteList, List<NCWhiteRule> rules) {
         if (Objects.nonNull(rules) && rules.size() > 0) {
             ncWhiteRuleDao.deleteByRefId(ncWhiteList.getId());
