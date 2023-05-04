@@ -63,7 +63,6 @@ public class NCWhiteListJsfServiceImpl implements NCWhiteListJsfService {
         PageDto<NCWhiteListDTO> pageDto = new PageDto<>();
         pageDto.setTotalRow(total);
         pageDto.setResult(makeWhiteListDTO(ncWhiteLists));
-        log.info("pageDto:{}",JsonHelper.toJSONString(pageDto));
         return Result.success(pageDto);
     }
 
