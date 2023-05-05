@@ -313,7 +313,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
 //            }while (count > 0);
 //            log.info("删除历史版本数据version:{},count:{}", history.getVersion(), sum);
 //        }
-        CollectBoxFlowInfo entity = null;
+        CollectBoxFlowInfo entity = new CollectBoxFlowInfo();;
         Date updateTime = new Date();
         //当前版本
         CollectBoxFlowInfo current = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null,
@@ -321,7 +321,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         if(current != null){
             //throw new Exception("未查到激活的版本");
             //当前版本改成历史版本
-            entity = new CollectBoxFlowInfo();
+            
             entity.setId(current.getId());
             entity.setStatus(HISTORY.getCode());
             entity.setOperateType(ACTIVATE.getCode());
