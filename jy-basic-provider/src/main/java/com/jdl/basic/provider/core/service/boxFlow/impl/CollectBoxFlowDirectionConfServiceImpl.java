@@ -318,8 +318,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         //当前版本
         CollectBoxFlowInfo current = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null,
                 CURRENT.getCode());
-        if(current == null){
-            log.error("小件集包规则，定时切换时未查到已激活版本");
+        if(current != null){
             //throw new Exception("未查到激活的版本");
             //当前版本改成历史版本
             entity = new CollectBoxFlowInfo();
@@ -328,6 +327,8 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
             entity.setOperateType(ACTIVATE.getCode());
             entity.setUpdateTime(updateTime);
             collectBoxFlowInfoDao.updateByPrimaryKeySelective(entity);
+        }else {
+            log.error("小件集包规则，定时切换时未查到已激活版本");
         }
         
         //待激活的修改状态
