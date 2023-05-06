@@ -179,4 +179,20 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
         }
         return response;
     }
+
+	@Override
+	public Result<PositionData> queryPositionByGridKey(String gridKey) {
+        if(log.isInfoEnabled()){
+            log.info("岗位管理-queryPositionByGridKey-{}",gridKey);
+        }
+        Result<PositionData> response = new Result<>();
+        response.toSuccess();
+        try {
+        	response.setData(positionRecordService.queryPositionByGridKeyWithCache(gridKey));
+        }catch (Exception e){
+            log.error("queryPositionByGridKey 查询岗位信息:{} 异常!-{}", gridKey, e.getMessage(),e);
+            response.toFail("岗位信息查询异常！");
+        }
+        return response;
+	}
 }
