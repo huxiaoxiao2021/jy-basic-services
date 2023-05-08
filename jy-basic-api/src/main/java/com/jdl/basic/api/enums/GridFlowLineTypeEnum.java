@@ -18,9 +18,9 @@ public enum GridFlowLineTypeEnum {
 
     BRANCH_LINE(2, "支线",2),
 
-    TRANSFER(3, "传",3),
+    TRANSFER(3, "传站",3),
 
-    SHUTTLE(4, "摆",4)
+    SHUTTLE(4, "摆渡",4)
     ;
 
     private Integer code;

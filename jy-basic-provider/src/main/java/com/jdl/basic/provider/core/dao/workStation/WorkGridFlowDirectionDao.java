@@ -1,6 +1,8 @@
 package com.jdl.basic.provider.core.dao.workStation;
 
 import java.util.List;
+
+import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
 
@@ -19,6 +21,12 @@ public interface WorkGridFlowDirectionDao {
 	 * @return
 	 */
 	int insert(WorkGridFlowDirection insertData);
+	/**
+	 * 插入数据列表
+	 * @param insertData
+	 * @return
+	 */
+	int batchInsert(List<WorkGridFlowDirection> flowList);
 	/**
 	 * 根据id更新数据
 	 * @param updateData
@@ -55,5 +63,23 @@ public interface WorkGridFlowDirectionDao {
 	 * @return
 	 */
 	List<WorkGridFlowDirection> queryListForWorkGridVo(WorkGridFlowDirectionQuery query);
+	/**
+	 * 根据id列表查询
+	 * @param deleteRequest
+	 * @return
+	 */
+	List<WorkGridFlowDirection> queryByIds(DeleteRequest<WorkGridFlowDirection> deleteRequest);
+	/**
+	 * 根据id列表删除
+	 * @param deleteRequest
+	 * @return
+	 */
+	int deleteByIds(DeleteRequest<WorkGridFlowDirection> deleteRequest);
+	/**
+	 * 查询流向列表
+	 * @param query
+	 * @return
+	 */
+	List<Integer> queryExistFlowSiteCodeList(WorkGridFlowDirectionQuery query);
 
 }

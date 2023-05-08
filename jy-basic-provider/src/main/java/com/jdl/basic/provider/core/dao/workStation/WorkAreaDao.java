@@ -55,5 +55,11 @@ public interface WorkAreaDao {
 	 * @return
 	 */	
 	WorkArea queryByAreaCode(String areaCode);
+	/**
+	 * 根据areaCode列表查询
+	 * @param areaCodeList
+	 * @return
+	 */
+	List<WorkArea> queryByAreaCodeList(List<String> areaCodeList);
 
 }

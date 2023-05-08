@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
+import com.jdl.basic.api.domain.workStation.WorkGridImport;
 import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridVo;
 import com.jdl.basic.common.utils.PageDto;
@@ -41,7 +42,13 @@ public interface WorkGridJsfService {
 	 * @param id
 	 * @return
 	 */
-	Result<WorkGrid> queryById(Long id);
+	Result<WorkGrid> queryById(Long id);	
+	/**
+	 * 根据id查询
+	 * @param id
+	 * @return
+	 */
+	Result<WorkGridVo> queryByIdForConfigFlow(Long id);
 	/**
 	 * 按条件分页查询
 	 * @param query
@@ -66,4 +73,10 @@ public interface WorkGridJsfService {
 	 * @return
 	 */
 	Result<Boolean> deleteByIds(DeleteRequest<WorkGrid> deleteRequest);
+	/**
+	 * 导入数据
+	 * @param dataList
+	 * @return
+	 */
+	Result<Boolean> importDatas(List<WorkGridImport> dataList);	
 }

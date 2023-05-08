@@ -5,6 +5,7 @@ import com.jdl.basic.common.utils.Result;
 
 import java.util.List;
 
+import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
 
@@ -23,6 +24,12 @@ public interface WorkGridFlowDirectionService {
 	 * @return
 	 */
 	Result<Boolean> insert(WorkGridFlowDirection insertData);
+	/**
+	 * 批量插入
+	 * @param flowListForAdd
+	 * @return
+	 */
+	int batchInsert(List<WorkGridFlowDirection> flowListForAdd);
 	/**
 	 * 根据id更新数据
 	 * @param updateData
@@ -53,5 +60,22 @@ public interface WorkGridFlowDirectionService {
 	 * @return
 	 */
 	List<WorkGridFlowDirection> queryListForWorkGridVo(WorkGridFlowDirectionQuery query);
-
+	/**
+	 * 批量删除逻辑
+	 * @param deleteRequest
+	 * @return
+	 */
+	Result<Boolean> deleteByIds(DeleteRequest<WorkGridFlowDirection> deleteRequest);
+	/**
+	 * 批量导入流向
+	 * @param dataList
+	 * @return
+	 */
+	Result<Boolean> importDatas(List<WorkGridFlowDirection> dataList);
+	/**
+	 * 查询流向站点列表
+	 * @param query
+	 * @return
+	 */
+	List<Integer> queryExistFlowSiteCodeList(WorkGridFlowDirectionQuery query);
 }

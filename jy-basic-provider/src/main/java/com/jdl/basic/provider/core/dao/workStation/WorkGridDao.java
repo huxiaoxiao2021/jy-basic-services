@@ -69,5 +69,11 @@ public interface WorkGridDao {
 	 * @return
 	 */
 	int deleteByIds(DeleteRequest<WorkGrid> deleteRequest);
+	/**
+	 * 根据workGridKey查询
+	 * @param workGridKey
+	 * @return
+	 */
+	WorkGrid queryByWorkGridKey(String workGridKey);
 
 }

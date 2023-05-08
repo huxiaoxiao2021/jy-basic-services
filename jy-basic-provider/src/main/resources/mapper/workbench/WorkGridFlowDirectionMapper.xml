@@ -150,7 +150,42 @@
 			</trim>
 			)
 	</insert>
-
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into work_grid_flow_direction
+            (
+		        ref_work_grid_key,
+		        line_type,
+		        flow_direction_type,
+		        site_code,
+		        site_name,
+		        org_code,
+		        org_name,
+		        flow_site_code,
+		        flow_site_name,
+		        flow_org_code,
+		        flow_org_name,
+		        create_user,
+		        create_time
+            )
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.refWorkGridKey,jdbcType=VARCHAR},
+                #{item.lineType,jdbcType=INTEGER},
+                #{item.flowDirectionType,jdbcType=INTEGER},
+                #{item.siteCode,jdbcType=INTEGER},
+                #{item.siteName, jdbcType=VARCHAR},
+                #{item.orgCode, jdbcType=INTEGER},
+                #{item.orgName, jdbcType=VARCHAR},
+                #{item.flowSiteCode, jdbcType=INTEGER},
+                #{item.flowSiteName, jdbcType=VARCHAR},
+                #{item.flowOrgCode, jdbcType=INTEGER},
+                #{item.flowOrgName, jdbcType=VARCHAR},
+                #{item.createUser,jdbcType=VARCHAR},
+                #{item.createTime,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+    </insert>
 	<update id="updateById" parameterType="com.jdl.basic.api.domain.workStation.WorkGridFlowDirection">
 		update work_grid_flow_direction
 			<set>
@@ -221,7 +256,33 @@
 			   yn = 0
 		where id = #{id,jdbcType=BIGINT}
 	</update>
-
+    <select id="queryByIds" parameterType="com.jdl.basic.api.domain.workStation.DeleteRequest" resultMap="WorkGridFlowDirection">
+        select
+            <include refid="Base_Column_List"/>
+        from
+            work_grid_flow_direction t
+        where t.yn = 1
+            and t.id in
+        <foreach collection="dataList" item="item" open="(" close=")" separator=",">
+            #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </select>
+    <update id="deleteByIds" parameterType="com.jdl.basic.api.domain.workStation.DeleteRequest">
+        update work_grid_flow_direction
+            set
+            <if test="operateUserCode != null" >
+                update_user = #{operateUserCode,jdbcType=VARCHAR},
+            </if>
+            <if test="operateTime != null" >
+                update_time = #{operateTime,jdbcType=TIMESTAMP},
+            </if>
+               yn = 0
+        where yn = 1
+            and id in
+        <foreach collection="dataList" item="item" open="(" close=")" separator=",">
+            #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
 	<select id="queryById" parameterType="java.lang.Long" resultMap="WorkGridFlowDirection">
 		select
 			<include refid="Base_Column_List"/>
@@ -250,6 +311,18 @@
 	<sql id="queryCondition">
 		<where>
 			yn = 1 
+          <if test="refWorkGridKey != null" >
+              and t.ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
+          </if>
+          <if test="lineType != null" >
+              and t.line_type = #{lineType,jdbcType=INTEGER}
+          </if>
+          <if test="flowDirectionType != null" >
+              and t.flow_direction_type = #{flowDirectionType,jdbcType=INTEGER}
+          </if>
+          <if test="flowSiteCode != null and flowSiteCode != ''" >
+              and t.flow_site_code = #{flowSiteCode,jdbcType=INTEGER}
+          </if>          			
 		</where>
 	</sql>
     <select id="queryListForWorkGridVo" resultMap="WorkGridFlowDirection">
@@ -260,6 +333,22 @@
         where yn = 1 
           and ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
          order by line_type,flow_site_code
-        limit 100
-    </select>	
+        limit 200
+    </select>
+    <select id="queryExistFlowSiteCodeList" resultType="int">
+        select
+            flow_site_code
+        from
+            work_grid_flow_direction t
+        where yn = 1 
+          and ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
+          and line_type = #{lineType,jdbcType=INTEGER}
+          and flow_direction_type = #{flowDirectionType,jdbcType=INTEGER}
+          and flow_site_code in 
+        <foreach collection="flowSiteCodeList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+         order by line_type,flow_site_code
+        limit 200
+    </select>    
 </mapper>

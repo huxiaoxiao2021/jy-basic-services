@@ -75,39 +75,9 @@ public class WorkGridQuery extends BasePagerCondition implements Serializable {
 	private String areaName;
 
 	/**
-	 * 自动化设备编码
+	 * 场地类型
 	 */
-	private String machineCode;
-
-	/**
-	 * 自动化设备类型编码
-	 */
-	private String machineTypeCode;
-
-	/**
-	 * 月台编号
-	 */
-	private String dockCode;
-
-	/**
-	 * 供应商编码
-	 */
-	private String supplierCode;
-
-	/**
-	 * 供应商名称
-	 */
-	private String supplierName;
-
-	/**
-	 * 锁定操作人
-	 */
-	private String lockUser;
-
-	/**
-	 * 锁定时间
-	 */
-	private Date lockTime;
+	private Integer siteType;
 
    /**
 	* 分页-pageSize

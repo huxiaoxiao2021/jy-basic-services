@@ -207,6 +207,18 @@
           and area_code = #{areaCode,jdbcType=VARCHAR} 
         limit 1
     </select>
+    <select id="queryByAreaCodeList" parameterType="java.util.List" resultMap="WorkArea">
+        select
+            <include refid="Base_Column_List"/>
+        from
+            work_area t
+        where yn = 1 
+          and area_code in 
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+    
 	<select id="queryList" resultMap="WorkArea">
 		select
 			<include refid="Base_Column_List"/>
@@ -227,6 +239,9 @@
 	<sql id="queryCondition">
 		<where>
 			yn = 1 
+	        <if test="areaCode != null and areaCode != ''" >
+	            and area_code = #{areaCode,jdbcType=VARCHAR}
+	        </if>			
 		</where>
 	</sql>
 </mapper>

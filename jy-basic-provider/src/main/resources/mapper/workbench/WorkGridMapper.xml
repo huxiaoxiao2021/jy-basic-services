@@ -7,6 +7,8 @@
 		<result column="business_key" property="businessKey" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="org_code" property="orgCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
 		<result column="org_name" property="orgName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="site_type" property="siteType" javaType="java.lang.Integer" jdbcType="INTEGER" />
+		<result column="site_type_name" property="siteTypeName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="site_code" property="siteCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
 		<result column="site_name" property="siteName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="floor" property="floor" javaType="java.lang.Integer" jdbcType="INTEGER" />
@@ -15,13 +17,14 @@
 		<result column="grid_name" property="gridName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="area_code" property="areaCode" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="area_name" property="areaName" javaType="java.lang.String" jdbcType="VARCHAR" />
-		<result column="machine_code" property="machineCode" javaType="java.lang.String" jdbcType="VARCHAR" />
-		<result column="machine_type_code" property="machineTypeCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="standard_num" property="standardNum" javaType="java.lang.Integer" jdbcType="INTEGER" />
+		<result column="owner_user_erp" property="ownerUserErp" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="dock_code" property="dockCode" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="supplier_code" property="supplierCode" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="supplier_name" property="supplierName" javaType="java.lang.String" jdbcType="VARCHAR" />
-		<result column="lock_user" property="lockUser" javaType="java.lang.String" jdbcType="VARCHAR" />
-		<result column="lock_time" property="lockTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result column="config_flow_user" property="configFlowUser" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="config_flow_time" property="configFlowTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result column="config_flow_status" property="configFlowStatus" javaType="java.lang.Integer" jdbcType="TINYINT" />
 		<result column="create_user" property="createUser" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="create_user_name" property="createUserName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="update_user" property="updateUser" javaType="java.lang.String" jdbcType="VARCHAR" />
@@ -33,12 +36,12 @@
 	</resultMap>
 
 	<sql id="Base_Column_List" >
-		id,business_key,org_code,org_name,site_code,site_name,
-		floor,grid_no,grid_code,grid_name,area_code,
-		area_name,machine_code,machine_type_code,dock_code,supplier_code,
-		supplier_name,lock_user,lock_time,create_user,create_user_name,
-		update_user,update_user_name,create_time,update_time,yn,
-		ts
+		id,business_key,org_code,org_name,site_type,site_type_name,
+		site_code,site_name,floor,grid_no,grid_code,
+		grid_name,area_code,area_name,standard_num,owner_user_erp,
+		dock_code,supplier_code,supplier_name,config_flow_user,config_flow_time,
+		config_flow_status,create_user,create_user_name,update_user,update_user_name,
+		create_time,update_time,yn,ts
 	</sql>
 
 	<insert id="insert" parameterType="com.jdl.basic.api.domain.workStation.WorkGrid" useGeneratedKeys="true" keyProperty="id">
@@ -56,6 +59,12 @@
 				</if>
 				<if test="orgName != null" >
 					org_name,
+				</if>
+				<if test="siteType != null" >
+					site_type,
+				</if>
+				<if test="siteTypeName != null" >
+					site_type_name,
 				</if>
 				<if test="siteCode != null" >
 					site_code,
@@ -81,11 +90,11 @@
 				<if test="areaName != null" >
 					area_name,
 				</if>
-				<if test="machineCode != null" >
-					machine_code,
+				<if test="standardNum != null" >
+					standard_num,
 				</if>
-				<if test="machineTypeCode != null" >
-					machine_type_code,
+				<if test="ownerUserErp != null" >
+					owner_user_erp,
 				</if>
 				<if test="dockCode != null" >
 					dock_code,
@@ -96,11 +105,14 @@
 				<if test="supplierName != null" >
 					supplier_name,
 				</if>
-				<if test="lockUser != null" >
-					lock_user,
+				<if test="configFlowUser != null" >
+					config_flow_user,
 				</if>
-				<if test="lockTime != null" >
-					lock_time,
+				<if test="configFlowTime != null" >
+					config_flow_time,
+				</if>
+				<if test="configFlowStatus != null" >
+					config_flow_status,
 				</if>
 				<if test="createUser != null" >
 					create_user,
@@ -143,6 +155,12 @@
 				<if test="orgName != null" >
 					#{orgName,jdbcType=VARCHAR},
 				</if>
+				<if test="siteType != null" >
+					#{siteType,jdbcType=INTEGER},
+				</if>
+				<if test="siteTypeName != null" >
+					#{siteTypeName,jdbcType=VARCHAR},
+				</if>
 				<if test="siteCode != null" >
 					#{siteCode,jdbcType=INTEGER},
 				</if>
@@ -167,11 +185,11 @@
 				<if test="areaName != null" >
 					#{areaName,jdbcType=VARCHAR},
 				</if>
-				<if test="machineCode != null" >
-					#{machineCode,jdbcType=VARCHAR},
+				<if test="standardNum != null" >
+					#{standardNum,jdbcType=INTEGER},
 				</if>
-				<if test="machineTypeCode != null" >
-					#{machineTypeCode,jdbcType=VARCHAR},
+				<if test="ownerUserErp != null" >
+					#{ownerUserErp,jdbcType=VARCHAR},
 				</if>
 				<if test="dockCode != null" >
 					#{dockCode,jdbcType=VARCHAR},
@@ -182,11 +200,14 @@
 				<if test="supplierName != null" >
 					#{supplierName,jdbcType=VARCHAR},
 				</if>
-				<if test="lockUser != null" >
-					#{lockUser,jdbcType=VARCHAR},
+				<if test="configFlowUser != null" >
+					#{configFlowUser,jdbcType=VARCHAR},
 				</if>
-				<if test="lockTime != null" >
-					#{lockTime,jdbcType=TIMESTAMP},
+				<if test="configFlowTime != null" >
+					#{configFlowTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="configFlowStatus != null" >
+					#{configFlowStatus,jdbcType=TINYINT},
 				</if>
 				<if test="createUser != null" >
 					#{createUser,jdbcType=VARCHAR},
@@ -228,6 +249,12 @@
 				<if test="orgName != null" >
 					org_name = #{orgName,jdbcType=VARCHAR},
 				</if>
+				<if test="siteType != null" >
+					site_type = #{siteType,jdbcType=INTEGER},
+				</if>
+				<if test="siteTypeName != null" >
+					site_type_name = #{siteTypeName,jdbcType=VARCHAR},
+				</if>
 				<if test="siteCode != null" >
 					site_code = #{siteCode,jdbcType=INTEGER},
 				</if>
@@ -252,11 +279,11 @@
 				<if test="areaName != null" >
 					area_name = #{areaName,jdbcType=VARCHAR},
 				</if>
-				<if test="machineCode != null" >
-					machine_code = #{machineCode,jdbcType=VARCHAR},
+				<if test="standardNum != null" >
+					standard_num = #{standardNum,jdbcType=INTEGER},
 				</if>
-				<if test="machineTypeCode != null" >
-					machine_type_code = #{machineTypeCode,jdbcType=VARCHAR},
+				<if test="ownerUserErp != null" >
+					owner_user_erp = #{ownerUserErp,jdbcType=VARCHAR},
 				</if>
 				<if test="dockCode != null" >
 					dock_code = #{dockCode,jdbcType=VARCHAR},
@@ -267,11 +294,14 @@
 				<if test="supplierName != null" >
 					supplier_name = #{supplierName,jdbcType=VARCHAR},
 				</if>
-				<if test="lockUser != null" >
-					lock_user = #{lockUser,jdbcType=VARCHAR},
+				<if test="configFlowUser != null" >
+					config_flow_user = #{configFlowUser,jdbcType=VARCHAR},
 				</if>
-				<if test="lockTime != null" >
-					lock_time = #{lockTime,jdbcType=TIMESTAMP},
+				<if test="configFlowTime != null" >
+					config_flow_time = #{configFlowTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="configFlowStatus != null" >
+					config_flow_status = #{configFlowStatus,jdbcType=TINYINT},
 				</if>
 				<if test="createUser != null" >
 					create_user = #{createUser,jdbcType=VARCHAR},
@@ -364,6 +394,16 @@
         order by t.id desc
         limit 1
     </select>
+    <select id="queryByWorkGridKey" parameterType="java.lang.String" resultMap="WorkGrid">
+        select
+            <include refid="Base_Column_List"/>
+        from
+            work_grid t
+        where t.yn = 1
+            and t.business_key = #{businessKey,jdbcType=VARCHAR}
+        order by t.id desc
+        limit 1
+    </select>    
 	<select id="queryList" resultMap="WorkGrid">
 		select
 			<include refid="Base_Column_List"/>
@@ -398,7 +438,10 @@
             </if>
             <if test="gridCode != null and gridCode != ''" >
                 and t.grid_code = #{gridCode,jdbcType=VARCHAR}
-            </if>			
+            </if>
+            <if test="siteType != null" >
+                and t.site_type = #{siteType,jdbcType=INTEGER}
+            </if>
 		</where>
 	</sql>
 </mapper>

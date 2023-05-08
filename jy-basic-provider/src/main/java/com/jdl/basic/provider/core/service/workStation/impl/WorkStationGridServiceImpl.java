@@ -10,6 +10,7 @@ import com.jdl.basic.api.domain.machine.Machine;
 import com.jdl.basic.api.domain.machine.WorkStationGridMachine;
 import com.jdl.basic.api.domain.position.PositionRecord;
 import com.jdl.basic.api.domain.workStation.*;
+import com.jdl.basic.api.enums.WorkSiteTypeEnum;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.enums.AreaEnum;
@@ -111,12 +112,23 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		workGrid.setOrgName(workStationGrid.getOrgName());
 		workGrid.setSiteCode(workStationGrid.getSiteCode());
 		workGrid.setSiteName(workStationGrid.getSiteName());
+		WorkSiteTypeEnum siteType = null;
+		BaseStaffSiteOrgDto siteInfo = this.baseMajorManager.getBaseSiteBySiteId(workStationGrid.getSiteCode());
+		if(siteInfo != null) {
+			siteType = WorkSiteTypeEnum.getWorkingSiteTypeBySubType(siteInfo.getSubType());
+		}
+		if(siteType == null) {
+			siteType = WorkSiteTypeEnum.OTHER;
+		}
+		workGrid.setSiteType(siteType.getCode());
+		workGrid.setSiteTypeName(siteType.getName());
 		workGrid.setFloor(workStationGrid.getFloor());
 		workGrid.setGridNo(workStationGrid.getGridNo());
 		workGrid.setGridCode(workStationGrid.getGridCode());
 		workGrid.setGridName(workStationGrid.getGridName());
 		workGrid.setAreaCode(workStationGrid.getAreaCode());
 		workGrid.setAreaName(workStationGrid.getAreaName());
+		workGrid.setOwnerUserErp(workStationGrid.getOwnerUserErp());		
 		workGrid.setDockCode(workStationGrid.getDockCode());
 		workGrid.setSupplierCode(workStationGrid.getSupplierCode());
 		workGrid.setSupplierName(workStationGrid.getSupplierName());

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
+import com.jdl.basic.api.domain.workStation.WorkGridImport;
 import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridVo;
 import com.jdl.basic.api.service.workStation.WorkGridJsfService;
@@ -66,13 +67,17 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	public Result<Boolean> deleteById(WorkGrid deleteData){
 		return workGridService.deleteById(deleteData);
 	 }
+	@Override
+	public Result<WorkGrid> queryById(Long id) {
+		return workGridService.queryById(id);
+	}	
 	/**
 	 * 根据id查询
 	 * @param id
 	 * @return
 	 */
-	public Result<WorkGrid> queryById(Long id){
-		return workGridService.queryById(id);
+	public Result<WorkGridVo> queryByIdForConfigFlow(Long id){
+		return workGridService.queryByIdForConfigFlow(id);
 	 }
 	/**
 	 * 按条件分页查询
@@ -92,7 +97,7 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	}
 	@Override
 	public Result<Boolean> deleteByIds(DeleteRequest<WorkGrid> deleteRequest) {
-		log.info("场地网格工序管理 deleteByIds 入参-{}", JSON.toJSONString(deleteRequest));
+		log.info("场地网格管理 deleteByIds 入参-{}", JSON.toJSONString(deleteRequest));
 		final Result<Boolean> result = Result.success();
 		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
 			@Override
@@ -117,5 +122,31 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 		});
 		return result;
 	}
-
+	@Override
+	public Result<Boolean> importDatas(List<WorkGridImport> dataList) {
+		log.info("场地网格管理 deleteByIds 入参-{}", JSON.toJSONString(dataList));
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				Result<Boolean> apiResult = workGridService.importDatas(dataList);
+				if(!apiResult.isSuccess()) {
+					result.setCode(apiResult.getCode());
+					result.setMessage(apiResult.getMessage());
+					result.setData(apiResult.getData());
+					return ;
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改网格信息，请稍后操作！");
+			}
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+		return result;
+	}
 }

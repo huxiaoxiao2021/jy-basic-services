@@ -1,13 +1,14 @@
 package com.jdl.basic.api.domain.workStation;
 
-import com.jdl.basic.api.domain.BasePagerCondition;
-import com.jdl.basic.common.utils.DateHelper;
-import lombok.Data;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
-
 import java.io.Serializable;
 import java.util.Date;
+
+import org.apache.commons.lang.time.DateFormatUtils;
+
+import com.jdl.basic.api.domain.BasePagerCondition;
+import com.jdl.basic.common.utils.DateHelper;
+
+import lombok.Data;
 
 /**
  * @ClassName: WorkGridFlowDetailOffline
@@ -38,6 +39,11 @@ public class WorkGridFlowDetailOfflineQuery extends BasePagerCondition implement
 	 * 日期
 	 */
 	private String dt;
+	
+	/**
+	 * 流向站点编号
+	 */
+	private String flowSiteCode;
 
 	/**
 	 * 分页-pageSize

@@ -1,10 +1,12 @@
 package com.jdl.basic.api.domain.workStation;
 
-import lombok.Setter;
-import lombok.Getter;
-import java.util.Date;
 import java.io.Serializable;
+import java.util.List;
+
 import com.jdl.basic.api.domain.BasePagerCondition;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 场地网格流向表-查询条件实体类
@@ -58,6 +60,10 @@ public class WorkGridFlowDirectionQuery extends BasePagerCondition implements Se
 	 * 流入或流出-场地编码
 	 */
 	private Integer flowSiteCode;
+	/**
+	 * 流入或流出-场地编码
+	 */
+	private List<Integer> flowSiteCodeList;	
 
 	/**
 	 * 流入或流出-场地名称

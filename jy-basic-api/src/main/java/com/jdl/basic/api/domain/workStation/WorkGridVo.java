@@ -21,10 +21,18 @@ import lombok.Setter;
 public class WorkGridVo extends WorkGrid {
 
 	private static final long serialVersionUID = 1L;
+	/**
+	 * 流向配置-状态
+	 */
+	private String configFlowStatusName;
 	
 	private Map<String,FlowInfoItem> flowInfo;
 	
 	private WorkDataInfo workDataInfo;
+	/**
+	 * 流向类型 1-进 2-出 0-其他
+	 */
+	private Integer flowDirectionType;
 	
 	public static class FlowInfoItem implements Serializable{
 		

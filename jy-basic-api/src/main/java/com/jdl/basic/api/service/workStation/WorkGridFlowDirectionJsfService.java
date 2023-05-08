@@ -1,9 +1,14 @@
 package com.jdl.basic.api.service.workStation;
 
-import com.jdl.basic.common.utils.PageDto;
-import com.jdl.basic.common.utils.Result;
+import java.util.List;
+
+import com.jdl.basic.api.domain.workStation.DeleteRequest;
+import com.jdl.basic.api.domain.workStation.WorkGridFlowDetailOffline;
+import com.jdl.basic.api.domain.workStation.WorkGridFlowDetailOfflineQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
+import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
 
 /**
  * 场地网格流向表--JsfService接口
@@ -44,5 +49,22 @@ public interface WorkGridFlowDirectionJsfService {
 	 * @return
 	 */
 	Result<PageDto<WorkGridFlowDirection>> queryPageList(WorkGridFlowDirectionQuery query);
-
+	/**
+	 * 批量删除
+	 * @param deleteRequest
+	 * @return
+	 */
+	Result<Boolean> deleteByIds(DeleteRequest<WorkGridFlowDirection> deleteRequest);
+	/**
+	 * 导入数据
+	 * @param dataList
+	 * @return
+	 */
+	Result<Boolean> importDatas(List<WorkGridFlowDirection> dataList);
+	
+	Result<Boolean> addFlowList(List<WorkGridFlowDirection> dataList);
+	
+	Result<PageDto<WorkGridFlowDetailOffline>> queryFlowDataForSelect(WorkGridFlowDetailOfflineQuery query);
+	
+	Result<PageDto<WorkGridFlowDirection>> queryFlowData(WorkGridFlowDirectionQuery query);
 }

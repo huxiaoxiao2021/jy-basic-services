@@ -1,22 +1,25 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.BeanUtils;
 
-import com.jdl.basic.common.utils.Result;
-import com.jdl.basic.common.utils.PageDto;
-import com.jdl.basic.common.contants.DmsConstants;
-
+import com.jd.jsf.gd.util.StringUtils;
+import com.jd.ldop.utils.CollectionUtils;
 import com.jdl.basic.api.domain.workStation.WorkArea;
 import com.jdl.basic.api.domain.workStation.WorkAreaQuery;
+import com.jdl.basic.common.contants.DmsConstants;
+import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.workStation.WorkAreaDao;
 import com.jdl.basic.provider.core.service.workStation.WorkAreaService;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 作业区信息表--Service接口实现
@@ -146,6 +149,49 @@ public class WorkAreaServiceImpl implements WorkAreaService {
 			result.setData(workAreaDao.insert(workArea) == 1);
 		}
 		return result;
+	}
+	@Override
+	public WorkArea queryByAreaCode(String areaCode) {
+		if(StringUtils.isNotBlank(areaCode)) {
+			return workAreaDao.queryByAreaCode(areaCode);
+		}
+		return null;
+	}
+	@Override
+	public Map<String,WorkArea> queryByAreaCodeListToMap(List<String> areaCodeList) {
+		Map<String,WorkArea> mapData = new HashMap<>();
+		if(CollectionUtils.isEmpty(areaCodeList)) {
+			return mapData;
+		}
+		List<WorkArea> dataList = workAreaDao.queryByAreaCodeList(areaCodeList);
+		if(CollectionUtils.isEmpty(dataList)) {
+			return mapData;
+		}
+		for(WorkArea item: dataList) {
+			mapData.put(item.getAreaCode(), item);
+		}
+		return mapData;
+	}
+	@Override
+	public WorkArea loadByAreaCodeInMap(String areaCode, Map<String, WorkArea> cacheMap) {
+		if(cacheMap == null) {
+			return queryByAreaCode(areaCode);
+		}
+		if(cacheMap.containsKey(areaCode)){
+			if(cacheMap.get(areaCode).getId() != null) {
+				return cacheMap.get(areaCode);
+			}
+			return null;
+		}
+		WorkArea workArea = queryByAreaCode(areaCode);
+		if(workArea != null) {
+			cacheMap.put(areaCode, workArea);
+			return workArea;
+		}else {
+			workArea = new WorkArea();
+			cacheMap.put(areaCode, workArea);
+			return null;
+		}
 	}
 
 }

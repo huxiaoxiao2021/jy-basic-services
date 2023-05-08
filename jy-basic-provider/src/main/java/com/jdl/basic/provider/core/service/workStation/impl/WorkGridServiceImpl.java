@@ -16,29 +16,39 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jd.jsf.gd.util.StringUtils;
+import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.machine.Machine;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
+import com.jdl.basic.api.domain.workStation.WorkArea;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
+import com.jdl.basic.api.domain.workStation.WorkGridImport;
 import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridVo;
 import com.jdl.basic.api.domain.workStation.WorkGridVo.FlowInfoItem;
 import com.jdl.basic.api.domain.workStation.WorkGridVo.WorkDataInfo;
 import com.jdl.basic.api.domain.workStation.WorkStationGrid;
 import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
+import com.jdl.basic.api.enums.ConfigFlowStatusEnum;
 import com.jdl.basic.api.enums.GridFlowLineTypeEnum;
 import com.jdl.basic.common.contants.DmsConstants;
+import com.jdl.basic.common.enums.AreaEnum;
+import com.jdl.basic.common.utils.CheckHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringHelper;
 import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkGridDao;
 import com.jdl.basic.provider.core.service.machine.WorkStationGridMachineService;
+import com.jdl.basic.provider.core.service.workStation.WorkAreaService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDirectionService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
+import com.jdl.basic.rpc.Rpc.BaseMajorRpc;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,6 +76,12 @@ public class WorkGridServiceImpl implements WorkGridService {
 	private WorkStationGridService workStationGridService;
 	@Autowired
 	private WorkStationGridMachineService machineService;
+	@Autowired
+	private BaseMajorRpc baseMajorManager;	
+	
+	@Autowired
+	@Qualifier("workAreaService")
+	private WorkAreaService workAreaService;	
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -97,16 +113,37 @@ public class WorkGridServiceImpl implements WorkGridService {
 		result.setData(workGridDao.deleteById(deleteData) == 1);
 		return result;
 	 }
+	@Override
+	public Result<WorkGrid> queryById(Long id) {
+		Result<WorkGrid> result = Result.success();
+		result.setData(workGridDao.queryById(id));
+		return result;
+	}	
 	/**
 	 * 根据id查询
 	 * @param id
 	 * @return
 	 */
-	public Result<WorkGrid> queryById(Long id){
-		Result<WorkGrid> result = Result.success();
-		result.setData(workGridDao.queryById(id));
+	public Result<WorkGridVo> queryByIdForConfigFlow(Long id){
+		Result<WorkGridVo> result = Result.success();
+		result.setData(toWorkGridVoForConfigFlow(workGridDao.queryById(id)));
 		return result;
-	 }
+	 }	
+	private WorkGridVo toWorkGridVoForConfigFlow(WorkGrid data) {
+		if(data == null) {
+			return null;
+		}
+		WorkGridVo voData = new WorkGridVo();
+		BeanUtils.copyProperties(data, voData);
+		voData.setConfigFlowStatusName(ConfigFlowStatusEnum.getNameByCode(voData.getConfigFlowStatus()));
+		//特殊字段设置
+		loadFlowInfo(voData);
+		WorkArea workArea = this.workAreaService.queryByAreaCode(voData.getAreaCode());
+		if(workArea != null) {
+			voData.setFlowDirectionType(workArea.getFlowDirectionType());
+		}
+		return voData;
+	}
 	/**
 	 * 根据业务主键查询
 	 * @param workGrid
@@ -170,6 +207,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		}
 		WorkGridVo voData = new WorkGridVo();
 		BeanUtils.copyProperties(data, voData);
+		voData.setConfigFlowStatusName(ConfigFlowStatusEnum.getNameByCode(voData.getConfigFlowStatus()));
 		//特殊字段设置
 		loadFlowInfo(voData);
 		loadWorkInfo(voData);
@@ -273,10 +311,14 @@ public class WorkGridServiceImpl implements WorkGridService {
 			updateData.setId(oldData.getId());
 			updateData.setOrgCode(workGrid.getOrgCode());
 			updateData.setOrgName(workGrid.getOrgName());
+			updateData.setSiteType(workGrid.getSiteType());
+			updateData.setSiteTypeName(workGrid.getSiteTypeName());
 			updateData.setSiteName(workGrid.getSiteName());
 			updateData.setGridCode(workGrid.getGridCode());
 			updateData.setGridName(workGrid.getGridName());
 			updateData.setAreaName(workGrid.getAreaName());
+			updateData.setStandardNum(workGrid.getStandardNum());
+			updateData.setOwnerUserErp(workGrid.getOwnerUserErp());
 			updateData.setDockCode(workGrid.getDockCode());
 			updateData.setSupplierCode(workGrid.getSupplierCode());
 			updateData.setSupplierName(workGrid.getSupplierName());
@@ -284,7 +326,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 			updateData.setUpdateUserName(workGrid.getUpdateUserName());
 			updateData.setUpdateTime(workGrid.getUpdateTime());
 			this.updateById(updateData);
-			return this.queryById(oldData.getId());
+			result.setData(workGridDao.queryById(oldData.getId()));
 		}else {
 			this.insert(workGrid);
 			result.setData(workGrid);
@@ -331,4 +373,209 @@ public class WorkGridServiceImpl implements WorkGridService {
 		result.setData(workGridDao.deleteByIds(deleteRequest) > 0);
 		return result;
 	}
+	@Transactional
+	@Override
+	public Result<Boolean> importDatas(List<WorkGridImport> dataList) {
+		Result<Boolean> result = checkAndFillImportDatas(dataList);
+		if(!result.isSuccess()) {
+			return result;
+		}
+		for(WorkGridImport gridData: dataList) {
+			//更新-配置状态
+			WorkGrid updateData = new WorkGrid();
+			updateData.setId(gridData.getId());
+			updateData.setConfigFlowStatus(ConfigFlowStatusEnum.CONFIG.getCode());
+			updateData.setConfigFlowUser(gridData.getConfigFlowUser());
+			updateData.setConfigFlowTime(new Date());
+			workGridDao.updateById(updateData);
+			//插入流向配置信息
+			Map<Integer,List<WorkGridFlowDirection>> flowDataMap = gridData.getFlowDataMap();
+			//按线路类型-分别处理
+			for(Integer lineType : flowDataMap.keySet()) {
+				List<WorkGridFlowDirection> flowList = flowDataMap.get(lineType);
+				List<WorkGridFlowDirection> flowListForAdd = new ArrayList<>();
+				List<Integer> flowSiteCodes = new ArrayList<>();
+				for(WorkGridFlowDirection flowData: flowList) {
+					flowSiteCodes.add(flowData.getFlowSiteCode());
+				}
+				WorkGridFlowDirection data0 = flowList.get(0);
+				WorkGridFlowDirectionQuery query = new WorkGridFlowDirectionQuery();
+				query.setFlowDirectionType(data0.getFlowDirectionType());
+				query.setRefWorkGridKey(data0.getRefWorkGridKey());
+				query.setFlowSiteCodeList(flowSiteCodes);
+				query.setLineType(lineType);
+				List<Integer> flowSiteCodesExist = this.workGridFlowDirectionService.queryExistFlowSiteCodeList(query);
+				for(WorkGridFlowDirection flowData: flowList) {
+					if(!flowSiteCodesExist.contains(flowData.getFlowSiteCode())) {
+						flowListForAdd.add(flowData);
+					}
+				}
+				workGridFlowDirectionService.batchInsert(flowListForAdd);
+			}
+		}
+		return result;
+	}
+	/**
+	 * 校验并填充导入数据
+	 * @param dataList
+	 * @return
+	 */
+	private Result<Boolean> checkAndFillImportDatas(List<WorkGridImport> dataList){
+		Result<Boolean> result = Result.success();
+		if(CollectionUtils.isEmpty(dataList)) {
+			return result.toFail("导入数据为空！");
+		}
+		//逐条校验
+		int rowNum = 1;
+		Map<String,Integer> uniqueKeysRowNumMap = new HashMap<String,Integer>();
+		List<String> areaCodeList = new ArrayList<>();
+		for(WorkGridImport data : dataList) {
+			String rowKey = "第" + rowNum + "行";
+			if(StringUtils.isNotBlank(data.getAreaCode())) {
+				if(!areaCodeList.contains(data.getAreaCode())) {
+					areaCodeList.add(data.getAreaCode());
+				}
+			}else {
+				result.toFail(rowKey+"作业区ID为空！");
+			}
+			rowNum ++;
+		}
+		Map<String,WorkArea> areaMap = workAreaService.queryByAreaCodeListToMap(areaCodeList);
+		if(areaMap == null || areaMap.isEmpty()) {
+			result.toFail("导入的数据作业区无效！");
+		}
+		rowNum = 1;
+		for(WorkGridImport data : dataList) {
+			String rowKey = "第" + rowNum + "行";
+			Result<Boolean> result0 = checkAndFillNewData(data,areaMap);
+			if(!result0.isSuccess()) {
+				return result0.toFail(rowKey + result0.getMessage());
+			}
+			//导入数据防重校验
+			String uniqueKeysStr = getUniqueKeysStr(data);
+			if(uniqueKeysRowNumMap.containsKey(uniqueKeysStr)) {
+				return result0.toFail(rowKey + "和第"+uniqueKeysRowNumMap.get(uniqueKeysStr)+"行数据重复！");
+			}
+			uniqueKeysRowNumMap.put(uniqueKeysStr, rowNum);
+			rowNum ++;
+		}
+		return result;
+	}
+	/**
+	 * 校验并填充数据
+	 * @param data
+	 * @return
+	 */
+	private Result<Boolean> checkAndFillNewData(WorkGridImport data,Map<String,WorkArea> areaMap){
+		Result<Boolean> result = Result.success();
+		Integer siteCode = data.getSiteCode();
+		Integer floor = data.getFloor();
+		String gridNo = data.getGridNo();
+		String areaCode = data.getAreaCode();
+		if(siteCode == null) {
+			return result.toFail("场地ID为空！");
+		}
+		if(!CheckHelper.checkInteger("楼层", floor, 1,5, result).isSuccess()) {
+			return result;
+		}
+		//校验gridNo
+		if(StringHelper.isEmpty(gridNo)) {
+			return result.toFail("网格号为空！");
+		}
+		if(gridNo.length()<2) {
+			gridNo = "0".concat(gridNo);
+			data.setGridNo(gridNo);
+		}
+		if(!CheckHelper.checkGridNo(gridNo, result).isSuccess()) {
+			return result;
+		}
+		if(!CheckHelper.checkStr("作业区ID", areaCode, 50, result).isSuccess()) {
+			return result;
+		}
+		Map<GridFlowLineTypeEnum,List<String>> flowSiteCodes = new HashMap<>();
+		if(StringUtils.isNotBlank(data.getFlowSiteCodeStr1())){
+			flowSiteCodes.put(GridFlowLineTypeEnum.TRUNK_LINE, StringHelper.parseList(data.getFlowSiteCodeStr1(), StringHelper.FLOW_SITE_CODE_SPLIT));
+		}
+		if(StringUtils.isNotBlank(data.getFlowSiteCodeStr2())){
+			flowSiteCodes.put(GridFlowLineTypeEnum.BRANCH_LINE, StringHelper.parseList(data.getFlowSiteCodeStr2(), StringHelper.FLOW_SITE_CODE_SPLIT));
+		}
+		if(StringUtils.isNotBlank(data.getFlowSiteCodeStr3())){
+			flowSiteCodes.put(GridFlowLineTypeEnum.TRANSFER, StringHelper.parseList(data.getFlowSiteCodeStr3(), StringHelper.FLOW_SITE_CODE_SPLIT));
+		}
+		if(StringUtils.isNotBlank(data.getFlowSiteCodeStr4())){
+			flowSiteCodes.put(GridFlowLineTypeEnum.SHUTTLE, StringHelper.parseList(data.getFlowSiteCodeStr4(), StringHelper.FLOW_SITE_CODE_SPLIT));
+		}
+		if(flowSiteCodes.isEmpty()) {
+			return result.toFail("配置无效，流向ID为空！");
+		}
+		
+		WorkGrid workGridQuery = new WorkGrid();
+		workGridQuery.setSiteCode(siteCode);
+		workGridQuery.setFloor(floor);
+		workGridQuery.setGridNo(gridNo);
+		workGridQuery.setAreaCode(areaCode);
+		WorkGrid workGridData = workGridDao.queryByBusinessKeys(workGridQuery);
+		if(workGridData == null) {
+			return result.toFail("网格信息不存在，请先维护场地网格信息！");
+		}
+		data.setId(workGridData.getId());
+		WorkArea workArea = areaMap.get(areaCode);
+		if(workArea == null) {
+			return result.toFail("作业区不存在，请先维护作业区工序信息！");
+		}
+		Map<Integer,List<WorkGridFlowDirection>> flowDataMap = new HashMap<>();
+		data.setFlowDataMap(flowDataMap);
+		for(GridFlowLineTypeEnum lineType : flowSiteCodes.keySet()) {
+			List<String> siteCodeStrList = flowSiteCodes.get(lineType);
+			List<WorkGridFlowDirection> flowDataList = new ArrayList<>();
+			for(String siteCodeStr : siteCodeStrList) {
+				Integer siteCodeInt = null;
+				if(!StringHelper.isNumberic(siteCodeStr)) {
+					return result.toFail(lineType.getName()+"流向ID中存在非数字站点！【"+siteCodeStr+"】");
+				}
+				siteCodeInt = Integer.valueOf(siteCodeStr);
+				BaseStaffSiteOrgDto siteInfo = baseMajorManager.getBaseSiteBySiteId(siteCodeInt);
+				if(siteInfo == null) {
+					return result.toFail(lineType.getName()+"流向ID中站点无效！【"+siteCodeStr+"】");
+				}
+				WorkGridFlowDirection flowData = new WorkGridFlowDirection();
+				flowData.setRefWorkGridKey(workGridData.getBusinessKey());
+				flowData.setSiteCode(workGridData.getSiteCode());
+				flowData.setSiteName(workGridData.getSiteName());
+				flowData.setOrgCode(workGridData.getOrgCode());
+				flowData.setOrgName(workGridData.getOrgName());
+				flowData.setCreateUser(data.getConfigFlowUser());
+				flowData.setLineType(lineType.getCode());
+				flowData.setFlowSiteCode(siteCodeInt);
+				flowData.setFlowOrgCode(siteInfo.getOrgId());
+				String orgName = AreaEnum.getAreaNameByCode(siteInfo.getOrgId());
+				if(orgName == null) {
+					orgName = siteInfo.getOrgName();
+				}
+				flowData.setFlowOrgName(orgName);
+				flowData.setFlowSiteName(siteInfo.getSiteName());
+				flowData.setFlowDirectionType(workArea.getFlowDirectionType());
+				flowDataList.add(flowData);
+			}
+			flowDataMap.put(lineType.getCode(), flowDataList);
+		}
+		return result;
+	}
+
+	private String getUniqueKeysStr(WorkGridImport data) {
+		if(data != null ) {
+			return data.getSiteCode().toString()
+					.concat(DmsConstants.KEYS_SPLIT)
+					.concat(data.getFloor().toString())
+					.concat(DmsConstants.KEYS_SPLIT)
+					.concat(data.getGridNo())
+					.concat(DmsConstants.KEYS_SPLIT)
+					.concat(data.getAreaCode());
+		}
+		return null;
+	}
+	@Override
+	public WorkGrid queryByWorkGridKey(String workGridKey) {
+		return workGridDao.queryByWorkGridKey(workGridKey);
+	}	
 }

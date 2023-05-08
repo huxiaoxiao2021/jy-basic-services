@@ -1,9 +1,12 @@
 package com.jdl.basic.provider.core.service.workStation;
 
-import com.jdl.basic.common.utils.PageDto;
-import com.jdl.basic.common.utils.Result;
+import java.util.List;
+import java.util.Map;
+
 import com.jdl.basic.api.domain.workStation.WorkArea;
 import com.jdl.basic.api.domain.workStation.WorkAreaQuery;
+import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
 
 /**
  * 作业区信息表--Service接口
@@ -49,5 +52,23 @@ public interface WorkAreaService {
 	 * @param workArea
 	 */
 	Result<Boolean> saveData(WorkArea workArea);
-
+	/**
+	 * 根据areaCode查询
+	 * @param areaCode
+	 * @return
+	 */	
+	WorkArea queryByAreaCode(String areaCode);
+	/**
+	 * 根据areaCode加载数据，传入cacheMap优先从map中加载，不存在返回null
+	 * @param areaCode
+	 * @param cacheMap
+	 * @return
+	 */
+	WorkArea loadByAreaCodeInMap(String areaCode,Map<String,WorkArea> cacheMap);
+	/**
+	 * 根据areaCode列表查询，将返回结果以areaCode为key返回map
+	 * @param areaCode
+	 * @return
+	 */	
+	Map<String,WorkArea> queryByAreaCodeListToMap(List<String> areaCodeList);	
 }

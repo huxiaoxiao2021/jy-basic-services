@@ -89,6 +89,9 @@
 			<if test="refWorkGridKey != null and refWorkGridKey != ''" >
 				and p.ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
 			</if>
+	        <if test="flowSiteCode != null and flowSiteCode != ''" >
+	            and t.flow_site_code = #{flowSiteCode,jdbcType=VARCHAR}
+	        </if> 			
 		</where>
 	</sql>
 

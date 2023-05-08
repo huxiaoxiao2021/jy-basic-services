@@ -9,7 +9,7 @@ import java.io.Serializable;
  * 场地网格表-实体类
  * 
  * @author wuyoude
- * @date 2023年04月25日 00:18:56
+ * @date 2023年04月27日 16:16:10
  *
  */
 @Setter
@@ -37,6 +37,16 @@ public class WorkGrid implements Serializable {
 	 * 机构名称
 	 */
 	private String orgName;
+
+	/**
+	 * 场地类型
+	 */
+	private Integer siteType;
+
+	/**
+	 * 场地类型名称
+	 */
+	private String siteTypeName;
 
 	/**
 	 * 场地编码
@@ -79,14 +89,14 @@ public class WorkGrid implements Serializable {
 	private String areaName;
 
 	/**
-	 * 自动化设备编码
+	 * 编制人数
 	 */
-	private String machineCode;
+	private Integer standardNum;
 
 	/**
-	 * 自动化设备类型编码
+	 * 负责人erp
 	 */
-	private String machineTypeCode;
+	private String ownerUserErp;
 
 	/**
 	 * 月台编号
@@ -104,14 +114,19 @@ public class WorkGrid implements Serializable {
 	private String supplierName;
 
 	/**
-	 * 锁定操作人
+	 * 流向维护人
 	 */
-	private String lockUser;
+	private String configFlowUser;
 
 	/**
-	 * 锁定时间
+	 * 流向维护时间
 	 */
-	private Date lockTime;
+	private Date configFlowTime;
+
+	/**
+	 * 流向维护状态,0-未配置,1-已配置
+	 */
+	private Integer configFlowStatus;
 
 	/**
 	 * 创建人ERP
