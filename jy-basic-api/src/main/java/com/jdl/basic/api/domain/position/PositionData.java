@@ -84,5 +84,13 @@ public class PositionData implements Serializable {
      */
     private String defaultMenuCode;
 
+    /**
+     * ref：work_station_grid业务主键
+     */
+    private String refGridKey;
 
+    /**
+     * 岗位编码
+     */
+    private String positionCode;
 }

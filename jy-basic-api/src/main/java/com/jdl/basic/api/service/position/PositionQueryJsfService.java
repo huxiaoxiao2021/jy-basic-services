@@ -78,4 +78,12 @@ public interface PositionQueryJsfService {
      * @return
      */
     Result<PositionData> queryPositionInfo(String positionCode);
+    /**
+     * 根据-gridKey查询岗位信息
+     *
+     * @param gridKey
+     * @return
+     */
+    Result<PositionData> queryPositionByGridKey(String gridKey);    
+    
 }
