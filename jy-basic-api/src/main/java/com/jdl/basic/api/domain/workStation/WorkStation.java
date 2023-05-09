@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName: WorkStation
@@ -101,4 +102,13 @@ public class WorkStation implements Serializable {
 	 */
 	private Date ts;
 
+	/**
+	 * 是否维护工种 0:未维护  1:已维护
+	 */
+	private Integer haveJobType;
+
+	/**
+	 * 工种类型集合
+	 */
+	private List<Integer> jobTypes;
 }

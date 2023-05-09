@@ -80,4 +80,15 @@ public class WorkStationFloorGridQuery extends BasePagerCondition {
      * 是否查询异常
      */
     private Integer areaType;
+
+    /**
+     * 月台号
+     */
+    private String dockCode;
+
+    /**
+     * 供应商编码
+     */
+    private String supplierCode;
+
 }

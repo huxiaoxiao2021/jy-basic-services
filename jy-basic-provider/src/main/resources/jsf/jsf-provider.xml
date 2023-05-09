@@ -191,5 +191,31 @@
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
+
+    <!-- ka积分卸车排序配置 -->
+    <jsf:provider id="kaCoefficientConfigJsfService"
+                  interface="com.jdl.basic.api.service.kaCoefficientConfig.KaCoefficientConfigJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="kaCoefficientConfigJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!--包裹白名单-->
+    <jsf:provider id="businessWhiteListJsfService"
+                  interface="com.jdl.basic.api.service.businessWhite.BusinessWhiteListJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="businessWhiteListJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+
+    <!--查询不同类型车辆的货物容量-->
+    <jsf:provider id="vehicleVolumeDicJsfService"
+      interface="com.jdl.basic.api.service.vehicle.VehicleVolumeDicJsfService"
+      alias="${jsf.jy_basic.alias}"
+      ref="vehicleVolumeDicJsfServiceImpl"
+      server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
 </beans>
 

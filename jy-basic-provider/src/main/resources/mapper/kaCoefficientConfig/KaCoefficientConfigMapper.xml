@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jdl.basic.provider.core.dao.kaCoefficientConfig.KaCoefficientConfigDao">
+    <resultMap id="BaseResultMap" type="com.jdl.basic.provider.core.po.KaCoefficientConfigPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="merchant_code" jdbcType="INTEGER" property="merchantCode"/>
+        <result column="merchant_name" jdbcType="VARCHAR" property="merchantName"/>
+        <result column="coefficient" jdbcType="DECIMAL" property="coefficient"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="status_name" jdbcType="INTEGER" property="statusName"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="ts" jdbcType="TIMESTAMP" property="ts"/>
+        <result column="yn" jdbcType="TINYINT" property="yn"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        merchant_code,
+        merchant_name,
+        coefficient,
+        status,
+        status_name,
+        create_user,
+        create_user_name,
+        update_user,
+        update_user_name,
+        create_time,
+        update_time,
+        yn,
+        ts
+    </sql>
+
+    <insert id="addAll" keyColumn="id" keyProperty="id"
+            parameterType="com.jdl.basic.provider.core.po.KaCoefficientConfigPO" useGeneratedKeys="true">
+        insert into ka_coefficient_config
+        (
+            merchant_code,
+            merchant_name,
+            coefficient,
+            status,
+            status_name,
+            create_user,
+            create_user_name,
+            update_user,
+            update_user_name,
+            create_time,
+            update_time
+        )values
+        (
+            #{merchantCode},
+            #{merchantName},
+            #{coefficient},
+            #{status},
+            #{statusName},
+            #{createUser},
+            #{createUserName},
+            #{updateUser},
+            #{updateUserName},
+            #{createTime},
+            #{updateTime}
+        )
+    </insert>
+
+
+    <update id="modifyCoefficient">
+        update ka_coefficient_config
+            set coefficient = #{coefficient},
+                update_user =  #{updateUser},
+                update_user_name = #{updateUserName},
+                update_time = #{updateTime},
+                merchant_code = #{merchantCode},
+                merchant_name = #{merchantName}
+        where
+            id = #{id}
+    </update>
+    <delete id="delById" parameterType="com.jdl.basic.provider.core.po.KaCoefficientConfigPO">
+        update ka_coefficient_config
+            set status = #{status},
+                status_name = #{statusName},
+                update_user =  #{updateUser},
+                update_user_name = #{updateUserName},
+                update_time = #{updateTime}
+        where
+            id = #{id}
+    </delete>
+
+    <select id="selectByMerchantCodeAndStatus" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from ka_coefficient_config
+        where
+            1=1
+        <if test="merchantCode != null and merchantCode != ''">
+            AND merchant_code = #{merchantCode,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null and status != ''">
+            and status = #{status,jdbcType=VARCHAR}
+        </if>
+        ORDER BY status DESC,update_time DESC
+        <if test="pageNumber > 0">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+
+    <select id="getTotalCount" resultType="java.lang.Integer">
+        select
+            count(1) as num
+        from ka_coefficient_config
+        where
+            1=1
+        <if test="merchantCode != null and merchantCode != ''">
+            and merchant_code = #{merchantCode,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null and status != ''">
+            and status = #{status,jdbcType=VARCHAR}
+        </if>
+    </select>
+    <select id="getCountOfInEffectState" resultType="java.lang.Integer">
+        select
+            count(1) as num
+        from ka_coefficient_config
+        where
+            status = 1
+
+    </select>
+    <select id="getInEffectKaCoefficientConfig"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ka_coefficient_config
+        where
+            status = 1
+            AND merchant_code = #{merchantCode,jdbcType=VARCHAR}
+        limit 1
+    </select>
+
+    <select id="getInEffectKaCoefficientConfigWithCache"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ka_coefficient_config
+        where
+        status = 1
+        AND merchant_code = #{merchantCode,jdbcType=VARCHAR}
+        limit 1
+    </select>
+</mapper>

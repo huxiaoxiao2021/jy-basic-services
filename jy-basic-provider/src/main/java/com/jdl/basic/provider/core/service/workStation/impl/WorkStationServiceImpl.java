@@ -1,13 +1,11 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
 
+import com.google.common.collect.Lists;
 import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkStation;
-import com.jdl.basic.api.domain.workStation.WorkStationCountVo;
-import com.jdl.basic.api.domain.workStation.WorkStationQuery;
+import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.enums.BusinessLineTypeEnum;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
@@ -17,20 +15,22 @@ import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringHelper;
 import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationDao;
+import com.jdl.basic.provider.core.dao.workStation.WorkStationJobTypeDao;
+import com.jdl.basic.provider.core.po.WorkStationJobTypePO;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName: WorkStationServiceImpl
@@ -53,12 +53,16 @@ public class WorkStationServiceImpl implements WorkStationService {
 	@Autowired
 	@Qualifier("workStationGridService")
 	private WorkStationGridService workStationGridService;
+	@Autowired
+	private WorkStationJobTypeDao workStationJobTypeDao;
 
 	/**
 	 * 插入一条数据
 	 * @param insertData
 	 * @return
 	 */
+	@Override
+	@Transactional
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.insert", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> insert(WorkStation insertData){
 		Result<Boolean> result = checkAndFillBeforeAdd(insertData);
@@ -66,10 +70,39 @@ public class WorkStationServiceImpl implements WorkStationService {
 			return result;
 		}
 		generateAndSetBusinessKey(insertData);
+		//判断有无设置工种类型 并设置
+		if(CollectionUtils.isNotEmpty(insertData.getJobTypes())){
+			insertData.setHaveJobType(1);
+		}
+		insertWorkStationJobTypePO(insertData,insertData.getBusinessKey());
 		result.setData(workStationDao.insert(insertData) == 1);
 		return result;
 	 }
+
+	/**
+	 * 组装网格工序工种数据并插入
+	 */
+	private int insertWorkStationJobTypePO(WorkStation dto ,String businessKey){
+		if(CollectionUtils.isEmpty(dto.getJobTypes())){
+			return 0;
+		}
+		List<WorkStationJobTypePO> pos = new ArrayList<>();
+
+		dto.getJobTypes().stream().forEach(item ->{
+			if(StringUtils.isBlank(businessKey) || Objects.isNull(item)){
+				throw new RuntimeException("添加网格工序工种异常,请检查后重新操作!");
+			}
+			WorkStationJobTypePO jobTypePO = new WorkStationJobTypePO();
+			jobTypePO.setRefBusinessKey(businessKey);
+			jobTypePO.setJobCode(item);
+			jobTypePO.setCreateUser(dto.getCreateUser());
+			jobTypePO.setCreateTime(new Date());
+			pos.add(jobTypePO);
+		});
+		return workStationJobTypeDao.batchInsert(pos);
+	 }
 	@Override
+	@Transactional
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.importDatas", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> importDatas(List<WorkStation> dataList) {
 		Result<Boolean> result = checkImportDatas(dataList);
@@ -89,6 +122,15 @@ public class WorkStationServiceImpl implements WorkStationService {
 				generateAndSetBusinessKey(data);
 			}
 			data.setBusinessLineName(BusinessLineTypeEnum.getNameByCode(data.getBusinessLineCode()));
+			//判断有无设置工种类型 并设置
+			if(CollectionUtils.isNotEmpty(data.getJobTypes())){
+				data.setHaveJobType(1);
+			}else {
+				data.setHaveJobType(0);
+			}
+			//删除所有老的与businessKey关联的JobType 然后再插入
+			workStationJobTypeDao.deleteByRefBusinessKey(data.getBusinessKey());
+			insertWorkStationJobTypePO(data,data.getBusinessKey());
 			workStationDao.insert(data);
 		}
 		return result;
@@ -193,6 +235,16 @@ public class WorkStationServiceImpl implements WorkStationService {
 		workStationDao.deleteById(updateData);
 		updateData.setId(null);
 		updateData.setBusinessLineName(BusinessLineTypeEnum.getNameByCode(updateData.getBusinessLineCode()));
+		//判断有无设置工种类型 并设置
+		if(CollectionUtils.isNotEmpty(updateData.getJobTypes())){
+			updateData.setHaveJobType(1);
+		}else {
+			updateData.setHaveJobType(0);
+		}
+
+		//删除所有老的与businessKey关联的JobType 然后再插入
+		workStationJobTypeDao.deleteByRefBusinessKey(updateData.getBusinessKey());
+		insertWorkStationJobTypePO(updateData,updateData.getBusinessKey());
 		result.setData(workStationDao.insert(updateData) == 1);
 		return result;
 	 }
@@ -215,6 +267,8 @@ public class WorkStationServiceImpl implements WorkStationService {
 		if(workStationGridService.hasGridData(oldData.getBusinessKey())) {
 			return result.toFail("该工序存在场地网格记录，无法删除！");
 		}
+		//删除所有与businessKey关联的JobType
+		workStationJobTypeDao.deleteByRefBusinessKey(oldData.getBusinessKey());
 		result.setData(workStationDao.deleteById(deleteData) == 1);
 		return result;
 	 }
@@ -226,7 +280,16 @@ public class WorkStationServiceImpl implements WorkStationService {
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.queryById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<WorkStation> queryById(Long id){
 		Result<WorkStation> result = Result.success();
-		result.setData(workStationDao.queryById(id));
+		WorkStation workStation = workStationDao.queryById(id);
+		//判断是否已经维护工种
+		if(Objects.equals(workStation.getHaveJobType(),1)){
+			List<WorkStationJobTypePO> jobTypes = workStationJobTypeDao.selectByBusinessKey(workStation.getBusinessKey());
+			if(CollectionUtils.isNotEmpty(jobTypes)){
+				List<Integer> types = jobTypes.stream().map(WorkStationJobTypePO::getJobCode).collect(Collectors.toList());
+				workStation.setJobTypes(types);
+			}
+		}
+		result.setData(workStation);
 		return result;
 	 }
 	/**
@@ -244,7 +307,18 @@ public class WorkStationServiceImpl implements WorkStationService {
 		PageDto<WorkStation> pageData = new PageDto<>(query.getPageNumber(), query.getPageSize());
 		Long totalCount = workStationDao.queryCount(query);
 		if(totalCount != null && totalCount > 0){
-			pageData.setResult(workStationDao.queryList(query));
+			List<WorkStation> workStations = workStationDao.queryList(query);
+			//查询工种信息补充到返回值中
+			if(CollectionUtils.isNotEmpty(workStations)){
+				workStations.stream().forEach(item ->{
+					List<WorkStationJobTypePO> jobTypes = workStationJobTypeDao.selectByBusinessKey(item.getBusinessKey());
+					if(CollectionUtils.isNotEmpty(jobTypes)){
+						List<Integer> types = jobTypes.stream().map(WorkStationJobTypePO::getJobCode).collect(Collectors.toList());
+						item.setJobTypes(types);
+					}
+				});
+			}
+			pageData.setResult(workStations);
 			pageData.setTotalRow(totalCount.intValue());
 		}else {
 			pageData.setResult(new ArrayList<WorkStation>());
@@ -398,7 +472,24 @@ public class WorkStationServiceImpl implements WorkStationService {
 		if(!checkResult.isSuccess()){
 		    return Result.fail(checkResult.getMessage());
 		}
-		result.setData(workStationDao.queryListForExport(query));
+		List<WorkStation> list = workStationDao.queryListForExport(query);
+		if(CollectionUtils.isNotEmpty(list)){
+			List<List<WorkStation>> partition = Lists.partition(list, 50);
+			for (int i = 0; i < partition.size(); i++) {
+				List<String> stationBusinessKeys = partition.get(i).stream().map(WorkStation::getBusinessKey).collect(Collectors.toList());
+				List<WorkStationJobTypePO> workStationJobTypes = workStationJobTypeDao.selectByBusinessKeys(stationBusinessKeys);
+				for (WorkStation workStation : partition.get(i)) {
+					List<Integer> joyTypes = new ArrayList<>();
+					for (int j = 0; j < workStationJobTypes.size(); j++) {
+						if(Objects.equals(workStation.getBusinessKey(),workStationJobTypes.get(j).getRefBusinessKey())){
+							joyTypes.add(workStationJobTypes.get(j).getJobCode());
+						}
+					}
+					workStation.setJobTypes(joyTypes);
+				}
+			}
+		}
+		result.setData(list);
 		return result;
 	}
 
@@ -409,4 +500,22 @@ public class WorkStationServiceImpl implements WorkStationService {
 		result.setData(workStationDao.queryWorkStationBybusinessKeyWithCache(businessKey));
 		return result;
 	}
+
+	@Override
+	public Result<List<WorkStationJobTypeDto>> queryWorkStationJobTypeBybusinessKey(String businessKey) {
+		Result<List<WorkStationJobTypeDto> > result = Result.success();
+		List<WorkStationJobTypeDto> list = new ArrayList<>();
+		List<WorkStationJobTypePO> pos = workStationJobTypeDao.selectByBusinessKey(businessKey);
+		if(CollectionUtils.isNotEmpty(pos)){
+			pos.stream().forEach(item->{
+				WorkStationJobTypeDto dto = new WorkStationJobTypeDto();
+				BeanUtils.copyProperties(item,dto);
+				list.add(dto);
+			});
+		}
+		result.setData(list);
+		return result;
+	}
+
+
 }

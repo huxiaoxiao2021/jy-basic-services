@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jdl.basic.provider.core.dao.workStation.WorkStationJobTypeDao" >
+  <resultMap id="BaseResultMap" type="com.jdl.basic.provider.core.po.WorkStationJobTypePO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="ref_station_key" property="refBusinessKey" jdbcType="VARCHAR" />
+    <result column="job_code" property="jobCode" jdbcType="BIT" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="yn" property="yn" jdbcType="BIT" />
+    <result column="ts" property="ts" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, ref_station_key, job_code, create_user, update_user, create_time, update_time, 
+    yn, ts
+  </sql>
+
+  <sql id="Part_Column_List" >
+    id, ref_station_key, job_code
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from work_station_job_type
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByBusinessKey"  parameterType="java.lang.String" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from work_station_job_type
+    where yn =1 and  ref_station_key = #{refBusinessKey,jdbcType=BIGINT}
+  </select>
+
+  <insert id="insert" parameterType="com.jdl.basic.provider.core.po.WorkStationJobTypePO" >
+    insert into work_station_job_type (id, ref_station_key, job_code, 
+      create_user, update_user, create_time, 
+      update_time, yn)
+    values (#{id,jdbcType=BIGINT}, #{refBusinessKey,jdbcType=VARCHAR}, #{jobCode,jdbcType=BIT}, 
+      #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{yn,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jdl.basic.provider.core.po.WorkStationJobTypePO" >
+    insert into work_station_job_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="refBusinessKey != null" >
+        ref_station_key,
+      </if>
+      <if test="jobCode != null" >
+        job_code,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="yn != null" >
+        yn,
+      </if>
+      <if test="ts != null" >
+        ts,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="refBusinessKey != null" >
+        #{refBusinessKey,jdbcType=VARCHAR},
+      </if>
+      <if test="jobCode != null" >
+        #{jobCode,jdbcType=BIT},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null" >
+        #{yn,jdbcType=BIT},
+      </if>
+      <if test="ts != null" >
+        #{ts,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+    insert into work_station_job_type
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    ref_station_key, job_code,create_user, create_time,
+    </trim>
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      <trim prefix=" (" suffix=")" suffixOverrides=",">
+        #{item.refBusinessKey},
+        #{item.jobCode},
+        #{item.createUser},
+        #{item.createTime},
+      </trim>
+    </foreach>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.jdl.basic.provider.core.po.WorkStationJobTypePO" >
+    update work_station_job_type
+    <set >
+      <if test="refBusinessKey != null" >
+        ref_station_key = #{refBusinessKey,jdbcType=VARCHAR},
+      </if>
+      <if test="jobCode != null" >
+        job_code = #{jobCode,jdbcType=BIT},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null" >
+        yn = #{yn,jdbcType=BIT},
+      </if>
+      <if test="ts != null" >
+        ts = #{ts,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jdl.basic.provider.core.po.WorkStationJobTypePO" >
+    update work_station_job_type
+    set ref_station_key = #{refBusinessKey,jdbcType=VARCHAR},
+      job_code = #{jobCode,jdbcType=BIT},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      yn = #{yn,jdbcType=BIT},
+      ts = #{ts,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="deleteByRefBusinessKey" parameterType="java.lang.String">
+    update work_station_job_type set yn=0
+    where yn =1 and ref_station_key = #{refBusinessKey,jdbcType=VARCHAR}
+  </update>
+
+
+  <select id="selectByBusinessKeys"   parameterType="java.util.List" resultMap="BaseResultMap" >
+    select
+    ref_station_key,job_code
+    from work_station_job_type
+    where yn =1 and  ref_station_key in
+    <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+</mapper>

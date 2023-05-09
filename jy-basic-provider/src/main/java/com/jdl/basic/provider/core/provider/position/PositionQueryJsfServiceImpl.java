@@ -84,6 +84,27 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
     }
 
     @Override
+    public Result<String> queryPositionCodeByRefGridKey(String refGridKey) {
+        if(log.isInfoEnabled()) {
+            log.info("queryPositionCodeByRefGridKey-refGridKey={}", refGridKey);
+        }
+        Result<String> result = new Result<>();
+        result.toSuccess();
+        try {
+            PositionRecord positionRecord = positionRecordService.queryPositionByRefGridKey(refGridKey);
+            if (positionRecord == null) {
+                log.warn("queryPositionCodeByRefGridKey查询为空:refGridKey={}", refGridKey);
+                return result;
+            }
+            result.setData(positionRecord.getPositionCode());
+        } catch (Exception e){
+            log.error("queryPositionCodeByRefGridKey|根据业务主键查询岗位码出现异常:refGridKey={}", refGridKey, e);
+            result.toError("服务器异常");
+        }
+        return result;
+    }
+
+    @Override
     public Result<Boolean> updateByPositionCode(PositionRecord positionRecord) {
         log.info("岗位管理-updateByPositionCode-{}",JSON.toJSONString(positionRecord));
         Result<Boolean> result = new Result<Boolean>();
@@ -158,4 +179,20 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
         }
         return response;
     }
+
+	@Override
+	public Result<PositionData> queryPositionByGridKey(String gridKey) {
+        if(log.isInfoEnabled()){
+            log.info("岗位管理-queryPositionByGridKey-{}",gridKey);
+        }
+        Result<PositionData> response = new Result<>();
+        response.toSuccess();
+        try {
+        	response.setData(positionRecordService.queryPositionByGridKeyWithCache(gridKey));
+        }catch (Exception e){
+            log.error("queryPositionByGridKey 查询岗位信息:{} 异常!-{}", gridKey, e.getMessage(),e);
+            response.toFail("岗位信息查询异常！");
+        }
+        return response;
+	}
 }

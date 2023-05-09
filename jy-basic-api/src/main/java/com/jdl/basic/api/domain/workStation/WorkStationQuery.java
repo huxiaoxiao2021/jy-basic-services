@@ -38,7 +38,11 @@ public class WorkStationQuery extends BasePagerCondition {
 	/**
 	 * 分页-pageSize
 	 */
-	private Integer pageSize;	
+	private Integer pageSize;
 
+	/**
+	 * 是否维护工种 0:未维护  1:已维护
+	 */
+	private Integer haveJobType;
 
 }

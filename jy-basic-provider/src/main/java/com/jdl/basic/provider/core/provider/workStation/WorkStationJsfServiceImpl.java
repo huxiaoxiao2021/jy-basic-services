@@ -1,10 +1,7 @@
 package com.jdl.basic.provider.core.provider.workStation;
 
 import com.alibaba.fastjson.JSON;
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkStation;
-import com.jdl.basic.api.domain.workStation.WorkStationCountVo;
-import com.jdl.basic.api.domain.workStation.WorkStationQuery;
+import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.service.workStation.WorkStationJsfService;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.utils.DateHelper;
@@ -292,4 +289,24 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 		}
 		return result;
 	}
+
+	@Override
+	public Result<List<WorkStationJobTypeDto>> queryWorkStationJobTypeBybusinessKey(String businessKey) {
+		Result<List<WorkStationJobTypeDto>> result = new Result<>();
+		try {
+			if(log.isInfoEnabled()) {
+				log.info("网格工序管理 queryWorkStationJobTypeBybusinessKey 入参-{}", JSON.toJSONString(businessKey));
+			}
+			if(StringUtils.isEmpty(businessKey)){
+				result.toFail("业务主键不能为空!");
+				return result;
+			}
+			return workStationService.queryWorkStationJobTypeBybusinessKey(businessKey);
+		}catch (Exception e){
+			log.error("获取网格工序工种类型异常! 入参-{}-{}",businessKey,e.getMessage(),e);
+			result.toError("获取网格工序工种类型异常!");
+		}
+		return result;
+	}
+
 }
