@@ -93,7 +93,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		}
 		insertData.setBusinessKey(generalBusinessKey());
 		//保存场地网格信息，设置关联关系字段
-		WorkGrid workGrid = saveWorkGird(insertData);
+		WorkGrid workGrid = saveWorkGird(insertData,new HashMap<>());
 		insertData.setRefWorkGridKey(workGrid.getBusinessKey());
 		
 		result.setData(workStationGridDao.insert(insertData) == 1);
@@ -105,23 +105,13 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		}
 		return result;
 	 }
-
-	private WorkGrid saveWorkGird(WorkStationGrid workStationGrid) {
+	
+	private WorkGrid saveWorkGird(WorkStationGrid workStationGrid,Map<String,WorkGrid> savedWorkGridMap) {
 		WorkGrid workGrid = new WorkGrid();
 		workGrid.setOrgCode(workStationGrid.getOrgCode());
 		workGrid.setOrgName(workStationGrid.getOrgName());
 		workGrid.setSiteCode(workStationGrid.getSiteCode());
 		workGrid.setSiteName(workStationGrid.getSiteName());
-		WorkSiteTypeEnum siteType = null;
-		BaseStaffSiteOrgDto siteInfo = this.baseMajorManager.getBaseSiteBySiteId(workStationGrid.getSiteCode());
-		if(siteInfo != null) {
-			siteType = WorkSiteTypeEnum.getWorkingSiteTypeBySubType(siteInfo.getSubType());
-		}
-		if(siteType == null) {
-			siteType = WorkSiteTypeEnum.OTHER;
-		}
-		workGrid.setSiteType(siteType.getCode());
-		workGrid.setSiteTypeName(siteType.getName());
 		workGrid.setFloor(workStationGrid.getFloor());
 		workGrid.setGridNo(workStationGrid.getGridNo());
 		workGrid.setGridCode(workStationGrid.getGridCode());
@@ -138,8 +128,25 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		workGrid.setUpdateUserName(workStationGrid.getUpdateUserName());
 		workGrid.setCreateTime(workStationGrid.getCreateTime());
 		workGrid.setUpdateTime(workStationGrid.getUpdateTime());
+		String uniqueGridKeysStr = workGridService.getUniqueKeysStr(workGrid);
+		//判断是否已保存过
+		if(savedWorkGridMap != null && savedWorkGridMap.containsKey(uniqueGridKeysStr)) {
+			return savedWorkGridMap.get(uniqueGridKeysStr);
+		}
+		//加载站点类型信息
+		WorkSiteTypeEnum siteType = null;
+		BaseStaffSiteOrgDto siteInfo = this.baseMajorManager.getBaseSiteBySiteId(workStationGrid.getSiteCode());
+		if(siteInfo != null) {
+			siteType = WorkSiteTypeEnum.getWorkingSiteTypeBySubType(siteInfo.getSubType());
+		}
+		if(siteType == null) {
+			siteType = WorkSiteTypeEnum.OTHER;
+		}
+		workGrid.setSiteType(siteType.getCode());
+		workGrid.setSiteTypeName(siteType.getName());
 		Result<WorkGrid> saveResult= workGridService.saveData(workGrid);
 		if(saveResult != null) {
+			savedWorkGridMap.put(uniqueGridKeysStr, saveResult.getData());
 			return saveResult.getData();
 		}
 		return null;
@@ -290,7 +297,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(oldData == null) {
 			return result.toFail("该网格数据已变更，请重新查询后修改！");
 		}
-		WorkGrid workGrid = this.saveWorkGird(updateData);
+		WorkGrid workGrid = this.saveWorkGird(updateData,new HashMap<>());
 		if(workGrid == null) {
 			return result.toFail("网格数据修改失败！");
 		}
@@ -437,6 +444,8 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(!result.isSuccess()) {
 			return result;
 		}
+		//存储已保存的WorkGrid数据
+		Map<String,WorkGrid> savedWorkGridMap = new HashMap<>();
 		//先删除后插入新记录
 		for(WorkStationGrid data : dataList) {
 			WorkStationGrid oldData = workStationGridDao.queryByBusinessKey(data);
@@ -451,7 +460,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			}else {
 				data.setBusinessKey(generalBusinessKey());
 			}
-			WorkGrid workGrid = this.saveWorkGird(data);
+			WorkGrid workGrid = this.saveWorkGird(data,savedWorkGridMap);
 			if(workGrid == null) {
 				throw  new RuntimeException("网格数据导入失败！");
 			}
@@ -730,7 +739,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	}
     private void initWorkGrid(WorkStationGrid data) {
 		if(StringUtils.isBlank(data.getRefWorkGridKey())) {
-	    	WorkGrid workGrid = this.saveWorkGird(data);
+	    	WorkGrid workGrid = this.saveWorkGird(data,new HashMap<>());
 			if(workGrid != null) {
 				data.setRefWorkGridKey(workGrid.getBusinessKey());
 				this.workStationGridDao.updateById(data);

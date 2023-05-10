@@ -98,5 +98,11 @@ public interface WorkGridService {
 	 * @return
 	 */
 	WorkGrid queryByWorkGridKey(String workGridKey);
+	/**
+	 * 获取-唯一业务主键字符串，多个字段组合结果
+	 * @param data
+	 * @return
+	 */
+	String getUniqueKeysStr(WorkGrid data);
 
 }

@@ -561,8 +561,8 @@ public class WorkGridServiceImpl implements WorkGridService {
 		}
 		return result;
 	}
-
-	private String getUniqueKeysStr(WorkGridImport data) {
+	@Override
+	public String getUniqueKeysStr(WorkGrid data) {
 		if(data != null ) {
 			return data.getSiteCode().toString()
 					.concat(DmsConstants.KEYS_SPLIT)
