@@ -164,7 +164,7 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
     private void addAndDeleteHistory(String version){
         String key = COLLECT_BOX_FLOW_ADD_AND_DELETE_HISTORY + version;
         try {
-            if(cluster.set(key, "1", 5, TimeUnit.MINUTES, false)){
+            if(cluster.set(key, "1", 10, TimeUnit.MINUTES, false)){
                 boolean isNew = addCollectBoxFlowInfo(version);
                 if(isNew){
                     deleteHistory();
@@ -172,8 +172,6 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
             }
         }catch (Exception e){
             log.error("大数据推送小件集包新版本，新增版本信息删除历史时异常", e);
-            throw e;
-        }finally {
             cluster.del(key);
         }
     }
