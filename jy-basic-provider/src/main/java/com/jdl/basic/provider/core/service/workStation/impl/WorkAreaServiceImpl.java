@@ -137,9 +137,18 @@ public class WorkAreaServiceImpl implements WorkAreaService {
 		if(oldData != null) {
 			WorkArea updateData = new WorkArea();
 			updateData.setId(oldData.getId());
+			updateData.setAreaName(workArea.getAreaName());
 			updateData.setBusinessLineCode(workArea.getBusinessLineCode());
-			updateData.setBusinessLineName(workArea.getBusinessLineName());
-			updateData.setAreaType(workArea.getAreaType());
+			if(workArea.getBusinessLineName() == null) {
+				updateData.setBusinessLineName("");
+			}else {
+				updateData.setBusinessLineName(workArea.getBusinessLineName());
+			}
+			if(workArea.getAreaType() == null) {
+				updateData.setAreaType(0);
+			}else {
+				updateData.setAreaType(workArea.getAreaType());
+			}
 			updateData.setFlowDirectionType(workArea.getFlowDirectionType());
 			updateData.setUpdateUser(workArea.getUpdateUser());
 			updateData.setUpdateUserName(workArea.getUpdateUserName());
