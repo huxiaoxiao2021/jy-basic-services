@@ -5,16 +5,19 @@ import com.jdl.basic.api.domain.workStation.WorkGridFlowDetailOfflineQuery;
 import com.jdl.basic.api.domain.workStation.WorkStationAttendPlan;
 import com.jdl.basic.api.domain.workStation.WorkStationAttendPlanQuery;
 import com.jdl.basic.common.contants.DmsConstants;
+import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.workStation.WorkGridFlowDetailOfflineDao;
 import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDetailOfflineService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -50,6 +53,9 @@ public class WorkGridFlowDetailOfflineServiceImpl implements WorkGridFlowDetailO
         if(query.getPageSize() == null
                 || query.getPageSize() <= 0) {
             query.setPageSize(DmsConstants.PAGE_SIZE_DEFAULT);
+        }
+        if(query.getDt() == null) {
+        	query.setDt(DateFormatUtils.format(DateHelper.addDays(new Date(), -1), DateHelper.DATE_FORMAT_YYYY_MM_DD));
         }
         query.setOffset(0);
         query.setLimit(query.getPageSize());

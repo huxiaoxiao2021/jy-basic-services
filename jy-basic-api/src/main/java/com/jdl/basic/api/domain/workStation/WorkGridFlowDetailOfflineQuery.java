@@ -51,10 +51,10 @@ public class WorkGridFlowDetailOfflineQuery extends BasePagerCondition implement
 	private Integer pageSize;
 
 	public String getDt() {
-		return DateFormatUtils.format(new Date(), DateHelper.DATE_FORMAT_YYYY_MM_DD);
+		return this.dt;
 	}
 
-	private void setDt(String dt) {
+	public void setDt(String dt) {
 		this.dt = dt;
 	}
 }
