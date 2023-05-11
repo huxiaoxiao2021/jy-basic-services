@@ -271,6 +271,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			data.setRefWorkGridKey(workGridResult.getData().getBusinessKey());
 		}
 		WorkStation workStation = workStationData.getData();
+		data.setAreaName(workStation.getAreaName());
 		data.setGridCode(workStation.getAreaCode().concat("-").concat(data.getGridNo()));
 		data.setGridName(workStation.getAreaName().concat("-").concat(data.getGridNo()));
 		data.setRefStationKey(workStation.getBusinessKey());
