@@ -422,12 +422,20 @@
     </select>
 
     <select id="queryCrossCodeTableTrolleyBySiteFlow" parameterType="com.jdl.basic.api.domain.cross.TableTrolleyQuery"
-            resultMap="BaseResultMap">
+            resultMap="tableTrolleyDto">
         select TABLETROLLEY_CODE, CROSS_CODE
         from
             sort_cross_detail
         where  yn = 1
             and site_code = #{siteCode,jdbcType=VARCHAR}
             and dms_id = #{dmsId,jdbcType=INTEGER}
+    </select>
+    <select id="querySiteFlowByCrossCodeTableTrolley" parameterType="com.jdl.basic.api.domain.cross.TableTrolleyQuery"
+            resultMap="tableTrolleyDto">
+        select site_code, dms_id
+        from sort_cross_detail
+        where  yn = 1
+            and CROSS_CODE = #{crossCode,jdbcType=VARCHAR}
+            and TABLETROLLEY_CODE = #{tabletrolleyCode,jdbcType=VARCHAR}
     </select>
 </mapper>

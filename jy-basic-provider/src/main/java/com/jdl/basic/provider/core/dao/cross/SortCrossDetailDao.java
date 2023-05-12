@@ -92,4 +92,8 @@ public interface SortCrossDetailDao {
      * @return
      */
     List<TableTrolleyJsfDto> queryCrossCodeTableTrolleyBySiteFlow(TableTrolleyQuery tableTrolleyQuery);
+    /**
+     * 根据滑道笼车信息查询场地流向
+     */
+    List<TableTrolleyJsfDto> querySiteFlowByCrossCodeTableTrolley(TableTrolleyQuery tableTrolleyQuery);
 }

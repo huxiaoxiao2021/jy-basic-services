@@ -78,4 +78,8 @@ public interface SortCrossJsfService {
      */
     Result<TableTrolleyJsfResp>  queryCrossCodeTableTrolleyBySiteFlow(TableTrolleyQuery tableTrolleyQuery);
 
+    /**
+     * 根据滑道笼车信息查询场地流向
+     */
+    Result<TableTrolleyJsfResp>  querySiteFlowByCrossCodeTableTrolley(TableTrolleyQuery tableTrolleyQuery);
 }
