@@ -72,4 +72,10 @@ public interface SortCrossJsfService {
      * @return
      */
     Boolean initSiteType(SortCrossDetail detail);
+
+    /**
+     * 根据场地流向查询滑道笼车信息
+     */
+    Result<TableTrolleyJsfResp>  queryCrossCodeTableTrolleyBySiteFlow(TableTrolleyQuery tableTrolleyQuery);
+
 }

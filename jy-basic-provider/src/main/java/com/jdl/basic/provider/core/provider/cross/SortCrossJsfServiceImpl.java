@@ -226,4 +226,24 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
         return true;
     }
 
+    @Override
+    public Result<TableTrolleyJsfResp> queryCrossCodeTableTrolleyBySiteFlow(TableTrolleyQuery request) {
+        Result<TableTrolleyJsfResp> result = new Result<>();
+        result.toSuccess();
+        if(Objects.isNull(request)) {
+            result.toFail("参数为空");
+            return result;
+        }
+        if(Objects.isNull(request.getDmsId())) {
+            result.toFail("参数DmsId缺失");
+            return result;
+        }
+        if(Objects.isNull(request.getSiteCode())) {
+            result.toFail("参数SiteCode缺失");
+            return result;
+        }
+        result.setData(sortCrossService.queryCrossCodeTableTrolleyBySiteFlow(request));
+        return result;
+    }
+
 }

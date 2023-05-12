@@ -187,4 +187,12 @@ public class SortCrossServiceImpl implements SortCrossService {
         }
         return true;
     }
+
+    @Override
+    public TableTrolleyJsfResp queryCrossCodeTableTrolleyBySiteFlow(TableTrolleyQuery tableTrolleyQuery) {
+        TableTrolleyJsfResp tableTrolley = new TableTrolleyJsfResp();
+        List<TableTrolleyJsfDto> tableTrolleyList = crossDetailDao.queryCrossCodeTableTrolleyBySiteFlow(tableTrolleyQuery);
+        tableTrolley.setTableTrolleyDtoJsfList(tableTrolleyList);
+        return tableTrolley;
+    }
 }

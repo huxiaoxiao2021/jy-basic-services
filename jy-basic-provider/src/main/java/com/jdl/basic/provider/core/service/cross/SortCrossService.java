@@ -68,5 +68,9 @@ public interface SortCrossService {
      * @param sortCrossModifyDto
      * @return
      */
-    boolean syncSortCross(SortCrossModifyDto sortCrossModifyDto);    
+    boolean syncSortCross(SortCrossModifyDto sortCrossModifyDto);
+    /**
+     * 根据场地流向查询滑道笼车信息
+     */
+    TableTrolleyJsfResp queryCrossCodeTableTrolleyBySiteFlow(TableTrolleyQuery tableTrolleyQuery);
 }
