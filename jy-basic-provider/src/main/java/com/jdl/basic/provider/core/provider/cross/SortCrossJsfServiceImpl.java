@@ -268,6 +268,10 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
             result.toFail("参数TabletrolleyCode缺失");
             return result;
         }
+        if(Objects.isNull(request.getDmsId())) {
+            result.toFail("参数DmsId缺失");
+            return result;
+        }
         try{
             result.setData(sortCrossService.querySiteFlowByCrossCodeTableTrolley(request));
             return result;
