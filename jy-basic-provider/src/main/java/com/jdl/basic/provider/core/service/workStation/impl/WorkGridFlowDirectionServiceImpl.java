@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,13 @@ import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
+import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionVo;
+import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.api.enums.ConfigFlowStatusEnum;
+import com.jdl.basic.api.enums.FlowSiteUseStatusEnum;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.enums.AreaEnum;
+import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.workStation.WorkGridFlowDirectionDao;
@@ -206,6 +211,9 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		}
 		WorkGridFlowDirection data0 = flowList.get(0);
 		WorkGrid gridData = workGridService.queryByWorkGridKey(data0.getRefWorkGridKey());
+		if(gridData == null) {
+			return result.toFail("网格数据无效，请重新进入配置页面！");
+		}
 		List<WorkGridFlowDirection> flowListForAdd = new ArrayList<>();
 		List<Integer> flowSiteCodes = new ArrayList<>();
 		for(WorkGridFlowDirection flowData: flowList) {
@@ -234,6 +242,7 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		updateData.setConfigFlowTime(new Date());
 		workGridService.updateById(updateData);
 		this.batchInsert(flowListForAdd);
+		result.setMessage("操作成功！本次新增"+flowListForAdd.size()+"个流向");
 		return result;
 	}
 	/**
@@ -316,5 +325,49 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	@Override
 	public List<Integer> queryExistFlowSiteCodeList(WorkGridFlowDirectionQuery query) {
 		return workGridFlowDirectionDao.queryExistFlowSiteCodeList(query);
+	}
+	@Override
+	public Result<PageDto<WorkGridFlowDirectionVo>> queryFlowDataForSelect(WorkGridFlowDirectionQuery query) {
+		Result<PageDto<WorkGridFlowDirectionVo>> result = Result.success();
+		if(query.getPageSize() == null || query.getPageSize() <= 0) {
+			query.setPageSize(DmsConstants.PAGE_SIZE_DEFAULT);
+		};
+		query.setOffset(0);
+		query.setLimit(query.getPageSize());
+		if(query.getPageSize() == null || query.getPageNumber() > 0) {
+			query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
+		};
+		if(query.getDt() == null) {
+        	query.setDt(DateFormatUtils.format(DateHelper.addDays(new Date(), -1), DateHelper.DATE_FORMAT_YYYY_MM_DD));
+        }
+        PageDto<WorkGridFlowDirectionVo> pageData = new PageDto<>(query.getPageNumber(), query.getPageSize());
+        Long totalCount = workGridFlowDirectionDao.queryFlowDataForSelectCount
+        		(query);
+        if(totalCount != null && totalCount > 0){
+            List<WorkGridFlowDirectionVo> dataList = workGridFlowDirectionDao.queryFlowDataForSelect(query);
+            for(WorkGridFlowDirectionVo item: dataList) {
+            	item.setConfigFlowStatusName(ConfigFlowStatusEnum.getNameByCode(item.getConfigFlowStatus()));
+            	item.setFlowSiteUseStatusName(FlowSiteUseStatusEnum.getNameByCode(item.getFlowSiteUseStatus()));
+            }
+            pageData.setResult(dataList);
+            pageData.setTotalRow(totalCount.intValue());
+        }else {
+            pageData.setResult(new ArrayList<WorkGridFlowDirectionVo>());
+            pageData.setTotalRow(0);
+        }
+        result.setData(pageData);		
+		return result;
+	}
+	@Override
+	public Result<List<WorkGridFlowDirection>> queryListForExport(WorkGridFlowDirectionQuery query) {
+		Result<List<WorkGridFlowDirection>> result = Result.success();
+		result.setData(workGridFlowDirectionDao.queryList(query));
+		return result;
+	}
+	@Override
+	public Result<Long> queryCount(WorkGridFlowDirectionQuery query) {
+		Result<Long> result = Result.success();
+		result.setData(workGridFlowDirectionDao.queryCount(query));
+		return result;
 	}
 }

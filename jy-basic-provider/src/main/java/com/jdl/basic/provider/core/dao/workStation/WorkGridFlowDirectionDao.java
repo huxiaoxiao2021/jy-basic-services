@@ -5,6 +5,7 @@ import java.util.List;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
+import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionVo;
 
 /**
  * 场地网格流向表--Dao接口
@@ -81,5 +82,17 @@ public interface WorkGridFlowDirectionDao {
 	 * @return
 	 */
 	List<Integer> queryExistFlowSiteCodeList(WorkGridFlowDirectionQuery query);
+	/**
+	 * 选择流向-查询数量
+	 * @param query
+	 * @return
+	 */
+	long queryFlowDataForSelectCount(WorkGridFlowDirectionQuery query);
+	/**
+	 * 选择流向-查询数据
+	 * @param query
+	 * @return
+	 */
+	List<WorkGridFlowDirectionVo> queryFlowDataForSelect(WorkGridFlowDirectionQuery query);
 
 }

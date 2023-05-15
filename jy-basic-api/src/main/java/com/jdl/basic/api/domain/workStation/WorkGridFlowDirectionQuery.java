@@ -79,6 +79,11 @@ public class WorkGridFlowDirectionQuery extends BasePagerCondition implements Se
 	 * 流入或流出-机构名称
 	 */
 	private String flowOrgName;
+	
+	/**
+	 * 日期
+	 */
+	private String dt;
 
    /**
 	* 分页-pageSize

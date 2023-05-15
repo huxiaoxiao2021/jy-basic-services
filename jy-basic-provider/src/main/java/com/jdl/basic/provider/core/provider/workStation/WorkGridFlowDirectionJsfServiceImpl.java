@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.jd.jsf.gd.util.StringUtils;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkGridFlowDetailOffline;
-import com.jdl.basic.api.domain.workStation.WorkGridFlowDetailOfflineQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
+import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionVo;
+import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.api.service.workStation.WorkGridFlowDirectionJsfService;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.utils.DateHelper;
@@ -157,12 +157,20 @@ public class WorkGridFlowDirectionJsfServiceImpl implements WorkGridFlowDirectio
 		return importDatas(dataList);
 	}
 	@Override
-	public Result<PageDto<WorkGridFlowDetailOffline>> queryFlowDataForSelect(WorkGridFlowDetailOfflineQuery query) {
-		return workGridFlowDetailOfflineService.queryPageList(query);
+	public Result<PageDto<WorkGridFlowDirectionVo>> queryFlowDataForSelect(WorkGridFlowDirectionQuery query) {
+		return workGridFlowDirectionService.queryFlowDataForSelect(query);
 	}
 	@Override
 	public Result<PageDto<WorkGridFlowDirection>> queryFlowData(WorkGridFlowDirectionQuery query) {
 		return queryPageList(query);
+	}
+	@Override
+	public Result<List<WorkGridFlowDirection>> queryListForExport(WorkGridFlowDirectionQuery query) {
+		return workGridFlowDirectionService.queryListForExport(query);
+	}
+	@Override
+	public Result<Long> queryCount(WorkGridFlowDirectionQuery query) {
+		return workGridFlowDirectionService.queryCount(query);
 	}
 
 }

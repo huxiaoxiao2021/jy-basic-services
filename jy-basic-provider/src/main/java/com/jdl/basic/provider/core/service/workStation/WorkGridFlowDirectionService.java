@@ -1,13 +1,14 @@
 package com.jdl.basic.provider.core.service.workStation;
 
-import com.jdl.basic.common.utils.PageDto;
-import com.jdl.basic.common.utils.Result;
-
 import java.util.List;
 
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
+import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionVo;
+import com.jdl.basic.api.domain.workStation.WorkGridQuery;
+import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
 
 /**
  * 场地网格流向表--Service接口
@@ -78,4 +79,13 @@ public interface WorkGridFlowDirectionService {
 	 * @return
 	 */
 	List<Integer> queryExistFlowSiteCodeList(WorkGridFlowDirectionQuery query);
+	/**
+	 * 查询流向-页面选择使用
+	 * @param query
+	 * @return
+	 */
+	Result<PageDto<WorkGridFlowDirectionVo>> queryFlowDataForSelect(WorkGridFlowDirectionQuery query);
+	
+	Result<List<WorkGridFlowDirection>> queryListForExport(WorkGridFlowDirectionQuery query);
+	Result<Long> queryCount(WorkGridFlowDirectionQuery query);
 }

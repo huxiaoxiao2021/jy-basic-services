@@ -3,10 +3,9 @@ package com.jdl.basic.api.service.workStation;
 import java.util.List;
 
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkGridFlowDetailOffline;
-import com.jdl.basic.api.domain.workStation.WorkGridFlowDetailOfflineQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
+import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionVo;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 
@@ -64,7 +63,10 @@ public interface WorkGridFlowDirectionJsfService {
 	
 	Result<Boolean> addFlowList(List<WorkGridFlowDirection> dataList);
 	
-	Result<PageDto<WorkGridFlowDetailOffline>> queryFlowDataForSelect(WorkGridFlowDetailOfflineQuery query);
+	Result<PageDto<WorkGridFlowDirectionVo>> queryFlowDataForSelect(WorkGridFlowDirectionQuery query);
 	
 	Result<PageDto<WorkGridFlowDirection>> queryFlowData(WorkGridFlowDirectionQuery query);
+	
+	Result<List<WorkGridFlowDirection>> queryListForExport(WorkGridFlowDirectionQuery query);
+	Result<Long> queryCount(WorkGridFlowDirectionQuery query);
 }

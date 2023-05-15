@@ -523,6 +523,9 @@ public class WorkGridServiceImpl implements WorkGridService {
 		if(workArea == null) {
 			return result.toFail("作业区不存在，请先维护作业区工序信息！");
 		}
+		if(workArea.getFlowDirectionType() == null) {
+			return result.toFail("作业区【"+areaCode+"】未维护流向类型，无法配置流向信息！");
+		}
 		Map<Integer,List<WorkGridFlowDirection>> flowDataMap = new HashMap<>();
 		data.setFlowDataMap(flowDataMap);
 		for(GridFlowLineTypeEnum lineType : flowSiteCodes.keySet()) {
