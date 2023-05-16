@@ -201,7 +201,6 @@
 <!--                <artifactId>ump-x</artifactId>-->
 <!--                <version>${jd.ump-x.version}</version>-->
 <!--            </dependency>-->
-
         </dependencies>
     </dependencyManagement>
 

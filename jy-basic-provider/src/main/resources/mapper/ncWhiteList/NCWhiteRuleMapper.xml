@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jdl.basic.provider.core.dao.ncWhiteList.NCWhiteRuleDao">
+
+    <resultMap id="BaseResultMap" type="com.jdl.basic.provider.core.po.NCWhiteRule">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="ref_id" jdbcType="INTEGER" property="refId"/>
+        <result column="quota_name" jdbcType="VARCHAR" property="quotaName"/>
+        <result column="gt" jdbcType="TINYINT" property="gt"/>
+        <result column="gte" jdbcType="TINYINT" property="gte"/>
+        <result column="lt" jdbcType="TINYINT" property="lt"/>
+        <result column="lte" jdbcType="TINYINT" property="lte"/>
+        <result column="gt_value" jdbcType="DOUBLE" property="gtValue"/>
+        <result column="lt_value" jdbcType="DOUBLE" property="ltValue"/>
+        <result column="unit" jdbcType="VARCHAR" property="unit"/>
+    </resultMap>
+
+    <update id="deleteByRefId" parameterType="java.lang.Integer">
+        update nc_white_rule
+        set yn = 0
+        where `ref_id` = #{refId,jdbcType=INTEGER}
+    </update>
+
+    <insert id="insert" parameterType="com.jdl.basic.provider.core.po.NCWhiteRule">
+        insert into nc_white_rule
+        (`ref_id`, `quota_name`, `gt`, `gte`,
+        `lt`, `lte`, `gt_value`, `lt_value`,
+        `unit`)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.refId,jdbcType=INTEGER}, #{item.quotaName,jdbcType=VARCHAR},
+            #{item.gt,jdbcType=TINYINT}, #{item.gte,jdbcType=TINYINT},
+            #{item.lt,jdbcType=TINYINT}, #{item.lte,jdbcType=TINYINT},
+            #{item.gtValue,jdbcType=DOUBLE},#{item.ltValue,jdbcType=DOUBLE},
+            #{item.unit,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <select id="queryByRefId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select `id`,
+               `ref_id`,
+               `quota_name`,
+               `gt`,
+               `gte`,
+               `lt`,
+               `lte`,
+               `gt_value`,
+               `lt_value`,
+               `unit`
+        from nc_white_rule
+        where `ref_id` = #{refId,jdbcType=INTEGER}
+          and yn = 1
+    </select>
+
+</mapper>
