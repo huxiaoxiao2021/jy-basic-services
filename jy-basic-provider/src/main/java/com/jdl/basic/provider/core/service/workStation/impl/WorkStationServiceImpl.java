@@ -454,6 +454,11 @@ public class WorkStationServiceImpl implements WorkStationService {
 				if((!CollectionUtils.isEmpty(dataList))) {
 					for(WorkStation data : dataList) {
 						this.saveWorkArea(data);
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}						
 					}
 				}
 			}

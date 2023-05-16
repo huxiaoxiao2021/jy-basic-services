@@ -78,7 +78,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	@Qualifier("workGridService")
 	WorkGridService workGridService;
 	
-
+	private static boolean initDataFlag = false;
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -711,27 +711,46 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
         result.setData(pageData);
         return result;
     }
-
+	@Override
+	public void stopInit() {
+		initDataFlag = false;
+	}
 	@Override
 	public void initAllWorkGrid() {
+		initDataFlag = true;
 		int pageNum = 1;
 		WorkStationGridQuery query = new WorkStationGridQuery();
 		List<WorkStationGrid> dataList = null;
 		do {
 			query.setPageNumber(pageNum);
-			query.setPageSize(100);
+			query.setPageSize(50);
 			Result<PageDto<WorkStationGrid>>  pageResult = this.queryPageList(query);
 			if(pageResult != null 
 					&& pageResult.getData() != null) {
 				dataList = pageResult.getData().getResult();
 				if((!CollectionUtils.isEmpty(dataList))) {
 					for(WorkStationGrid data : dataList) {
-						initWorkGrid(data);
+						if(StringUtils.isBlank(data.getAreaCode())) {
+							log.warn("网格数据无效areaCode值为空！"+data.getId());
+							continue;
+						}
+						if(initDataFlag) {
+							initWorkGrid(data);
+							try {
+								Thread.sleep(100);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}else {
+							log.warn("initAllWorkGrid-stop！"+data.getId());
+							break;
+						}
 					}
 				}
 			}
 			pageNum++;
-		}while(!CollectionUtils.isEmpty(dataList));		
+		}while(initDataFlag && !CollectionUtils.isEmpty(dataList));	
+		initDataFlag = false;
 	}
 
 	@Override
