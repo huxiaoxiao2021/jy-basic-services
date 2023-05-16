@@ -35,7 +35,7 @@
 				and keyword like CONCAT('%', #{keyword, jdbcType=VARCHAR}, '%')
 			</if>
 		</where>
-		<if test="pageSize != 0 and offset != 0" >
+		<if test="pageSize != 0 and pageNo != 0" >
 			limit #{offset}, #{pageSize}
 		</if>
 	</select>
