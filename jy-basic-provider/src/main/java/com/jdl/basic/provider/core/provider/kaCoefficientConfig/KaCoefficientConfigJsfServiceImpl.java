@@ -17,7 +17,7 @@ import java.util.Objects;
 @Slf4j
 public class KaCoefficientConfigJsfServiceImpl implements KaCoefficientConfigJsfService {
 
-    private static final Integer limitNum = 50;
+    private static final Integer limitNum = 500;
 
 
     @Autowired
@@ -53,7 +53,7 @@ public class KaCoefficientConfigJsfServiceImpl implements KaCoefficientConfigJsf
             Integer numOfRecords = kaCoefficientConfigService.getCountOfInEffectState();
 
             if (numOfRecords >= limitNum){
-                result.toFail("有效数据最多50条！");
+                result.toFail("有效数据最多500条！");
             }else{
                 Integer resultData = kaCoefficientConfigService.addKaCoefficientConfig(param);
                 result.toSuccess(resultData > 0 ? Boolean.TRUE:Boolean.FALSE,"success");

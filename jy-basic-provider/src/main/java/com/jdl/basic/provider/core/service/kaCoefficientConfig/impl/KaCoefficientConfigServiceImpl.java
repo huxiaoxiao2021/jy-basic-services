@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * ka积分卸车系数配置服务
@@ -84,6 +85,9 @@ public class KaCoefficientConfigServiceImpl implements KaCoefficientConfigServic
     @Override
     public KaCoefficientConfigDto getInEffectKaCoefficientConfig(KaCoefficientConfigDto param) {
         KaCoefficientConfigPO data = kaCoefficientConfigDao.getInEffectKaCoefficientConfig(param);
+        if (Objects.isNull(data)){
+            return null;
+        }
         KaCoefficientConfigDto tmp = assertDto(data);
         return tmp;
     }
