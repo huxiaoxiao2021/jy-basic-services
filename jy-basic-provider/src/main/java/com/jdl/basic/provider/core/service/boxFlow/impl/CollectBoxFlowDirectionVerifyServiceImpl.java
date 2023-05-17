@@ -13,9 +13,12 @@ import com.jdl.basic.provider.core.dao.boxFlow.query.CollectBoxFlowDirectionConf
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.boxFlow.CollectBoxFlowDirectionConfDao;
+import com.jdl.basic.provider.core.service.boxFlow.ICollectBoxFlowDirectionConfService;
 import com.jdl.basic.provider.core.service.boxFlow.ICollectBoxFlowDirectionVerifyService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -28,6 +31,8 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
 
     @Resource
     private CollectBoxFlowDirectionConfDao collectBoxFlowDirectionConfMapper;
+    @Autowired
+    private ICollectBoxFlowDirectionConfService collectBoxFlowDirectionConfService;
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionVerifyServiceImpl.verifyBoxFlowDirectionConf", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
@@ -37,7 +42,6 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
         Integer boxReceiveId = confToBeVerifyed.getBoxReceiveId();
         Integer transportType = confToBeVerifyed.getTransportType();
         Integer flowType = confToBeVerifyed.getFlowType();
-        String version = confToBeVerifyed.getVersion();
         Result<CollectBoxFlowDirectionConf> checkPageResult = new Result();
 
         if (startSiteId == null || endSiteId == null || boxReceiveId == null || transportType == null || flowType == null) {
@@ -46,12 +50,24 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
             checkPageResult.setMessage("参数不能为空");
             return checkPageResult;
         }
-
+        //大数据推送时调用此方法 传的版本号
+        String version = confToBeVerifyed.getVersion();
+        //分拣计划配置时的版本号
+        if(StringUtils.isBlank(confToBeVerifyed.getVersion())){
+            version = collectBoxFlowDirectionConfService.getCurrentVersion();
+        }
+        if(StringUtils.isBlank(version)){
+            checkPageResult.setCode(CollectBoxFlowDirectionConf.SUCCESS);
+            checkPageResult.setMessage("未查到激活的集包规则版本");
+            return checkPageResult;
+        }
         CollectBoxFlowDirectionConf collectBoxFlowDirectionConf = new CollectBoxFlowDirectionConf();
         collectBoxFlowDirectionConf.setStartSiteId(startSiteId);
         collectBoxFlowDirectionConf.setEndSiteId(endSiteId);
         collectBoxFlowDirectionConf.setTransportType(transportType);
         collectBoxFlowDirectionConf.setFlowType(flowType);
+
+        collectBoxFlowDirectionConf.setVersion(version);
         List<CollectBoxFlowDirectionConf> lists = collectBoxFlowDirectionConfMapper.selectConfiged(collectBoxFlowDirectionConf);
         //没配置
         if (CollectionUtils.isEmpty(lists)) {
@@ -95,6 +111,10 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
             return Result.fail("参数不能为空");
         }
 
+        String version = collectBoxFlowDirectionConfService.getCurrentVersion();
+        if(StringUtils.isBlank(version)){
+            return Result.success("无激活版本");
+        }
         //防止全查出来
         if (CollectionUtils.isEmpty(req.getEndSiteId())) {
             req.setEndSiteId(Arrays.asList(-1));
@@ -109,7 +129,7 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
 
         query.setTransportType(req.getTransportType());
         query.setFlowType(req.getFlowType());
-
+        query.setVersion(version);
         try {
 
             List<CollectBoxFlowDirectionConf> select = collectBoxFlowDirectionConfMapper.selectByStartSiteIdAndEndSiteIds(query);
@@ -146,7 +166,10 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
             log.warn("参数错误,{}", JSONObject.toJSONString(req));
             return Result.fail("参数不能为空");
         }
-
+        String version = collectBoxFlowDirectionConfService.getCurrentVersion();
+        if(StringUtils.isBlank(version)){
+            return Result.success("无激活版本");
+        }
         //防止全查出来
         if (CollectionUtils.isEmpty(req.getEndSiteId())) {
             req.setEndSiteId(new ArrayList<Integer>() {{
@@ -163,7 +186,7 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
 
         query.setTransportType(req.getTransportType());
         query.setFlowType(req.getFlowType());
-
+        query.setVersion(version);
         try {
 
             List<CollectBoxFlowDirectionConf> select = collectBoxFlowDirectionConfMapper.selectByStartSiteIdAndEndSiteIds(query);

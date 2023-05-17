@@ -120,5 +120,7 @@ public class CollectBoxFlowDirectionConfVo {
      */
     private Integer ifChangeSinceLastUpdate;
     private String ifChangeSinceLastUpdateStr;
+    
+    private String version;
 
 }

@@ -2,8 +2,12 @@ package com.jdl.basic.api.service.boxFlow;
 
 
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf;
+import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowInfo;
+import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowInfoDto;
 import com.jdl.basic.common.utils.Pager;
 import com.jdl.basic.common.utils.Result;
+
+import java.util.List;
 
 
 public interface CollectBoxFlowDirectionConfJsfService {
@@ -24,4 +28,12 @@ public interface CollectBoxFlowDirectionConfJsfService {
      */
     Result<Pager<CollectBoxFlowDirectionConf>> listByParamAndWhetherConfiged(Pager<CollectBoxFlowDirectionConf> pager, Boolean configed);
 
+    Result<Boolean> rollbackVersion();
+
+
+    Result<List<CollectBoxFlowInfoDto>> selectAllCollectBoxFlowInfo();
+
+    Result<String> getCurrentVersion();
+
+    Result<Integer> updateCollectBoxFlowInfo(CollectBoxFlowInfo collectBoxFlowInfo);
 }

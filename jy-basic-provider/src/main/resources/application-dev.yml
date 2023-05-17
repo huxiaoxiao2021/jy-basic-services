@@ -35,22 +35,12 @@ spring:
         app: JYBasic
         address: jmq-testcluster.jd.local:50088
         enabled: true
-      basic-producer-jmq4:
-        password: FBBB11B7
-        app: JYBasic
-        address: test-nameserver.jmq.jd.local:50088
-        enabled: true
       ####--app consumer 定义--##########################################################
     consumers:
       basic-consumer:
         password: FBBB11B7
         app: JYBasic
         address: jmq-testcluster.jd.local:50088
-        enabled: true
-      basic-consumer-jmq4:
-        password: FBBB11B7
-        app: JYBasic
-        address: test-nameserver.jmq.jd.local:50088
         enabled: true
 
 
@@ -59,11 +49,22 @@ mq:
   topic:
     #叉车完成
     fork-lift-topic: ky_fork_lift_complete
+    collectBoxFlowNotice: collect_box_flow_notice
 
   consumer:
     topic:
       sort_cross_detail: basic_sort_cross_detail
-
+      
+  jmq4producer:
+    password: 809375866c4842f28d7e4eec04da1e41
+    app: JYBasic
+    address: test-nameserver.jmq.jd.local:50088
+    enabled: true
+    
+  split:
+    uat:
+      switch: false
+  
 
 
 
