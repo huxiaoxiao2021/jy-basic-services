@@ -27,7 +27,7 @@
         <dependency>
             <groupId>com.jdl.basic</groupId>
             <artifactId>jy-basic-api</artifactId>
-            <version>1.4.5-SNAPSHOT</version>
+            <version>1.4.7-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.jdl.basic</groupId>
@@ -135,10 +135,22 @@
             <artifactId>jmq2-client-spring-boot-starter</artifactId>
             <version>4.2.7-SNAPSHOT</version>
         </dependency>
+        <!--jmq-->
+        <dependency>
+            <groupId>com.jd.jmq</groupId>
+            <artifactId>jmq-client-spring</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.jd.jmq</groupId>
             <artifactId>jmq-client-core</artifactId>
-            <version>2.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jd.jmq</groupId>
+            <artifactId>jmq-client-ump</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jd.jspliter</groupId>
+            <artifactId>jspliter-jmq</artifactId>
         </dependency>
 
         <!-- Cache -->
@@ -248,7 +260,11 @@
 <!--            <groupId>com.jd.ump.x</groupId>-->
 <!--            <artifactId>ump-x</artifactId>-->
 <!--        </dependency>-->
-
+        <!-- lsb 任务引擎 -->
+        <dependency>
+            <groupId>com.jd.lsb</groupId>
+            <artifactId>lsb-task-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

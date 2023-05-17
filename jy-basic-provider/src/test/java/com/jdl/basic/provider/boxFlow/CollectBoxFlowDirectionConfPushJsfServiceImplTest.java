@@ -19,7 +19,7 @@ public class CollectBoxFlowDirectionConfPushJsfServiceImplTest {
 
     @Test
     public void updateOrNewConfig() {
-        String json = "{\"startSiteId\": 908, \"startSiteName\": \"广州萝岗分拣中心\", \"endSiteId\": 908, \"endSiteName\": \"广州萝岗分拣中心\", \"boxReceiveId\": 910, \"boxReceiveName\": \"广州黄埔集货分拣中心\", \"boxPkgName\": \"广州黄埔集货混\", \"transportType\": 1, \"flowType\": 2, \"collectClaim\": 2, \"updateDate\": \"202302221905\"}";
+        String json = "{\"startSiteId\": 908, \"startSiteName\": \"广州萝岗分拣中心\", \"endSiteId\": 908, \"endSiteName\": \"广州萝岗分拣中心\", \"boxReceiveId\": 910, \"boxReceiveName\": \"广州黄埔集货分拣中心\", \"boxPkgName\": \"广州黄埔集货混\", \"transportType\": 1, \"flowType\": 2, \"collectClaim\": 2, \"updateDate\": \"202304071706\"}";
         CollectBoxFlowDirectionPushConfDto dto = new CollectBoxFlowDirectionPushConfDto();
         dto = JsonHelper.toObject(json, CollectBoxFlowDirectionPushConfDto.class);
         Result<Void> result = collectBoxFlowDirectionConfPushJsfService.updateOrNewConfig(dto);
