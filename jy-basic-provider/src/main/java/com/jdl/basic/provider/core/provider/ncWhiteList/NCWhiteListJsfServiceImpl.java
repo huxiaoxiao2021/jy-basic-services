@@ -73,54 +73,102 @@ public class NCWhiteListJsfServiceImpl implements NCWhiteListJsfService {
     }
 
     /*
-     *入参： 长 宽 高 体积 重量 物品描述 白名单json串
-     *返回值： 0-不在白名单内 1-是nc 2-不是nc
+     *入参： 长 宽 高 体积 重量 物品描述 预判是否为NC 白名单json串
+     *返回值： 0-不是nc 1-是nc
      */
     @Override
     public Result<Integer> evaluate(String length, String width, String height, String volume, String weight,
-                            String description) {
+                            String isNC, String description) {
         NCWhiteListQuery query = new NCWhiteListQuery();
         Result<PageDto<NCWhiteListDTO>> pageDtoResult = queryByCondition(query);
         List<NCWhiteListDTO> ncWhiteListDTOS = pageDtoResult.getData().getResult();
         Result<Integer> result = new Result<>();
+        if (Objects.equals(isNC, "1")) {
+            return isExclude(length,width,height,volume,weight,description,ncWhiteListDTOS) ? Result.success(0) : Result.success(1);
+        } else {
+            return isInclude(length,width,height,volume,weight,description,ncWhiteListDTOS) ? Result.success(1) : Result.success(0);
+        }
+    }
+
+    /*
+     * 返回值-true不是nc件、 false是nc件
+     */
+    private Boolean isExclude(String length, String width, String height, String volume, String weight,
+                             String description, List<NCWhiteListDTO> ncWhiteListDTOS) {
+        if (Objects.isNull(ncWhiteListDTOS) || ncWhiteListDTOS.size() == 0) return false;
+
         for (NCWhiteListDTO ncWhiteList : ncWhiteListDTOS) {
-            String[] keywords = ncWhiteList.getKeyword().split("、");
-            // 包含关键字就开始匹配
-            for (String keyword : keywords) {
-                if (description.contains(keyword)) {
-                    List<NCWhiteRuleDTO> rules = ncWhiteList.getRules();
-                    if (Objects.equals(ncWhiteList.getRuleType(), NOT_INCLUDE)) {
+            if (Objects.equals(ncWhiteList.getRuleType(), NOT_INCLUDE)) {
+                String[] keywords = ncWhiteList.getKeyword().split("、");
+                // 包含关键字就开始匹配
+                for (String keyword : keywords) {
+                    if (description.contains(keyword)) {
+                        List<NCWhiteRuleDTO> rules = ncWhiteList.getRules();
                         //没有规则，直接排除
                         if (Objects.isNull(rules) || rules.size() == 0) {
-                            return Result.success(-1);
+                            return true;
                         }
-                        boolean isMatch = match(length,width,height,volume,weight,rules);
+                        Integer isMatch = match(length,width,height,volume,weight,rules);
                         //符合排除规则直接排除
-                        if (isMatch) {
-                            return Result.success(-1);
+                        if (Objects.equals(isMatch, 0) || Objects.equals(isMatch, 1)) {
+                            return true;
                         } else {
-                            return Result.success(1);
-                        }
-                    } else if (Objects.equals(ncWhiteList.getRuleType(), INCLUDE)) {
-                        if (Objects.isNull(rules) || rules.size() == 0) {
-                            return Result.success(1);
-                        }
-                        boolean isMatch = match(length,width,height,volume,weight,rules);
-                        //符合包含规则要算
-                        if (isMatch) {
-                            return Result.success(1);
-                        } else {
-                            return Result.success(-1);
+                            return false;
                         }
                     }
                 }
             }
         }
-        //白名单没有匹配到的情况
-        return Result.success(0);
+        // 没有一条排除规则匹配成功
+        return false;
     }
 
-    private Boolean match(String length, String width, String height, String volume, String weight, List<NCWhiteRuleDTO> rules) {
+    /*
+     * 返回值-true是nc件、 false不是nc件
+     */
+    private Boolean isInclude(String length, String width, String height, String volume, String weight,
+                             String description, List<NCWhiteListDTO> ncWhiteListDTOS) {
+        if (Objects.isNull(ncWhiteListDTOS) || ncWhiteListDTOS.size() == 0) return false;
+
+        for (NCWhiteListDTO ncWhiteList : ncWhiteListDTOS) {
+            if (Objects.equals(ncWhiteList.getRuleType(), INCLUDE)) {
+                String[] keywords = ncWhiteList.getKeyword().split("、");
+                // 包含关键字就开始匹配
+                for (String keyword : keywords) {
+                    if (description.contains(keyword)) {
+                        List<NCWhiteRuleDTO> rules = ncWhiteList.getRules();
+                        //没有规则，直接算nc件
+                        if (Objects.isNull(rules) || rules.size() == 0) {
+                            //检查是否排除，如果排除了不算NC,如果没排除算NC
+                            if (isExclude(length, width, height, volume, weight, description, ncWhiteListDTOS)) {
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        }
+                        Integer isMatch = match(length,width,height,volume,weight,rules);
+                        //符合包含规则
+                        if (Objects.equals(isMatch, 1)) {
+                            if (isExclude(length, width, height, volume, weight, description, ncWhiteListDTOS)) {
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // 没有一条排除规则匹配成功
+        return false;
+    }
+
+    /*
+     * 返回值 0-参数空值导致不算nc件
+     *       -1-不符合匹配规则
+     *       1-符合匹配规则
+     * */
+    private Integer match(String length, String width, String height, String volume, String weight, List<NCWhiteRuleDTO> rules) {
         Boolean isMatch = false;
         Double args = 0.0;
         for (NCWhiteRuleDTO rule : rules) {
@@ -135,15 +183,17 @@ public class NCWhiteListJsfServiceImpl implements NCWhiteListJsfService {
             } else if (Objects.equals(rule.getQuotaName(), VOLUME) && Objects.nonNull(volume)) {
                 args = Double.valueOf(volume);
             } else {
-                //空值直接返回false
-                return false;
+                //空值不算NC件
+                return 0;
             }
             isMatch = matchValue(args, rule);
+            // 有一条规则不符合 该条白名单就不符合
             if (!isMatch) {
-                return false;
+                return -1;
             }
         }
-        return true;
+        // 全部符合
+        return 1;
     }
 
     private Boolean matchValue(Double args, NCWhiteRuleDTO rule) {
