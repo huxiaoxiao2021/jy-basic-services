@@ -726,11 +726,15 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 							log.warn("网格数据无效areaCode值为空！"+data.getId());
 							continue;
 						}
+						if(StringUtils.isNotBlank(data.getRefWorkGridKey())) {
+							log.warn("网格数据无效refWorkGridKey值已存在，不处理！"+data.getId());
+							continue;
+						}
 						if(initDataFlag) {
 							log.warn("initWorkGrid："+data.getId());
 							initWorkGrid(data);
 							try {
-								Thread.sleep(100);
+								Thread.sleep(50);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}

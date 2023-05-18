@@ -330,7 +330,7 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 	public void initAllWorkGrid() {
 		log.info("场地网格工序管理 initAllWorkGrid ");
 		final Result<Boolean> result = Result.success();
-		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,120 * DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
 			@Override
 			public void success() {
 				workStationGridService.initAllWorkGrid();
@@ -350,7 +350,7 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 	public void initWorkGrid(Long id) {
 		log.info("场地网格工序管理 initWorkGrid 入参-{}", id);
 		final Result<Boolean> result = Result.success();
-		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
 			@Override
 			public void success() {
 				workStationGridService.initWorkGrid(id);
