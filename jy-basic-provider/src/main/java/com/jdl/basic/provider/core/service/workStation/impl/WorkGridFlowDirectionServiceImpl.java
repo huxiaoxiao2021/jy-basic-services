@@ -10,6 +10,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
@@ -54,6 +55,9 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	
 	@Autowired
 	private BaseMajorRpc baseMajorManager;
+	
+	@Value("${beans.workGridFlowDirectionService.importDatasLimit:100}")
+	private int importDatasLimit;
 
 	/**
 	 * 插入一条数据
@@ -81,7 +85,7 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		query.setFlowSiteCodeList(flowSiteCodes);
 		query.setLineType(insertData.getLineType());
 		List<Integer> flowSiteCodesExist = this.queryExistFlowSiteCodeList(query);
-		
+		//todo- contains
 		if(flowSiteCodesExist.contains(insertData.getFlowSiteCode())) {
 			return result.toFail("添加失败，流向站点已存在！");
 		}
@@ -207,7 +211,10 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	public Result<Boolean> importDatas(List<WorkGridFlowDirection> flowList) {
 		Result<Boolean> result = Result.success(); 
 		if(CollectionUtils.isEmpty(flowList)) {
-			return result.toFail("导入数据为空！");
+			return result.toFail("批量添加流向数据为空！");
+		}
+		if(flowList.size() > importDatasLimit) {
+			return result.toFail("批量添加流向数据不能超过"+importDatasLimit+"条！");
 		}
 		WorkGridFlowDirection data0 = flowList.get(0);
 		WorkGrid gridData = workGridService.queryByWorkGridKey(data0.getRefWorkGridKey());
@@ -340,11 +347,30 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		if(query.getDt() == null) {
         	query.setDt(DateFormatUtils.format(DateHelper.addDays(new Date(), -1), DateHelper.DATE_FORMAT_YYYY_MM_DD));
         }
+		int pageSize = query.getPageSize();
         PageDto<WorkGridFlowDirectionVo> pageData = new PageDto<>(query.getPageNumber(), query.getPageSize());
-        Long totalCount = workGridFlowDirectionDao.queryFlowDataForSelectCount
-        		(query);
+        Long totalCount = 0L;
+        Long totalCount1 =  workGridFlowDirectionDao.queryFlowDataForSelectCount1(query);
+        Long totalCount2 =  workGridFlowDirectionDao.queryFlowDataForSelectCount2(query);
+        Long totalCount3 =  workGridFlowDirectionDao.queryFlowDataForSelectCount3(query);
+        totalCount = totalCount1 + totalCount2 + totalCount3;
+        int startRow = query.getOffset();
+        int endRow = startRow + pageSize;
+        List<WorkGridFlowDirectionVo> dataList = new ArrayList<>();
         if(totalCount != null && totalCount > 0){
-            List<WorkGridFlowDirectionVo> dataList = workGridFlowDirectionDao.queryFlowDataForSelect(query);
+            int queryRows = restPageInfo(query,dataList,startRow,endRow,pageSize,0,totalCount1);
+            if(queryRows > 0) {
+            	dataList.addAll(workGridFlowDirectionDao.queryFlowDataForSelect1(query));
+            }
+            queryRows = restPageInfo(query,dataList,startRow,endRow,pageSize,totalCount1,totalCount2);
+            if(queryRows > 0) {
+            	dataList.addAll(workGridFlowDirectionDao.queryFlowDataForSelect2(query));
+            }
+            queryRows = restPageInfo(query,dataList,startRow,endRow,pageSize,totalCount1 + totalCount2,totalCount3);
+            if(queryRows > 0) {
+            	dataList.addAll(workGridFlowDirectionDao.queryFlowDataForSelect3(query));
+            }
+            
             for(WorkGridFlowDirectionVo item: dataList) {
             	item.setConfigFlowStatusName(ConfigFlowStatusEnum.getNameByCode(item.getConfigFlowStatus()));
             	item.setFlowSiteUseStatusName(FlowSiteUseStatusEnum.getNameByCode(item.getFlowSiteUseStatus()));
@@ -352,11 +378,46 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
             pageData.setResult(dataList);
             pageData.setTotalRow(totalCount.intValue());
         }else {
-            pageData.setResult(new ArrayList<WorkGridFlowDirectionVo>());
+            pageData.setResult(dataList);
             pageData.setTotalRow(0);
         }
         result.setData(pageData);		
 		return result;
+	}
+	/**
+	 * 
+	 * @param dataList 已查询的数据列表
+	 * @param startRow 开始行号
+	 * @param endRow 结束行
+	 * @param totalCount 能查到的总数
+	 */
+	private int restPageInfo(WorkGridFlowDirectionQuery query,List<WorkGridFlowDirectionVo> dataList, int startRow, int endRow,int pageSize,long dataStartRow, long totalCount) {
+		int hasReadNum = dataList.size();
+		int needReadNum = pageSize - hasReadNum;
+		int startReadRow = startRow + hasReadNum;
+		int endReadRow = startReadRow + needReadNum;
+		int dataEndRow = (int)(dataStartRow + totalCount);
+		//需要读取条数
+		if(needReadNum == 0) {
+			return 0;
+		}
+		if(totalCount == 0) {
+			return 0;
+		}
+		if(startReadRow > dataEndRow) {
+			return 0;
+		}
+		int realStartRow = (int)dataStartRow;
+		int realEndRow = endReadRow;
+		if(startReadRow > realStartRow) {
+			realStartRow = startReadRow;
+		}
+		if(realEndRow > dataEndRow) {
+			realEndRow = dataEndRow;
+		}
+		query.setOffset((int)(realStartRow - dataStartRow));
+		query.setLimit(realEndRow - realStartRow);
+		return realEndRow - realStartRow;
 	}
 	@Override
 	public Result<List<WorkGridFlowDirection>> queryListForExport(WorkGridFlowDirectionQuery query) {

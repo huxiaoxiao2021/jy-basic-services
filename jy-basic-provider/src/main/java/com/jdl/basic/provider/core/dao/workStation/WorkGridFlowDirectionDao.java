@@ -94,5 +94,25 @@ public interface WorkGridFlowDirectionDao {
 	 * @return
 	 */
 	List<WorkGridFlowDirectionVo> queryFlowDataForSelect(WorkGridFlowDirectionQuery query);
-
+	/**
+	 * 选择流向-查询路由推荐未配置的流向
+	 * @param query
+	 * @return
+	 */
+	List<WorkGridFlowDirectionVo> queryFlowDataForSelect1(WorkGridFlowDirectionQuery query);	
+	long queryFlowDataForSelectCount1(WorkGridFlowDirectionQuery query);
+	/**
+	 * 选择流向-查询路由未推荐已配置的流向
+	 * @param query
+	 * @return
+	 */
+	List<WorkGridFlowDirectionVo> queryFlowDataForSelect2(WorkGridFlowDirectionQuery query);
+	long queryFlowDataForSelectCount2(WorkGridFlowDirectionQuery query);
+	/**
+	 * 选择流向-查询路由推荐已配置的流向
+	 * @param query
+	 * @return
+	 */
+	List<WorkGridFlowDirectionVo> queryFlowDataForSelect3(WorkGridFlowDirectionQuery query);	
+	long queryFlowDataForSelectCount3(WorkGridFlowDirectionQuery query);
 }

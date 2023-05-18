@@ -264,12 +264,6 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 				|| workStationData.getData() == null) {
 			return result.toFail("作业区工序信息不存在，请先维护作业区及工序信息！");
 		}
-		WorkGrid workGrid = new WorkGrid();
-		workGrid.setSiteCode(siteCode);
-		Result<WorkGrid> workGridResult = workGridService.queryByBusinessKeys(workGrid);
-		if(workGridResult != null && workGridResult.getData() != null) {
-			data.setRefWorkGridKey(workGridResult.getData().getBusinessKey());
-		}
 		WorkStation workStation = workStationData.getData();
 		data.setAreaName(workStation.getAreaName());
 		data.setGridCode(workStation.getAreaCode().concat("-").concat(data.getGridNo()));
@@ -724,10 +718,8 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		do {
 			query.setPageNumber(pageNum);
 			query.setPageSize(50);
-			Result<PageDto<WorkStationGrid>>  pageResult = this.queryPageList(query);
-			if(pageResult != null 
-					&& pageResult.getData() != null) {
-				dataList = pageResult.getData().getResult();
+			dataList = workStationGridDao.queryList(query);
+			if(dataList != null) {
 				if((!CollectionUtils.isEmpty(dataList))) {
 					for(WorkStationGrid data : dataList) {
 						if(StringUtils.isBlank(data.getAreaCode())) {
@@ -735,6 +727,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 							continue;
 						}
 						if(initDataFlag) {
+							log.warn("initWorkGrid："+data.getId());
 							initWorkGrid(data);
 							try {
 								Thread.sleep(100);
@@ -758,15 +751,13 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		this.initWorkGrid(workStationGridDao.queryById(id));
 	}
     private void initWorkGrid(WorkStationGrid data) {
-		if(StringUtils.isBlank(data.getRefWorkGridKey())) {
-	    	WorkGrid workGrid = this.saveWorkGird(data,new HashMap<>());
-			if(workGrid != null) {
-				data.setRefWorkGridKey(workGrid.getBusinessKey());
-				this.workStationGridDao.updateById(data);
-			}else {
-				log.warn("initAllWorkGrid-失败！"+data.getId());
-				log.warn("initAllWorkGrid-失败！"+JsonHelper.toJSONString(data));
-			}
+    	WorkGrid workGrid = this.saveWorkGird(data,new HashMap<>());
+		if(workGrid != null) {
+			data.setRefWorkGridKey(workGrid.getBusinessKey());
+			this.workStationGridDao.updateById(data);
+		}else {
+			log.warn("initAllWorkGrid-失败！"+data.getId());
+			log.warn("initAllWorkGrid-失败！"+JsonHelper.toJSONString(data));
 		}
     }
 

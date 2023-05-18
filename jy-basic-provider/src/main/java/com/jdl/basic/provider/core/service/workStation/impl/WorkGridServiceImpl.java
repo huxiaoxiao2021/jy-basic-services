@@ -15,6 +15,7 @@ import org.apache.commons.lang.ObjectUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,7 +82,10 @@ public class WorkGridServiceImpl implements WorkGridService {
 	
 	@Autowired
 	@Qualifier("workAreaService")
-	private WorkAreaService workAreaService;	
+	private WorkAreaService workAreaService;
+	
+	@Value("${beans.workGridService.importDatasLimit:100}")
+	private int importDatasLimit;
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -345,6 +349,10 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Override
 	public Result<List<WorkGridVo>> queryListForExport(WorkGridQuery query) {
 		Result<List<WorkGridVo>> result = Result.success();
+		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
+		if(!checkResult.isSuccess()){
+		    return Result.fail(checkResult.getMessage());
+		}		
 		List<WorkGrid> dataList = workGridDao.queryList(query);
 	    List<WorkGridVo> voDataList = new ArrayList<WorkGridVo>();
 	    for (WorkGrid tmp : dataList) {
@@ -425,6 +433,9 @@ public class WorkGridServiceImpl implements WorkGridService {
 		if(CollectionUtils.isEmpty(dataList)) {
 			return result.toFail("导入数据为空！");
 		}
+		if(dataList.size() > importDatasLimit) {
+			return result.toFail("导入数据不能超过"+importDatasLimit+"条！");
+		}		
 		//逐条校验
 		int rowNum = 1;
 		Map<String,Integer> uniqueKeysRowNumMap = new HashMap<String,Integer>();

@@ -332,12 +332,8 @@
 	<sql id="queryCondition">
 		<where>
 			yn = 1 
-          <if test="refWorkGridKey != null" >
               and t.ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
-          </if>
-          <if test="lineType != null" >
               and t.line_type = #{lineType,jdbcType=INTEGER}
-          </if>
           <if test="flowDirectionType != null" >
               and t.flow_direction_type = #{flowDirectionType,jdbcType=INTEGER}
           </if>
@@ -369,52 +365,80 @@
         <foreach collection="flowSiteCodeList" item="item" open="(" close=")" separator=",">
             #{item,jdbcType=VARCHAR}
         </foreach>
-         order by line_type,flow_site_code
         limit 200
-    </select>  
-    <select id="queryFlowDataForSelect" resultMap="WorkGridFlowDirectionVo">
-	    select total.* from(
-	        select ref_work_grid_key,flow_site_code,flow_site_name,flow_org_code,flow_org_name,1 as config_flow_status,0 as flow_site_use_status 
-	           from work_grid_flow_direction t 
-               <include refid="queryFlowDataForSelectCondition"/>
-	           and t.flow_site_code not in(
-	            select o.flow_site_code from work_grid_flow_detail_offline o 
-               <include refid="queryFlowDataForSelectConditionOffline"/>
-	        )
-	        union all
-	        select ref_work_grid_key,flow_site_code,flow_site_name,flow_org_code,flow_org_name,1 as config_flow_status,1 as flow_site_use_status 
-               from work_grid_flow_direction t 
-               <include refid="queryFlowDataForSelectCondition"/>
-	           and t.flow_site_code in(
-	            select o.flow_site_code from work_grid_flow_detail_offline o 
-               <include refid="queryFlowDataForSelectConditionOffline"/>
-	        )
-	        union all 
-	        select ref_work_grid_key,flow_site_code,flow_site_name,flow_org_code,flow_org_name,0 as config_flow_status,1 as flow_site_use_status 
-	          from work_grid_flow_detail_offline o 
-            <include refid="queryFlowDataForSelectConditionOffline"/> 
-	        and flow_site_code not in(
-	            select t.flow_site_code from work_grid_flow_direction t 
-               <include refid="queryFlowDataForSelectCondition"/>
-	        )) total 
-	    order by total.config_flow_status,total.config_flow_status
+    </select> 
+    <!-- 选择流向-查询路由推荐未配置的流向 --> 
+    <select id="queryFlowDataForSelect1" resultMap="WorkGridFlowDirectionVo">
+        select ref_work_grid_key,flow_site_code,flow_site_name,flow_org_code,flow_org_name,0 as config_flow_status,1 as flow_site_use_status 
+          from work_grid_flow_detail_offline o 
+           <include refid="queryFlowDataForSelectConditionOffline"/> 
+            and not exists(
+	            select 1 from work_grid_flow_direction t 
+	              <include refid="queryFlowDataForSelectCondition"/>
+	              and t.flow_site_code = o.flow_site_code
+                )
+	    order by o.id
         limit #{offset}, #{limit}
     </select>
 
-    <select id="queryFlowDataForSelectCount" resultType="long">
-        select count(1) from(
-            select flow_site_code,flow_site_name,flow_org_code,flow_org_name,1 as config_flow_status,0 as flow_site_use_status 
-               from work_grid_flow_direction t 
-               <include refid="queryFlowDataForSelectCondition"/>
-            union all 
-            select flow_site_code,flow_site_name,flow_org_code,flow_org_name,0 as config_flow_status,1 as flow_site_use_status 
-              from work_grid_flow_detail_offline o 
-            <include refid="queryFlowDataForSelectConditionOffline"/> 
-            and flow_site_code not in(
+    <select id="queryFlowDataForSelectCount1" resultType="long">
+        select count(1) 
+          from work_grid_flow_detail_offline o 
+           <include refid="queryFlowDataForSelectConditionOffline"/> 
+            and not exists(
                 select t.flow_site_code from work_grid_flow_direction t 
-               <include refid="queryFlowDataForSelectCondition"/>
-            )) total 
+                  <include refid="queryFlowDataForSelectCondition"/>
+                  and t.flow_site_code = o.flow_site_code
+                )
     </select>
+    <!-- 选择流向-查询路由未推荐已配置的流向 --> 
+    <select id="queryFlowDataForSelect2" resultMap="WorkGridFlowDirectionVo">
+        select ref_work_grid_key,flow_site_code,flow_site_name,flow_org_code,flow_org_name,1 as config_flow_status,0 as flow_site_use_status 
+           from work_grid_flow_direction t 
+           <include refid="queryFlowDataForSelectCondition"/>
+	           and not exists(
+	            select 1 from work_grid_flow_detail_offline o 
+	           <include refid="queryFlowDataForSelectConditionOffline"/>
+	           and o.flow_site_code = t.flow_site_code
+	        )
+        order by t.id
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="queryFlowDataForSelectCount2" resultType="long">
+        select count(1)
+           from work_grid_flow_direction t 
+           <include refid="queryFlowDataForSelectCondition"/>
+               and not exists(
+                select 1 from work_grid_flow_detail_offline o 
+               <include refid="queryFlowDataForSelectConditionOffline"/>
+               and o.flow_site_code = t.flow_site_code
+            )
+    </select>
+    <!-- !选择流向-查询路由推荐已配置的流向 --> 
+    <select id="queryFlowDataForSelect3" resultMap="WorkGridFlowDirectionVo">
+        select ref_work_grid_key,flow_site_code,flow_site_name,flow_org_code,flow_org_name,1 as config_flow_status,1 as flow_site_use_status 
+           from work_grid_flow_direction t 
+           <include refid="queryFlowDataForSelectCondition"/>
+	           and exists(
+	            select 1 from work_grid_flow_detail_offline o 
+	           <include refid="queryFlowDataForSelectConditionOffline"/>
+	           and o.flow_site_code = t.flow_site_code
+            )
+        order by t.id
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="queryFlowDataForSelectCount3" resultType="long">
+        select count(1) 
+           from work_grid_flow_direction t 
+           <include refid="queryFlowDataForSelectCondition"/>
+               and exists(
+                select 1 from work_grid_flow_detail_offline o 
+               <include refid="queryFlowDataForSelectConditionOffline"/>
+               and o.flow_site_code = t.flow_site_code
+            )
+    </select>        
     <sql id="queryFlowDataForSelectCondition">
           where t.yn = 1 
 	        and t.ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
