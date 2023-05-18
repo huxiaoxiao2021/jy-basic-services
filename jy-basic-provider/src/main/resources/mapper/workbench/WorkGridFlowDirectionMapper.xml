@@ -349,6 +349,7 @@
             work_grid_flow_direction t
         where yn = 1 
           and ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
+          and flow_direction_type = #{flowDirectionType,jdbcType=INTEGER}
          order by line_type,flow_site_code
         limit 200
     </select>

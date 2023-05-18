@@ -140,12 +140,12 @@ public class WorkGridServiceImpl implements WorkGridService {
 		WorkGridVo voData = new WorkGridVo();
 		BeanUtils.copyProperties(data, voData);
 		voData.setConfigFlowStatusName(ConfigFlowStatusEnum.getNameByCode(voData.getConfigFlowStatus()));
-		//特殊字段设置
-		loadFlowInfo(voData);
 		WorkArea workArea = this.workAreaService.queryByAreaCode(voData.getAreaCode());
 		if(workArea != null) {
 			voData.setFlowDirectionType(workArea.getFlowDirectionType());
 		}
+		//特殊字段设置
+		loadFlowInfo(voData);
 		return voData;
 	}
 	/**
@@ -221,7 +221,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		if(voData == null) {
 			return;
 		}
-		voData.setFlowInfo(queryFlowInfoByWorkGridKey(voData.getBusinessKey()));
+		voData.setFlowInfo(queryFlowInfoByWorkGridKey(voData));
 	}	
 	private void loadWorkInfo(WorkGridVo voData) {
 		if(voData == null) {
@@ -278,10 +278,11 @@ public class WorkGridServiceImpl implements WorkGridService {
 	 * @param workGridKey
 	 * @return
 	 */
-	private Map<String,FlowInfoItem> queryFlowInfoByWorkGridKey(String workGridKey){
+	private Map<String,FlowInfoItem> queryFlowInfoByWorkGridKey(WorkGridVo voData){
 		Map<String,FlowInfoItem> flowInfo = new HashMap<>();
 		WorkGridFlowDirectionQuery query = new WorkGridFlowDirectionQuery();
-		query.setRefWorkGridKey(workGridKey);
+		query.setRefWorkGridKey(voData.getBusinessKey());
+		query.setFlowDirectionType(voData.getFlowDirectionType());
 		List<WorkGridFlowDirection> flowList = workGridFlowDirectionService.queryListForWorkGridVo(query);
 		if(CollectionUtils.isEmpty(flowList)) {
 			return flowInfo;

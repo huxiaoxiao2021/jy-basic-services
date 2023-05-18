@@ -415,12 +415,10 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		if(realEndRow > dataEndRow) {
 			realEndRow = dataEndRow;
 		}
-		if(realStartRow > dataStartRow) {
-			return 0;
-		}
 		query.setPageNumber(0);
 		query.setOffset((int)(realStartRow - dataStartRow));
 		query.setLimit(realEndRow - realStartRow);
+		log.info("Offset:{},Limit:{}",query.getOffset(),query.getLimit());
 		return realEndRow - realStartRow;
 	}
 	@Override
