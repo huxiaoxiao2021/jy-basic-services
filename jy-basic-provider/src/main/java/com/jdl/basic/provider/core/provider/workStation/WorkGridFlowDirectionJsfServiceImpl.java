@@ -1,9 +1,11 @@
 package com.jdl.basic.provider.core.provider.workStation;
 
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -11,10 +13,15 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.jd.jsf.gd.util.StringUtils;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
+import com.jdl.basic.api.domain.workStation.WorkGrid;
+import com.jdl.basic.api.domain.workStation.WorkGridFlowDetailOffline;
+import com.jdl.basic.api.domain.workStation.WorkGridFlowDetailOfflineQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionVo;
 import com.jdl.basic.api.domain.workStation.WorkGridQuery;
+import com.jdl.basic.api.domain.workStation.WorkStationGrid;
+import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
 import com.jdl.basic.api.service.workStation.WorkGridFlowDirectionJsfService;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.utils.DateHelper;
@@ -23,6 +30,7 @@ import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.config.lock.LockService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDetailOfflineService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDirectionService;
+import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.hander.ResultHandler;
 
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +57,11 @@ public class WorkGridFlowDirectionJsfServiceImpl implements WorkGridFlowDirectio
 	@Autowired
 	@Qualifier("workGridFlowDetailOfflineService")
 	private WorkGridFlowDetailOfflineService workGridFlowDetailOfflineService;
+	@Autowired
+	@Qualifier("workGridService")
+	private WorkGridService workGridService;
+	
+	private static boolean initDataFlag = false;
 	
 	/**
 	 * 插入一条数据
@@ -172,5 +185,60 @@ public class WorkGridFlowDirectionJsfServiceImpl implements WorkGridFlowDirectio
 	public Result<Long> queryCount(WorkGridFlowDirectionQuery query) {
 		return workGridFlowDirectionService.queryCount(query);
 	}
-
+	@Override
+	public void stopInit() {
+		initDataFlag = false;
+	}
+	@Override
+	public void initWorkGridFlowOffline() {
+		initDataFlag = true;
+		int pageNum = 1;
+		WorkGridFlowDetailOfflineQuery query = new WorkGridFlowDetailOfflineQuery();
+		List<WorkGridFlowDetailOffline> dataList = null;
+		do {
+			query.setDt(DateFormatUtils.format(DateHelper.addDays(new Date(), -1), DateHelper.DATE_FORMAT_YYYY_MM_DD));
+			query.setPageNumber(pageNum);
+			query.setPageSize(50);
+			Result<PageDto<WorkGridFlowDetailOffline>> pageResult = workGridFlowDetailOfflineService.queryPageList(query);
+			if(pageResult != null 
+					&& pageResult.getData() != null ) {
+				dataList = pageResult.getData().getResult();
+			}
+			if(dataList != null) {
+				if((!CollectionUtils.isEmpty(dataList))) {
+					for(WorkGridFlowDetailOffline data : dataList) {
+						if(StringUtils.isNotBlank(data.getRefWorkGridKey())) {
+							log.warn("refWorkGridKey值已存在，不处理！"+data.getId());
+							continue;
+						}
+						if(initDataFlag) {
+							WorkGrid queryGrid = new WorkGrid();
+							if(data.getSiteCode() != null) {
+								queryGrid.setSiteCode(Integer.parseInt(data.getSiteCode()));
+							}
+							queryGrid.setFloor(data.getFloor());
+							queryGrid.setGridNo(data.getGridNo());
+							queryGrid.setAreaCode(data.getAreaCode());
+							Result<WorkGrid> gridResult = workGridService.queryByBusinessKeys(queryGrid);
+							if(gridResult != null && gridResult.getData() != null) {
+								log.warn("initWorkGridFlowOffline："+data.getId());
+								data.setRefWorkGridKey(gridResult.getData().getBusinessKey());
+								workGridFlowDetailOfflineService.updateRefWorkGridKeyById(data);
+							}
+							try {
+								Thread.sleep(100);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}else {
+							log.warn("initAllWorkGrid-stop！"+data.getId());
+							break;
+						}
+					}
+				}
+			}
+			pageNum++;
+		}while(initDataFlag && !CollectionUtils.isEmpty(dataList));	
+		initDataFlag = false;
+	}
 }

@@ -65,5 +65,9 @@ public class WorkGridFlowDetailOfflineServiceImpl implements WorkGridFlowDetailO
 
         return result;
     }
+	@Override
+	public int updateRefWorkGridKeyById(WorkGridFlowDetailOffline updateData) {
+		return workGridFlowDetailOfflineDao.updateRefWorkGridKeyById(updateData);
+	}
 
 }

@@ -68,5 +68,9 @@ public interface WorkGridFlowDirectionJsfService {
 	Result<PageDto<WorkGridFlowDirection>> queryFlowData(WorkGridFlowDirectionQuery query);
 	
 	Result<List<WorkGridFlowDirection>> queryListForExport(WorkGridFlowDirectionQuery query);
+	
 	Result<Long> queryCount(WorkGridFlowDirectionQuery query);
+	
+	void stopInit();
+	void initWorkGridFlowOffline();
 }

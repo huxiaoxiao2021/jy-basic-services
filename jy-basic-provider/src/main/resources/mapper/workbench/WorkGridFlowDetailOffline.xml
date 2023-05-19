@@ -94,5 +94,10 @@
 	        </if> 			
 		</where>
 	</sql>
-
+    <update id="updateRefWorkGridKeyById" parameterType="com.jdl.basic.api.domain.workStation.WorkGridFlowDetailOffline">
+        update work_grid_flow_detail_offline
+            set 
+               ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
 </mapper>

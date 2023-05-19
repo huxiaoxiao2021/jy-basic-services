@@ -16,4 +16,10 @@ public interface WorkGridFlowDetailOfflineService {
      * @return
      */
     Result<PageDto<WorkGridFlowDetailOffline>> queryPageList(WorkGridFlowDetailOfflineQuery query);
+    /**
+     * 更新refWorkGridKey信息
+     * @param updateData
+     * @return
+     */
+    int updateRefWorkGridKeyById(WorkGridFlowDetailOffline updateData);
 }

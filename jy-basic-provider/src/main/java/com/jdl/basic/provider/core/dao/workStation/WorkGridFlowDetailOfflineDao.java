@@ -14,5 +14,7 @@ public interface WorkGridFlowDetailOfflineDao {
     Long queryCount(WorkGridFlowDetailOfflineQuery query);
 
     List<WorkGridFlowDetailOffline> queryList(WorkGridFlowDetailOfflineQuery query);
+    
+    int updateRefWorkGridKeyById(WorkGridFlowDetailOffline updateData);
 
 }
