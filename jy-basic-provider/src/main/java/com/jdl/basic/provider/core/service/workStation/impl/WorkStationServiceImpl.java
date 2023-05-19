@@ -5,15 +5,7 @@ import com.google.common.collect.Lists;
 import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
-<<<<<<< HEAD
 import com.jdl.basic.api.domain.workStation.*;
-=======
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkArea;
-import com.jdl.basic.api.domain.workStation.WorkStation;
-import com.jdl.basic.api.domain.workStation.WorkStationCountVo;
-import com.jdl.basic.api.domain.workStation.WorkStationQuery;
->>>>>>> remotes/origin/wuyde_20230415GridFlow
 import com.jdl.basic.api.enums.BusinessLineTypeEnum;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
@@ -23,12 +15,9 @@ import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringHelper;
 import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationDao;
-<<<<<<< HEAD
 import com.jdl.basic.provider.core.dao.workStation.WorkStationJobTypeDao;
 import com.jdl.basic.provider.core.po.WorkStationJobTypePO;
-=======
 import com.jdl.basic.provider.core.service.workStation.WorkAreaService;
->>>>>>> remotes/origin/wuyde_20230415GridFlow
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationService;
 import org.apache.commons.collections.CollectionUtils;
@@ -65,16 +54,12 @@ public class WorkStationServiceImpl implements WorkStationService {
 	@Autowired
 	@Qualifier("workStationGridService")
 	private WorkStationGridService workStationGridService;
-<<<<<<< HEAD
 	@Autowired
 	private WorkStationJobTypeDao workStationJobTypeDao;
-
-=======
 	
 	@Autowired
 	@Qualifier("workAreaService")
 	private WorkAreaService workAreaService;
->>>>>>> remotes/origin/wuyde_20230415GridFlow
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -101,7 +86,6 @@ public class WorkStationServiceImpl implements WorkStationService {
 		}
 		return result;
 	 }
-<<<<<<< HEAD
 
 	/**
 	 * 组装网格工序工种数据并插入
@@ -125,7 +109,6 @@ public class WorkStationServiceImpl implements WorkStationService {
 		});
 		return workStationJobTypeDao.batchInsert(pos);
 	 }
-=======
 	private boolean saveWorkArea(WorkStation workStation) {
 		WorkArea workArea = new WorkArea();
 		workArea.setAreaCode(workStation.getAreaCode());
@@ -142,7 +125,6 @@ public class WorkStationServiceImpl implements WorkStationService {
 		workAreaService.saveData(workArea);
 		return true;
 	}
->>>>>>> remotes/origin/wuyde_20230415GridFlow
 	@Override
 	@Transactional
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.importDatas", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
@@ -546,7 +528,6 @@ public class WorkStationServiceImpl implements WorkStationService {
 		result.setData(workStationDao.queryWorkStationBybusinessKeyWithCache(businessKey));
 		return result;
 	}
-<<<<<<< HEAD
 
 	@Override
 	public Result<List<WorkStationJobTypeDto>> queryWorkStationJobTypeBybusinessKey(String businessKey) {
@@ -565,7 +546,6 @@ public class WorkStationServiceImpl implements WorkStationService {
 	}
 
 
-=======
 	
 	public void initAllWorkArea() {
 		int pageNum = 1;
@@ -595,5 +575,4 @@ public class WorkStationServiceImpl implements WorkStationService {
 	public void initWorkArea(Long id) {
 		this.saveWorkArea(workStationDao.queryById(id));
 	}
->>>>>>> remotes/origin/wuyde_20230415GridFlow
 }
