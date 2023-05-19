@@ -140,10 +140,6 @@ public class WorkGridServiceImpl implements WorkGridService {
 		WorkGridVo voData = new WorkGridVo();
 		BeanUtils.copyProperties(data, voData);
 		voData.setConfigFlowStatusName(ConfigFlowStatusEnum.getNameByCode(voData.getConfigFlowStatus()));
-		WorkArea workArea = this.workAreaService.queryByAreaCode(voData.getAreaCode());
-		if(workArea != null) {
-			voData.setFlowDirectionType(workArea.getFlowDirectionType());
-		}
 		//特殊字段设置
 		loadFlowInfo(voData);
 		return voData;
@@ -220,6 +216,10 @@ public class WorkGridServiceImpl implements WorkGridService {
 	private void loadFlowInfo(WorkGridVo voData) {
 		if(voData == null) {
 			return;
+		}
+		WorkArea workArea = this.workAreaService.queryByAreaCode(voData.getAreaCode());
+		if(workArea != null) {
+			voData.setFlowDirectionType(workArea.getFlowDirectionType());
 		}
 		voData.setFlowInfo(queryFlowInfoByWorkGridKey(voData));
 	}	
