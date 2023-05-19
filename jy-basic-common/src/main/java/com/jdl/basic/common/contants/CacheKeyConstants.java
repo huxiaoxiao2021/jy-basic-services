@@ -257,9 +257,22 @@ public class CacheKeyConstants {
      */
     public static final String CACHE_KEY_WORK_STATION_EDIT = "k_work_station_edit";
     /**
+     * 网格工序操作-key
+     */
+    public static final String CACHE_KEY_WORK_STATION_GRID_EDIT = "k_work_station_grid_edit";
+    /**
      * 网格操作-key
      */
-    public static final String CACHE_KEY_WORK_STATION_GRID_EDIT = "k_work_station_grid_edit"; 
+    public static final String CACHE_KEY_WORK_GRID_EDIT = "k_work_grid_edit";
+    /**
+     * 网格操作-key
+     */
+    public static final String CACHE_KEY_WORK_GRID_EDIT_ONE_FORMAT = "k_work_grid_edit_one:%s";    
+    /**
+     * 网格流向操作
+     */
+    public static final String CACHE_KEY_WORK_GRID_FLOW_EDIT = "k_work_grid_flow_edit";
+    
     /**
      * 网格计划操作-key
      */

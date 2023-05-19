@@ -309,4 +309,46 @@ public class WorkStationJsfServiceImpl implements WorkStationJsfService {
 		return result;
 	}
 
+	@Override
+	public void initAllWorkArea() {
+		log.info("网格工序管理 initAllWorkArea 开始");
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				workStationService.initAllWorkArea();
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改工序信息，请稍后操作！");
+			}
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+		log.info("网格工序管理 initAllWorkArea 结束");
+	}
+	@Override
+	public void initWorkArea(Long id) {
+		log.info("网格工序管理 initWorkArea-{} 开始",id);
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				workStationService.initWorkArea(id);
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改工序信息，请稍后操作！");
+			}
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+		log.info("网格工序管理 initWorkArea 结束");
+	}
 }

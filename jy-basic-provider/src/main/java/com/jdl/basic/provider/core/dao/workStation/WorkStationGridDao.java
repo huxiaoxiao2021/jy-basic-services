@@ -30,7 +30,7 @@ public interface WorkStationGridDao {
 	 * @param updateData
 	 * @return
 	 */
-	//int updateById(WorkStationGrid updateData);
+	int updateById(WorkStationGrid updateData);
 	/**
 	 * 根据id删除数据
 	 * @param deleteData
@@ -173,4 +173,10 @@ public interface WorkStationGridDao {
 	@Cache(key = "WorkStationGridDao.queryWorkStationGridBybusinessKeyWithCache@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
 			,redisEnable = true, redisExpiredTime = 5 * 60 * 1000)
 	WorkStationGrid queryWorkStationGridBybusinessKeyWithCache(String businessKey);
+	/**
+	 * 查询场地网格工序列表
+	 * @param query
+	 * @return
+	 */
+	List<WorkStationGrid> queryListForWorkGridVo(WorkStationGridQuery query);
 }

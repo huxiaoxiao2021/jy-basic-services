@@ -322,4 +322,48 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
         }
         return workStationGridService.queryAllWorkGridList(query);
     }
+	@Override
+	public void stopInit() {
+		workStationGridService.stopInit();
+	}
+	@Override
+	public void initAllWorkGrid() {
+		log.info("场地网格工序管理 initAllWorkGrid ");
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,120 * DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				workStationGridService.initAllWorkGrid();
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改网格信息，请稍后操作！");
+			}
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});		
+	}
+	@Override
+	public void initWorkGrid(Long id) {
+		log.info("场地网格工序管理 initWorkGrid 入参-{}", id);
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				workStationGridService.initWorkGrid(id);
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在修改网格信息，请稍后操作！");
+			}
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("操作异常，请稍后重试！");
+			}
+		});
+	}
 }

@@ -75,5 +75,29 @@ public class PositionDetailRecord extends PositionRecord {
      * 工序主键
      */
     private String refStationKey;
+	/**
+	 * 业务条线编码
+	 */
+	private String businessLineCode;
+
+	/**
+	 * 业务条线名称
+	 */
+	private String businessLineName;    
+	/**
+	 * 月台编号
+	 */
+	private String dockCode;
+
+	/**
+	 * 供应商编码
+	 */
+	private String supplierCode;
+
+	/**
+	 * 供应商名称
+	 */
+	private String supplierName;
+	
 
 }

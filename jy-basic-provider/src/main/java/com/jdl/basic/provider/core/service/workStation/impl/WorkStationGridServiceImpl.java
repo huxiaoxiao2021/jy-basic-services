@@ -10,10 +10,12 @@ import com.jdl.basic.api.domain.machine.Machine;
 import com.jdl.basic.api.domain.machine.WorkStationGridMachine;
 import com.jdl.basic.api.domain.position.PositionRecord;
 import com.jdl.basic.api.domain.workStation.*;
+import com.jdl.basic.api.enums.WorkSiteTypeEnum;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.enums.AreaEnum;
 import com.jdl.basic.common.utils.CheckHelper;
+import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringHelper;
@@ -22,6 +24,7 @@ import com.jdl.basic.provider.core.dao.workStation.WorkStationGridDao;
 import com.jdl.basic.provider.core.service.machine.WorkStationGridMachineService;
 import com.jdl.basic.provider.core.service.position.PositionRecordService;
 import com.jdl.basic.provider.core.service.workStation.WorkAbnormalGridBindingService;
+import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationService;
 import com.jdl.basic.rpc.Rpc.BaseMajorRpc;
@@ -29,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -69,7 +73,12 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 
 	@Autowired
 	private WorkStationGridMachineService machineService;
-
+	
+	@Autowired
+	@Qualifier("workGridService")
+	WorkGridService workGridService;
+	
+	private static boolean initDataFlag = false;
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -83,13 +92,65 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			return result;
 		}
 		insertData.setBusinessKey(generalBusinessKey());
+		//保存场地网格信息，设置关联关系字段
+		WorkGrid workGrid = saveWorkGird(insertData,new HashMap<>());
+		insertData.setRefWorkGridKey(workGrid.getBusinessKey());
+		
 		result.setData(workStationGridDao.insert(insertData) == 1);
-		// 添加岗位记录
-		addPosition(insertData);
-		// 添加自动化设备
-		addMachine(insertData);
+		if(result.getData()) {
+			// 添加岗位记录
+			addPosition(insertData);
+			// 添加自动化设备
+			addMachine(insertData);
+		}
 		return result;
 	 }
+	
+	private WorkGrid saveWorkGird(WorkStationGrid workStationGrid,Map<String,WorkGrid> savedWorkGridMap) {
+		WorkGrid workGrid = new WorkGrid();
+		workGrid.setOrgCode(workStationGrid.getOrgCode());
+		workGrid.setOrgName(workStationGrid.getOrgName());
+		workGrid.setSiteCode(workStationGrid.getSiteCode());
+		workGrid.setSiteName(workStationGrid.getSiteName());
+		workGrid.setFloor(workStationGrid.getFloor());
+		workGrid.setGridNo(workStationGrid.getGridNo());
+		workGrid.setGridCode(workStationGrid.getGridCode());
+		workGrid.setGridName(workStationGrid.getGridName());
+		workGrid.setAreaCode(workStationGrid.getAreaCode());
+		workGrid.setAreaName(workStationGrid.getAreaName());
+		workGrid.setOwnerUserErp(workStationGrid.getOwnerUserErp());		
+		workGrid.setDockCode(workStationGrid.getDockCode());
+		workGrid.setSupplierCode(workStationGrid.getSupplierCode());
+		workGrid.setSupplierName(workStationGrid.getSupplierName());
+		workGrid.setCreateUser(workStationGrid.getCreateUser());
+		workGrid.setCreateUserName(workStationGrid.getCreateUserName());
+		workGrid.setUpdateUser(workStationGrid.getUpdateUser());
+		workGrid.setUpdateUserName(workStationGrid.getUpdateUserName());
+		workGrid.setCreateTime(workStationGrid.getCreateTime());
+		workGrid.setUpdateTime(workStationGrid.getUpdateTime());
+		String uniqueGridKeysStr = workGridService.getUniqueKeysStr(workGrid);
+		//判断是否已保存过
+		if(savedWorkGridMap != null && savedWorkGridMap.containsKey(uniqueGridKeysStr)) {
+			return savedWorkGridMap.get(uniqueGridKeysStr);
+		}
+		//加载站点类型信息
+		WorkSiteTypeEnum siteType = null;
+		BaseStaffSiteOrgDto siteInfo = this.baseMajorManager.getBaseSiteBySiteId(workStationGrid.getSiteCode());
+		if(siteInfo != null) {
+			siteType = WorkSiteTypeEnum.getWorkingSiteTypeBySubType(siteInfo.getSubType());
+		}
+		if(siteType == null) {
+			siteType = WorkSiteTypeEnum.OTHER;
+		}
+		workGrid.setSiteType(siteType.getCode());
+		workGrid.setSiteTypeName(siteType.getName());
+		Result<WorkGrid> saveResult= workGridService.saveData(workGrid);
+		if(saveResult != null) {
+			savedWorkGridMap.put(uniqueGridKeysStr, saveResult.getData());
+			return saveResult.getData();
+		}
+		return null;
+	}
 
 	private void addMachine(WorkStationGrid insertData) {
 		if (CollectionUtils.isEmpty(insertData.getMachine())){
@@ -204,6 +265,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			return result.toFail("作业区工序信息不存在，请先维护作业区及工序信息！");
 		}
 		WorkStation workStation = workStationData.getData();
+		data.setAreaName(workStation.getAreaName());
 		data.setGridCode(workStation.getAreaCode().concat("-").concat(data.getGridNo()));
 		data.setGridName(workStation.getAreaName().concat("-").concat(data.getGridNo()));
 		data.setRefStationKey(workStation.getBusinessKey());
@@ -229,6 +291,13 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		WorkStationGrid oldData = workStationGridDao.queryById(updateData.getId());
 		if(oldData == null) {
 			return result.toFail("该网格数据已变更，请重新查询后修改！");
+		}
+		WorkGrid workGrid = this.saveWorkGird(updateData,new HashMap<>());
+		if(workGrid == null) {
+			return result.toFail("网格数据修改失败！");
+		}
+		if(StringUtils.isBlank(updateData.getRefWorkGridKey())) {
+			updateData.setRefWorkGridKey(workGrid.getBusinessKey());
 		}
 		workStationGridDao.deleteById(updateData);
 		updateData.setId(null);
@@ -370,6 +439,8 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(!result.isSuccess()) {
 			return result;
 		}
+		//存储已保存的WorkGrid数据
+		Map<String,WorkGrid> savedWorkGridMap = new HashMap<>();
 		//先删除后插入新记录
 		for(WorkStationGrid data : dataList) {
 			WorkStationGrid oldData = workStationGridDao.queryByBusinessKey(data);
@@ -383,6 +454,13 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 				data.setBusinessKey(oldData.getBusinessKey());
 			}else {
 				data.setBusinessKey(generalBusinessKey());
+			}
+			WorkGrid workGrid = this.saveWorkGird(data,savedWorkGridMap);
+			if(workGrid == null) {
+				throw  new RuntimeException("网格数据导入失败！");
+			}
+			if(StringUtils.isBlank(data.getRefWorkGridKey())) {
+				data.setRefWorkGridKey(workGrid.getBusinessKey());
 			}
 			if(!Objects.equals(workStationGridDao.insert(data), Constants.YN_YES)){
 				throw  new RuntimeException("新增businessKey为:" + data.getBusinessKey() + "的数据失败");
@@ -627,4 +705,68 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
         result.setData(pageData);
         return result;
     }
+	@Override
+	public void stopInit() {
+		initDataFlag = false;
+	}
+	@Override
+	public void initAllWorkGrid() {
+		initDataFlag = true;
+		int pageNum = 1;
+		WorkStationGridQuery query = new WorkStationGridQuery();
+		List<WorkStationGrid> dataList = null;
+		do {
+			query.setPageNumber(pageNum);
+			query.setPageSize(50);
+			dataList = workStationGridDao.queryList(query);
+			if(dataList != null) {
+				if((!CollectionUtils.isEmpty(dataList))) {
+					for(WorkStationGrid data : dataList) {
+						if(StringUtils.isBlank(data.getAreaCode())) {
+							log.warn("网格数据无效areaCode值为空！"+data.getId());
+							continue;
+						}
+						if(StringUtils.isNotBlank(data.getRefWorkGridKey())) {
+							log.warn("网格数据无效refWorkGridKey值已存在，不处理！"+data.getId());
+							continue;
+						}
+						if(initDataFlag) {
+							log.warn("initWorkGrid："+data.getId());
+							initWorkGrid(data);
+							try {
+								Thread.sleep(50);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}else {
+							log.warn("initAllWorkGrid-stop！"+data.getId());
+							break;
+						}
+					}
+				}
+			}
+			pageNum++;
+		}while(initDataFlag && !CollectionUtils.isEmpty(dataList));	
+		initDataFlag = false;
+	}
+
+	@Override
+	public void initWorkGrid(Long id) {
+		this.initWorkGrid(workStationGridDao.queryById(id));
+	}
+    private void initWorkGrid(WorkStationGrid data) {
+    	WorkGrid workGrid = this.saveWorkGird(data,new HashMap<>());
+		if(workGrid != null) {
+			data.setRefWorkGridKey(workGrid.getBusinessKey());
+			this.workStationGridDao.updateById(data);
+		}else {
+			log.warn("initAllWorkGrid-失败！"+data.getId());
+			log.warn("initAllWorkGrid-失败！"+JsonHelper.toJSONString(data));
+		}
+    }
+
+	@Override
+	public List<WorkStationGrid> queryListForWorkGridVo(WorkStationGridQuery query) {
+		return workStationGridDao.queryListForWorkGridVo(query);
+	}
 }

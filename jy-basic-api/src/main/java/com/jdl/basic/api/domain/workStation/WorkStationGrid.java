@@ -168,5 +168,10 @@ public class WorkStationGrid implements Serializable {
 	 * 供应商名称
 	 */
 	private String supplierName;
+	
+	/**
+	 * 关联场地网格key:work_grid
+	 */
+	private String refWorkGridKey;	
 
 }

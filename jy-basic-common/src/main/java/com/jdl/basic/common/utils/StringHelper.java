@@ -24,7 +24,8 @@ public class StringHelper {
 
     public static final int EXCP_AREA = 1;  // 异常作业区类型
     public static final String FLOOR = "楼层"; // 楼层
-
+    public static final String FLOW_SITE_CODE_SPLIT = ";";
+    
     public static String getRandomString() {
         Random random = new Random();
         StringBuilder sb = new StringBuilder();

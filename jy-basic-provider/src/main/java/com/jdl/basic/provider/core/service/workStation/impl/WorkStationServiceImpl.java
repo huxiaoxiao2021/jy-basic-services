@@ -5,7 +5,15 @@ import com.google.common.collect.Lists;
 import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
+<<<<<<< HEAD
 import com.jdl.basic.api.domain.workStation.*;
+=======
+import com.jdl.basic.api.domain.workStation.DeleteRequest;
+import com.jdl.basic.api.domain.workStation.WorkArea;
+import com.jdl.basic.api.domain.workStation.WorkStation;
+import com.jdl.basic.api.domain.workStation.WorkStationCountVo;
+import com.jdl.basic.api.domain.workStation.WorkStationQuery;
+>>>>>>> remotes/origin/wuyde_20230415GridFlow
 import com.jdl.basic.api.enums.BusinessLineTypeEnum;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
@@ -15,8 +23,12 @@ import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringHelper;
 import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationDao;
+<<<<<<< HEAD
 import com.jdl.basic.provider.core.dao.workStation.WorkStationJobTypeDao;
 import com.jdl.basic.provider.core.po.WorkStationJobTypePO;
+=======
+import com.jdl.basic.provider.core.service.workStation.WorkAreaService;
+>>>>>>> remotes/origin/wuyde_20230415GridFlow
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationService;
 import org.apache.commons.collections.CollectionUtils;
@@ -53,9 +65,16 @@ public class WorkStationServiceImpl implements WorkStationService {
 	@Autowired
 	@Qualifier("workStationGridService")
 	private WorkStationGridService workStationGridService;
+<<<<<<< HEAD
 	@Autowired
 	private WorkStationJobTypeDao workStationJobTypeDao;
 
+=======
+	
+	@Autowired
+	@Qualifier("workAreaService")
+	private WorkAreaService workAreaService;
+>>>>>>> remotes/origin/wuyde_20230415GridFlow
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -76,8 +95,13 @@ public class WorkStationServiceImpl implements WorkStationService {
 		}
 		insertWorkStationJobTypePO(insertData,insertData.getBusinessKey());
 		result.setData(workStationDao.insert(insertData) == 1);
+		//新增成功，同步保存workArea
+		if(result.getData()) {
+			saveWorkArea(insertData);
+		}
 		return result;
 	 }
+<<<<<<< HEAD
 
 	/**
 	 * 组装网格工序工种数据并插入
@@ -101,6 +125,24 @@ public class WorkStationServiceImpl implements WorkStationService {
 		});
 		return workStationJobTypeDao.batchInsert(pos);
 	 }
+=======
+	private boolean saveWorkArea(WorkStation workStation) {
+		WorkArea workArea = new WorkArea();
+		workArea.setAreaCode(workStation.getAreaCode());
+		workArea.setAreaName(workStation.getAreaName());
+		workArea.setBusinessLineCode(workStation.getBusinessLineCode());
+		workArea.setBusinessLineName(workStation.getBusinessLineName());
+		workArea.setAreaType(workStation.getAreaType());
+		workArea.setCreateUser(workStation.getCreateUser());
+		workArea.setCreateUserName(workStation.getCreateUserName());
+		workArea.setUpdateUser(workStation.getUpdateUser());
+		workArea.setUpdateUserName(workStation.getUpdateUserName());
+		workArea.setCreateTime(workStation.getCreateTime());
+		workArea.setUpdateTime(workStation.getUpdateTime());
+		workAreaService.saveData(workArea);
+		return true;
+	}
+>>>>>>> remotes/origin/wuyde_20230415GridFlow
 	@Override
 	@Transactional
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationServiceImpl.importDatas", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
@@ -132,6 +174,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 			workStationJobTypeDao.deleteByRefBusinessKey(data.getBusinessKey());
 			insertWorkStationJobTypePO(data,data.getBusinessKey());
 			workStationDao.insert(data);
+			saveWorkArea(data);
 		}
 		return result;
 	}
@@ -246,6 +289,9 @@ public class WorkStationServiceImpl implements WorkStationService {
 		workStationJobTypeDao.deleteByRefBusinessKey(updateData.getBusinessKey());
 		insertWorkStationJobTypePO(updateData,updateData.getBusinessKey());
 		result.setData(workStationDao.insert(updateData) == 1);
+		if(result.getData()) {
+			saveWorkArea(updateData);
+		}
 		return result;
 	 }
 	/**
@@ -500,6 +546,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 		result.setData(workStationDao.queryWorkStationBybusinessKeyWithCache(businessKey));
 		return result;
 	}
+<<<<<<< HEAD
 
 	@Override
 	public Result<List<WorkStationJobTypeDto>> queryWorkStationJobTypeBybusinessKey(String businessKey) {
@@ -518,4 +565,35 @@ public class WorkStationServiceImpl implements WorkStationService {
 	}
 
 
+=======
+	
+	public void initAllWorkArea() {
+		int pageNum = 1;
+		WorkStationQuery query = new WorkStationQuery();
+		List<WorkStation> dataList = null;
+		do {
+			query.setPageNumber(pageNum);
+			query.setPageSize(100);
+			Result<PageDto<WorkStation>>  pageResult = this.queryPageList(query);
+			if(pageResult != null 
+					&& pageResult.getData() != null) {
+				dataList = pageResult.getData().getResult();
+				if((!CollectionUtils.isEmpty(dataList))) {
+					for(WorkStation data : dataList) {
+						this.saveWorkArea(data);
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}						
+					}
+				}
+			}
+			pageNum++;
+		}while(!CollectionUtils.isEmpty(dataList));
+	}
+	public void initWorkArea(Long id) {
+		this.saveWorkArea(workStationDao.queryById(id));
+	}
+>>>>>>> remotes/origin/wuyde_20230415GridFlow
 }

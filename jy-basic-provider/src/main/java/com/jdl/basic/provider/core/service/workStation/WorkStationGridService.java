@@ -154,5 +154,22 @@ public interface WorkStationGridService {
 	Result<WorkStationGrid> queryWorkStationGridBybusinessKeyWithCache(String businessKey);
 
     Result<PageDto<WorkStationGrid>> queryAllWorkGridList(WorkStationGridQuery query);
-
+    /**
+     * 停止数据初始化
+     */
+    void stopInit();
+    /**
+	 * 初始化-所有数据
+	 */
+	void initAllWorkGrid();
+	/**
+	 * 初始化-单条数据
+	 */
+	void initWorkGrid(Long id);
+	/**
+	 * 查询岗位工序列表
+	 * @param query
+	 * @return
+	 */
+	List<WorkStationGrid> queryListForWorkGridVo(WorkStationGridQuery query);
 }

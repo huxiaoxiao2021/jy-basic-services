@@ -27,6 +27,8 @@ public class WorkStationJsfServiceTest {
     public void queryByIdTest(){
         Result<WorkStation> workStationResult = workStationJsfService.queryById(10L);
         System.out.println(JSON.toJSONString(workStationResult));
+        
+        workStationJsfService.initAllWorkArea();
     }
 
     @Test

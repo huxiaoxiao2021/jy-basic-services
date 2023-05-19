@@ -133,4 +133,12 @@ public interface WorkStationService {
 	 * @return
 	 */
 	Result<List<WorkStationJobTypeDto>> queryWorkStationJobTypeBybusinessKey(String businessKey);
+	/**
+	 * 初始化-所有数据
+	 */
+	void initAllWorkArea();
+	/**
+	 * 初始化-单条数据
+	 */
+	void initWorkArea(Long id);
 }
