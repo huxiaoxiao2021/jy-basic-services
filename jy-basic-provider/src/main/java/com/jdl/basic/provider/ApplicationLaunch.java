@@ -1,5 +1,7 @@
 package com.jdl.basic.provider;
 
+import com.jd.jmq.client.api.ClientMode;
+import com.jd.jmq.client.api.MQClientManager;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -39,6 +41,7 @@ import org.springframework.context.annotation.PropertySource;
 public class ApplicationLaunch extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
+        MQClientManager.getInstance().setClientMode(ClientMode.JMQ_NATIVE);
         try {
             SpringApplication.run(ApplicationLaunch.class, args);
             log.info("ServiceBootApplication start success!");

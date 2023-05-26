@@ -19,7 +19,7 @@ public class JyUser {
 
     private String organizationFullName;
 
-    private Boolean userStatus;
+    private Integer userStatus;
 
     private String quitActionDate;
 
@@ -103,11 +103,11 @@ public class JyUser {
         this.organizationFullName = organizationFullName;
     }
 
-    public Boolean getUserStatus() {
+    public Integer getUserStatus() {
         return userStatus;
     }
 
-    public void setUserStatus(Boolean userStatus) {
+    public void setUserStatus(Integer userStatus) {
         this.userStatus = userStatus;
     }
 

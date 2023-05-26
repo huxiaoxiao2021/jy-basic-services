@@ -54,17 +54,18 @@ mq:
   consumer:
     topic:
       sort_cross_detail: basic_sort_cross_detail
-      
+      wlUserInfo: wlUserInfo
+
   jmq4producer:
     password: 809375866c4842f28d7e4eec04da1e41
     app: JYBasic
     address: test-nameserver.jmq.jd.local:50088
     enabled: true
-    
+
   split:
     uat:
       switch: false
-  
+
 
 
 

@@ -14,4 +14,6 @@ public interface JyUserDao {
     int updateByPrimaryKeySelective(JyUser record);
 
     int updateByPrimaryKey(JyUser record);
+
+    JyUser queryUserInfo(JyUser condition);
 }

@@ -10,7 +10,7 @@
     <result column="organization_code" jdbcType="VARCHAR" property="organizationCode" />
     <result column="organization_name" jdbcType="VARCHAR" property="organizationName" />
     <result column="organization_full_name" jdbcType="VARCHAR" property="organizationFullName" />
-    <result column="user_status" jdbcType="BIT" property="userStatus" />
+    <result column="user_status" jdbcType="INTEGER" property="userStatus" />
     <result column="quit_action_date" jdbcType="VARCHAR" property="quitActionDate" />
     <result column="nature" jdbcType="VARCHAR" property="nature" />
     <result column="nature_desc" jdbcType="VARCHAR" property="natureDesc" />
@@ -22,34 +22,40 @@
     <result column="ts" jdbcType="TIMESTAMP" property="ts" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_erp, user_name, sex, entry_date, organization_code, organization_name, organization_full_name, 
-    user_status, quit_action_date, nature, nature_desc, position_code, position_name, 
+    id, user_erp, user_name, sex, entry_date, organization_code, organization_name, organization_full_name,
+    user_status, quit_action_date, nature, nature_desc, position_code, position_name,
     grid_distribute_flag, create_time, update_time, ts
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from jy_user
     where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="queryUserInfo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from jy_user
+    where user_erp =#{userErp} and entry_date =#{entryDate} and nature =#{nature}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from jy_user
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.jdl.basic.api.domain.user.JyUser">
-    insert into jy_user (id, user_erp, user_name, 
-      sex, entry_date, organization_code, 
-      organization_name, organization_full_name, 
-      user_status, quit_action_date, nature, 
-      nature_desc, position_code, position_name, 
-      grid_distribute_flag, create_time, update_time, 
+    insert into jy_user (id, user_erp, user_name,
+      sex, entry_date, organization_code,
+      organization_name, organization_full_name,
+      user_status, quit_action_date, nature,
+      nature_desc, position_code, position_name,
+      grid_distribute_flag, create_time, update_time,
       ts)
-    values (#{id,jdbcType=BIGINT}, #{userErp,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
-      #{sex,jdbcType=VARCHAR}, #{entryDate,jdbcType=VARCHAR}, #{organizationCode,jdbcType=VARCHAR}, 
-      #{organizationName,jdbcType=VARCHAR}, #{organizationFullName,jdbcType=VARCHAR}, 
-      #{userStatus,jdbcType=BIT}, #{quitActionDate,jdbcType=VARCHAR}, #{nature,jdbcType=VARCHAR}, 
-      #{natureDesc,jdbcType=VARCHAR}, #{positionCode,jdbcType=VARCHAR}, #{positionName,jdbcType=VARCHAR}, 
-      #{gridDistributeFlag,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+    values (#{id,jdbcType=BIGINT}, #{userErp,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
+      #{sex,jdbcType=VARCHAR}, #{entryDate,jdbcType=VARCHAR}, #{organizationCode,jdbcType=VARCHAR},
+      #{organizationName,jdbcType=VARCHAR}, #{organizationFullName,jdbcType=VARCHAR},
+      #{userStatus,jdbcType=INTEGER}, #{quitActionDate,jdbcType=VARCHAR}, #{nature,jdbcType=VARCHAR},
+      #{natureDesc,jdbcType=VARCHAR}, #{positionCode,jdbcType=VARCHAR}, #{positionName,jdbcType=VARCHAR},
+      #{gridDistributeFlag,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
       #{ts,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.jdl.basic.api.domain.user.JyUser">
@@ -136,7 +142,7 @@
         #{organizationFullName,jdbcType=VARCHAR},
       </if>
       <if test="userStatus != null">
-        #{userStatus,jdbcType=BIT},
+        #{userStatus,jdbcType=INTEGER},
       </if>
       <if test="quitActionDate != null">
         #{quitActionDate,jdbcType=VARCHAR},
@@ -192,7 +198,7 @@
         organization_full_name = #{organizationFullName,jdbcType=VARCHAR},
       </if>
       <if test="userStatus != null">
-        user_status = #{userStatus,jdbcType=BIT},
+        user_status = #{userStatus,jdbcType=INTEGER},
       </if>
       <if test="quitActionDate != null">
         quit_action_date = #{quitActionDate,jdbcType=VARCHAR},
@@ -233,7 +239,7 @@
       organization_code = #{organizationCode,jdbcType=VARCHAR},
       organization_name = #{organizationName,jdbcType=VARCHAR},
       organization_full_name = #{organizationFullName,jdbcType=VARCHAR},
-      user_status = #{userStatus,jdbcType=BIT},
+      user_status = #{userStatus,jdbcType=INTEGER},
       quit_action_date = #{quitActionDate,jdbcType=VARCHAR},
       nature = #{nature,jdbcType=VARCHAR},
       nature_desc = #{natureDesc,jdbcType=VARCHAR},
