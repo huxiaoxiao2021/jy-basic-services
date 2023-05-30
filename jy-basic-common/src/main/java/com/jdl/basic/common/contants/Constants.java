@@ -1711,4 +1711,8 @@ public class Constants {
      * UMP appName
      */
     public static final String UMP_APP_NAME = "jy-basic-services";
+
+    public static final String USER_LOCK_PREFIX  = "jy_user_lock_%s_%s_%s";
+
+    public static final int  LOCK_EXPIRE  = 10;
 }

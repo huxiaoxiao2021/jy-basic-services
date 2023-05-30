@@ -1,20 +1,27 @@
 package com.jdl.basic.provider.mq.consumer;
 
+import static com.jdl.basic.common.contants.Constants.LOCK_EXPIRE;
+
 import com.jd.jmq.common.message.Message;
 import com.jd.joyqueue.client.springboot2.annotation.JmqListener;
 import com.jdl.basic.api.domain.user.JyUser;
 import com.jdl.basic.api.enums.UserSatusEnum;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.BeanUtils;
 import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.common.utils.StringUtils;
+import com.jdl.basic.provider.config.lock.JimDbLock;
 import com.jdl.basic.provider.core.service.cross.SortCrossService;
 import com.jdl.basic.provider.core.service.user.UserService;
 import com.jdl.basic.provider.dto.SortCrossModifyDto;
 import com.jdl.basic.provider.dto.UserInfoBusinessDTO;
+import com.jdl.basic.rpc.exception.JYBasicRpcException;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,34 +34,49 @@ public class UserConsumer {
 
   @Autowired
   UserService userService;
+  @Autowired
+  JimDbLock jimDbLock;
 
 
   @JmqListener(id = "basic-consumer", topics = {"${mq.consumer.topic.wlUserInfo}"})
   public void onMessage(List<Message> messages) {
-    Message message =messages.get(0);
-    String content = message.getText();
-    log.info("consumer wlUserInfo topic: {}，data：{}", message.getTopic(), content);
-    if (StringUtils.isEmpty(content)) {
-      return;
-    }
-    UserInfoBusinessDTO userInfo = JsonHelper.toObject(content, UserInfoBusinessDTO.class);
-    if (ObjectHelper.isNotNull(userInfo)) {
-      JyUser condition = assembleUser(userInfo);
-      //加锁防重
-      JyUser exitUser = userService.queryUserInfo(condition);
-      int rs = 0;
-      Date now = new Date();
-      if (ObjectHelper.isNotNull(exitUser)) {
-        condition.setId(exitUser.getId());
-        condition.setUpdateTime(now);
-        rs = userService.updateUser(condition);
-      } else {
-        condition.setCreateTime(now);
-        condition.setUpdateTime(now);
-        rs = userService.saveUser(condition);
+    for (Message message : messages) {
+      String content = message.getText();
+      log.info("consumer wlUserInfo topic: {}，data：{}", message.getTopic(), content);
+      if (StringUtils.isEmpty(content)) {
+        return;
       }
-      if (rs <= 0) {
-        log.error("同步用户数据失败");
+      UserInfoBusinessDTO userInfo = JsonHelper.toObject(content, UserInfoBusinessDTO.class);
+      if (ObjectHelper.isNotNull(userInfo)) {
+        if (ObjectHelper.isEmpty(userInfo.getUserName()) || ObjectHelper.isEmpty(userInfo.getEntryDate()) ||ObjectHelper.isEmpty(userInfo.getNature())){
+          log.error("用户数据必要参数不全：{}",content);
+          return;
+        }
+        JyUser condition = assembleUser(userInfo);
+        String userLockKey = String.format(Constants.USER_LOCK_PREFIX, condition.getUserErp(), condition.getEntryDate(), condition.getNature());
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+        if (!jimDbLock.lock(userLockKey, uuid, LOCK_EXPIRE, TimeUnit.SECONDS)) {
+          throw new JYBasicRpcException("未获取到锁,稍后重试！");
+        }
+        try {
+          JyUser exitUser = userService.queryUserInfo(condition);
+          int rs = 0;
+          Date now = new Date();
+          if (ObjectHelper.isNotNull(exitUser)) {
+            condition.setId(exitUser.getId());
+            condition.setUpdateTime(now);
+            rs = userService.updateUser(condition);
+          } else {
+            condition.setCreateTime(now);
+            condition.setUpdateTime(now);
+            rs = userService.saveUser(condition);
+          }
+          if (rs <= 0) {
+            log.error("同步用户数据失败");
+          }
+        } finally {
+          jimDbLock.releaseLock(userLockKey, uuid);
+        }
       }
     }
   }
