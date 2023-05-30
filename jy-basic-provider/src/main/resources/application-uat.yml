@@ -52,6 +52,8 @@ mq:
   consumer:
     topic:
       sort_cross_detail: basic_sort_cross_detail
+      site_change: basic_base_site_change
+      wmsSite_Change: basic_ps_storeinfo
   jmq4producer:
     password: f0a10912179747fd9b31dd8e32c6009c
     app: JYBasic
@@ -113,3 +115,19 @@ site:
   siteType: 4
   subType: 4
   thirdType: 1
+
+## es config
+es:
+  basic:
+    cluster:
+      name: erdtools_newes
+      ip: nodes-es-avty5e0cy9-0.jvessel-open-hb.jdcloud.com:9300,nodes-es-avty5e0cy9-1.jvessel-open-hb.jdcloud.com:9300,nodes-es-avty5e0cy9-2.jvessel-open-hb.jdcloud.com:9300
+      port: 9300
+      user: qltest_es
+      password: "#Qltest_newes"
+      sleep:
+        times: 5000
+    ## 索引
+    basicSite:
+      queryIndexAlias: jy_basic_site
+      type: jy_basic_site

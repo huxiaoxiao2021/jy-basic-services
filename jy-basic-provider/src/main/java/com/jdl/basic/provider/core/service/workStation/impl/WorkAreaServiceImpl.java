@@ -1,16 +1,6 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.jd.jsf.gd.util.StringUtils;
-import com.jd.ldop.utils.CollectionUtils;
 import com.jdl.basic.api.domain.workStation.WorkArea;
 import com.jdl.basic.api.domain.workStation.WorkAreaQuery;
 import com.jdl.basic.common.contants.DmsConstants;
@@ -18,8 +8,16 @@ import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.workStation.WorkAreaDao;
 import com.jdl.basic.provider.core.service.workStation.WorkAreaService;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 作业区信息表--Service接口实现

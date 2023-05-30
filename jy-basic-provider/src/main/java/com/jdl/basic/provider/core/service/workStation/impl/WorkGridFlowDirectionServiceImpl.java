@@ -1,25 +1,7 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkGrid;
-import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
-import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
-import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionVo;
-import com.jdl.basic.api.domain.workStation.WorkGridQuery;
+import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.enums.ConfigFlowStatusEnum;
 import com.jdl.basic.api.enums.FlowSiteUseStatusEnum;
 import com.jdl.basic.common.contants.DmsConstants;
@@ -28,11 +10,18 @@ import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.workStation.WorkGridFlowDirectionDao;
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDirectionService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
-import com.jdl.basic.rpc.Rpc.BaseMajorRpc;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * 场地网格流向表--Service接口实现
@@ -54,7 +43,7 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	private WorkGridService workGridService;
 	
 	@Autowired
-	private BaseMajorRpc baseMajorManager;
+	private BaseMajorManager baseMajorManager;
 	
 	@Value("${beans.workGridFlowDirectionService.importDatasLimit:100}")
 	private int importDatasLimit;

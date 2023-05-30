@@ -8,7 +8,7 @@ import com.jdl.basic.common.utils.BeanUtils;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.service.vehicle.VehicleVolumeDicService;
-import com.jdl.basic.rpc.exception.JYBasicRpcException;
+import com.jdl.basic.provider.JYBasicRpcException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

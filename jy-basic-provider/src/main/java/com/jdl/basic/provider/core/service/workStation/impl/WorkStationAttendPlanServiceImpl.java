@@ -15,10 +15,10 @@ import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringHelper;
 import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationAttendPlanDao;
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.workStation.WorkStationAttendPlanService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationService;
-import com.jdl.basic.rpc.Rpc.BaseMajorRpc;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
@@ -55,7 +55,7 @@ public class WorkStationAttendPlanServiceImpl implements WorkStationAttendPlanSe
 	WorkStationGridService workStationGridService;
 	
 	@Autowired
-	private BaseMajorRpc baseMajorManager;
+	private BaseMajorManager baseMajorManager;
 	
 	@Autowired
 	private IGenerateObjectId genObjectId;

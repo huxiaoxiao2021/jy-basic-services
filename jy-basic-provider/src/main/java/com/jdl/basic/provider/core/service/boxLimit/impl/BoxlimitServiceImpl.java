@@ -4,22 +4,20 @@ package com.jdl.basic.provider.core.service.boxLimit.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
-import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.LoginUser;
 import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigDto;
 import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigQueryDto;
-import com.jdl.basic.api.response.JDResponse;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.enums.BoxTypeEnum;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.boxLimit.BoxLimitConfigDao;
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.po.BoxLimitConfigPO;
 import com.jdl.basic.provider.core.service.boxLimit.BoxlimitService;
-import com.jdl.basic.rpc.Rpc.BaseMajorRpc;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -44,7 +42,7 @@ public class BoxlimitServiceImpl implements BoxlimitService {
     private static final Integer SITE_BOX_TYPE =2;
 
     @Autowired
-    private BaseMajorRpc baseMajorRpc;
+    private BaseMajorManager baseMajorManager;
 
 
     @Autowired
@@ -108,7 +106,7 @@ public class BoxlimitServiceImpl implements BoxlimitService {
         List<Long> updateList = new ArrayList<>();
         int failCount =0;
         for (BoxLimitConfigDto vo :data){
-            BaseStaffSiteOrgDto siteOrgDto = baseMajorRpc.getBaseSiteBySiteId(vo.getSiteId());
+            BaseStaffSiteOrgDto siteOrgDto = baseMajorManager.getBaseSiteBySiteId(vo.getSiteId());
             log.info("siteOrgDto -{}",JSON.toJSONString(siteOrgDto));
             if (siteOrgDto == null) {
                 failCount++;
@@ -232,7 +230,7 @@ public class BoxlimitServiceImpl implements BoxlimitService {
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitServiceImpl.querySiteNameById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<String> querySiteNameById(Integer siteId) {
         Result<String> response = new Result<>();
-        BaseStaffSiteOrgDto siteOrgDto = baseMajorRpc.getBaseSiteBySiteId(siteId);
+        BaseStaffSiteOrgDto siteOrgDto = baseMajorManager.getBaseSiteBySiteId(siteId);
         if (siteOrgDto == null || siteOrgDto.getSiteName() == null) {
             response.toFail("站点不存在!");
         } else {
@@ -333,7 +331,7 @@ public class BoxlimitServiceImpl implements BoxlimitService {
             }
         }
         if(dto.getConfigType().equals(SITE_BOX_TYPE)){
-            BaseStaffSiteOrgDto siteOrgDto = baseMajorRpc.getBaseSiteBySiteId(dto.getSiteId());
+            BaseStaffSiteOrgDto siteOrgDto = baseMajorManager.getBaseSiteBySiteId(dto.getSiteId());
             if (siteOrgDto == null || org.springframework.util.StringUtils.isEmpty(siteOrgDto.getSiteName())) {
                 response.toFail(String.format("ID为%s的机构不存在!", dto.getSiteId()));
                 return;
