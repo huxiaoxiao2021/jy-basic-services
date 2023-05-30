@@ -10,9 +10,9 @@ import com.jdl.basic.common.enums.AreaEnum;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.easyFreezeSite.EasyFreezeSiteDao;
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.po.EasyFreezeSitePO;
 import com.jdl.basic.provider.core.service.easyFreezeSite.EasyFreezeSiteService;
-import com.jdl.basic.rpc.Rpc.BaseMajorRpc;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
@@ -32,7 +32,7 @@ import java.util.*;
 public class EasyFreezeSiteServiceImpl implements EasyFreezeSiteService {
 
     @Autowired
-    private BaseMajorRpc baseMajorRpc;
+    private BaseMajorManager baseMajorManager;
 
     @Autowired
     private EasyFreezeSiteDao easyFreezeSiteDao;
@@ -156,7 +156,7 @@ public class EasyFreezeSiteServiceImpl implements EasyFreezeSiteService {
      */
     private void fillSiteDate(List<EasyFreezeSiteDto> dtoList, LoginUser loginUser){
         dtoList.stream().forEach(dto -> {
-            BaseStaffSiteOrgDto baseSite = baseMajorRpc.getBaseSiteBySiteId(dto.getSiteCode());
+            BaseStaffSiteOrgDto baseSite = baseMajorManager.getBaseSiteBySiteId(dto.getSiteCode());
             if(baseSite != null){
                 dto.setSiteName(baseSite.getSiteName());
                 dto.setSiteType(baseSite.getSubType().equals(Constants.B2B_SITE_TYPE)? "转运":"分拣");

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.springframework.beans.BeanUtils;
@@ -49,7 +50,6 @@ import com.jdl.basic.provider.core.service.workStation.WorkAreaService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDirectionService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
-import com.jdl.basic.rpc.Rpc.BaseMajorRpc;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -78,7 +78,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Autowired
 	private WorkStationGridMachineService machineService;
 	@Autowired
-	private BaseMajorRpc baseMajorManager;	
+	private BaseMajorManager baseMajorManager;	
 	
 	@Autowired
 	@Qualifier("workAreaService")

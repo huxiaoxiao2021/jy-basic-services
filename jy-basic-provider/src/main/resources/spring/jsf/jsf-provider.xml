@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jsf="http://jsf.jd.com/schema/jsf"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://jsf.jd.com/schema/jsf http://jsf.jd.com/schema/jsf/jsf.xsd">
+
+    <jsf:registry id="jsfRegistry" index="i.jsf.jd.com" protocol="jsfRegistry"/>
+
+    <jsf:server id="jsf" protocol="jsf" threads="400"/>
+
+    <!--  集箱包裹数量限制JSF服务   -->
+    <jsf:provider id="boxlimitConfigJsfService"
+                  interface="com.jdl.basic.api.service.boxLimit.BoxlimitConfigJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="boxlimitConfigJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!-- 三定网格工序管理jsf服务 -->
+    <jsf:provider id="workAreaJsfServiceServer"
+                  interface="com.jdl.basic.api.service.workStation.WorkAreaJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workAreaJsfService"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!-- 三定网格工序管理jsf服务 -->
+    <jsf:provider id="workStationJsfService"
+                  interface="com.jdl.basic.api.service.workStation.WorkStationJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workStationJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!-- 三定网格管理jsf服务 -->
+    <jsf:provider id="workGridJsfServiceServer"
+                  interface="com.jdl.basic.api.service.workStation.WorkGridJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workGridJsfService"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!-- 三定网格工序管理jsf服务 -->
+    <jsf:provider id="workStationGridJsfService"
+                  interface="com.jdl.basic.api.service.workStation.WorkStationGridJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workStationGridJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!-- 三定网格工序管理jsf服务 -->
+    <jsf:provider id="workGridFlowDirectionJsfServiceServer"
+                  interface="com.jdl.basic.api.service.workStation.WorkGridFlowDirectionJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workGridFlowDirectionJsfService"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!-- 三定场地工序维度出勤计划管理jsf服务 -->
+    <jsf:provider id="workStationAttendPlanJsfService"
+                  interface="com.jdl.basic.api.service.workStation.WorkStationAttendPlanJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workStationAttendPlanJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+
+    <!--  三定场地维度出勤计划jsf服务-->
+    <jsf:provider id="siteAttendPlanJsfService"
+                  interface="com.jdl.basic.api.service.workStation.SiteAttendPlanJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="siteAttendPlanJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+
+    <!--  三定场地班次时间jsf服务-->
+    <jsf:provider id="siteWaveScheduleJsfService"
+                  interface="com.jdl.basic.api.service.workStation.SiteWaveScheduleJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="siteWaveScheduleJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+
+    <!-- 上岗码管理jsf服务 -->
+    <jsf:provider id="positionQueryJsfService"
+                  interface="com.jdl.basic.api.service.position.PositionQueryJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="positionQueryJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+
+    <!-- 拣运功能配置JSF服务 -->
+    <jsf:provider id="jyWorkMapFuncConfigJsfService"
+                  interface="com.jdl.basic.api.service.workMapFunc.JyWorkMapFuncConfigJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="jyWorkMapFuncConfigJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+
+    <!-- 网格异常配置jsf服务 -->
+    <jsf:provider id="workAbnormalGridBindingJsfService"
+                  interface="com.jdl.basic.api.service.workStation.WorkAbnormalGridBindingJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workAbnormalGridBindingJsfServiceImpl"
+                  server="jsf">
+    </jsf:provider>
+
+    <!-- 集包配置JSF服务 -->
+    <jsf:provider id="collectBoxFlowDirectionConfJsfService"
+                  interface="com.jdl.basic.api.service.boxFlow.CollectBoxFlowDirectionConfJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="collectBoxFlowDirectionConfJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}"  hide="true"/>
+    </jsf:provider>
+
+    <!-- 大数据推送集包配置JSF服务 -->
+    <jsf:provider id="collectBoxFlowDirectionConfPushJsfService"
+                  interface="com.jdl.basic.api.service.boxFlow.CollectBoxFlowDirectionConfPushJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="collectBoxFlowDirectionConfPushJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+
+    <!-- 集包配置校验JSF服务 -->
+    <jsf:provider id="collectBoxFlowDirectionVerifyJsfService"
+                  interface="com.jdl.basic.api.service.boxFlow.CollectBoxFlowDirectionVerifyJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="collectBoxFlowDirectionVerifyJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true"/>
+    </jsf:provider>
+    <!-- 发货交接清单邮箱配置JSF服务 -->
+    <jsf:provider id="sendHandoverJsfService"
+                  interface="com.jdl.basic.api.service.sendHandover.SendHandoverJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="sendHandoverJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+
+    <!--易冻品场地配置JSF服务-->
+    <jsf:provider id="easyFreezeSiteJsfService"
+                  interface="com.jdl.basic.api.service.easyFreeze.EasyFreezeSiteJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="easyFreezeSiteJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+
+    <!-- 设备管理接口 -->
+    <jsf:provider id="deviceInfoApiJsf"
+                  interface="com.jdl.basic.api.service.device.DeviceInfoApi"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="deviceInfoApiImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!-- IT区域接口 -->
+    <jsf:provider id="itBasicRegionApiJsf"
+                  interface="com.jdl.basic.api.service.itBasic.ItBasicRegionApi"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="itBasicRegionApiImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!-- IT设备IP对应区域位置接口 -->
+    <jsf:provider id="itBasicIpRegionApiJsf"
+                  interface="com.jdl.basic.api.service.itBasic.ItBasicIpRegionApi"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="itBasicIpRegionApiImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!-- IT设备对应区域接口 -->
+    <jsf:provider id="itBasicStorageNetInfoApiJsf"
+                  interface="com.jdl.basic.api.service.itBasic.ItBasicStorageNetInfoApi"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="itBasicStorageNetInfoApiImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+
+    <!-- 交接至德邦配置接口 -->
+    <jsf:provider id="configTransferDpApiJsf"
+                  interface="com.jdl.basic.api.service.transferDp.ConfigTransferDpApi"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="configTransferDpApiImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+
+    <!-- 交接至德邦配置业务接口 -->
+    <jsf:provider id="configTransferDpBusinessApiJsf"
+                  interface="com.jdl.basic.api.service.transferDp.ConfigTransferDpBusinessApi"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="configTransferDpBusinessApiImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <jsf:provider id="sortCrossJsfService"
+                  interface="com.jdl.basic.api.service.cross.SortCrossJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="sortCrossJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+
+    <!-- ka积分卸车排序配置 -->
+    <jsf:provider id="kaCoefficientConfigJsfService"
+                  interface="com.jdl.basic.api.service.kaCoefficientConfig.KaCoefficientConfigJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="kaCoefficientConfigJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!--包裹白名单-->
+    <jsf:provider id="businessWhiteListJsfService"
+                  interface="com.jdl.basic.api.service.businessWhite.BusinessWhiteListJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="businessWhiteListJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+
+    <!--查询不同类型车辆的货物容量-->
+    <jsf:provider id="vehicleVolumeDicJsfService"
+      interface="com.jdl.basic.api.service.vehicle.VehicleVolumeDicJsfService"
+      alias="${jsf.jy_basic.alias}"
+      ref="vehicleVolumeDicJsfServiceImpl"
+      server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+
+    <!-- nc件白名单 -->
+    <jsf:provider id="ncWhiteListJsfService"
+                  interface="com.jdl.basic.api.service.ncWhiteList.NCWhiteListJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="NCWhiteListJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <jsf:provider id="lspBoxFlowDirectionConfTask"
+                  timeout="100000000"
+                  interface="com.jd.lsb.task.handler.Handler"
+                  ref="collectBoxFlowDirectionConfJsfServiceImpl"
+                  alias="${jsf.jy_basic.alias}"
+                  server="jsf">
+    </jsf:provider>
+    
+    <!-- 基础站点接口 -->
+    <jsf:provider id="siteQueryJsfService"
+                  interface="com.jdl.basic.api.service.site.SiteQueryService"
+                  ref="siteQueryService"
+                  alias="${jsf.jy_basic.alias}"
+                  server="jsf">
+    </jsf:provider>
+</beans>
+

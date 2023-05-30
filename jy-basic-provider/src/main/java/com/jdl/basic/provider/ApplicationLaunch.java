@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.PropertySource;
 
 /**
  * @ProjectName：JY-MSP
@@ -23,16 +22,8 @@ import org.springframework.context.annotation.PropertySource;
 
 @MapperScan(basePackages = {"com.jdl.basic.provider.core.dao"})
 @SpringBootApplication(scanBasePackages = {"com.jdl.basic"})
-//@PropertySource(
-//    value = {
-//            "classpath:jsf/jsf-provider.properties",
-//            "classpath:jsf/jsf-consumer.properties"
-//    }
-//)
 @ImportResource(value = {
-        "classpath:jsf/jsf-provider.xml",
-        "classpath:jsf/jsf-consumer.xml",
-        "classpath:jmq/jmq-conf.xml"
+        "classpath:spring/spring-context.xml"
 })
 @ImportAutoConfiguration(value = SpringBootConfiguration.class)
 @Slf4j

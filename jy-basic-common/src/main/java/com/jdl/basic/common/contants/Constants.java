@@ -1444,6 +1444,11 @@ public class Constants {
     public static final int  ALL_MAIL_CACHE_SECONDS = 5;
 
     /**
+     * 常量值：0
+     * */
+    public static final int  CONSTANT_NUMBER_ZERO = 0;
+    
+    /**
      * 常量值：1
      * */
     public static final int  CONSTANT_NUMBER_ONE = 1;
@@ -1451,6 +1456,11 @@ public class Constants {
      * 常量值：2
      * */
     public static final int  CONSTANT_NUMBER_TWO = 2;
+
+    /**
+     * 特殊符号：*
+     */
+    public static final String  CONSTANT_SPECIAL_MARK_ASTERISK = "*";
 
     /**
      * 组板转移标识
