@@ -9,9 +9,9 @@ import java.io.Serializable;
  * @date 2021/2/24 10:51 上午
  */
 public class BasicSiteVO implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+    
+    private static final long serialVersionUID = 5380338197702012766L;
+    
     /**
      * 站点ID
      */

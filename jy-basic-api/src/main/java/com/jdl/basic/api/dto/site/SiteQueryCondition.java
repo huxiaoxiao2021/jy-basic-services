@@ -10,9 +10,9 @@ import java.util.List;
  * @date 2021/2/24 3:04 下午
  */
 public class SiteQueryCondition implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+    
+    private static final long serialVersionUID = -6610921180344795755L;
+    
     /**
      * 站点编号
      */
@@ -64,6 +64,11 @@ public class SiteQueryCondition implements Serializable {
      * 省区编码
      */
     private String provinceAgencyCode;
+
+    /**
+     * 枢纽编码
+     */
+    private String areaCode;
     
     /**
      * 省份ID
@@ -178,6 +183,14 @@ public class SiteQueryCondition implements Serializable {
 
     public void setProvinceAgencyCode(String provinceAgencyCode) {
         this.provinceAgencyCode = provinceAgencyCode;
+    }
+
+    public String getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
     }
 
     public List<Integer> getProvinceIds() {

@@ -148,6 +148,10 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         if(StringUtils.isNotEmpty(siteQueryCondition.getProvinceAgencyCode())){
             boolQueryBuilder.filter(QueryBuilders.termsQuery(BasicSiteEsDto.PROVINCE_AGENCY_CODE, siteQueryCondition.getProvinceAgencyCode()));
         }
+        // 枢纽编码
+        if(StringUtils.isNotEmpty(siteQueryCondition.getAreaCode())){
+            boolQueryBuilder.filter(QueryBuilders.termsQuery(BasicSiteEsDto.AREA_CODE, siteQueryCondition.getAreaCode()));
+        }
         // 省id
         if(CollectionUtils.isNotEmpty(siteQueryCondition.getProvinceIds())){
             boolQueryBuilder.filter(QueryBuilders.termsQuery(BasicSiteEsDto.PROVINCE_ID, siteQueryCondition.getProvinceIds()));
