@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.service.site;
 
 import com.jdl.basic.api.dto.site.BasicSiteVO;
+import com.jdl.basic.api.dto.site.ProvinceAgencyVO;
 import com.jdl.basic.api.dto.site.SiteQueryCondition;
 import com.jdl.basic.api.service.site.SiteQueryService;
 import com.jdl.basic.common.utils.Pager;
@@ -36,8 +37,21 @@ public class SiteServiceImplTest {
 
     @Autowired
     private SiteQueryService siteQueryService;
-    
 
+
+    @Test
+    public void queryProvinceAgencyInfoByCode() {
+        try {
+            String context = "100000";
+            Result<ProvinceAgencyVO> result = siteQueryService.queryProvinceAgencyInfoByCode(context);
+
+            Assert.assertTrue(true);
+        }catch (Exception e){
+            logger.error("服务异常!", e);
+            Assert.fail();
+        }
+    }
+    
     @Test
     public void querySiteByConditionFromBasicSite() {
         try {

@@ -1,7 +1,6 @@
 package com.jdl.basic.provider.core.service.site;
 
 import com.jd.etms.framework.utils.cache.annotation.Cache;
-import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jd.ump.profiler.CallerInfo;
 import com.jd.ump.profiler.proxy.Profiler;
 import com.jdl.basic.api.dto.site.AreaVO;
@@ -48,6 +47,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
 
     @Autowired
     private BasicSiteEsDao basicSiteEsDao;
+
     @Autowired
     IBasicSiteQueryWSManager basicSiteQueryWSManager;
 
@@ -82,35 +82,43 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         return result;
     }
 
-    @Cache(key = "SiteQueryService.queryProvinceAgencyInfoByCode", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
+    @Cache(key = "SiteQueryService.queryProvinceAgencyInfoByCode@args0", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
             ,redisEnable = true, redisExpiredTime = 60 * 60 * 1000)
     @Override
     public Result<ProvinceAgencyVO> queryProvinceAgencyInfoByCode(String provinceAgencyCode) {
         Result<ProvinceAgencyVO> result = new Result<>();
-        result.toFail("未查询到省区信息!");
+        result.toSuccess();
         Optional<ProvinceAgencyVO> first = Arrays.stream(BasicProvinceAgencyEnum.values()).filter(item -> Objects.equals(item.getCode(), provinceAgencyCode)).map(item -> {
             ProvinceAgencyVO provinceAgencyVO = new ProvinceAgencyVO();
             provinceAgencyVO.setProvinceAgencyCode(item.getCode());
             provinceAgencyVO.setProvinceAgencyName(item.getName());
             return provinceAgencyVO;
         }).findFirst();
-        first.ifPresent(result::setData);
+        if(first.isPresent()){
+            result.setData(first.get());
+        }else {
+            result.toFail("未查询到省区信息!");
+        }
         return result;
     }
 
-    @Cache(key = "SiteQueryService.queryAreaVOInfoByCode", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
+    @Cache(key = "SiteQueryService.queryAreaVOInfoByCode@args0", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
             ,redisEnable = true, redisExpiredTime = 60 * 60 * 1000)
     @Override
     public Result<AreaVO> queryAreaVOInfoByCode(String areaCode) {
         Result<AreaVO> result = new Result<>();
-        result.toFail("未查询到枢纽信息!");
+        result.toSuccess();
         Optional<AreaVO> first = Arrays.stream(BasicAreaEnum.values()).filter(item -> Objects.equals(item.getCode(), areaCode)).map(item -> {
             AreaVO areaVO = new AreaVO();
             areaVO.setAreaCode(item.getCode());
             areaVO.setAreaName(item.getName());
             return areaVO;
         }).findFirst();
-        first.ifPresent(result::setData);
+        if(first.isPresent()){
+            result.setData(first.get());
+        }else {
+            result.toFail("未查询到枢纽信息!");
+        }
         return result;
     }
 
