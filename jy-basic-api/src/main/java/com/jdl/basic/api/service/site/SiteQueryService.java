@@ -1,5 +1,6 @@
 package com.jdl.basic.api.service.site;
 
+import com.jdl.basic.api.dto.site.AreaVO;
 import com.jdl.basic.api.dto.site.BasicSiteVO;
 import com.jdl.basic.api.dto.site.ProvinceAgencyVO;
 import com.jdl.basic.api.dto.site.SiteQueryCondition;
@@ -16,6 +17,13 @@ public interface SiteQueryService {
      * @return
      */
     Result<List<ProvinceAgencyVO>> queryAllProvinceAgencyInfo();
+
+    /**
+     * 查询所有枢纽
+     * 
+     * @return
+     */
+    Result<List<AreaVO>> queryAllAreaInfo();
     
     /**
      * 根据条件查询站点
