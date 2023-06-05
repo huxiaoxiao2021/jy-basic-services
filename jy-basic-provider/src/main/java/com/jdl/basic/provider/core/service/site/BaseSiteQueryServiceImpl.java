@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.service.site;
 
 import com.jd.etms.framework.utils.cache.annotation.Cache;
+import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jd.ump.profiler.CallerInfo;
 import com.jd.ump.profiler.proxy.Profiler;
 import com.jdl.basic.api.dto.site.AreaVO;
