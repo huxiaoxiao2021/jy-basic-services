@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.service.site;
 
 import com.jd.etms.framework.utils.cache.annotation.Cache;
+import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jd.ump.profiler.CallerInfo;
 import com.jd.ump.profiler.proxy.Profiler;
 import com.jdl.basic.api.dto.site.AreaVO;
@@ -16,6 +17,7 @@ import com.jdl.basic.provider.core.dao.basic.BasicSiteEsDao;
 import com.jdl.basic.provider.core.enums.BasicAreaEnum;
 import com.jdl.basic.provider.core.enums.BasicProvinceAgencyEnum;
 import com.jdl.basic.provider.core.enums.SiteOperateStateEnum;
+import com.jdl.basic.provider.core.manager.IBasicSiteQueryWSManager;
 import com.jdl.basic.provider.core.po.BasicSiteEsDto;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -38,14 +40,17 @@ import java.util.stream.Collectors;
 
 @Service("siteQueryService")
 public class BaseSiteQueryServiceImpl implements SiteQueryService {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(BaseSiteQueryServiceImpl.class);
 
     // 截取最长长度
     private static final int subRetainLength = 20;
-    
+
     @Autowired
     private BasicSiteEsDao basicSiteEsDao;
+    @Autowired
+    IBasicSiteQueryWSManager basicSiteQueryWSManager;
+
 
     @Cache(key = "SiteQueryService.queryAllProvinceAgencyInfo", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
             ,redisEnable = true, redisExpiredTime = 60 * 60 * 1000)
@@ -330,6 +335,37 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         }
         return result;
     }
+
+    @Override
+    public Result<Pager<BasicSiteVO>> getFJSiteByProvinceAgencyCode(Pager<SiteQueryCondition> siteQueryPager) {
+        SiteQueryCondition siteQueryCondition =siteQueryPager.getSearchVo();
+        checkParams4QueryFjSites(siteQueryCondition);
+        List<BaseStaffSiteOrgDto> baseStaffSiteOrgDtoList = basicSiteQueryWSManager.getBaseSiteByProvinceAgencyCodeSubTypePage(siteQueryCondition.getProvinceAgencyCode(),siteQueryCondition.getSubTypes(),siteQueryPager.getPageNo());
+        if (CollectionUtils.isNotEmpty(baseStaffSiteOrgDtoList)){
+            List<BasicSiteVO> basicSiteVOList =baseStaffSiteOrgDtoList
+                .stream()
+                .map(baseStaffSiteOrgDto ->
+                {
+                    BasicSiteVO basicSiteVO =assembleBasicSiteVO(baseStaffSiteOrgDto);
+                    return basicSiteVO;
+                }).collect(Collectors.toList());
+
+            Pager pager =new Pager();
+            pager.setPageNo(siteQueryPager.getPageNo());
+            pager.setPageSize(siteQueryPager.getPageSize());
+            pager.setData(basicSiteVOList);
+            return Result.success(pager);
+        }
+        return Result.success();
+    }
+
+    private BasicSiteVO assembleBasicSiteVO(BaseStaffSiteOrgDto baseStaffSiteOrgDto) {
+        return null;
+    }
+
+    private void checkParams4QueryFjSites(SiteQueryCondition siteQueryCondition) {
+    }
+
 
     private Result<Void> checkParam4querySitePageByConditionFromBasicSite(Pager<SiteQueryCondition> siteQueryPager){
         Result<Void> result = new Result<>();
