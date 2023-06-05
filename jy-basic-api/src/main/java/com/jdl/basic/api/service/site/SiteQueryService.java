@@ -24,6 +24,20 @@ public interface SiteQueryService {
      * @return
      */
     Result<List<AreaVO>> queryAllAreaInfo();
+
+    /**
+     * 根据省区编码查询省区信息
+     * 
+     * @return
+     */
+    Result<ProvinceAgencyVO> queryProvinceAgencyInfoByCode(String provinceAgencyCode);
+
+    /**
+     * 根据枢纽编码查询枢纽信息
+     *
+     * @return
+     */
+    Result<AreaVO> queryAreaVOInfoByCode(String areaCode);
     
     /**
      * 根据条件查询站点

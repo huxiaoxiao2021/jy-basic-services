@@ -33,9 +33,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service("siteQueryService")
@@ -76,6 +74,38 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
             areaVO.setAreaName(item.getName());
             return areaVO;
         }).collect(Collectors.toList()));
+        return result;
+    }
+
+    @Cache(key = "SiteQueryService.queryProvinceAgencyInfoByCode", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 60 * 60 * 1000)
+    @Override
+    public Result<ProvinceAgencyVO> queryProvinceAgencyInfoByCode(String provinceAgencyCode) {
+        Result<ProvinceAgencyVO> result = new Result<>();
+        result.toFail("未查询到省区信息!");
+        Optional<ProvinceAgencyVO> first = Arrays.stream(BasicProvinceAgencyEnum.values()).filter(item -> Objects.equals(item.getCode(), provinceAgencyCode)).map(item -> {
+            ProvinceAgencyVO provinceAgencyVO = new ProvinceAgencyVO();
+            provinceAgencyVO.setProvinceAgencyCode(item.getCode());
+            provinceAgencyVO.setProvinceAgencyName(item.getName());
+            return provinceAgencyVO;
+        }).findFirst();
+        first.ifPresent(result::setData);
+        return result;
+    }
+
+    @Cache(key = "SiteQueryService.queryAreaVOInfoByCode", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 60 * 60 * 1000)
+    @Override
+    public Result<AreaVO> queryAreaVOInfoByCode(String areaCode) {
+        Result<AreaVO> result = new Result<>();
+        result.toFail("未查询到枢纽信息!");
+        Optional<AreaVO> first = Arrays.stream(BasicAreaEnum.values()).filter(item -> Objects.equals(item.getCode(), areaCode)).map(item -> {
+            AreaVO areaVO = new AreaVO();
+            areaVO.setAreaCode(item.getCode());
+            areaVO.setAreaName(item.getName());
+            return areaVO;
+        }).findFirst();
+        first.ifPresent(result::setData);
         return result;
     }
 
