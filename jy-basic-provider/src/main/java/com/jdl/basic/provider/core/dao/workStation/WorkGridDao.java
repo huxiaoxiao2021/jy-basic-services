@@ -8,7 +8,7 @@ import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 
 /**
  * 场地网格表--Dao接口
- * 
+ *
  * @author wuyoude
  * @date 2023年04月25日 00:18:56
  *
@@ -61,7 +61,7 @@ public interface WorkGridDao {
 	 * 根据id列表查询
 	 * @param workGrid
 	 * @return
-	 */	
+	 */
 	List<WorkGrid> queryByIds(DeleteRequest<WorkGrid> deleteRequest);
 	/**
 	 * 根据id列表删除
@@ -76,4 +76,9 @@ public interface WorkGridDao {
 	 */
 	WorkGrid queryByWorkGridKey(String workGridKey);
 
+  List<WorkGrid> queryFloorDictList(WorkGrid queryParams);
+
+	List<WorkGrid> queryAreaDictList(WorkGrid queryParams);
+
+	List<WorkGrid> queryWorkGrid(WorkGrid queryParams);
 }

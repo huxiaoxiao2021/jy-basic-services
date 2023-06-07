@@ -12,7 +12,7 @@ import com.jdl.basic.common.utils.Result;
 
 /**
  * 场地网格表--JsfService接口
- * 
+ *
  * @author wuyoude
  * @date 2023年04月25日 00:18:56
  *
@@ -42,7 +42,7 @@ public interface WorkGridJsfService {
 	 * @param id
 	 * @return
 	 */
-	Result<WorkGrid> queryById(Long id);	
+	Result<WorkGrid> queryById(Long id);
 	/**
 	 * 根据id查询
 	 * @param id
@@ -78,5 +78,24 @@ public interface WorkGridJsfService {
 	 * @param dataList
 	 * @return
 	 */
-	Result<Boolean> importDatas(List<WorkGridImport> dataList);	
+	Result<Boolean> importDatas(List<WorkGridImport> dataList);
+
+	/**
+	 * 查询场地网格的楼层列表信息
+	 * @return
+	 */
+	Result<List<WorkGrid>> queryFloorDictList(WorkGrid queryParams);
+
+	/**
+	 * 查询场地网格的作业区信息
+	 * @return
+	 */
+	Result<List<WorkGrid>> queryAreaDictList(WorkGrid queryParams);
+
+	/**
+	 * 查询场地网格信息
+	 * @param queryParams
+	 * @return
+	 */
+	Result<List<WorkGrid>> queryWorkGrid(WorkGrid queryParams);
 }
