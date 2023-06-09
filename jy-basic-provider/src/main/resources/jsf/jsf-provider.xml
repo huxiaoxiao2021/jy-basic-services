@@ -58,6 +58,31 @@
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
+    <!--  任务管理-线上化task-jsf服务  -->
+    <jsf:provider id="workGridManagerTaskJsfServiceServer"
+                  interface="com.jdl.basic.api.service.work.WorkGridManagerTaskJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workGridManagerTaskJsfService"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>     
+    <!--  任务管理-线上化case-jsf服务  -->
+    <jsf:provider id="workGridManagerCaseJsfServiceServer"
+                  interface="com.jdl.basic.api.service.work.WorkGridManagerCaseJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workGridManagerCaseJsfService"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!--  任务管理-线上化task-config-jsf服务  -->
+    <jsf:provider id="workGridManagerTaskConfigJsfServiceServer"
+                  interface="com.jdl.basic.api.service.work.WorkGridManagerTaskConfigJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workGridManagerTaskConfigJsfService"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+        
     <!-- 三定场地工序维度出勤计划管理jsf服务 -->
     <jsf:provider id="workStationAttendPlanJsfService"
                   interface="com.jdl.basic.api.service.workStation.WorkStationAttendPlanJsfService"
