@@ -24,4 +24,9 @@ public class UserJsfServiceImpl implements UserJsfService {
     public Result<List<JyUser>> queryByUserId(List<Long> userIds) {
         return userService.queryByUserIds(userIds);
     }
+
+    @Override
+    public Result<List<JyUser>> getUnDistributedStaff(Integer siteCode, Integer jobType) {
+        return userService.getUnDistributedStaff(siteCode, jobType);
+    }
 }

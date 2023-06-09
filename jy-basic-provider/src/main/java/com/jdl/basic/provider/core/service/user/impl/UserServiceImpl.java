@@ -61,4 +61,9 @@ public class UserServiceImpl implements UserService {
     result.setData(jyUserDao.queryByUserIds(ids));
     return result;
   }
+
+  @Override
+  public Result<List<JyUser>> getUnDistributedStaff(Integer siteCode, Integer jobType) {
+    return null;
+  }
 }

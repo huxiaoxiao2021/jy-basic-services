@@ -29,4 +29,6 @@ public interface UserService {
   Result<List<JyUser>> searchUserBySiteCode(Integer siteCode);
 
   Result<List<JyUser>> queryByUserIds(List<Long> ids);
+
+  Result<List<JyUser>> getUnDistributedStaff(Integer siteCode, Integer jobType);
 }

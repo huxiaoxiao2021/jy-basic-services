@@ -9,4 +9,7 @@ public interface UserJsfService {
     Result<List<JyUser>> searchUserBySiteCode(Integer siteCode);
 
     Result<List<JyUser>> queryByUserId(List<Long> userIds);
+
+    Result<List<JyUser>> getUnDistributedStaff(Integer siteCode, Integer jobType);
+
 }
