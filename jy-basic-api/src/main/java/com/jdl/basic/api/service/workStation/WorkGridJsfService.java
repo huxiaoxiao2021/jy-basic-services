@@ -100,4 +100,6 @@ public interface WorkGridJsfService {
 	Result<List<WorkGrid>> queryWorkGrid(WorkGrid queryParams);
 
 	Result<WorkGrid> queryByWorkGridKey(String workGridKey);
+
+	Result<List<WorkGrid>> queryPageData(WorkGridQuery query);
 }

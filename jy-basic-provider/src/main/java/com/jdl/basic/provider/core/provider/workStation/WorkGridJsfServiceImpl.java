@@ -171,4 +171,9 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 		result.setData(workGridService.queryByWorkGridKey(workGridKey));
 		return result;
 	}
+
+	@Override
+	public Result<List<WorkGrid>> queryPageData(WorkGridQuery query) {
+		return null;
+	}
 }
