@@ -7,12 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.jd.ldop.utils.CollectionUtils;
 import com.jdl.basic.api.domain.work.WorkGridManagerCase;
 import com.jdl.basic.api.domain.work.WorkGridManagerCaseItem;
 import com.jdl.basic.api.domain.work.WorkGridManagerCaseQuery;

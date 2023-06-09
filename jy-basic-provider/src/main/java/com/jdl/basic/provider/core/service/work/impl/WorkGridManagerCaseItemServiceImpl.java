@@ -3,11 +3,11 @@ package com.jdl.basic.provider.core.service.work.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.jd.ldop.utils.CollectionUtils;
 import com.jdl.basic.api.domain.work.WorkGridManagerCaseItem;
 import com.jdl.basic.api.domain.work.WorkGridManagerCaseItemQuery;
 import com.jdl.basic.common.contants.DmsConstants;
