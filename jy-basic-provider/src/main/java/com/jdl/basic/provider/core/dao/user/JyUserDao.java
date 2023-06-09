@@ -2,6 +2,8 @@ package com.jdl.basic.provider.core.dao.user;
 
 import com.jdl.basic.api.domain.user.JyUser;
 
+import java.util.List;
+
 public interface JyUserDao {
     int deleteByPrimaryKey(Long id);
 
@@ -16,4 +18,8 @@ public interface JyUserDao {
     int updateByPrimaryKey(JyUser record);
 
     JyUser queryUserInfo(JyUser condition);
+
+    List<JyUser> searchUserBySiteCode(Integer siteCode);
+
+    List<JyUser> queryByUserIds(List<Long> ids);
 }

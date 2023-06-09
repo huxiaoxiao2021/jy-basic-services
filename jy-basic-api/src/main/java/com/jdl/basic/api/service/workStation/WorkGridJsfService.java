@@ -78,5 +78,7 @@ public interface WorkGridJsfService {
 	 * @param dataList
 	 * @return
 	 */
-	Result<Boolean> importDatas(List<WorkGridImport> dataList);	
+	Result<Boolean> importDatas(List<WorkGridImport> dataList);
+
+	Result<WorkGrid> queryByWorkGridKey(String workGridKey);
 }

@@ -149,4 +149,11 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 		});
 		return result;
 	}
+
+	@Override
+	public Result<WorkGrid> queryByWorkGridKey(String workGridKey) {
+		Result<WorkGrid> result = Result.success();
+		result.setData(workGridService.queryByWorkGridKey(workGridKey));
+		return result;
+	}
 }

@@ -251,4 +251,33 @@
       ts = #{ts,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="searchUserBySiteCode" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+        <include refid="Base_Column_List"/>
+    from
+        jy_user
+    where
+        yn = 1
+    and
+        user_status = 1
+    <if test="siteCode != null">
+      and site_code = #{siteCode, jdbcType=INTEGER}
+    </if>
+  </select>
+
+  <select id="queryByUserIds" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+        <include refid="Base_Column_List"/>
+    from
+        jy_user
+    where
+        yn = 1
+    <if test="ids != null and ids.size() > 0">
+      and user_id in
+      <foreach collection="ids" item="item" separator="," open="(" close=")">
+        #{item.userId}
+      </foreach>
+    </if>
+  </select>
 </mapper>
