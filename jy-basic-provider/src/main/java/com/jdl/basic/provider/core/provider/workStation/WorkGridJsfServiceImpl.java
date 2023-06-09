@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 场地网格表--JsfService接口实现
- * 
+ *
  * @author wuyoude
  * @date 2023年04月25日 00:18:56
  *
@@ -38,10 +38,10 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	@Autowired
 	@Qualifier("workGridService")
 	private WorkGridService workGridService;
-	
+
 	@Autowired
 	@Qualifier("jimdbRemoteLockService")
-	private LockService lockService;	
+	private LockService lockService;
 
 	/**
 	 * 插入一条数据
@@ -70,7 +70,7 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	@Override
 	public Result<WorkGrid> queryById(Long id) {
 		return workGridService.queryById(id);
-	}	
+	}
 	/**
 	 * 根据id查询
 	 * @param id
@@ -148,6 +148,21 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 			}
 		});
 		return result;
+	}
+
+	@Override
+	public Result<List<WorkGrid>> queryFloorDictList(WorkGrid queryParams) {
+		return Result.success(workGridService.queryFloorDictList(queryParams));
+	}
+
+	@Override
+	public Result<List<WorkGrid>> queryAreaDictList(WorkGrid queryParams) {
+		return Result.success(workGridService.queryAreaDictList(queryParams));
+	}
+
+	@Override
+	public Result<List<WorkGrid>> queryWorkGrid(WorkGrid queryParams) {
+		return Result.success(workGridService.queryWorkGrid(queryParams));
 	}
 
 	@Override
