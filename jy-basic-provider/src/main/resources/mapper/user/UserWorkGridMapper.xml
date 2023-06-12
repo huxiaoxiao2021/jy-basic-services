@@ -67,9 +67,9 @@
       </if>
   </select>
 
-    <select id="queryTotal" parameterType="com.jdl.basic.api.domain.user.UserWorkGridRequest">
+    <select id="queryTotal" parameterType="com.jdl.basic.api.domain.user.UserWorkGridRequest" resultType="java.lang.Long">
         select
-        <include refid="Base_Column_List"/>
+        count(*)
         from
         user_work_grid
         where

@@ -2,11 +2,13 @@ package com.jdl.basic.provider.core.service.user;
 
 
 import com.jd.dms.java.utils.sdk.base.Result;
+import com.jdl.basic.api.domain.user.JyUser;
 import com.jdl.basic.api.domain.user.UserWorkGrid;
 import com.jdl.basic.api.domain.user.UserWorkGridRequest;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.ApplicationLaunch;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +38,20 @@ public class UserWorkGridServiceTest {
 
     @Test
     public void  queryRecordDetail() {
-
+        String workGridKey = "CDWG00000022001";
+        Result<List<UserWorkGrid>> result = userWorkGridService.queryRecordDetail(workGridKey);
+        log.info("queryPageList response {}", JsonHelper.toJSONString(result));
     }
 
     @Test
     public void queryDifference() {
-
+        UserWorkGridRequest request = new UserWorkGridRequest();
+        Date time = DateUtils.addDays(new Date(), -1);
+        request.setWorkGridKey("CDWG00000019007");
+        request.setCreateTime(time);
+        request.setUpdateTime(time);
+        Result<List<UserWorkGrid>> result = userWorkGridService.queryDifference(request);
+        log.info("queryPageList response {}", JsonHelper.toJSONString(result));
     }
 
     @Test
@@ -114,6 +124,10 @@ public class UserWorkGridServiceTest {
 
     @Test
     public void getWorkGridDistributedStaff() {
+        UserWorkGridRequest request = new UserWorkGridRequest();
+        request.setWorkGridKey("CDWG00000022001");
+        Result<List<JyUser>> result = userWorkGridService.getWorkGridDistributedStaff(request);
 
+        log.info("getWorkGridDistributedStaff response {}", JsonHelper.toJSONString(result));
     }
 }

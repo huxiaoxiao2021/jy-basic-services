@@ -272,12 +272,9 @@
     from
         jy_user
     where
-        yn = 1
-    <if test="ids != null and ids.size() > 0">
-      and user_id in
-      <foreach collection="ids" item="item" separator="," open="(" close=")">
-        #{item.userId}
+      id in
+      <foreach collection="list" item="item" separator="," open="(" close=")">
+        #{item}
       </foreach>
-    </if>
   </select>
 </mapper>
