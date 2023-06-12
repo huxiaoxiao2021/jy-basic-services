@@ -11,4 +11,6 @@ import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 public interface BaseMajorManager {
 
     public BaseStaffSiteOrgDto getBaseSiteBySiteId(Integer paramInteger);
+
+    BaseStaffSiteOrgDto getBaseStaffByErp(String erp);
 }

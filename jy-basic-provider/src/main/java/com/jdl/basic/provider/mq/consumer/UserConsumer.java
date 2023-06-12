@@ -13,6 +13,7 @@ import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.basic.provider.config.lock.JimDbLock;
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.cross.SortCrossService;
 import com.jdl.basic.provider.core.service.user.UserService;
 import com.jdl.basic.provider.dto.SortCrossModifyDto;
@@ -36,6 +37,8 @@ public class UserConsumer {
   UserService userService;
   @Autowired
   JimDbLock jimDbLock;
+  @Autowired
+  BaseMajorManager baseMajorManager;
 
 
   @JmqListener(id = "basic-consumer", topics = {"${mq.consumer.topic.wlUserInfo}"})
