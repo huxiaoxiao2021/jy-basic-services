@@ -15,7 +15,15 @@ public class UserWorkGridRequest extends BasePagerCondition {
     
     private Integer nature;
 
+    private String createUserErp;
+
+    private String createUserName;
+
     private Date createTime;
+
+    private String updateUserErp;
+
+    private String updateUserName;
 
     private Date updateTime;
     

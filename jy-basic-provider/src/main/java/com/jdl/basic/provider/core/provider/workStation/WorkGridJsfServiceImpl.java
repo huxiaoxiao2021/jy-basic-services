@@ -173,7 +173,7 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	}
 
 	@Override
-	public Result<List<WorkGrid>> queryPageData(WorkGridQuery query) {
-		return null;
+	public Result<List<WorkGrid>> batchQueryByWorkGridKey(List<String> workGridKeys) {
+		return Result.success(workGridService.batchQueryByWorkGridKey(workGridKeys));
 	}
 }

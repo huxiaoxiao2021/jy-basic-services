@@ -2,6 +2,7 @@ package com.jdl.basic.api.service.workStation;
 
 import java.util.List;
 
+import com.jdl.basic.api.domain.user.UserWorkGrid;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
 import com.jdl.basic.api.domain.workStation.WorkGridImport;
@@ -99,7 +100,17 @@ public interface WorkGridJsfService {
 	 */
 	Result<List<WorkGrid>> queryWorkGrid(WorkGrid queryParams);
 
+	/**
+	 * 根据网格主键查询单个网格
+	 * @param workGridKey
+	 * @return
+	 */
 	Result<WorkGrid> queryByWorkGridKey(String workGridKey);
 
-	Result<List<WorkGrid>> queryPageData(WorkGridQuery query);
+	/**
+	 * 根据网格主键批量查询网格
+	 * @param workGridKeys
+	 * @return
+	 */
+	Result<List<WorkGrid>> batchQueryByWorkGridKey(List<String> workGridKeys);
 }

@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.service.workStation;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -79,6 +80,16 @@ public class WorkGridServiceTest {
         
         Result<WorkGrid> queryByIdYn0 = workGridService.queryById(updateData.getId());
         Assert.assertTrue(queryByIdYn0 != null && queryByIdYn0.getData() == null);
+    }
+
+    @Test
+    public void batchQueryByWorkGridKeyTest() {
+        List<String> workGridKeys = new ArrayList<>();
+        workGridKeys.add("CDWG00000019007");
+        workGridKeys.add("CDWG00000022001");
+        workGridKeys.add("CDWG00000022002");
+        List<WorkGrid> workGrids = workGridService.batchQueryByWorkGridKey(workGridKeys);
+        logger.info("batchQueryByWorkGridKeyTest response {}", workGrids);
     }
 
 }

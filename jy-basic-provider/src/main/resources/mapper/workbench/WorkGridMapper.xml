@@ -478,4 +478,17 @@
 			and area_code = #{areaCode,jdbcType=VARCHAR}
 		</if>
 	</select>
+
+	<select id="batchQueryByWorkGridKey" parameterType="java.lang.String" resultMap="WorkGrid">
+		select
+		<include refid="Base_Column_List"/>
+		from
+		work_grid
+		where
+			yn = 1
+		and business_key in
+			<foreach collection="list" item="item" separator="," open="(" close=")">
+				#{item}
+			</foreach>
+	</select>
 </mapper>
