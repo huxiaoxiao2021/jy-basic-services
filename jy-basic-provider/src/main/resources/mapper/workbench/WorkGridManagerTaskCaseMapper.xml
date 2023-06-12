@@ -168,7 +168,7 @@
 			work_grid_manager_task_case t
 		where yn = 1 and id = #{id,jdbcType=BIGINT}
 	</select>
-    <select id="queryCaseCodeListByTaskCode" parameterType="java.lang.String" resultMap="WorkGridManagerTaskCase">
+    <select id="queryCaseCodeListByTaskCode" parameterType="java.lang.String" resultType="java.lang.String">
         select
             case_code
         from
