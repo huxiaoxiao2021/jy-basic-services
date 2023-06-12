@@ -1,17 +1,27 @@
 package com.jdl.basic.provider.core.dao.user;
 
 import com.jdl.basic.api.domain.user.UserWorkGrid;
+import com.jdl.basic.api.domain.user.UserWorkGridRequest;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Date;
+import java.util.List;
 
 public interface UserWorkGridDao {
-    int deleteByPrimaryKey(Long id);
+    List<UserWorkGrid> queryPageList(UserWorkGridRequest request);
 
-    int insert(UserWorkGrid record);
+    List<UserWorkGrid> queryRecordDetail(String workGridKey);
 
-    int insertSelective(UserWorkGrid record);
+    List<UserWorkGrid> queryDifference(UserWorkGridRequest request);
 
-    UserWorkGrid selectByPrimaryKey(Long id);
+    long queryTotal(UserWorkGridRequest request);
 
-    int updateByPrimaryKeySelective(UserWorkGrid record);
+    int batchInsert(List<UserWorkGrid> userWorkGrids);
 
-    int updateByPrimaryKey(UserWorkGrid record);
+    int batchDelete(@Param("list") List<UserWorkGrid> userWorkGrids, @Param("workGridKey") String workGridKey,
+                    @Param("updateTime")Date updateTime, @Param("updateUserErp") String updateUserErp, @Param("updateUserName") String updateUserName);
+
+    List<UserWorkGrid> queryByUserIds(List<Long> userIds);
+
+    List<UserWorkGrid> queryByWorkGridKey(UserWorkGridRequest request);
 }

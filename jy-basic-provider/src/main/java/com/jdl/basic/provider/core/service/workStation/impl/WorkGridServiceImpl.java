@@ -606,6 +606,11 @@ public class WorkGridServiceImpl implements WorkGridService {
 	}
 
 	@Override
+	public List<WorkGrid> batchQueryByWorkGridKey(List<String> workGridKeys) {
+		return workGridDao.batchQueryByWorkGridKey(workGridKeys);
+	}
+
+	@Override
 	public WorkGrid queryByWorkGridKey(String workGridKey) {
 		return workGridDao.queryByWorkGridKey(workGridKey);
 	}

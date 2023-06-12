@@ -124,4 +124,10 @@ public interface WorkGridService {
 	 */
 	List<WorkGrid> queryWorkGrid(WorkGrid queryParams);
 
+	/**
+	 * 根据网格主键批量查询网格
+	 * @param workGridKeys
+	 * @return
+	 */
+	List<WorkGrid> batchQueryByWorkGridKey(List<String> workGridKeys);
 }
