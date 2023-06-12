@@ -63,6 +63,10 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
             ProvinceAgencyVO provinceAgencyVO = new ProvinceAgencyVO();
             provinceAgencyVO.setProvinceAgencyCode(item.getCode());
             provinceAgencyVO.setProvinceAgencyName(item.getName());
+            //总公司下包含枢纽
+            if(item.equals(BasicProvinceAgencyEnum.WULIUZONGBU)){
+                provinceAgencyVO.setHasAreaFlag(Boolean.TRUE);
+            }
             return provinceAgencyVO;
         }).collect(Collectors.toList()));
         return result;
@@ -71,15 +75,20 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
     @Cache(key = "SiteQueryService.queryAllAreaInfo", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
             ,redisEnable = true, redisExpiredTime = 60 * 60 * 1000)
     @Override
-    public Result<List<AreaVO>> queryAllAreaInfo() {
+    public Result<List<AreaVO>> queryAllAreaInfo(String provinceAgencyCode) {
         Result<List<AreaVO>> result = new Result<>();
         result.toSuccess();
-        result.setData(Arrays.stream(BasicAreaEnum.values()).map(item -> {
-            AreaVO areaVO = new AreaVO();
-            areaVO.setAreaCode(item.getCode());
-            areaVO.setAreaName(item.getName());
-            return areaVO;
-        }).collect(Collectors.toList()));
+        if(BasicProvinceAgencyEnum.WULIUZONGBU.getCode().equals(provinceAgencyCode)){
+            //目前仅支持总部省区下返回枢纽
+            result.setData(Arrays.stream(BasicAreaEnum.values()).map(item -> {
+                AreaVO areaVO = new AreaVO();
+                areaVO.setAreaCode(item.getCode());
+                areaVO.setAreaName(item.getName());
+                return areaVO;
+            }).collect(Collectors.toList()));
+        }else{
+            result.setData(Collections.EMPTY_LIST);
+        }
         return result;
     }
 

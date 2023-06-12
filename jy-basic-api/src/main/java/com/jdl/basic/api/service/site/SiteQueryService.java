@@ -19,11 +19,11 @@ public interface SiteQueryService {
     Result<List<ProvinceAgencyVO>> queryAllProvinceAgencyInfo();
 
     /**
-     * 查询所有枢纽
+     * 查询省区下所有枢纽
      *
      * @return
      */
-    Result<List<AreaVO>> queryAllAreaInfo();
+    Result<List<AreaVO>> queryAllAreaInfo(String provinceAgencyCode);
 
     /**
      * 根据省区编码查询省区信息
