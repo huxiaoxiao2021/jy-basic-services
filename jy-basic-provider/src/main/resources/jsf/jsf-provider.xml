@@ -247,10 +247,19 @@
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
+    
     <jsf:provider id="lspBoxFlowDirectionConfTask"
                   timeout="100000000"
                   interface="com.jd.lsb.task.handler.Handler"
                   ref="collectBoxFlowDirectionConfJsfServiceImpl"
+                  alias="${jsf.jy_basic.alias}"
+                  server="jsf">
+    </jsf:provider>
+
+    <jsf:provider id="lspBoxFlowDirectionRouteVerifyTask"
+                  timeout="3600000"
+                  interface="com.jd.lsb.task.handler.Handler"
+                  ref="collectBoxFlowDirectionVerifyJsfServiceImpl"
                   alias="${jsf.jy_basic.alias}"
                   server="jsf">
     </jsf:provider>

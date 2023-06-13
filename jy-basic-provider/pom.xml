@@ -27,7 +27,7 @@
         <dependency>
             <groupId>com.jdl.basic</groupId>
             <artifactId>jy-basic-api</artifactId>
-            <version>1.4.7-SNAPSHOT</version>
+            <version>1.4.9BFroute-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.jdl.basic</groupId>
@@ -264,6 +264,11 @@
         <dependency>
             <groupId>com.jd.lsb</groupId>
             <artifactId>lsb-task-api</artifactId>
+        </dependency>
+        <!--大数据集包规则路由校验-->
+        <dependency>
+            <groupId>com.jd.jdl.aidata.isc</groupId>
+            <artifactId>jdmeta-project-outer-api-sort</artifactId>
         </dependency>
     </dependencies>
 

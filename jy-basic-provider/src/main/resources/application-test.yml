@@ -101,7 +101,9 @@ jsf:
   jy_basic:
     alias: jy-basic-server-test
     token: jy-basic-server-token
-
+  sortWorkbenchBusiness:
+    alias: sortWorkbenchBusiness-test
+    token: sortWorkbenchBusiness-token
 basic:
   jsf:
     token: 123456

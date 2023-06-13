@@ -36,6 +36,7 @@
         <jd.jmq.jspliter.version>1.0.3</jd.jmq.jspliter.version>
         <jd.lsb.task.api>0.0.6-SNAPSHOT</jd.lsb.task.api>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jdmeta-project-outer-api-sort.version>1.0-SNAPSHOT</jdmeta-project-outer-api-sort.version>
     </properties>
 
     <!--配置环境的profile-->
@@ -261,6 +262,12 @@
                         <artifactId>jsf</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <!--大数据集包规则路由校验-->
+            <dependency>
+                <groupId>com.jd.jdl.aidata.isc</groupId>
+                <artifactId>jdmeta-project-outer-api-sort</artifactId>
+                <version>${jdmeta-project-outer-api-sort.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

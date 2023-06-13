@@ -30,4 +30,15 @@
                   lazy="${jsf.consumer.lazy}" timeout="${basic.jsf.timeout}" retries="${jsf.retries}">
         <jsf:parameter key="token" value="${basic.jsf.token}" hide="true" />
     </jsf:consumer>
+
+    <!-- 大数据集包规则路由校验服务 -->
+    <jsf:consumer id="jsfSortWorkbenchBusiness"
+                  interface="com.jd.jdl.aidata.isc.outer.api.sort.interfaces.SortWorkbenchBusiness"
+                  alias="${jsf.sortWorkbenchBusiness.alias}"
+                  timeout="${jsf.timeout.default}"
+                  retries="${jsf.retries.default}"
+                  serialization="hessian"
+                  lazy="${jsf.consumer.lazy}">
+        <jsf:parameter key="token" value="${basic.sortWorkbenchBusiness.token}" hide="true" />
+    </jsf:consumer>
 </beans>

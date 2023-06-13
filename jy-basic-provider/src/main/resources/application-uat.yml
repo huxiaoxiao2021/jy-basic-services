@@ -95,6 +95,9 @@ jsf:
   jy_basic:
     alias: jy-basic-server-uat
     token: anktYmFzaWMtc2VydmVyLXRva2Vu
+  sortWorkbenchBusiness:
+    alias: sort_uat
+    token: 1509F68AB5241F90592551E04E60AAEE
 
 basic:
   jsf:

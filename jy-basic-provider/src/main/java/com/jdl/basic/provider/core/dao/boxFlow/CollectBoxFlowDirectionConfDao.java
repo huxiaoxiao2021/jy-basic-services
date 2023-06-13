@@ -36,4 +36,7 @@ public interface CollectBoxFlowDirectionConfDao {
     
     int deleteByVersion(@Param("version") String version, @Param("deleteCount") Integer deleteCount);
 
+    List<CollectBoxFlowDirectionConf> selectPageById(@Param("id") Long id, @Param("collectClaim")Integer collectClaim,
+                                                     @Param("version") String version);
+
 }

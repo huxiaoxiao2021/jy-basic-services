@@ -2,13 +2,24 @@ package com.jdl.basic.provider.core.service.boxFlow.impl;
 
 
 import com.jd.fastjson.JSONObject;
+import com.jd.jdl.aidata.isc.outer.api.common.model.JdMetaResult;
+import com.jd.jdl.aidata.isc.outer.api.sort.interfaces.SortWorkbenchBusiness;
+import com.jd.jdl.aidata.isc.outer.api.sort.model.BoxFlowParam;
+import com.jd.jdl.aidata.isc.outer.api.sort.model.BoxFlowResult;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
+import com.jd.ump.profiler.CallerInfo;
+import com.jd.ump.profiler.proxy.Profiler;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf;
+import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowInfo;
 import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowDirectionConfReq;
 import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowDirectionConfResp;
 import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowFinishBoxReq;
 import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowFinishBoxResp;
+import com.jdl.basic.common.enums.CollectBoxFlowInfoStatusEnum;
+import com.jdl.basic.common.enums.CollectClaimEnum;
+import com.jdl.basic.common.utils.JsonHelper;
+import com.jdl.basic.provider.core.dao.boxFlow.CollectBoxFlowInfoDao;
 import com.jdl.basic.provider.core.dao.boxFlow.query.CollectBoxFlowDirectionConfQuery;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.Result;
@@ -22,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,6 +45,10 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
     private CollectBoxFlowDirectionConfDao collectBoxFlowDirectionConfMapper;
     @Autowired
     private ICollectBoxFlowDirectionConfService collectBoxFlowDirectionConfService;
+    @Resource
+    private CollectBoxFlowInfoDao collectBoxFlowInfoDao;
+    @Autowired
+    private SortWorkbenchBusiness jsfSortWorkbenchBusiness;
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionVerifyServiceImpl.verifyBoxFlowDirectionConf", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
@@ -217,4 +233,73 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
         return result;
     }
 
+    @Override
+    public void checkAllMixableRoute() {
+        CollectBoxFlowInfo collectBoxFlowInfo = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null,
+                CollectBoxFlowInfoStatusEnum.CURRENT.getCode());
+        if(collectBoxFlowInfo == null){
+            log.error("离线校验路由，未查到已激活版本");
+            return;
+        }
+        Long id = 1L;
+        List<CollectBoxFlowDirectionConf> confs = null;
+        do{
+            confs = collectBoxFlowDirectionConfMapper.selectPageById(id, CollectClaimEnum.MIXABLE.getCode(), 
+                    collectBoxFlowInfo.getVersion());
+            if(CollectionUtils.isNotEmpty(confs)){
+                id = confs.get(confs.size() -1).getId();
+                for(CollectBoxFlowDirectionConf conf : confs){
+                    BoxFlowParam boxFlowParam = new BoxFlowParam();
+                    Integer boxReceiveId = conf.getBoxReceiveId();
+                    String boxReceiveName = conf.getBoxReceiveName();
+                    Integer startSiteId = conf.getStartSiteId();
+                    String startSiteName = conf.getStartSiteName();
+                    Integer endSiteId = conf.getEndSiteId();
+                    String endSiteName = conf.getEndSiteName();
+                    boxFlowParam.setBoxReceiveId(boxReceiveId);
+                    boxFlowParam.setBoxReceiveName(boxReceiveName);
+                    boxFlowParam.setStartSiteId(startSiteId);
+                    boxFlowParam.setStartSiteName(startSiteName);
+                    boxFlowParam.setEndSiteId(endSiteId);
+                    boxFlowParam.setEndSiteName(endSiteName);
+                    JdMetaResult<BoxFlowResult> jdMetaResult = null;
+                    CallerInfo callerInfo = Profiler.registerInfo(Constants.UMP_APP_NAME +".CollectBoxFlowDirectionVerifyServiceImpl.getBoxFlowDiagnosticResult",
+                            Constants.UMP_APP_NAME,false,true);
+                    try {
+                        jdMetaResult = jsfSortWorkbenchBusiness.getBoxFlowDiagnosticResult(boxFlowParam);
+                    }catch (Exception e){
+                        log.error("离线校验路由规则失败，请求参数：conf.id:{}, boxReceiveId:{},boxReceiveName:{},startSiteId:{}," +
+                                        "startSiteName:{},endSiteId:{},endSiteName:{}, result:{}", conf.getId(), boxReceiveId, boxReceiveName,
+                                startSiteId, startSiteName, endSiteId, endSiteName, JsonHelper.toJSONString(jdMetaResult));
+                        Profiler.functionError(callerInfo);
+                    }finally {
+                        Profiler.registerInfoEnd(callerInfo);
+                    }
+                    
+                    if(jdMetaResult == null || !jdMetaResult.success()){
+                        log.error("离线校验路由规则失败，请求参数：conf.id:{}, boxReceiveId:{},boxReceiveName:{},startSiteId:{}," +
+                                        "startSiteName:{},endSiteId:{},endSiteName:{}, result:{}", conf.getId(), boxReceiveId, boxReceiveName,
+                                startSiteId, startSiteName, endSiteId, endSiteName, JsonHelper.toJSONString(jdMetaResult));
+                       continue;
+                    }
+                    BoxFlowResult boxFlowResult = jdMetaResult.getData();
+                    if(boxFlowResult == null){
+                        log.info("离线校验路由规则boxFlowResult为空，默认校验通过，请求参数：conf.id:{},boxReceiveId:{},boxReceiveName:{},startSiteId:{}," +
+                                        "startSiteName:{},endSiteId:{},endSiteName:{}, result:{}", conf.getId(), boxReceiveId, boxReceiveName,
+                                startSiteId, startSiteName, endSiteId, endSiteName, JsonHelper.toJSONString(jdMetaResult));
+                        continue;
+                    }
+                    if(boxFlowResult.getProblemType() != null){
+                        String errorMsg = MessageFormat.format("离线校验路由规则路由错误：始发分拣:{0},目的地分拣:{1},建包流向:{2} 路由错误:[{3}],conf.id:{4}",
+                                startSiteName, endSiteName, boxReceiveName, boxFlowResult.getProblemTypeDesc(), conf.getId());
+                        log.error(errorMsg);
+                        conf.setRouteErrorType(boxFlowResult.getProblemType());
+                        collectBoxFlowDirectionConfMapper.updateByPrimaryKey(conf);
+                    }
+                }
+            }
+        }while (CollectionUtils.isNotEmpty(confs));
+        
+    }
+    
 }
