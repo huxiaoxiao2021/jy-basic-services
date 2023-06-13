@@ -1,6 +1,8 @@
 package com.jdl.basic.provider.core.dao.user;
 
 import com.jdl.basic.api.domain.user.JyUser;
+import com.jdl.basic.api.domain.user.JyUserBatchRequest;
+import com.jdl.basic.api.domain.user.JyUserQueryCondition;
 
 import java.util.List;
 
@@ -19,7 +21,13 @@ public interface JyUserDao {
 
     JyUser queryUserInfo(JyUser condition);
 
-    List<JyUser> searchUserBySiteCode(Integer siteCode);
+    List<JyUser> searchUserByCondition(JyUserQueryCondition condition);
 
-    List<JyUser> queryByUserIds(List<Long> ids);
+    List<JyUser> queryByUserIds(JyUserBatchRequest request);
+
+    int batchUpdateByUserIds(JyUserBatchRequest request);
+
+    Integer queryUndistributedCountBySiteCode(JyUserQueryCondition condition);
+
+    List<JyUser> queryDifference(JyUserQueryCondition condition);
 }

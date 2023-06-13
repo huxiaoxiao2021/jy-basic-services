@@ -4,6 +4,7 @@ package com.jdl.basic.provider.core.service.user;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.JyUser;
 import com.jdl.basic.api.domain.user.UserWorkGrid;
+import com.jdl.basic.api.domain.user.UserWorkGridBatchRequest;
 import com.jdl.basic.api.domain.user.UserWorkGridRequest;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.ApplicationLaunch;
@@ -28,18 +29,10 @@ public class UserWorkGridServiceTest {
     private UserWorkGridService userWorkGridService;
 
     @Test
-    public void queryPageList() {
+    public void  queryByCondition() {
         UserWorkGridRequest request = new UserWorkGridRequest();
-        request.setPageNumber(1);
-
-        Result<List<UserWorkGrid>> result = userWorkGridService.queryPageList(request);
-        log.info("queryPageList response {}", JsonHelper.toJSONString(result));
-    }
-
-    @Test
-    public void  queryRecordDetail() {
-        String workGridKey = "CDWG00000022001";
-        Result<List<UserWorkGrid>> result = userWorkGridService.queryRecordDetail(workGridKey);
+        request.setWorkGridKey("CDWG00000022001");
+        Result<List<UserWorkGrid>> result = userWorkGridService.queryByCondition(request);
         log.info("queryPageList response {}", JsonHelper.toJSONString(result));
     }
 
@@ -51,15 +44,6 @@ public class UserWorkGridServiceTest {
         request.setCreateTime(time);
         request.setUpdateTime(time);
         Result<List<UserWorkGrid>> result = userWorkGridService.queryDifference(request);
-        log.info("queryPageList response {}", JsonHelper.toJSONString(result));
-    }
-
-    @Test
-    public void queryTotal() {
-
-        UserWorkGridRequest request = new UserWorkGridRequest();
-
-        Result<Long> result = userWorkGridService.queryTotal(request);
         log.info("queryPageList response {}", JsonHelper.toJSONString(result));
     }
 
@@ -92,7 +76,10 @@ public class UserWorkGridServiceTest {
         list.add(userWorkGrid1);
         list.add(userWorkGrid2);
 
-        userWorkGridService.batchInsert(list);
+        UserWorkGridBatchRequest request = new UserWorkGridBatchRequest();
+        request.setUserWorkGrids(list);
+
+        userWorkGridService.batchInsert(request);
     }
 
     @Test
@@ -103,7 +90,7 @@ public class UserWorkGridServiceTest {
         UserWorkGrid userWorkGrid1 = new UserWorkGrid();
         userWorkGrid1.setWorkGridKey("CDWG00000019007");
         userWorkGrid1.setNature("1");
-        userWorkGrid1.setUserId(1L);
+        userWorkGrid1.setUserId(2L);
         userWorkGrid1.setCreateUserErp("wuyoude");
         userWorkGrid1.setCreateUserName("吴有德");
         userWorkGrid1.setCreateTime(new Date());
@@ -112,14 +99,21 @@ public class UserWorkGridServiceTest {
         userWorkGrid1.setUpdateTime(new Date());
         list.add(userWorkGrid1);
 
-        userWorkGridService.batchDelete(list);
+        UserWorkGridBatchRequest request = new UserWorkGridBatchRequest();
+        request.setUserWorkGrids(list);
+
+        userWorkGridService.batchDelete(request);
     }
 
     @Test
     public void queryByUserIds() {
-        List<Long> userIds = new ArrayList<>();
-        userIds.add(2L);
-        userWorkGridService.queryByUserIds(userIds);
+        List<UserWorkGrid> userWorkGrids = new ArrayList<>();
+        UserWorkGrid userWorkGrid = new UserWorkGrid();
+        userWorkGrid.setUserId(2L);
+        userWorkGrids.add(userWorkGrid);
+        UserWorkGridBatchRequest request = new UserWorkGridBatchRequest();
+        request.setUserWorkGrids(userWorkGrids);
+        userWorkGridService.queryByUserIdsWithCondition(request);
     }
 
     @Test

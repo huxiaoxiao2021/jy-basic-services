@@ -19,61 +19,8 @@
     id, user_id, work_grid_key, nature, yn, create_time, update_time, create_user_erp,
     create_user_name, update_user_erp, update_user_name, ts
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from user_work_grid
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  
-  <select id="queryPageList" parameterType="com.jdl.basic.api.domain.user.UserWorkGridRequest" resultMap="BaseResultMap">
-    select
-        <include refid="Base_Column_List"/>
-    from
-        user_work_grid
-    where
-        yn = 1
-      <if test="userId != null">
-        and user_id = #{userId,jdbcType=BIGINT}
-      </if>
-      <if test="workGridKey != null and workGridKey != ''">
-        and work_grid_key = #{workGridKey,jdbcType=VARCHAR}
-      </if>
-      <if test="nature != null">
-        and nature = #{nature,jdbcType=VARCHAR}
-      </if>
-      <if test="createTime != null">
-        and create_time = #{createTime,jdbcType=TIMESTAMP}
-      </if>
-      <if test="updateTime != null">
-        and update_time = #{updateTime,jdbcType=TIMESTAMP}
-      </if>
-      <if test="createUserErp != null and createUserErp != ''">
-        and create_user_erp = #{createUserErp,jdbcType=VARCHAR}
-      </if>
-      <if test="createUserName != null and createUserName != ''">
-        and create_user_name = #{createUserName,jdbcType=VARCHAR}
-      </if>
-      <if test="updateUserErp != null and updateUserErp != ''">
-        and update_user_erp = #{updateUserErp,jdbcType=VARCHAR}
-      </if>
-      <if test="updateUserName != null and updateUserName != ''">
-        and update_user_name = #{updateUserName,jdbcType=VARCHAR}
-      </if>
-    group by
-        work_grid_key
-      <if test="pageNumber > 0">
-        limit #{offset}, #{limit}
-      </if>
-  </select>
 
-    <select id="queryTotal" parameterType="com.jdl.basic.api.domain.user.UserWorkGridRequest" resultType="java.lang.Long">
-        select
-        count(*)
-        from
-        user_work_grid
-        where
-        yn = 1
+    <sql id="queryCondition">
         <if test="userId != null">
             and user_id = #{userId,jdbcType=BIGINT}
         </if>
@@ -101,9 +48,14 @@
         <if test="updateUserName != null and updateUserName != ''">
             and update_user_name = #{updateUserName,jdbcType=VARCHAR}
         </if>
-        group by
-        work_grid_key
-    </select>
+    </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_work_grid
+    where id = #{id,jdbcType=BIGINT}
+  </select>
   
   <select id="queryRecordDetail" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
@@ -146,7 +98,7 @@
             update_user_name
         )
     values
-    <foreach collection="list" item="item" separator=",">
+    <foreach collection="userWorkGrids" item="item" separator=",">
         (
             #{item.userId, jdbcType=BIGINT},
             #{item.workGridKey, jdbcType=VARCHAR},
@@ -161,7 +113,7 @@
     </foreach>
   </insert>
 
-  <update id="batchDelete" parameterType="com.jdl.basic.api.domain.user.UserWorkGrid">
+  <update id="batchDelete">
     update
         user_work_grid
     set
@@ -174,38 +126,33 @@
       <if test="workGridKey != null and workGridKey != ''">
         and work_grid_key = #{workGridKey, jdbcType=VARCHAR}
       </if>
-      <if test="list != null and list.size() > 0">
         and user_id in
-        <foreach collection="list" item="item" separator="," open="(" close=")">
+        <foreach collection="userWorkGrids" item="item" separator="," open="(" close=")">
         #{item.userId}
         </foreach>
-      </if>
   </update>
 
-  <select id="queryByUserIds" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="queryByUserIdsWithCondition" resultMap="BaseResultMap">
     select
         <include refid="Base_Column_List"/>
     from
         user_work_grid
     where
         yn = 1
-    <if test="list != null and list.size() > 0">
-        and user_id in
-        <foreach collection="list" item="item" separator="," open="(" close=")">
-            #{item}
+    and user_id in
+        <foreach collection="userWorkGrids" item="item" separator="," open="(" close=")">
+            #{item.userId}
         </foreach>
-    </if>
+    <include refid="queryCondition"/>
   </select>
 
-  <select id="queryByWorkGridKey" parameterType="com.jdl.basic.api.domain.user.UserWorkGridRequest" resultMap="BaseResultMap">
-    select
-       <include refid="Base_Column_List"/>
-    from
-        user_work_grid
-    where
-        yn = 1
-    <if test="workGridKey != null and workGridKey != ''">
-        and work_grid_key = #{workGridKey, jdbcType=VARCHAR}
-    </if>
-  </select>
+    <select id="queryByCondition" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from
+            user_work_grid
+        where
+            yn = 1
+        <include refid="queryCondition"/>
+    </select>
 </mapper>
