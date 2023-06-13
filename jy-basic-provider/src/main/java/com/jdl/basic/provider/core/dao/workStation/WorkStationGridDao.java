@@ -179,4 +179,18 @@ public interface WorkStationGridDao {
 	 * @return
 	 */
 	List<WorkStationGrid> queryListForWorkGridVo(WorkStationGridQuery query);
+
+	/**
+	 * 刷数-分页查询
+	 * @param startId
+	 * @return
+	 */
+	List<WorkStationGrid> brushQueryAllByPage(Integer startId);
+
+	/**
+	 * 刷数-批量更新
+	 * @param list
+	 * @return
+	 */
+	Integer brushUpdateById(List<WorkStationGrid> list);
 }

@@ -137,3 +137,15 @@ es:
     basicSite:
       queryIndexAlias: jy_basic_site
       type: jy_basic_site
+      
+## ducc 配置(不同应用请设置不同的application)
+laf:
+  config:
+    manager:
+      application: jy-basic-services
+      resources[0]:
+        name: ducc
+        uri: ucc://jy-basic-services:f1fc8b8197ea487d966c1da35b3835ad@ducc.jd.local/v1/namespace/jy_basic_services/config/default/profiles/test?longPolling=60000&necessary=true
+      parameters[0]:
+        name: autoListener
+        value: true

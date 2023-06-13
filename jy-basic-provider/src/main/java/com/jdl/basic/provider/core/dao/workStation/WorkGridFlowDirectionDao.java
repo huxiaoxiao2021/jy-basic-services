@@ -1,11 +1,11 @@
 package com.jdl.basic.provider.core.dao.workStation;
 
-import java.util.List;
-
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionVo;
+
+import java.util.List;
 
 /**
  * 场地网格流向表--Dao接口
@@ -115,4 +115,18 @@ public interface WorkGridFlowDirectionDao {
 	 */
 	List<WorkGridFlowDirectionVo> queryFlowDataForSelect3(WorkGridFlowDirectionQuery query);	
 	long queryFlowDataForSelectCount3(WorkGridFlowDirectionQuery query);
+
+	/**
+	 * 刷数-分页查询
+	 * @param startId
+	 * @return
+	 */
+	List<WorkGridFlowDirection> brushQueryAllByPage(Integer startId);
+
+	/**
+	 * 刷数-批量更新
+	 * @param list
+	 * @return
+	 */
+	Integer brushUpdateById(List<WorkGridFlowDirection> list);
 }

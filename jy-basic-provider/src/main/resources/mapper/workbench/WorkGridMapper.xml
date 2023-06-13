@@ -7,6 +7,10 @@
 		<result column="business_key" property="businessKey" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="org_code" property="orgCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
 		<result column="org_name" property="orgName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="province_agency_code" property="provinceAgencyCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="province_agency_name" property="provinceAgencyName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="area_hub_code" property="areaHubCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="area_hub_name" property="areaHubName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="site_type" property="siteType" javaType="java.lang.Integer" jdbcType="INTEGER" />
 		<result column="site_type_name" property="siteTypeName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="site_code" property="siteCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
@@ -36,8 +40,9 @@
 	</resultMap>
 
 	<sql id="Base_Column_List" >
-		id,business_key,org_code,org_name,site_type,site_type_name,
-		site_code,site_name,floor,grid_no,grid_code,
+		id,business_key,org_code,org_name,
+		province_agency_code,province_agency_name,area_hub_code,area_hub_name,
+		site_type,site_type_name,site_code,site_name,floor,grid_no,grid_code,
 		grid_name,area_code,area_name,standard_num,owner_user_erp,
 		dock_code,supplier_code,supplier_name,config_flow_user,config_flow_time,
 		config_flow_status,create_user,create_user_name,update_user,update_user_name,
@@ -59,6 +64,18 @@
 				</if>
 				<if test="orgName != null" >
 					org_name,
+				</if>
+				<if test="provinceAgencyCode != null" >
+					province_agency_code,
+				</if>
+				<if test="provinceAgencyName != null" >
+					province_agency_name,
+				</if>
+				<if test="areaHubCode != null" >
+					area_hub_code,
+				</if>
+				<if test="areaHubName != null" >
+					area_hub_name,
 				</if>
 				<if test="siteType != null" >
 					site_type,
@@ -155,6 +172,18 @@
 				<if test="orgName != null" >
 					#{orgName,jdbcType=VARCHAR},
 				</if>
+				<if test="provinceAgencyCode != null" >
+					#{provinceAgencyCode,jdbcType=VARCHAR},
+				</if>
+				<if test="provinceAgencyName != null" >
+					#{provinceAgencyName,jdbcType=VARCHAR},
+				</if>
+				<if test="areaHubCode != null" >
+					#{areaHubCode,jdbcType=VARCHAR},
+				</if>
+				<if test="areaHubName != null" >
+					#{areaHubName,jdbcType=VARCHAR},
+				</if>
 				<if test="siteType != null" >
 					#{siteType,jdbcType=INTEGER},
 				</if>
@@ -248,6 +277,18 @@
 				</if>
 				<if test="orgName != null" >
 					org_name = #{orgName,jdbcType=VARCHAR},
+				</if>
+				<if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
+					province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR},
+				</if>
+				<if test="provinceAgencyName != null and provinceAgencyName != ''" >
+					province_agency_name = #{provinceAgencyName,jdbcType=VARCHAR},
+				</if>
+				<if test="areaHubCode != null and areaHubCode != ''" >
+					area_hub_code = #{areaHubCode,jdbcType=VARCHAR},
+				</if>
+				<if test="areaHubName != null and areaHubName != ''" >
+					area_hub_name = #{areaHubName,jdbcType=VARCHAR},
 				</if>
 				<if test="siteType != null" >
 					site_type = #{siteType,jdbcType=INTEGER},
@@ -427,6 +468,12 @@
             <if test="orgCode != null and orgCode != ''" >
                 and t.org_code = #{orgCode,jdbcType=INTEGER}
             </if>
+			<if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
+				and t.province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR}
+			</if>
+			<if test="areaHubCode != null and areaHubCode != ''" >
+				and t.area_hub_code = #{areaHubCode,jdbcType=VARCHAR}
+			</if>
             <if test="siteCode != null and siteCode != ''" >
                 and t.site_code = #{siteCode,jdbcType=INTEGER}
             </if>
@@ -444,4 +491,39 @@
             </if>
 		</where>
 	</sql>
+
+	<!-- 刷数sql start -->
+	<select id="brushQueryAllByPage" parameterType="java.lang.Integer" resultMap="WorkGrid">
+		select
+			id,site_code
+		from
+			work_grid
+		where yn = 1
+		  and id > #{id,jdbcType=BIGINT}
+		order by id
+			limit 100
+	</select>
+	<update id="brushUpdateById" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"  separator=";">
+			UPDATE work_grid
+			<set>
+				<if test="item.provinceAgencyCode != null and item.provinceAgencyCode != ''" >
+					province_agency_code = #{item.provinceAgencyCode,jdbcType=VARCHAR},
+				</if>
+				<if test="item.provinceAgencyName != null and item.provinceAgencyName != ''" >
+					province_agency_name = #{item.provinceAgencyName,jdbcType=VARCHAR},
+				</if>
+				<if test="item.areaHubCode != null and item.areaHubCode != ''" >
+					area_hub_code = #{item.areaHubCode,jdbcType=VARCHAR},
+				</if>
+				<if test="item.areaHubName != null and item.areaHubName != ''" >
+					area_hub_name = #{item.areaHubName,jdbcType=VARCHAR},
+				</if>
+				update_time = now()
+			</set>
+			WHERE yn = 1
+			AND id = #{item.id}
+		</foreach>
+	</update>
+	<!-- 刷数sql end -->
 </mapper>

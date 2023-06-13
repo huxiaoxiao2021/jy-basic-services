@@ -255,6 +255,10 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		}
 		data.setOrgName(orgName);
 		data.setSiteName(siteInfo.getSiteName());
+		data.setProvinceAgencyCode(siteInfo.getProvinceAgencyCode());
+		data.setProvinceAgencyName(siteInfo.getProvinceAgencyName());
+		data.setAreaHubCode(siteInfo.getAreaCode());
+		data.setAreaName(siteInfo.getAreaName());
 
 		WorkStation workStationCheckQuery = new WorkStation();
 		workStationCheckQuery.setWorkCode(workCode);

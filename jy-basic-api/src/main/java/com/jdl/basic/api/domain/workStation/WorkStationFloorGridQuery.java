@@ -91,4 +91,13 @@ public class WorkStationFloorGridQuery extends BasePagerCondition {
      */
     private String supplierCode;
 
+    /**
+     * 省区编码
+     */
+    private String provinceAgencyCode;
+    /**
+     * 枢纽编码
+     */
+    private String areaHubCode;
+    
 }

@@ -1,10 +1,10 @@
 package com.jdl.basic.provider.core.dao.workStation;
 
-import java.util.List;
-
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
 import com.jdl.basic.api.domain.workStation.WorkGridQuery;
+
+import java.util.List;
 
 /**
  * 场地网格表--Dao接口
@@ -75,5 +75,19 @@ public interface WorkGridDao {
 	 * @return
 	 */
 	WorkGrid queryByWorkGridKey(String workGridKey);
+
+	/**
+	 * 刷数-分页查询
+	 * @param startId
+	 * @return
+	 */
+	List<WorkGrid> brushQueryAllByPage(Integer startId);
+
+	/**
+	 * 刷数-批量更新
+	 * @param list
+	 * @return
+	 */
+	Integer brushUpdateById(List<WorkGrid> list);
 
 }

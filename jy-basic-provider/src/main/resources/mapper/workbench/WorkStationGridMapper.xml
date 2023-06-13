@@ -7,6 +7,10 @@
 		<result column="business_key" property="businessKey" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="org_code" property="orgCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
 		<result column="org_name" property="orgName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="province_agency_code" property="provinceAgencyCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="province_agency_name" property="provinceAgencyName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="area_hub_code" property="areaHubCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="area_hub_name" property="areaHubName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="site_code" property="siteCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
 		<result column="site_name" property="siteName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="floor" property="floor" javaType="java.lang.Integer" jdbcType="INTEGER" />
@@ -42,8 +46,9 @@
 	</resultMap>
 
 	<sql id="Base_Column_List" >
-		g.id,g.business_key,g.org_code,g.org_name,g.site_code,g.site_name,
-		g.floor,g.grid_no,g.grid_code,g.grid_name,g.standard_num,
+		g.id,g.business_key,g.org_code,g.org_name,
+		g.province_agency_code,g.province_agency_name,g.area_hub_code,g.area_hub_name,
+		g.site_code,g.site_name,g.floor,g.grid_no,g.grid_code,g.grid_name,g.standard_num,
 		g.owner_user_erp,g.ref_station_key,g.create_user,g.create_user_name,g.update_user,
 		g.update_user_name,g.create_time,g.update_time,g.yn,g.ts,g.dock_code,g.supplier_code,g.supplier_name,
 		g.ref_work_grid_key,
@@ -51,8 +56,9 @@
 	</sql>
 
 	<sql id="Base_Column_List_WorkStationGrid" >
-		g.id,g.business_key,g.org_code,g.org_name,g.site_code,g.site_name,
-		g.floor,g.grid_no,g.grid_code,g.grid_name,g.standard_num,
+		g.id,g.business_key,g.org_code,g.org_name,
+		g.province_agency_code,g.province_agency_name,g.area_hub_code,g.area_hub_name,
+		g.site_code,g.site_name,g.floor,g.grid_no,g.grid_code,g.grid_name,g.standard_num,
 		g.owner_user_erp,g.ref_station_key,g.create_user,g.create_user_name,g.update_user,
 		g.update_user_name,g.create_time,g.update_time,g.yn,g.ts,g.dock_code,g.supplier_code,g.supplier_name,
 		g.ref_work_grid_key
@@ -73,6 +79,18 @@
 				</if>
 				<if test="orgName != null" >
 					org_name,
+				</if>
+				<if test="provinceAgencyCode != null" >
+					province_agency_code,
+				</if>
+				<if test="provinceAgencyName != null" >
+					province_agency_name,
+				</if>
+				<if test="areaHubCode != null" >
+					area_hub_code,
+				</if>
+				<if test="areaHubName != null" >
+					area_hub_name,
 				</if>
 				<if test="siteCode != null" >
 					site_code,
@@ -153,6 +171,18 @@
 				</if>
 				<if test="orgName != null" >
 					#{orgName,jdbcType=VARCHAR},
+				</if>
+				<if test="provinceAgencyCode != null" >
+					#{provinceAgencyCode,jdbcType=VARCHAR},
+				</if>
+				<if test="provinceAgencyName != null" >
+					#{provinceAgencyName,jdbcType=VARCHAR},
+				</if>
+				<if test="areaHubCode != null" >
+					#{areaHubCode,jdbcType=VARCHAR},
+				</if>
+				<if test="areaHubName != null" >
+					#{areaHubName,jdbcType=VARCHAR},
 				</if>
 				<if test="siteCode != null" >
 					#{siteCode,jdbcType=INTEGER},
@@ -235,6 +265,18 @@
 				</if>
 				<if test="orgName != null" >
 					org_name = #{orgName,jdbcType=VARCHAR},
+				</if>
+				<if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
+					province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR},
+				</if>
+				<if test="provinceAgencyName != null and provinceAgencyName != ''" >
+					province_agency_name = #{provinceAgencyName,jdbcType=VARCHAR},
+				</if>
+				<if test="areaHubCode != null and areaHubCode != ''" >
+					area_hub_code = #{areaHubCode,jdbcType=VARCHAR},
+				</if>
+				<if test="areaHubName != null and areaHubName != ''" >
+					area_hub_name = #{areaHubName,jdbcType=VARCHAR},
 				</if>
 				<if test="siteCode != null" >
 					site_code = #{siteCode,jdbcType=INTEGER},
@@ -407,6 +449,12 @@
 			g.yn = 1
 		<if test="orgCode != null" >
 			and g.org_code = #{orgCode,jdbcType=INTEGER}
+		</if>
+		<if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
+			and g.province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR}
+		</if>
+		<if test="areaHubCode != null and areaHubCode != ''" >
+			and g.area_hub_code = #{areaHubCode,jdbcType=VARCHAR}
 		</if>
 		<if test="siteCode != null" >
 			and g.site_code = #{siteCode,jdbcType=INTEGER}
@@ -584,8 +632,9 @@
 	</select>
 	<select id="queryListDistinct" parameterType="com.jdl.basic.api.domain.workStation.WorkStationFloorGridQuery" resultMap="WorkStationGrid">
 		select distinct
-		g.org_code,g.org_name,g.site_code,
-		g.floor,g.grid_no,g.grid_code,g.grid_name,
+		g.org_code,g.org_name,
+		g.province_agency_code,g.province_agency_name,g.area_hub_code,g.area_hub_name,
+		g.site_code,g.floor,g.grid_no,g.grid_code,g.grid_name,
 		s.area_code,s.area_name,ifnull(s.area_type,0) area_type
 		from
 			work_station_grid g
@@ -600,6 +649,12 @@
 			g.yn = 1
 			<if test="orgCode != null and orgCode != ''" >
 				and g.org_code = #{orgCode,jdbcType=INTEGER}
+			</if>
+			<if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
+				and g.province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR}
+			</if>
+			<if test="areaHubCode != null and areaHubCode != ''" >
+				and g.area_hub_code = #{areaHubCode,jdbcType=VARCHAR}
 			</if>
 			<if test="siteCode != null and siteCode != ''" >
 				and g.site_code = #{siteCode,jdbcType=INTEGER}
@@ -622,8 +677,8 @@
 		select
 		count(*)
 		from (select distinct
-		g.org_code,g.org_name,g.site_code,g.site_name,
-		g.floor,g.grid_no,g.grid_code,g.grid_name,
+		g.org_code,g.org_name,g.province_agency_code,g.province_agency_name,g.area_hub_code,g.area_hub_name,
+	    g.site_code,g.site_name,g.floor,g.grid_no,g.grid_code,g.grid_name,
 		s.area_code,s.area_name
 		from
 		work_station_grid g
@@ -652,5 +707,40 @@
         where g.yn = 1 
           and g.ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
         limit 100
-    </select>	
+    </select>
+	
+	<!-- 刷数sql start -->
+	<select id="brushQueryAllByPage" parameterType="java.lang.Integer" resultMap="WorkStationGrid">
+		select
+			id,site_code
+		from
+			work_station_grid
+		where yn = 1
+		and id > #{id,jdbcType=BIGINT}
+		order by id
+		limit 100
+	</select>
+	<update id="brushUpdateById" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"  separator=";">
+			UPDATE work_station_grid
+			<set>
+				<if test="item.provinceAgencyCode != null and item.provinceAgencyCode != ''" >
+					province_agency_code = #{item.provinceAgencyCode,jdbcType=VARCHAR},
+				</if>
+				<if test="item.provinceAgencyName != null and item.provinceAgencyName != ''" >
+					province_agency_name = #{item.provinceAgencyName,jdbcType=VARCHAR},
+				</if>
+				<if test="item.areaHubCode != null and item.areaHubCode != ''" >
+					area_hub_code = #{item.areaHubCode,jdbcType=VARCHAR},
+				</if>
+				<if test="item.areaHubName != null and item.areaHubName != ''" >
+					area_hub_name = #{item.areaHubName,jdbcType=VARCHAR},
+				</if>
+			    update_time = now()
+			</set>
+			WHERE yn = 1
+			AND id = #{item.id}
+		</foreach>
+	</update>
+	<!-- 刷数sql end -->
 </mapper>

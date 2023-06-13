@@ -262,5 +262,13 @@
                   alias="${jsf.jy_basic.alias}"
                   server="jsf">
     </jsf:provider>
+
+    <!-- 刷数接口 -->
+    <jsf:provider id="orgSwitchProvinceBrushJsfServiceJsf"
+                  interface="com.jdl.basic.api.service.workStation.OrgSwitchProvinceBrushJsfService"
+                  ref="orgSwitchProvinceBrushJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  server="jsf">
+    </jsf:provider>
 </beans>
 

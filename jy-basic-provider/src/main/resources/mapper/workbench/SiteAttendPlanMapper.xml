@@ -6,6 +6,10 @@
         <result column="plan_attend_time" property="planAttendTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
         <result column="org_code" property="orgCode" javaType="java.lang.Integer" jdbcType="INTEGER"/>
         <result column="org_name" property="orgName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="province_agency_code" property="provinceAgencyCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="province_agency_name" property="provinceAgencyName" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="area_hub_code" property="areaHubCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="area_hub_name" property="areaHubName" javaType="java.lang.String" jdbcType="VARCHAR" />
         <result column="site_code" property="siteCode" javaType="java.lang.Integer" jdbcType="INTEGER"/>
         <result column="site_name" property="siteName" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <result column="business_line_code" property="businessLineCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
@@ -29,7 +33,9 @@
     </resultMap>
 
     <sql id="baseColumnList">
-        s.id, s.plan_attend_time, s.org_code, s.org_name, s.site_code, s.site_name, s.business_line_code,
+        s.id, s.plan_attend_time, s.org_code, s.org_name, 
+        s.province_agency_code,s.province_agency_name,s.area_hub_code,s.area_hub_name,
+        s.site_code, s.site_name, s.business_line_code,
         s.business_line_name, s.wave_code, s.job_type, s.plan_attend_num, s.status, s.create_user, s.create_user_name, s.create_time, s.confirm_user,
         s.confirm_user_name, s.confirm_time, s.update_user, s.update_user_name, s.update_time, s.version_num, s.yn, s.ts
     </sql>
@@ -39,6 +45,12 @@
             s.yn = 1
             <if test="query.orgCode != null">
                 and org_code = #{query.orgCode, jdbcType=INTEGER}
+            </if>
+            <if test="query.provinceAgencyCode != null and query.provinceAgencyCode != ''">
+                and province_agency_code = #{query.provinceAgencyCode, jdbcType=VARCHAR}
+            </if>
+            <if test="query.areaHubCode != null and query.areaHubCode != ''">
+                and area_hub_code = #{query.areaHubCode, jdbcType=VARCHAR}
             </if>
             <if test="query.siteCode != null">
                 and site_code = #{query.siteCode, jdbcType=INTEGER}
@@ -61,6 +73,7 @@
                  plan_attend_time,
                  org_code,
                  org_name,
+                 province_agency_code,province_agency_name,area_hub_code,area_hub_name,
                  site_code,
                  site_name,
                  business_line_code,
@@ -82,6 +95,7 @@
                 #{item.planAttendTime, jdbcType=TIMESTAMP},
                 #{item.orgCode, jdbcType=INTEGER},
                 #{item.orgName, jdbcType=VARCHAR},
+                #{item.provinceAgencyCode,jdbcType=VARCHAR},#{item.provinceAgencyName,jdbcType=VARCHAR},#{item.areaHubCode,jdbcType=VARCHAR},#{item.areaHubName,jdbcType=VARCHAR},
                 #{item.siteCode, jdbcType=INTEGER},
                 #{item.siteName, jdbcType=VARCHAR},
                 #{item.businessLineCode, jdbcType=VARCHAR},
@@ -108,10 +122,22 @@
         where
             s.yn = 1 and
             plan_attend_time = #{planAttendTime, jdbcType=TIMESTAMP} and
-            org_code = #{orgCode, jdbcType=INTEGER} and
             site_code = #{siteCode, jdbcType=INTEGER}
         group by
             s.plan_attend_time, s.org_code, s.site_code
+    </select>
+
+    <select id="queryOldDataByBusinessKeyNew" parameterType="com.jdl.basic.api.domain.workStation.SiteAttendPlan" resultMap="resultMap">
+        select
+        <include refid="baseColumnList"/>
+        from
+        site_attend_plan s
+        where
+        s.yn = 1 and
+        plan_attend_time = #{planAttendTime, jdbcType=TIMESTAMP} and
+        site_code = #{siteCode, jdbcType=INTEGER}
+        group by
+        s.plan_attend_time, s.province_agency_code, s.site_code
     </select>
 
     <update id="deleteOldDataByBusinessKey" parameterType="com.jdl.basic.api.domain.workStation.SiteAttendPlan">
@@ -129,6 +155,21 @@
             site_code = #{siteCode, jdbcType=INTEGER}
     </update>
 
+    <update id="deleteOldDataByBusinessKeyNew" parameterType="com.jdl.basic.api.domain.workStation.SiteAttendPlan">
+        update
+            site_attend_plan s
+        set
+            s.update_user = #{updateUser, jdbcType=VARCHAR},
+            s.update_user_name = #{updateUserName, jdbcType=VARCHAR},
+            s.update_time = #{updateTime, jdbcType=TIMESTAMP},
+            s.yn = 0
+        where
+            s.yn = 1 and
+            plan_attend_time = #{planAttendTime, jdbcType=TIMESTAMP} and
+            province_agency_code = #{provinceAgenctCode, jdbcType=VARCHAR} and
+            site_code = #{siteCode, jdbcType=INTEGER}
+    </update>
+
     <select id="queryTotalCount" parameterType="com.jdl.basic.api.domain.workStation.SiteAttendPlanQuery" resultType="java.lang.Long">
         select
             count(*)
@@ -139,6 +180,16 @@
             s.plan_attend_time, s.org_code, s.site_code
     </select>
 
+    <select id="queryTotalCountNew" parameterType="com.jdl.basic.api.domain.workStation.SiteAttendPlanQuery" resultType="java.lang.Long">
+        select
+        count(*)
+        from
+        site_attend_plan s
+        <include refid="queryCondition"/>
+        group by
+        s.plan_attend_time, s.province_agency_code, s.site_code
+    </select>
+
     <select id="queryPageList" parameterType="com.jdl.basic.api.domain.workStation.SiteAttendPlanQuery" resultMap="resultMap">
         select
             <include refid="baseColumnList"/>
@@ -147,6 +198,19 @@
         <include refid="queryCondition"/>
         group by
             s.plan_attend_time, s.org_code, s.site_code
+        <if test="query.pageNumber > 0">
+            limit #{query.offset}, #{query.limit}
+        </if>
+    </select>
+
+    <select id="queryPageListNew" parameterType="com.jdl.basic.api.domain.workStation.SiteAttendPlanQuery" resultMap="resultMap">
+        select
+        <include refid="baseColumnList"/>
+        from
+        site_attend_plan s
+        <include refid="queryCondition"/>
+        group by
+        s.plan_attend_time, s.province_agency_code, s.site_code
         <if test="query.pageNumber > 0">
             limit #{query.offset}, #{query.limit}
         </if>
@@ -164,6 +228,18 @@
             s.site_code = #{siteCode, jdbcType=INTEGER}
     </select>
 
+    <select id="queryPageDetailNew" parameterType="com.jdl.basic.api.domain.workStation.SiteAttendPlan" resultMap="resultMap">
+        select
+        <include refid="baseColumnList"/>
+        from
+        site_attend_plan s
+        where
+        s.yn = 1 and
+        s.plan_attend_time = #{planAttendTime, jdbcType=TIMESTAMP} and
+        s.province_agency_code = #{provinceAgenctCode, jdbcType=VARCHAR} and
+        s.site_code = #{siteCode, jdbcType=INTEGER}
+    </select>
+
     <update id="confirmOneRecord" parameterType="com.jdl.basic.api.domain.workStation.SiteAttendPlan">
         update
             site_attend_plan s
@@ -179,7 +255,41 @@
             s.yn = 1 and
             s.status = 0 and
             s.plan_attend_time = #{planAttendTime, jdbcType=TIMESTAMP} and
-            s.org_code = #{orgCode, jdbcType=INTEGER} and
             s.site_code = #{siteCode, jdbcType=INTEGER}
     </update>
+
+    <!-- 刷数sql start -->
+    <select id="brushQueryAllByPage" parameterType="java.lang.Integer" resultMap="resultMap">
+        select
+            id,site_code
+        from
+            site_attend_plan
+        where yn = 1
+          and id > #{id,jdbcType=BIGINT}
+        order by id
+            limit 100
+    </select>
+    <update id="brushUpdateById" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index"  separator=";">
+            UPDATE site_attend_plan
+            <set>
+                <if test="item.provinceAgencyCode != null and item.provinceAgencyCode != ''" >
+                    province_agency_code = #{item.provinceAgencyCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.provinceAgencyName != null and item.provinceAgencyName != ''" >
+                    province_agency_name = #{item.provinceAgencyName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.areaHubCode != null and item.areaHubCode != ''" >
+                    area_hub_code = #{item.areaHubCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.areaHubName != null and item.areaHubName != ''" >
+                    area_hub_name = #{item.areaHubName,jdbcType=VARCHAR},
+                </if>
+                update_time = now()
+            </set>
+            WHERE yn = 1
+            AND id = #{item.id}
+        </foreach>
+    </update>
+    <!-- 刷数sql end -->
 </mapper>

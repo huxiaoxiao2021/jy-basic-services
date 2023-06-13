@@ -44,6 +44,15 @@ public class SortCrossDetail {
     private String belongName;
 
     private Integer enableFlag;
+
+    /**
+     * 省区编码
+     */
+    private String provinceAgencyCode;
+    /**
+     * 枢纽编码
+     */
+    private String areaHubCode;
     
     public Long getId() {
         return id;
@@ -211,5 +220,21 @@ public class SortCrossDetail {
 
     public void setEnableFlag(Integer enableFlag) {
         this.enableFlag = enableFlag;
+    }
+
+    public String getProvinceAgencyCode() {
+        return provinceAgencyCode;
+    }
+
+    public void setProvinceAgencyCode(String provinceAgencyCode) {
+        this.provinceAgencyCode = provinceAgencyCode;
+    }
+
+    public String getAreaHubCode() {
+        return areaHubCode;
+    }
+
+    public void setAreaHubCode(String areaHubCode) {
+        this.areaHubCode = areaHubCode;
     }
 }
