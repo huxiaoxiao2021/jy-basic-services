@@ -8,6 +8,7 @@ import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.BeanUtils;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.basic.provider.common.Jimdb.CacheService;
 import com.jdl.basic.provider.core.dao.cross.SortCrossDetailDao;
 import com.jdl.basic.provider.core.service.cross.SortCrossService;
@@ -46,6 +47,8 @@ public class SortCrossServiceImpl implements SortCrossService {
     
     private static final String INSERT_EVENT = "INSERT";
     
+    private static final Integer NO_INIT = -1;
+    
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossServiceImpl.queryPage", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public PageDto<SortCrossDetail> queryPage(SortCrossQuery query) {
@@ -60,10 +63,28 @@ public class SortCrossServiceImpl implements SortCrossService {
             pageDto.setTotalRow((int) count);
             pageDto.setResult(crossDetailDao.queryPage(query));
         }else {
-            pageDto.setResult(new ArrayList<>());
-            pageDto.setTotalRow(0);
+            // 如果无查询数据，并且查询条件中包含站点ID，执行刷站点类型逻辑
+            pageDto.setResult(initSiteTypeByQuery(query));
+            if (CollectionUtils.isEmpty(pageDto.getResult())) {
+                pageDto.setTotalRow(0);
+            }else {
+                pageDto.setTotalPage(pageDto.getResult().size());
+            }
         }
         return pageDto;
+    }
+
+    private List<SortCrossDetail> initSiteTypeByQuery(SortCrossQuery query) {
+        if (StringUtils.isEmpty(query.getSiteCode())) {
+            return new ArrayList<>();
+        }
+        List<SortCrossDetail> details = crossDetailDao.queryNotInitPage(query);
+        if (!CollectionUtils.isEmpty(details)){
+            for (SortCrossDetail detail : details) {
+                sortCrossService.initSiteType(detail);
+            }
+        }
+        return crossDetailDao.queryPage(query);
     }
 
     @Override
@@ -82,7 +103,7 @@ public class SortCrossServiceImpl implements SortCrossService {
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossServiceImpl.queryNotInit", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public List<SortCrossDetail> queryNotInit(Integer dmsId) {
-        return crossDetailDao.queryNotInit(dmsId);
+        return crossDetailDao.queryNotInitBySiteCode(dmsId);
     }
 
     @Override
