@@ -9,6 +9,8 @@
         <result column="city_name" jdbcType="VARCHAR" property="cityName"/>
         <result column="org_code" jdbcType="INTEGER" property="orgCode"/>
         <result column="org_name" jdbcType="VARCHAR" property="orgName"/>
+        
+        
         <result column="remind_start_time" jdbcType="TIMESTAMP" property="remindStartTime"/>
         <result column="remind_end_time" jdbcType="TIMESTAMP" property="remindEndTime"/>
         <result column="use_state" jdbcType="TINYINT" property="useState"/>

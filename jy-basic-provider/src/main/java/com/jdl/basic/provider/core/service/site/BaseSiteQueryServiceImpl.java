@@ -1,7 +1,11 @@
 package com.jdl.basic.provider.core.service.site;
 
+import com.google.common.collect.Lists;
 import com.jd.etms.framework.utils.cache.annotation.Cache;
+import com.jd.ql.basic.domain.BaseSite;
+import com.jd.ql.basic.dto.BaseSiteSimpleDto;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
+import com.jd.ql.basic.dto.PageDto;
 import com.jd.ump.profiler.CallerInfo;
 import com.jd.ump.profiler.proxy.Profiler;
 import com.jdl.basic.api.dto.site.AreaVO;
@@ -11,8 +15,10 @@ import com.jdl.basic.api.dto.site.SiteQueryCondition;
 import com.jdl.basic.api.service.site.SiteQueryService;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.JsonHelper;
+import com.jdl.basic.common.utils.NumberHelper;
 import com.jdl.basic.common.utils.Pager;
 import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.provider.config.ducc.DuccPropertyConfiguration;
 import com.jdl.basic.provider.core.dao.basic.BasicSiteEsDao;
 import com.jdl.basic.provider.core.enums.BasicAreaEnum;
 import com.jdl.basic.provider.core.enums.BasicProvinceAgencyEnum;
@@ -45,12 +51,17 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
 
     // 截取最长长度
     private static final int subRetainLength = 20;
+    // 最大limit
+    private static final int MAX_LIMIT = 100;
 
     @Autowired
     private BasicSiteEsDao basicSiteEsDao;
 
     @Autowired
-    IBasicSiteQueryWSManager basicSiteQueryWSManager;
+    private IBasicSiteQueryWSManager basicSiteQueryWSManager;
+
+    @Autowired
+    private DuccPropertyConfiguration duccPropertyConfiguration;
 
 
     @Cache(key = "SiteQueryService.queryAllProvinceAgencyInfo", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
@@ -140,8 +151,80 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
      */
     @Override
     public Result<List<BasicSiteVO>> querySiteByConditionFromBasicSite(SiteQueryCondition siteQueryCondition, Integer limit) {
+        if(duccPropertyConfiguration.getSiteQueryDowngradeSwitch()){
+            return querySiteFromES(siteQueryCondition, limit);
+        }
+        return querySiteFromExternal(siteQueryCondition, limit);
+    }
+
+    private Result<List<BasicSiteVO>> querySiteFromExternal(SiteQueryCondition siteQueryCondition, Integer limit) {
         Result<List<BasicSiteVO>> baseEntity = new Result<List<BasicSiteVO>>();
-        CallerInfo info = Profiler.registerInfo("com.jdl.basic.api.service.site.SiteQueryService.querySiteByConditionFromBasicSite",
+        baseEntity.setData(Lists.newArrayList());
+        CallerInfo info = Profiler.registerInfo("com.jdl.basic.api.service.site.SiteQueryService.querySiteFromBasic",
+                false, true);
+        try {
+            // 先查站点数据
+            PageDto<Object> pageDto = new PageDto<>();
+            pageDto.setCurPage(Constants.CONSTANT_NUMBER_ONE);
+            pageDto.setPageSize(limit > MAX_LIMIT ? MAX_LIMIT : limit);
+            PageDto<List<BaseSiteSimpleDto>> pageSiteResult = basicSiteQueryWSManager.querySiteByCondition(convertOutSiteQuery(siteQueryCondition), pageDto);
+            if(pageSiteResult != null && CollectionUtils.isNotEmpty(pageSiteResult.getData())){
+                baseEntity.getData().addAll(pageSiteResult.getData().stream().map(this::convertOwnBasicSite).collect(Collectors.toList()));
+            }
+            // 在查库房数据 todo
+            
+            
+            
+        }catch (Exception e){
+            logger.error("根据条件{}查询站点异常!", JsonHelper.toJSONString(siteQueryCondition), e);
+            baseEntity.toFail("服务异常!");
+            Profiler.functionError(info);
+        }finally {
+            Profiler.registerInfoEnd(info);
+        }
+        return baseEntity;
+    }
+
+    private BaseSite convertOutSiteQuery(SiteQueryCondition siteQueryCondition) {
+        BaseSite siteQuery = new BaseSite();
+        siteQuery.setProvinceAgencyCode(siteQueryCondition.getProvinceAgencyCode());
+        siteQuery.setAreaCode(siteQueryCondition.getAreaCode());
+        siteQuery.setSiteCode(siteQueryCondition.getSiteCode());
+        siteQuery.setSiteName(siteQueryCondition.getSiteName());
+        siteQuery.setSiteNamePym(siteQueryCondition.getSiteNamePym());
+//        siteQuery.setSiteType();
+//        siteQuery.setSubType();
+        if(StringUtils.isNotEmpty(siteQueryCondition.getSearchStr())){
+            if(NumberHelper.isNumber(siteQueryCondition.getSearchStr())){
+                // 数字，则根据站点id查询
+                siteQuery.setSiteCode(Integer.valueOf(siteQueryCondition.getSearchStr()));
+            }else {
+                // 非数字则根据站点名称模糊查询
+                siteQuery.setSiteName(siteQueryCondition.getSearchStr());
+            }
+        }
+        return siteQuery;
+    }
+
+    private BasicSiteVO convertOwnBasicSite(BaseSiteSimpleDto item) {
+        BasicSiteVO basicSiteVO = new BasicSiteVO();
+        basicSiteVO.setProvinceAgencyCode(item.getProvinceAgencyCode());
+        basicSiteVO.setProvinceAgencyName(item.getProvinceAgencyName());
+        basicSiteVO.setAreaCode(item.getAreaCode());
+        basicSiteVO.setProvinceId(item.getProvinceId());
+        basicSiteVO.setProvinceName(item.getProvinceName());
+        basicSiteVO.setCityId(item.getCityId());
+        basicSiteVO.setSiteCode(item.getSiteCode());
+        basicSiteVO.setDmsSiteCode(item.getDmsCode());
+        basicSiteVO.setSiteName(item.getSiteName());
+        basicSiteVO.setSiteType(item.getSiteType());
+        basicSiteVO.setSubType(item.getSubType());
+        return basicSiteVO;
+    }
+
+    private Result<List<BasicSiteVO>> querySiteFromES(SiteQueryCondition siteQueryCondition, Integer limit) {
+        Result<List<BasicSiteVO>> baseEntity = new Result<List<BasicSiteVO>>();
+        CallerInfo info = Profiler.registerInfo("com.jdl.basic.api.service.site.SiteQueryService.querySiteFromES",
                 false, true);
         try {
             // 构建es查询条件
@@ -177,8 +260,8 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
                 .filter(QueryBuilders.termQuery(BasicSiteEsDto.YN, Constants.CONSTANT_NUMBER_ONE));
         // 站点id
-        if(CollectionUtils.isNotEmpty(siteQueryCondition.getSiteCodes())){
-            boolQueryBuilder.filter(QueryBuilders.termsQuery(BasicSiteEsDto.SITE_CODE, siteQueryCondition.getSiteCodes()));
+        if(siteQueryCondition.getSiteCode() != null){
+            boolQueryBuilder.filter(QueryBuilders.termQuery(BasicSiteEsDto.SITE_CODE, siteQueryCondition.getSiteCode()));
         }
         // 站点编码
         if(StringUtils.isNotEmpty(siteQueryCondition.getDmsCode())){
@@ -216,11 +299,11 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         }
         // 省区编码
         if(StringUtils.isNotEmpty(siteQueryCondition.getProvinceAgencyCode())){
-            boolQueryBuilder.filter(QueryBuilders.termsQuery(BasicSiteEsDto.PROVINCE_AGENCY_CODE, siteQueryCondition.getProvinceAgencyCode()));
+            boolQueryBuilder.filter(QueryBuilders.termQuery(BasicSiteEsDto.PROVINCE_AGENCY_CODE, siteQueryCondition.getProvinceAgencyCode()));
         }
         // 枢纽编码
         if(StringUtils.isNotEmpty(siteQueryCondition.getAreaCode())){
-            boolQueryBuilder.filter(QueryBuilders.termsQuery(BasicSiteEsDto.AREA_CODE, siteQueryCondition.getAreaCode()));
+            boolQueryBuilder.filter(QueryBuilders.termQuery(BasicSiteEsDto.AREA_CODE, siteQueryCondition.getAreaCode()));
         }
         // 省id
         if(CollectionUtils.isNotEmpty(siteQueryCondition.getProvinceIds())){

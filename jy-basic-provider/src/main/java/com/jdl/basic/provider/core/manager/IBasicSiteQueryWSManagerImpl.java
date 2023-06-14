@@ -1,19 +1,22 @@
 package com.jdl.basic.provider.core.manager;
 
+import com.jd.ql.basic.domain.BaseSite;
 import com.jd.ql.basic.dto.BaseSiteInfoDto;
+import com.jd.ql.basic.dto.BaseSiteSimpleDto;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jd.ql.basic.dto.PageDto;
 import com.jd.ql.basic.ws.BasicSiteQueryWS;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
+import com.jd.ump.profiler.CallerInfo;
+import com.jd.ump.profiler.proxy.Profiler;
 import com.jdl.basic.common.contants.Constants;
-import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import netscape.javascript.JSObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author liwenji
@@ -53,4 +56,26 @@ public class IBasicSiteQueryWSManagerImpl implements IBasicSiteQueryWSManager {
         }
         return null;
     }
+
+    @Override
+    public PageDto<List<BaseSiteSimpleDto>> querySiteByCondition(BaseSite site, PageDto pageDto) {
+        CallerInfo info = Profiler.registerInfo("com.jdl.basic.provider.core.manager.IBasicSiteQueryWSManager.querySiteByCondition",
+                Constants.UMP_APP_NAME, false, true);
+        try{
+            if(pageDto == null || pageDto.getCurPage() <= Constants.NUMBER_ZERO || pageDto.getPageSize() <= Constants.NUMBER_ZERO){
+                pageDto = new PageDto<>();
+                pageDto.setCurPage(1);
+                pageDto.setPageSize(10);
+            }
+            return basicSiteQueryWS.querySiteByCondition(site, pageDto);
+        }catch (Exception e){
+            log.error("分页查询站点异常!", e);
+            Profiler.functionError(info);
+        }finally {
+            Profiler.registerInfoEnd(info);
+        }
+        return null;
+    }
+
+
 }

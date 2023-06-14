@@ -16,7 +16,7 @@ public class SiteQueryCondition implements Serializable {
     /**
      * 站点编号
      */
-    private List<Integer> siteCodes;
+    private Integer siteCode;
 
     /**
      * 站点名称
@@ -105,12 +105,12 @@ public class SiteQueryCondition implements Serializable {
      */
     private String searchStr;
 
-    public List<Integer> getSiteCodes() {
-        return siteCodes;
+    public Integer getSiteCode() {
+        return siteCode;
     }
 
-    public void setSiteCodes(List<Integer> siteCodes) {
-        this.siteCodes = siteCodes;
+    public void setSiteCode(Integer siteCode) {
+        this.siteCode = siteCode;
     }
 
     public String getSiteName() {
