@@ -1,9 +1,10 @@
 package com.jdl.basic.provider.core.service.work;
 
-import com.jdl.basic.common.utils.PageDto;
-import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.api.domain.work.WorkGridManagerTaskConfig;
 import com.jdl.basic.api.domain.work.WorkGridManagerTaskConfigQuery;
+import com.jdl.basic.api.domain.work.WorkGridManagerTaskConfigVo;
+import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
 
 /**
  * 作业区巡检任务配置表--Service接口
@@ -19,13 +20,13 @@ public interface WorkGridManagerTaskConfigService {
 	 * @param insertData
 	 * @return
 	 */
-	Result<Boolean> insert(WorkGridManagerTaskConfig insertData);
+	Result<Boolean> insert(WorkGridManagerTaskConfigVo insertData);
 	/**
 	 * 根据id更新数据
 	 * @param updateData
 	 * @return
 	 */
-	Result<Boolean> updateById(WorkGridManagerTaskConfig updateData);
+	Result<Boolean> updateById(WorkGridManagerTaskConfigVo updateData);
 	/**
 	 * 根据id删除数据
 	 * @param deleteData
@@ -37,12 +38,12 @@ public interface WorkGridManagerTaskConfigService {
 	 * @param id
 	 * @return
 	 */
-	Result<WorkGridManagerTaskConfig> queryById(Long id);
+	Result<WorkGridManagerTaskConfigVo> queryById(Long id);
 	/**
 	 * 按条件分页查询
 	 * @param query
 	 * @return
 	 */
-	Result<PageDto<WorkGridManagerTaskConfig>> queryPageList(WorkGridManagerTaskConfigQuery query);
+	Result<PageDto<WorkGridManagerTaskConfigVo>> queryPageList(WorkGridManagerTaskConfigQuery query);
 
 }

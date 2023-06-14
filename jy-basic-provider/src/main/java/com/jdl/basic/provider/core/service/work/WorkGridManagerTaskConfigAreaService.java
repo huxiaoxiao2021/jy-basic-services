@@ -2,6 +2,9 @@ package com.jdl.basic.provider.core.service.work;
 
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
+
+import java.util.List;
+
 import com.jdl.basic.api.domain.work.WorkGridManagerTaskConfigArea;
 import com.jdl.basic.api.domain.work.WorkGridManagerTaskConfigAreaQuery;
 
@@ -21,6 +24,12 @@ public interface WorkGridManagerTaskConfigAreaService {
 	 */
 	Result<Boolean> insert(WorkGridManagerTaskConfigArea insertData);
 	/**
+	 * 批量添加
+	 * @param configAreaList
+	 * @return
+	 */
+	int batchInsert(List<WorkGridManagerTaskConfigArea> configAreaList);	
+	/**
 	 * 根据id更新数据
 	 * @param updateData
 	 * @return
@@ -33,6 +42,12 @@ public interface WorkGridManagerTaskConfigAreaService {
 	 */
 	Result<Boolean> deleteById(WorkGridManagerTaskConfigArea deleteData);
 	/**
+	 * 根据taskConfigCode删除数据
+	 * @param deleteData
+	 * @return
+	 */
+	int deleteByTaskConfigCode(WorkGridManagerTaskConfigArea deleteData);
+	/**
 	 * 根据id查询
 	 * @param id
 	 * @return
@@ -44,5 +59,10 @@ public interface WorkGridManagerTaskConfigAreaService {
 	 * @return
 	 */
 	Result<PageDto<WorkGridManagerTaskConfigArea>> queryPageList(WorkGridManagerTaskConfigAreaQuery query);
-
+	/**
+	 * 查询配置对应的areaCode列表
+	 * @param taskConfigCode
+	 * @return
+	 */
+	List<String> queryAreaCodeListByTaskConfigCode(String taskConfigCode);
 }

@@ -202,5 +202,12 @@ public class WorkAreaServiceImpl implements WorkAreaService {
 			return null;
 		}
 	}
+	@Override
+	public List<WorkArea> queryListByAreaCodeList(List<String> areaCodeList) {
+		if(CollectionUtils.isEmpty(areaCodeList)) {
+			return new ArrayList<>();
+		}
+		return workAreaDao.queryByAreaCodeList(areaCodeList);
+	}
 
 }

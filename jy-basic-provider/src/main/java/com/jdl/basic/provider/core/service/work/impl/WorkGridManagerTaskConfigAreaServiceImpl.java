@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 
 import com.jdl.basic.common.utils.Result;
@@ -43,6 +44,13 @@ public class WorkGridManagerTaskConfigAreaServiceImpl implements WorkGridManager
 		result.setData(workGridManagerTaskConfigAreaDao.insert(insertData) == 1);
 		return result;
 	 }
+	@Override
+	public int batchInsert(List<WorkGridManagerTaskConfigArea> configAreaList) {
+		if(CollectionUtils.isNotEmpty(configAreaList)) {
+			return workGridManagerTaskConfigAreaDao.batchInsert(configAreaList);
+		}
+		return 0;
+	}	
 	/**
 	 * 根据id更新数据
 	 * @param updateData
@@ -63,6 +71,10 @@ public class WorkGridManagerTaskConfigAreaServiceImpl implements WorkGridManager
 		result.setData(workGridManagerTaskConfigAreaDao.deleteById(deleteData) == 1);
 		return result;
 	 }
+	@Override
+	public int deleteByTaskConfigCode(WorkGridManagerTaskConfigArea deleteData) {
+		return workGridManagerTaskConfigAreaDao.deleteByTaskConfigCode(deleteData);
+	}	
 	/**
 	 * 根据id查询
 	 * @param id
@@ -127,5 +139,8 @@ public class WorkGridManagerTaskConfigAreaServiceImpl implements WorkGridManager
 		//特殊字段设置
 		return data;
 	 }
-
+	@Override
+	public List<String> queryAreaCodeListByTaskConfigCode(String taskConfigCode) {
+		return workGridManagerTaskConfigAreaDao.queryAreaCodeListByTaskConfigCode(taskConfigCode);
+	}
 }

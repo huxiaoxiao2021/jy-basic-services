@@ -24,7 +24,7 @@ import com.jdl.basic.api.domain.work.WorkGridManagerTaskConfigAreaQuery;
  * 作业区巡检任务配置-作业区表--Service测试用例
  * 
  * @author wuyoude
- * @date 2023年06月08日 10:54:02
+ * @date 2023年06月13日 15:17:42
  *
  */
 @RunWith(SpringRunner.class)

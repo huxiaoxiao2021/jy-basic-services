@@ -10,7 +10,7 @@ import com.jdl.basic.api.domain.BasePagerCondition;
  * 作业区巡检任务配置表-查询条件实体类
  * 
  * @author wuyoude
- * @date 2023年06月08日 10:54:02
+ * @date 2023年06月13日 15:20:53
  *
  */
 @Setter
@@ -65,17 +65,17 @@ public class WorkGridManagerTaskConfigQuery extends BasePagerCondition implement
 	private Integer frequencyMinute;
 
 	/**
-	 * 执行周期 1-一天内完成 2-一周内完成
+	 * 完成期限 1-一天内完成 2-一周内完成
 	 */
 	private Integer finishType;
 
 	/**
-	 * 每次检查网格数量，1-100
+	 * 每次推送网格数量，1-100
 	 */
 	private Integer perGridNum;
 
 	/**
-	 * 网格轮训规则 1-随机推送 
+	 * 推送规则 1-随机推送 
 	 */
 	private Integer gridTurnType;
 

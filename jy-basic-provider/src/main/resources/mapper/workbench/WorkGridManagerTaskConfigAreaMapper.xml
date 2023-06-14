@@ -99,7 +99,20 @@
 			</trim>
 			)
 	</insert>
-
+	<insert id="batchInsert" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+	    insert into work_grid_manager_task_config_area
+	       (task_config_code,area_code,create_user,create_user_name,create_time)
+	    values
+	    <foreach collection="list" item="item" index="index" separator=",">
+	      <trim prefix=" (" suffix=")" suffixOverrides=",">
+	        #{item.taskConfigCode},
+	        #{item.areaCode},
+	        #{item.createUser},
+	        #{item.createUserName},
+	        #{item.createTime},
+	      </trim>
+	    </foreach>
+	 </insert>
 	<update id="updateById" parameterType="com.jdl.basic.api.domain.work.WorkGridManagerTaskConfigArea">
 		update work_grid_manager_task_config_area
 			<set>
@@ -147,9 +160,20 @@
 				update_time = #{updateTime,jdbcType=TIMESTAMP},
 			</if>
 			   yn = 0
-		where id = #{id,jdbcType=BIGINT}
+		where yn = 1 and id = #{id,jdbcType=BIGINT}
 	</update>
-
+    <update id="deleteByTaskConfigCode" parameterType="com.jdl.basic.api.domain.work.WorkGridManagerTaskConfigArea">
+        update work_grid_manager_task_config_area
+            set 
+            <if test="updateUser != null" >
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+               yn = 0
+        where yn =1 and task_config_code = #{taskConfigCode,jdbcType=VARCHAR}
+    </update>
 	<select id="queryById" parameterType="java.lang.Long" resultMap="WorkGridManagerTaskConfigArea">
 		select
 			<include refid="Base_Column_List"/>
@@ -180,4 +204,13 @@
 			yn = 1 
 		</where>
 	</sql>
+    <select id="queryAreaCodeListByTaskConfigCode" resultType="java.lang.String">
+        select
+            area_code
+        from
+            work_grid_manager_task_config_area t
+        where yn = 1 
+          and task_config_code = #{taskConfigCode,jdbcType=VARCHAR}
+        limit 200
+    </select>	
 </mapper>

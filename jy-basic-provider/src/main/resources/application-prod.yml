@@ -49,6 +49,7 @@ mq:
     #叉车完成
     fork-lift-topic: ky_fork_lift_complete
     collectBoxFlowNotice: collect_box_flow_notice
+    workGridManagerTaskConfigMq: workGridManagerTaskConfigMq
 
   consumer:
     topic:

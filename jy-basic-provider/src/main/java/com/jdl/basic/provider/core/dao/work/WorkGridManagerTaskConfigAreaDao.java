@@ -20,6 +20,12 @@ public interface WorkGridManagerTaskConfigAreaDao {
 	 */
 	int insert(WorkGridManagerTaskConfigArea insertData);
 	/**
+	 * 批量插入
+	 * @param configAreaList
+	 * @return
+	 */
+	int batchInsert(List<WorkGridManagerTaskConfigArea> configAreaList);
+	/**
 	 * 根据id更新数据
 	 * @param updateData
 	 * @return
@@ -31,6 +37,12 @@ public interface WorkGridManagerTaskConfigAreaDao {
 	 * @return
 	 */
 	int deleteById(WorkGridManagerTaskConfigArea deleteData);
+	/**
+	 * 删除配置下所有配置
+	 * @param deleteData
+	 * @return
+	 */
+	int deleteByTaskConfigCode(WorkGridManagerTaskConfigArea deleteData);	
 	/**
 	 * 根据id查询
 	 * @param id
@@ -49,5 +61,11 @@ public interface WorkGridManagerTaskConfigAreaDao {
 	 * @return
 	 */
 	long queryCount(WorkGridManagerTaskConfigAreaQuery query);
+	/**
+	 * 查询配置的列表
+	 * @param taskConfigCode
+	 * @return
+	 */
+	List<String> queryAreaCodeListByTaskConfigCode(String taskConfigCode);
 
 }

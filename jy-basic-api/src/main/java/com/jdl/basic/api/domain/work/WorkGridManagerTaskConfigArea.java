@@ -9,7 +9,7 @@ import java.io.Serializable;
  * 作业区巡检任务配置-作业区表-实体类
  * 
  * @author wuyoude
- * @date 2023年06月08日 10:54:02
+ * @date 2023年06月13日 15:17:42
  *
  */
 @Setter
