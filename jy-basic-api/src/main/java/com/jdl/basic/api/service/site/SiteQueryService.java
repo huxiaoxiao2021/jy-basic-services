@@ -13,21 +13,21 @@ public interface SiteQueryService {
 
     /**
      * 查询所有省区
-     * 
+     *
      * @return
      */
     Result<List<ProvinceAgencyVO>> queryAllProvinceAgencyInfo();
 
     /**
-     * 查询所有枢纽
-     * 
+     * 查询省区下所有枢纽
+     *
      * @return
      */
-    Result<List<AreaVO>> queryAllAreaInfo();
+    Result<List<AreaVO>> queryAllAreaInfo(String provinceAgencyCode);
 
     /**
      * 根据省区编码查询省区信息
-     * 
+     *
      * @return
      */
     Result<ProvinceAgencyVO> queryProvinceAgencyInfoByCode(String provinceAgencyCode);
@@ -38,7 +38,7 @@ public interface SiteQueryService {
      * @return
      */
     Result<AreaVO> queryAreaVOInfoByCode(String areaCode);
-    
+
     /**
      * 根据条件查询站点
      * @param siteQueryCondition
@@ -55,4 +55,12 @@ public interface SiteQueryService {
      * @time 2022-10-12 14:06:56 周三
      */
     Result<Pager<BasicSiteVO>> querySitePageByConditionFromBasicSite(Pager<SiteQueryCondition> siteQueryPager);
+
+    /**
+     * 根据省区编码查询省区下的分拣中心场地
+     * @param siteQueryPager
+     * @return
+     */
+    Result<Pager<BasicSiteVO>> getFJSiteByProvinceAgencyCode(Pager<SiteQueryCondition> siteQueryPager);
+
 }

@@ -15,6 +15,12 @@ public class DuccPropertyConfiguration {
     /**
      * 场地班次计划省区切换开关
      */
+    @Value("${siteQuery_downgrade_switch:false}")
+    private boolean siteQueryDowngradeSwitch;
+    
+    /**
+     * 场地班次计划省区切换开关
+     */
     @Value("${province_switch_siteWaveSchedule:true}")
     private boolean siteWaveScheduleProvinceSwitch;
 
@@ -39,5 +45,13 @@ public class DuccPropertyConfiguration {
 
     public void setSiteAttendPlanProvinceSwitch(boolean siteAttendPlanProvinceSwitch) {
         this.siteAttendPlanProvinceSwitch = siteAttendPlanProvinceSwitch;
+    }
+
+    public boolean getSiteQueryDowngradeSwitch() {
+        return siteQueryDowngradeSwitch;
+    }
+
+    public void setSiteQueryDowngradeSwitch(boolean siteQueryDowngradeSwitch) {
+        this.siteQueryDowngradeSwitch = siteQueryDowngradeSwitch;
     }
 }
