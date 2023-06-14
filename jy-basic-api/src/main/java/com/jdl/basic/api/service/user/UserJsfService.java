@@ -5,13 +5,12 @@ import com.jdl.basic.api.domain.user.JyUser;
 import com.jdl.basic.api.domain.user.JyUserBatchRequest;
 import com.jdl.basic.api.domain.user.JyUserQueryCondition;
 
-import java.util.Date;
 import java.util.List;
 
 public interface UserJsfService {
     Result<List<JyUser>> searchUserByCondition(JyUserQueryCondition condition);
 
-    Result<List<JyUser>> queryByUserId(JyUserBatchRequest request);
+    Result<List<JyUser>> queryByUserIds(JyUserBatchRequest request);
 
     Result<Integer> queryUndistributedCountBySiteCode(JyUserQueryCondition condition);
 

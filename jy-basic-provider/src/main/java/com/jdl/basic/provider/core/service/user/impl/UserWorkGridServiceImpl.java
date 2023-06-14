@@ -8,10 +8,12 @@ import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.provider.core.dao.user.UserWorkGridDao;
 import com.jdl.basic.provider.core.service.user.UserService;
 import com.jdl.basic.provider.core.service.user.UserWorkGridService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -117,8 +119,8 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
     @Override
     public Result<List<UserWorkGrid>> queryByUserIdsWithCondition(UserWorkGridBatchRequest request) {
         Result<List<UserWorkGrid>> result = Result.success();
-        if (request.getUserWorkGrids() == null) {
-            return result.toFail("用户id不能为空！");
+        if (CollectionUtils.isEmpty(request.getUserWorkGrids())) {
+            return result.setData(new ArrayList<>());
         }
         result.setData(userWorkGridDao.queryByUserIdsWithCondition(request));
         return result;

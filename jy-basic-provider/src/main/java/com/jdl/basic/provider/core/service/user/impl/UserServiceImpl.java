@@ -14,6 +14,7 @@ import com.jdl.basic.rpc.exception.JYBasicRpcException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -57,7 +58,7 @@ public class UserServiceImpl implements UserService {
   public Result<List<JyUser>> queryByUserIds(JyUserBatchRequest request) {
     Result<List<JyUser>> result = Result.success();
     if (request.getUsers() == null) {
-      return result.toFail("用户不能为空！");
+      return result.setData(new ArrayList<>());
     }
     result.setData(jyUserDao.queryByUserIds(request));
     return result;

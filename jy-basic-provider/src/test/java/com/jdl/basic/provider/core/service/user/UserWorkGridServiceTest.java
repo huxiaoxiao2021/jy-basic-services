@@ -110,10 +110,12 @@ public class UserWorkGridServiceTest {
         List<UserWorkGrid> userWorkGrids = new ArrayList<>();
         UserWorkGrid userWorkGrid = new UserWorkGrid();
         userWorkGrid.setUserId(2L);
-        userWorkGrids.add(userWorkGrid);
+//        userWorkGrids.add(userWorkGrid);
         UserWorkGridBatchRequest request = new UserWorkGridBatchRequest();
         request.setUserWorkGrids(userWorkGrids);
-        userWorkGridService.queryByUserIdsWithCondition(request);
+        Result result = userWorkGridService.queryByUserIdsWithCondition(request);
+        log.info("getWorkGridDistributedStaff response {}", JsonHelper.toJSONString(result));
+
     }
 
     @Test

@@ -24,7 +24,7 @@ public class UserJsfServiceImpl implements UserJsfService {
     }
 
     @Override
-    public Result<List<JyUser>> queryByUserId(JyUserBatchRequest request) {
+    public Result<List<JyUser>> queryByUserIds(JyUserBatchRequest request) {
         return userService.queryByUserIds(request);
     }
 
