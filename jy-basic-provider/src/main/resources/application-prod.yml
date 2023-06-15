@@ -141,7 +141,7 @@ laf:
       application: jy-basic-services
       resources[0]:
         name: ducc
-        uri: ucc://jy-basic-services:f1fc8b8197ea487d966c1da35b3835ad@ducc.jd.local/v1/namespace/jy_basic_services/config/default/profiles/prod?longPolling=60000&necessary=true
+        uri: ucc://jdos_jy-basic-services:f1fc8b8197ea487d966c1da35b3835ad@ducc.jd.local/v1/namespace/jy_basic_services/config/default/profiles/prod?longPolling=60000&necessary=true
       parameters[0]:
         name: autoListener
         value: true

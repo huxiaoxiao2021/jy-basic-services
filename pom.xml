@@ -36,6 +36,7 @@
         <jd.lsb.task.api>0.0.6-SNAPSHOT</jd.lsb.task.api>
         <elasticsearch.transport.version>6.3.2</elasticsearch.transport.version>
         <ql.basic.version>2.0.15-online-SNAPSHOT</ql.basic.version>
+        <laf.config.version>1.1.0</laf.config.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -275,6 +276,14 @@
                 <groupId>com.jd.ql.basic</groupId>
                 <artifactId>ql-basic-facade</artifactId>
                 <version>${ql.basic.version}</version>
+            </dependency>
+
+            <!-- ducc config -->
+            <dependency>
+                <groupId>com.jd.laf.config</groupId>
+                <artifactId>laf-config-client-jd-springboot-starter</artifactId>
+                <version>${laf.config.version}</version>
+                <type>pom</type>
             </dependency>
         </dependencies>
     </dependencyManagement>
