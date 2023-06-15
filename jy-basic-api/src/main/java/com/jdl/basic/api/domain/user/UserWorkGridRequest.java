@@ -7,9 +7,10 @@ import java.util.Date;
 
 @Data
 public class UserWorkGridRequest extends BasePagerCondition {
-    private Long userId;
 
-    private String userErp;
+    private static final long serialVersionUID = 1124727379456561276L;
+
+    private Long userId;
 
     private String workGridKey;
     

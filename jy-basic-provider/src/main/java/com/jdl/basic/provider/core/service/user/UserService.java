@@ -2,6 +2,8 @@ package com.jdl.basic.provider.core.service.user;
 
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.JyUser;
+import com.jdl.basic.api.domain.user.JyUserBatchRequest;
+import com.jdl.basic.api.domain.user.JyUserQueryCondition;
 
 import java.util.List;
 
@@ -26,9 +28,23 @@ public interface UserService {
    */
   int updateUser(JyUser jyUser);
 
-  Result<List<JyUser>> searchUserBySiteCode(Integer siteCode);
+  /**
+   * 根据条件查询员工
+   * @param condition
+   * @return
+   */
+  Result<List<JyUser>> searchUserByCondition(JyUserQueryCondition condition);
 
-  Result<List<JyUser>> queryByUserIds(List<Long> ids);
+  /**
+   * 根据员工id以及条件批量查询员工
+   * @param request
+   * @return
+   */
+  Result<List<JyUser>> queryByUserIds(JyUserBatchRequest request);
 
-  Result<List<JyUser>> getUnDistributedStaff(Integer siteCode, Integer jobType);
+  Result<Boolean> batchUpdateByUserIds(JyUserBatchRequest request);
+
+  Result<Integer> queryUndistributedCountBySiteCode(JyUserQueryCondition condition);
+
+  Result<List<JyUser>> queryDifference(JyUserQueryCondition condition);
 }

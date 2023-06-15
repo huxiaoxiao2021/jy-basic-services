@@ -2,14 +2,17 @@ package com.jdl.basic.api.service.user;
 
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.JyUser;
+import com.jdl.basic.api.domain.user.JyUserBatchRequest;
+import com.jdl.basic.api.domain.user.JyUserQueryCondition;
 
 import java.util.List;
 
 public interface UserJsfService {
-    Result<List<JyUser>> searchUserBySiteCode(Integer siteCode);
+    Result<List<JyUser>> searchUserByCondition(JyUserQueryCondition condition);
 
-    Result<List<JyUser>> queryByUserId(List<Long> userIds);
+    Result<List<JyUser>> queryByUserIds(JyUserBatchRequest request);
 
-    Result<List<JyUser>> getUnDistributedStaff(Integer siteCode, Integer jobType);
+    Result<Integer> queryUndistributedCountBySiteCode(JyUserQueryCondition condition);
 
+    Result<List<JyUser>> queryDifference(JyUserQueryCondition condition);
 }

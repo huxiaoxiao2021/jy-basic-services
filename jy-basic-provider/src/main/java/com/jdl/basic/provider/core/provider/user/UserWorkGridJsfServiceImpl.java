@@ -5,6 +5,7 @@ import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.user.JyUser;
 import com.jdl.basic.api.domain.user.UserWorkGrid;
+import com.jdl.basic.api.domain.user.UserWorkGridBatchRequest;
 import com.jdl.basic.api.domain.user.UserWorkGridRequest;
 import com.jdl.basic.api.service.user.UserWorkGridJsfService;
 import com.jdl.basic.common.contants.Constants;
@@ -20,15 +21,8 @@ public class UserWorkGridJsfServiceImpl implements UserWorkGridJsfService {
     private UserWorkGridService userWorkGridService;
 
     @Override
-    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridJsfServiceImpl.listWorkGridData", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public Result<List<UserWorkGrid>> queryPageList(UserWorkGridRequest request) {
-        return userWorkGridService.queryPageList(request);
-    }
-
-    @Override
-    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridJsfServiceImpl.queryRecordDetail", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public Result<List<UserWorkGrid>> queryRecordDetail(String workGridKey) {
-        return userWorkGridService.queryRecordDetail(workGridKey);
+    public Result<List<UserWorkGrid>> queryByCondition(UserWorkGridRequest request) {
+        return userWorkGridService.queryByCondition(request);
     }
 
     @Override
@@ -38,27 +32,20 @@ public class UserWorkGridJsfServiceImpl implements UserWorkGridJsfService {
     }
 
     @Override
-    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridJsfServiceImpl.queryTotal", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public Result<Long> queryTotal(UserWorkGridRequest request) {
-        return userWorkGridService.queryTotal(request);
-    }
-
-    @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridJsfServiceImpl.batchInsert", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public Result<Boolean> batchInsert(List<UserWorkGrid> userWorkGrids) {
-        return userWorkGridService.batchInsert(userWorkGrids);
+    public Result<Boolean> batchInsert(UserWorkGridBatchRequest request) {
+        return userWorkGridService.batchInsert(request);
     }
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridJsfServiceImpl.batchDelete", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public Result<Boolean> batchDelete(List<UserWorkGrid> userWorkGrids) {
-        return userWorkGridService.batchDelete(userWorkGrids);
+    public Result<Boolean> batchDelete(UserWorkGridBatchRequest request) {
+        return userWorkGridService.batchDelete(request);
     }
 
-    @Override
-    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridJsfServiceImpl.queryByUserId", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public Result<List<UserWorkGrid>> queryByUserIds(List<Long> userIds) {
-        return userWorkGridService.queryByUserIds(userIds);
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridJsfServiceImpl.queryByUserIdsWithCondition", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<List<UserWorkGrid>> queryByUserIdsWithCondition(UserWorkGridBatchRequest request) {
+        return userWorkGridService.queryByUserIdsWithCondition(request);
     }
 
     @Override
