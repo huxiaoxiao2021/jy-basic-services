@@ -32,6 +32,12 @@ public interface WorkGridManagerTaskConfigDao {
 	 */
 	int deleteById(WorkGridManagerTaskConfig deleteData);
 	/**
+	 * 根据taskConfigCode查询
+	 * @param taskConfigCode
+	 * @return
+	 */
+	WorkGridManagerTaskConfig queryByTaskConfigCode(String taskConfigCode);	
+	/**
 	 * 根据id查询
 	 * @param id
 	 * @return

@@ -165,6 +165,12 @@ public class WorkGridManagerTaskConfigServiceImpl implements WorkGridManagerTask
 		result.setData(workGridManagerTaskConfigDao.deleteById(deleteData) == 1);
 		return result;
 	 }
+	@Override
+	public Result<WorkGridManagerTaskConfigVo> queryByTaskConfigCode(String taskConfigCode) {
+		Result<WorkGridManagerTaskConfigVo> result = Result.success();
+		result.setData(fillWorkGridManagerTaskConfig(workGridManagerTaskConfigDao.queryByTaskConfigCode(taskConfigCode)));
+		return result;
+	}	
 	/**
 	 * 根据id查询
 	 * @param id

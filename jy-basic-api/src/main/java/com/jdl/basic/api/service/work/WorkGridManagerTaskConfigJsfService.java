@@ -34,6 +34,12 @@ public interface WorkGridManagerTaskConfigJsfService {
 	 */
 	Result<Boolean> deleteById(WorkGridManagerTaskConfig deleteData);
 	/**
+	 * 根据taskConfigCode查询
+	 * @param taskConfigCode
+	 * @return
+	 */
+	Result<WorkGridManagerTaskConfigVo> queryByTaskConfigCode(String taskConfigCode);	
+	/**
 	 * 根据id查询
 	 * @param id
 	 * @return

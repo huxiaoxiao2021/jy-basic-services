@@ -251,7 +251,14 @@
 			   yn = 0
 		where id = #{id,jdbcType=BIGINT}
 	</update>
-
+    <select id="queryByTaskConfigCode" parameterType="java.lang.String" resultMap="WorkGridManagerTaskConfig">
+        select
+            <include refid="Base_Column_List"/>
+        from
+            work_grid_manager_task_config t
+        where yn = 1 and task_config_code = #{taskConfigCode,jdbcType=VARCHAR}
+            limit 1
+    </select>
 	<select id="queryById" parameterType="java.lang.Long" resultMap="WorkGridManagerTaskConfig">
 		select
 			<include refid="Base_Column_List"/>

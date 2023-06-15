@@ -54,6 +54,10 @@ public class WorkGridManagerTaskConfigJsfServiceImpl implements WorkGridManagerT
 	public Result<Boolean> deleteById(WorkGridManagerTaskConfig deleteData){
 		return workGridManagerTaskConfigService.deleteById(deleteData);
 	 }
+	@Override
+	public Result<WorkGridManagerTaskConfigVo> queryByTaskConfigCode(String taskConfigCode) {
+		return workGridManagerTaskConfigService.queryByTaskConfigCode(taskConfigCode);
+	}	
 	/**
 	 * 根据id查询
 	 * @param id
@@ -70,5 +74,4 @@ public class WorkGridManagerTaskConfigJsfServiceImpl implements WorkGridManagerT
 	public Result<PageDto<WorkGridManagerTaskConfigVo>> queryPageList(WorkGridManagerTaskConfigQuery query){
 		return workGridManagerTaskConfigService.queryPageList(query);
 	 }
-
 }
