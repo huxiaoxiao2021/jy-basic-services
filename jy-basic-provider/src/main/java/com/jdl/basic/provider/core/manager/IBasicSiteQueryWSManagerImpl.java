@@ -64,7 +64,7 @@ public class IBasicSiteQueryWSManagerImpl implements IBasicSiteQueryWSManager {
         try{
             if(pageDto == null || pageDto.getCurPage() <= Constants.NUMBER_ZERO || pageDto.getPageSize() <= Constants.NUMBER_ZERO){
                 pageDto = new PageDto<>();
-                pageDto.setCurPage(1);
+                pageDto.setCurPage(Constants.CONSTANT_NUMBER_ONE);
                 pageDto.setPageSize(10);
             }
             return basicSiteQueryWS.querySiteByCondition(site, pageDto);

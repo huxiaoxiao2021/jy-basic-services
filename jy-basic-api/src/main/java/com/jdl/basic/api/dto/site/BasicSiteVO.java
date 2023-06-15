@@ -130,7 +130,7 @@ public class BasicSiteVO implements Serializable {
     private String provinceCompanyCode;
     private String provinceCompanyName;
     /**
-     * 片区
+     * 片区|枢纽
      */
     private String areaCode;
     private String areaName;

@@ -71,5 +71,16 @@ public class OrgSwitchProvinceBrushJsfServiceImplTest {
         orgSwitchProvinceBrushJsfService.collectBoxFlowDirectionConfBrush(0, 1000);
     }
     
+    @Test
+    public void easyFreezeSiteConfBrush() {
+
+        orgSwitchProvinceBrushJsfService.easyFreezeSiteConfBrush(0, 1000);
+    }
+
+    @Test
+    public void configTransferDpSiteBrush() {
+
+        orgSwitchProvinceBrushJsfService.configTransferDpSiteBrush(0, 1000);
+    }
     
 }

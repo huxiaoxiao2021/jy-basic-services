@@ -56,7 +56,8 @@ public class SiteServiceImplTest {
     public void querySiteByConditionFromBasicSite() {
         try {
             SiteQueryCondition siteQueryCondition = new SiteQueryCondition();
-            siteQueryCondition.setSiteNamePym("xzz");
+//            siteQueryCondition.setSiteNamePym("xzz");
+            siteQueryCondition.setSiteName("石景山");
             Result<List<BasicSiteVO>> result = siteQueryService.querySiteByConditionFromBasicSite(siteQueryCondition, 10);
             
             Assert.assertTrue(true);

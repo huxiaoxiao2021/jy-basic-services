@@ -9,8 +9,10 @@
         <result column="city_name" jdbcType="VARCHAR" property="cityName"/>
         <result column="org_code" jdbcType="INTEGER" property="orgCode"/>
         <result column="org_name" jdbcType="VARCHAR" property="orgName"/>
-        
-        
+        <result column="province_agency_code" property="provinceAgencyCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="province_agency_name" property="provinceAgencyName" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="area_hub_code" property="areaHubCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="area_hub_name" property="areaHubName" javaType="java.lang.String" jdbcType="VARCHAR" />
         <result column="remind_start_time" jdbcType="TIMESTAMP" property="remindStartTime"/>
         <result column="remind_end_time" jdbcType="TIMESTAMP" property="remindEndTime"/>
         <result column="use_state" jdbcType="TINYINT" property="useState"/>
@@ -29,6 +31,7 @@
         city_name,
         org_code,
         org_name,
+        province_agency_code,province_agency_name,area_hub_code,area_hub_name,
         remind_start_time,
         remind_end_time,
         use_state,
@@ -57,6 +60,7 @@
         city_name,
         org_code,
         org_name,
+        province_agency_code,province_agency_name,area_hub_code,area_hub_name,
         remind_start_time,
         remind_end_time,
         use_state,
@@ -72,6 +76,7 @@
         #{cityName,jdbcType=VARCHAR},
         #{orgCode,jdbcType=INTEGER},
         #{orgName,jdbcType=VARCHAR},
+        #{provinceAgencyCode,jdbcType=VARCHAR},#{provinceAgencyName,jdbcType=VARCHAR},#{areaHubCode,jdbcType=VARCHAR},#{areaHubName,jdbcType=VARCHAR},
         #{remindStartTime,jdbcType=TIMESTAMP},
         #{remindEndTime,jdbcType=TIMESTAMP},
         #{useState,jdbcType=TINYINT},
@@ -90,6 +95,7 @@
         city_name,
         org_code,
         org_name,
+        province_agency_code,province_agency_name,area_hub_code,area_hub_name,
         remind_start_time,
         remind_end_time,
         use_state,
@@ -107,6 +113,7 @@
             #{item.cityName,jdbcType=VARCHAR},
             #{item.orgCode,jdbcType=INTEGER},
             #{item.orgName,jdbcType=VARCHAR},
+            #{provinceAgencyCode,jdbcType=VARCHAR},#{provinceAgencyName,jdbcType=VARCHAR},#{areaHubCode,jdbcType=VARCHAR},#{areaHubName,jdbcType=VARCHAR},
             #{item.remindStartTime,jdbcType=TIMESTAMP},
             #{item.remindEndTime,jdbcType=TIMESTAMP},
             #{item.useState,jdbcType=TINYINT},
@@ -141,6 +148,18 @@
             </if>
             <if test="orgName != null">
                 org_name = #{orgName,jdbcType=VARCHAR},
+            </if>
+            <if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
+                province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="provinceAgencyName != null and provinceAgencyName != ''" >
+                province_agency_name = #{provinceAgencyName,jdbcType=VARCHAR},
+            </if>
+            <if test="areaHubCode != null and areaHubCode != ''" >
+                area_hub_code = #{areaHubCode,jdbcType=VARCHAR},
+            </if>
+            <if test="areaHubName != null and areaHubName != ''" >
+                area_hub_name = #{areaHubName,jdbcType=VARCHAR},
             </if>
             <if test="remindStartTime != null">
                 remind_start_time = #{remindStartTime,jdbcType=TIMESTAMP},
@@ -193,6 +212,18 @@
                 </if>
                 <if test="item.orgName != null">
                     org_name = #{item.orgName,jdbcType=VARCHAR},
+                </if>
+                <if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
+                    province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR},
+                </if>
+                <if test="provinceAgencyName != null and provinceAgencyName != ''" >
+                    province_agency_name = #{provinceAgencyName,jdbcType=VARCHAR},
+                </if>
+                <if test="areaHubCode != null and areaHubCode != ''" >
+                    area_hub_code = #{areaHubCode,jdbcType=VARCHAR},
+                </if>
+                <if test="areaHubName != null and areaHubName != ''" >
+                    area_hub_name = #{areaHubName,jdbcType=VARCHAR},
                 </if>
                 <if test="item.remindStartTime != null">
                     remind_start_time = #{item.remindStartTime,jdbcType=TIMESTAMP},
@@ -309,5 +340,39 @@
         limit 1
     </select>
 
+    <!-- 刷数sql start -->
+    <select id="brushQueryAllByPage" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+            id,site_code
+        from
+            jy_easy_freeze_site_conf
+        where yn = 1
+          and id > #{id,jdbcType=BIGINT}
+        order by id
+            limit 100
+    </select>
+    <update id="brushUpdateById" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index"  separator=";">
+            UPDATE jy_easy_freeze_site_conf
+            <set>
+                <if test="item.provinceAgencyCode != null and item.provinceAgencyCode != ''" >
+                    province_agency_code = #{item.provinceAgencyCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.provinceAgencyName != null and item.provinceAgencyName != ''" >
+                    province_agency_name = #{item.provinceAgencyName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.areaHubCode != null and item.areaHubCode != ''" >
+                    area_hub_code = #{item.areaHubCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.areaHubName != null and item.areaHubName != ''" >
+                    area_hub_name = #{item.areaHubName,jdbcType=VARCHAR},
+                </if>
+                update_time = now()
+            </set>
+            WHERE yn = 1
+            AND id = #{item.id}
+        </foreach>
+    </update>
+    <!-- 刷数sql end -->
 
 </mapper>

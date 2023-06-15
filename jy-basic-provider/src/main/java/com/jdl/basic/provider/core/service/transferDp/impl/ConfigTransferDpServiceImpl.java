@@ -152,6 +152,10 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
             configTransferDpSite.setHandoverSiteName(handoverSiteInfo.getSiteName());
             configTransferDpSite.setHandoverOrgId(handoverSiteInfo.getOrgId());
             configTransferDpSite.setHandoverOrgName(handoverSiteInfo.getOrgName());
+            configTransferDpSite.setHandoverProvinceAgencyCode(handoverSiteInfo.getProvinceAgencyCode());
+            configTransferDpSite.setHandoverProvinceAgencyName(handoverSiteInfo.getProvinceAgencyName());
+            configTransferDpSite.setHandoverAreaHubCode(handoverSiteInfo.getAreaCode());
+            configTransferDpSite.setHandoverAreaHubName(handoverSiteInfo.getAreaName());
 
 
             final BaseStaffSiteOrgDto preSortSiteInfo = baseMajorManager.getBaseSiteBySiteId(configTransferDpSite.getPreSortSiteCode());
@@ -239,6 +243,10 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
                 configTransferDpSite.setHandoverSiteName(handoverSiteInfo.getSiteName());
                 configTransferDpSite.setHandoverOrgId(handoverSiteInfo.getOrgId());
                 configTransferDpSite.setHandoverOrgName(handoverSiteInfo.getOrgName());
+                configTransferDpSite.setHandoverProvinceAgencyCode(handoverSiteInfo.getProvinceAgencyCode());
+                configTransferDpSite.setHandoverProvinceAgencyName(handoverSiteInfo.getProvinceAgencyName());
+                configTransferDpSite.setHandoverAreaHubCode(handoverSiteInfo.getAreaCode());
+                configTransferDpSite.setHandoverAreaHubName(handoverSiteInfo.getAreaName());
 
 
                 final BaseStaffSiteOrgDto preSortSiteInfo = baseMajorManager.getBaseSiteBySiteId(configTransferDpSite.getPreSortSiteCode());
@@ -303,6 +311,10 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
                 configTransferDpSite.setHandoverSiteName(handoverSiteInfo.getSiteName());
                 configTransferDpSite.setHandoverOrgId(handoverSiteInfo.getOrgId());
                 configTransferDpSite.setHandoverOrgName(handoverSiteInfo.getOrgName());
+                configTransferDpSite.setHandoverProvinceAgencyCode(handoverSiteInfo.getProvinceAgencyCode());
+                configTransferDpSite.setHandoverProvinceAgencyName(handoverSiteInfo.getProvinceAgencyName());
+                configTransferDpSite.setHandoverAreaHubCode(handoverSiteInfo.getAreaCode());
+                configTransferDpSite.setHandoverAreaHubName(handoverSiteInfo.getAreaName());
             }
             if (configTransferDpSite.getPreSortSiteCode() != null) {
                 final BaseStaffSiteOrgDto preSortSiteInfo = baseMajorManager.getBaseSiteBySiteId(configTransferDpSite.getPreSortSiteCode());

@@ -4,14 +4,18 @@ import com.google.common.collect.Lists;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf;
 import com.jdl.basic.api.domain.cross.SortCrossDetail;
+import com.jdl.basic.api.domain.transferDp.ConfigTransferDpSite;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.service.workStation.OrgSwitchProvinceBrushJsfService;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.basic.provider.core.dao.boxFlow.CollectBoxFlowDirectionConfDao;
 import com.jdl.basic.provider.core.dao.cross.SortCrossDetailDao;
+import com.jdl.basic.provider.core.dao.easyFreezeSite.EasyFreezeSiteDao;
+import com.jdl.basic.provider.core.dao.transferDp.ConfigTransferDpSiteDao;
 import com.jdl.basic.provider.core.dao.workStation.*;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
+import com.jdl.basic.provider.core.po.EasyFreezeSitePO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +56,12 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
 
     @Autowired
     private CollectBoxFlowDirectionConfDao collectBoxFlowDirectionConfDao;
+
+    @Autowired
+    private EasyFreezeSiteDao easyFreezeSiteDao;
+
+    @Autowired
+    private ConfigTransferDpSiteDao configTransferDpSiteDao;
 
     @Autowired
     private BaseMajorManager baseMajorManager;
@@ -405,4 +415,87 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
             log.info("collect_box_flow_direction_conf 表省区刷数:{}", updatedCount);
         }
     }
+
+    @Override
+    public void easyFreezeSiteConfBrush(Integer startId, Integer maxLoopCount) {
+        // 起始id
+        int offsetId = startId;
+        int updatedCount = 0; // 更新数量
+        int loopCount = 0; // 循环次数
+        while (loopCount < maxLoopCount) {
+            List<EasyFreezeSitePO> singleList = easyFreezeSiteDao.brushQueryAllByPage(offsetId);
+            if(CollectionUtils.isEmpty(singleList)){
+                break;
+            }
+            List<EasyFreezeSitePO> list = Lists.newArrayList();
+            for (EasyFreezeSitePO item : singleList) {
+                if(item.getSiteCode() == null){
+                    continue;
+                }
+                BaseStaffSiteOrgDto baseSite = baseMajorManager.getBaseSiteBySiteId(item.getSiteCode());
+                if(baseSite == null){
+                    continue;
+                }
+                EasyFreezeSitePO updateItem = new EasyFreezeSitePO();
+                updateItem.setId(item.getId());
+                updateItem.setProvinceAgencyCode(baseSite.getProvinceAgencyCode());
+                updateItem.setProvinceAgencyName(baseSite.getProvinceAgencyName());
+                updateItem.setAreaHubCode(baseSite.getAreaCode());
+                updateItem.setAreaHubName(baseSite.getAreaName());
+                list.add(updateItem);
+            }
+            Integer singleCount = easyFreezeSiteDao.brushUpdateById(list);
+            updatedCount += singleCount;
+
+            EasyFreezeSitePO easyFreezeSitePO = singleList.stream().max((a, b) -> (int) (a.getId() - b.getId())).get();
+            offsetId = easyFreezeSitePO.getId().intValue();
+
+            loopCount ++;
+        }
+        if(log.isInfoEnabled()){
+            log.info("jy_easy_freeze_site_conf 表省区刷数:{}", updatedCount);
+        }
+    }
+
+    @Override
+    public void configTransferDpSiteBrush(Integer startId, Integer maxLoopCount) {
+        // 起始id
+        int offsetId = startId;
+        int updatedCount = 0; // 更新数量
+        int loopCount = 0; // 循环次数
+        while (loopCount < maxLoopCount) {
+            List<ConfigTransferDpSite> singleList = configTransferDpSiteDao.brushQueryAllByPage(offsetId);
+            if(CollectionUtils.isEmpty(singleList)){
+                break;
+            }
+            List<ConfigTransferDpSite> list = Lists.newArrayList();
+            for (ConfigTransferDpSite item : singleList) {
+                if(item.getHandoverSiteCode() == null){
+                    continue;
+                }
+                BaseStaffSiteOrgDto baseSite = baseMajorManager.getBaseSiteBySiteId(item.getHandoverSiteCode());
+                if(baseSite == null){
+                    continue;
+                }
+                ConfigTransferDpSite updateItem = new ConfigTransferDpSite();
+                updateItem.setId(item.getId());
+                updateItem.setHandoverProvinceAgencyCode(baseSite.getProvinceAgencyCode());
+                updateItem.setHandoverProvinceAgencyName(baseSite.getProvinceAgencyName());
+                updateItem.setHandoverAreaHubCode(baseSite.getAreaCode());
+                updateItem.setHandoverAreaHubName(baseSite.getAreaName());
+                list.add(updateItem);
+            }
+            Integer singleCount = configTransferDpSiteDao.brushUpdateById(list);
+            updatedCount += singleCount;
+
+            ConfigTransferDpSite configTransferDpSite = singleList.stream().max((a, b) -> (int) (a.getId() - b.getId())).get();
+            offsetId = configTransferDpSite.getId().intValue();
+
+            loopCount ++;
+        }
+        if(log.isInfoEnabled()){
+            log.info("config_transfer_dp_site 表省区刷数:{}", updatedCount);
+        }
+    }
+
 }

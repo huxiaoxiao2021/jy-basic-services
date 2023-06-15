@@ -13,7 +13,9 @@ import java.util.List;
 public class DuccPropertyConfiguration {
 
     /**
-     * 场地班次计划省区切换开关
+     * 站点查询降级开关
+     *  false：查基础资料
+     *  true：查es
      */
     @Value("${siteQuery_downgrade_switch:false}")
     private boolean siteQueryDowngradeSwitch;

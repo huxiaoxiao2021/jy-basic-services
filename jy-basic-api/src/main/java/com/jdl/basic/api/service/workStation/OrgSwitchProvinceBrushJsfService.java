@@ -47,4 +47,15 @@ public interface OrgSwitchProvinceBrushJsfService {
      * collect_box_flow_direction_conf 表刷数省区字段
      */
     void collectBoxFlowDirectionConfBrush(Integer startId, Integer maxLoopCount);
+
+    /**
+     * jy_easy_freeze_site_conf 表刷数省区字段
+     */
+    void easyFreezeSiteConfBrush(Integer startId, Integer maxLoopCount);
+
+    /**
+     * config_transfer_dp_site 表刷数省区字段
+     */
+    void configTransferDpSiteBrush(Integer startId, Integer maxLoopCount);
+
 }

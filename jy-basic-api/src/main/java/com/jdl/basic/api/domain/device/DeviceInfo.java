@@ -106,6 +106,23 @@ public class DeviceInfo implements Serializable{
      * 数据库时间  db_column: ts
      */
     private Date ts;
+
+    /**
+     * 省区编码
+     */
+    private String provinceAgencyCode;
+    /**
+     * 省区名称
+     */
+    private String provinceAgencyName;
+    /**
+     * 枢纽编码
+     */
+    private String areaHubCode;
+    /**
+     * 枢纽名称
+     */
+    private String areaHubName;
     //columns END
 
     public DeviceInfo(){

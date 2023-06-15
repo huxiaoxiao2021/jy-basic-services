@@ -14,6 +14,10 @@
         <result property="description" column="description"/>
         <result property="orgId" column="org_id"/>
         <result property="orgName" column="org_name"/>
+        <result property="provinceAgencyCode" column="province_agency_code" />
+        <result property="provinceAgencyName" column="province_agency_name" />
+        <result property="areaHubCode" column="area_hub_code" />
+        <result property="areaHubName" column="area_hub_name" />
         <result property="siteCode" column="site_code"/>
         <result property="siteName" column="site_name"/>
         <result property="deviceStatus" column="device_status"/>
@@ -29,7 +33,9 @@
 
     <!-- 用于select查询公用抽取的列 -->
     <sql id="Base_Column_List">
-        `id`, `device_code`, `device_name`, `device_sn`, `device_type_id`, `device_type`, `manufacturer_code`, `manufacturer_name`, `description`, `org_id`, `org_name`, `site_code`, `site_name`, `device_status`, `create_user`, `create_user_name`, `update_user`, `update_user_name`, `create_time`, `update_time`, `yn`, `ts`
+        `id`, `device_code`, `device_name`, `device_sn`, `device_type_id`, `device_type`, `manufacturer_code`, `manufacturer_name`, `description`, `org_id`, `org_name`, 
+        province_agency_code,province_agency_name,area_hub_code,area_hub_name,
+        `site_code`, `site_name`, `device_status`, `create_user`, `create_user_name`, `update_user`, `update_user_name`, `create_time`, `update_time`, `yn`, `ts`
     </sql>
 
     <!-- 插入 -->
@@ -46,6 +52,7 @@
             description,
             org_id,
             org_name,
+            province_agency_code,province_agency_name,area_hub_code,area_hub_name,
             site_code,
             site_name,
             device_status,
@@ -69,6 +76,7 @@
                      #{description},
                      #{orgId},
                      #{orgName},
+                     #{provinceAgencyCode,jdbcType=VARCHAR},#{provinceAgencyName,jdbcType=VARCHAR},#{areaHubCode,jdbcType=VARCHAR},#{areaHubName,jdbcType=VARCHAR},
                      #{siteCode},
                      #{siteName},
                      #{deviceStatus},
@@ -119,6 +127,18 @@
             </if>
             <if test="orgName != null and orgName != ''">
                 org_name,
+            </if>
+            <if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
+                province_agency_code
+            </if>
+            <if test="provinceAgencyName != null and provinceAgencyName != ''" >
+                province_agency_name
+            </if>
+            <if test="areaHubCode != null and areaHubCode != ''" >
+                area_hub_code
+            </if>
+            <if test="areaHubName != null and areaHubName != ''" >
+                area_hub_name
             </if>
             <if test="siteCode != null">
                 site_code,
@@ -188,6 +208,18 @@
             <if test="orgName != null and orgName != ''">
                 #{orgName},
             </if>
+            <if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
+                #{provinceAgencyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="provinceAgencyName != null and provinceAgencyName != ''" >
+                #{provinceAgencyName,jdbcType=VARCHAR},
+            </if>
+            <if test="areaHubCode != null and areaHubCode != ''" >
+                #{areaHubCode,jdbcType=VARCHAR},
+            </if>
+            <if test="areaHubName != null and areaHubName != ''" >
+                #{areaHubName,jdbcType=VARCHAR},
+            </if>
             <if test="siteCode != null">
                 #{siteCode},
             </if>
@@ -238,6 +270,7 @@
             description,
             org_id,
             org_name,
+            province_agency_code,province_agency_name,area_hub_code,area_hub_name,
             site_code,
             site_name,
             device_status,
@@ -264,6 +297,7 @@
                 #{item.description},
                 #{item.orgId},
                 #{item.orgName},
+                #{item.provinceAgencyCode},#{item.provinceAgencyName},#{item.areaHubCode},#{item.areaHubName},
                 #{item.siteCode},
                 #{item.siteName},
                 #{item.deviceStatus},
@@ -311,6 +345,18 @@
             </if>
             <if test="orgName != null and orgName != ''">
                 org_name = #{orgName},
+            </if>
+            <if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
+                province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="provinceAgencyName != null and provinceAgencyName != ''" >
+                province_agency_name = #{provinceAgencyName,jdbcType=VARCHAR},
+            </if>
+            <if test="areaHubCode != null and areaHubCode != ''" >
+                area_hub_code = #{areaHubCode,jdbcType=VARCHAR},
+            </if>
+            <if test="areaHubName != null and areaHubName != ''" >
+                area_hub_name = #{areaHubName,jdbcType=VARCHAR},
             </if>
             <if test="siteCode != null ">
                 site_code = #{siteCode},
@@ -383,6 +429,18 @@
                 </if>
                 <if test="item.orgName != null and item.orgName != ''">
                     org_name = #{item.orgName},
+                </if>
+                <if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
+                    province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR},
+                </if>
+                <if test="provinceAgencyName != null and provinceAgencyName != ''" >
+                    province_agency_name = #{provinceAgencyName,jdbcType=VARCHAR},
+                </if>
+                <if test="areaHubCode != null and areaHubCode != ''" >
+                    area_hub_code = #{areaHubCode,jdbcType=VARCHAR},
+                </if>
+                <if test="areaHubName != null and areaHubName != ''" >
+                    area_hub_name = #{areaHubName,jdbcType=VARCHAR},
                 </if>
                 <if test="item.siteCode != null">
                     site_code = #{item.siteCode},
@@ -480,6 +538,12 @@
         <if test="orgName != null and orgName != ''">
             AND org_name = #{orgName}
         </if>
+        <if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
+            AND province_agency_code = #{provinceAgencyCode},
+        </if>
+        <if test="areaHubCode != null and areaHubCode != ''" >
+            AND area_hub_code = #{areaHubCode},
+        </if>
         <if test="siteCode != null">
             AND site_code = #{siteCode}
         </if>
@@ -540,5 +604,40 @@
             #{item}
         </foreach>
     </update>
+
+    <!-- 刷数sql start -->
+    <select id="brushQueryAllByPage" parameterType="java.lang.Integer" resultMap="RM_DeviceInfo">
+        select
+            id,site_code
+        from
+            device_info
+        where yn = 1
+          and id > #{id,jdbcType=BIGINT}
+        order by id
+            limit 100
+    </select>
+    <update id="brushUpdateById" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index"  separator=";">
+            UPDATE device_info
+            <set>
+                <if test="item.provinceAgencyCode != null and item.provinceAgencyCode != ''" >
+                    province_agency_code = #{item.provinceAgencyCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.provinceAgencyName != null and item.provinceAgencyName != ''" >
+                    province_agency_name = #{item.provinceAgencyName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.areaHubCode != null and item.areaHubCode != ''" >
+                    area_hub_code = #{item.areaHubCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.areaHubName != null and item.areaHubName != ''" >
+                    area_hub_name = #{item.areaHubName,jdbcType=VARCHAR},
+                </if>
+                update_time = now()
+            </set>
+            WHERE yn = 1
+            AND id = #{item.id}
+        </foreach>
+    </update>
+    <!-- 刷数sql end -->
 </mapper>
 

@@ -6,6 +6,10 @@
         <result property="id" column="id"/>
         <result property="handoverOrgId" column="handover_org_id"/>
         <result property="handoverOrgName" column="handover_org_name"/>
+        <result property="handoverProvinceAgencyCode" column="handover_province_agency_code" />
+        <result property="handoverProvinceAgencyName" column="handover_province_agency_name" />
+        <result property="handoverAreaHubCode" column="handover_area_hub_code" />
+        <result property="handoverAreaHubName" column="handover_area_hub_name" />
         <result property="handoverSiteCode" column="handover_site_code"/>
         <result property="handoverSiteName" column="handover_site_name"/>
         <result property="preSortSiteCode" column="pre_sort_site_code"/>
@@ -25,7 +29,9 @@
 
     <!-- 用于select查询公用抽取的列 -->
     <sql id="Base_Column_List">
-        `id`, `handover_org_id`, `handover_org_name`, `handover_site_code`, `handover_site_name`, `pre_sort_site_code`, `pre_sort_site_name`, `config_status`, `effective_start_time`, `effective_stop_time`, `create_user`, `create_user_name`, `update_user`, `update_user_name`, `create_time`, `update_time`, `yn`, `ts`
+        `id`, `handover_org_id`, `handover_org_name`, 
+        handover_province_agency_code,handover_province_agency_name,handover_area_hub_code,handover_area_hub_name,
+        `handover_site_code`, `handover_site_name`, `pre_sort_site_code`, `pre_sort_site_name`, `config_status`, `effective_start_time`, `effective_stop_time`, `create_user`, `create_user_name`, `update_user`, `update_user_name`, `create_time`, `update_time`, `yn`, `ts`
     </sql>
 
     <!-- 插入 -->
@@ -34,6 +40,7 @@
             id,
             handover_org_id,
             handover_org_name,
+            handover_province_agency_code,handover_province_agency_name,handover_area_hub_code,handover_area_hub_name,
             handover_site_code,
             handover_site_name,
             pre_sort_site_code,
@@ -52,6 +59,7 @@
              #{id},
              #{handoverOrgId},
              #{handoverOrgName},
+             #{handoverProvinceAgencyCode},#{handoverProvinceAgencyName},#{handoverAreaHubCode},#{handoverAreaHubName},
              #{handoverSiteCode},
              #{handoverSiteName},
              #{preSortSiteCode},
@@ -81,6 +89,18 @@
             </if>
             <if test="handoverOrgName != null and handoverOrgName != ''">
                 handover_org_name,
+            </if>
+            <if test="handoverProvinceAgencyCode != null and handoverProvinceAgencyCode != ''" >
+                handove_province_agency_code,
+            </if>
+            <if test="handoverProvinceAgencyName != null and handoverProvinceAgencyName != ''" >
+                handove_province_agency_name,
+            </if>
+            <if test="handoverAreaHubCode != null and handoverAreaHubCode != ''" >
+                handove_area_hub_code
+            </if>
+            <if test="handoverAreaHubName != null and handoverAreaHubName != ''" >
+                handove_area_hub_name,
             </if>
             <if test="handoverSiteCode != null">
                 handover_site_code,
@@ -135,6 +155,18 @@
             <if test="handoverOrgName != null and handoverOrgName != ''">
                 #{handoverOrgName},
             </if>
+            <if test="handoverProvinceAgencyCode != null and handoverProvinceAgencyCode != ''" >
+                #{handoverProvinceAgencyCode},
+            </if>
+            <if test="handoverProvinceAgencyName != null and handoverProvinceAgencyName != ''" >
+                #{handoverProvinceAgencyName},
+            </if>
+            <if test="handoverAreaHubCode != null and handoverAreaHubCode != ''" >
+                #{handoverAreaHubCode},
+            </if>
+            <if test="handoverAreaHubName != null and handoverAreaHubName != ''" >
+                #{handoverAreaHubName},
+            </if>
             <if test="handoverSiteCode != null">
                 #{handoverSiteCode},
             </if>
@@ -186,6 +218,7 @@
             id,
             handover_org_id,
             handover_org_name,
+            handover_province_agency_code,handover_province_agency_name,handover_area_hub_code,handover_area_hub_name,
             handover_site_code,
             handover_site_name,
             pre_sort_site_code,
@@ -207,6 +240,7 @@
                 #{item.id},
                 #{item.handoverOrgId},
                 #{item.handoverOrgName},
+                #{item.handoverProvinceAgencyCode},#{item.handoverProvinceAgencyName},#{item.handoverAreaHubCode},#{item.handoverAreaHubName},
                 #{item.handoverSiteCode},
                 #{item.handoverSiteName},
                 #{item.preSortSiteCode},
@@ -233,6 +267,18 @@
             </if>
             <if test="handoverOrgName != null and handoverOrgName != ''">
                 handover_org_name = #{handoverOrgName},
+            </if>
+            <if test="handoverProvinceAgencyCode != null and handoverProvinceAgencyCode != ''" >
+                handover_province_agency_code = #{handoverProvinceAgencyCode},
+            </if>
+            <if test="handoverProvinceAgencyName != null and handoverProvinceAgencyName != ''" >
+                handover_province_agency_name = #{handoverProvinceAgencyName},
+            </if>
+            <if test="handoverAreaHubCode != null and handoverAreaHubCode != ''" >
+                handover_area_hub_code = #{handoverAreaHubCode},
+            </if>
+            <if test="handoverAreaHubName != null and handoverAreaHubName != ''" >
+                handover_area_hub_name = #{handoverAreaHubName},
             </if>
             <if test="handoverSiteCode != null ">
                 handover_site_code = #{handoverSiteCode},
@@ -290,6 +336,18 @@
                 </if>
                 <if test="item.handoverOrgName != null and item.handoverOrgName != ''">
                     handover_org_name = #{item.handoverOrgName},
+                </if>
+                <if test="handoverProvinceAgencyCode != null and handoverProvinceAgencyCode != ''" >
+                    handover_province_agency_code = #{handoverProvinceAgencyCode},
+                </if>
+                <if test="handoverProvinceAgencyName != null and handoverProvinceAgencyName != ''" >
+                    handover_province_agency_name = #{handoverProvinceAgencyName},
+                </if>
+                <if test="handoverAreaHubCode != null and handoverAreaHubCode != ''" >
+                    handover_area_hub_code = #{handoverAreaHubCode},
+                </if>
+                <if test="handoverAreaHubName != null and handoverAreaHubName != ''" >
+                    handover_area_hub_name = #{handoverAreaHubName},
                 </if>
                 <if test="item.handoverSiteCode != null">
                     handover_site_code = #{item.handoverSiteCode},
@@ -372,6 +430,12 @@
         <if test="handoverOrgName != null and handoverOrgName != ''">
             AND handover_org_name = #{handoverOrgName}
         </if>
+        <if test="handoverProvinceAgencyCode != null and handoverProvinceAgencyCode != ''" >
+            AND handover_province_agency_code = #{handoverProvinceAgencyCode},
+        </if>
+        <if test="handoverAreaHubCode != null and handoverAreaHubCode != ''" >
+            AND handover_area_hub_code = #{handoverAreaHubCode},
+        </if>
         <if test="handoverSiteCode != null">
             AND handover_site_code = #{handoverSiteCode}
         </if>
@@ -446,5 +510,40 @@
             #{item}
         </foreach>
     </update>
+
+    <!-- 刷数sql start -->
+    <select id="brushQueryAllByPage" parameterType="java.lang.Integer" resultMap="RM_ConfigTransferDpSite">
+        select
+            id,handover_site_code
+        from
+            config_transfer_dp_site
+        where yn = 1
+          and id > #{id,jdbcType=BIGINT}
+        order by id
+            limit 100
+    </select>
+    <update id="brushUpdateById" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index"  separator=";">
+            UPDATE config_transfer_dp_site
+            <set>
+                <if test="item.handoverProvinceAgencyCode != null and item.handoverProvinceAgencyCode != ''" >
+                    handover_province_agency_code = #{item.handoverProvinceAgencyCode},
+                </if>
+                <if test="item.handoverProvinceAgencyName != null and item.handoverProvinceAgencyName != ''" >
+                    handover_province_agency_name = #{item.handoverProvinceAgencyName},
+                </if>
+                <if test="item.handoverAreaHubCode != null and item.handoverAreaHubCode != ''" >
+                    handover_area_hub_code = #{item.handoverAreaHubCode},
+                </if>
+                <if test="item.handoverAreaHubName != null and item.handoverAreaHubName != ''" >
+                    handover_area_hub_name = #{item.handoverAreaHubName},
+                </if>
+                update_time = now()
+            </set>
+            WHERE yn = 1
+            AND id = #{item.id}
+        </foreach>
+    </update>
+    <!-- 刷数sql end -->
 </mapper>
 

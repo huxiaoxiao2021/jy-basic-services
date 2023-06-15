@@ -30,4 +30,9 @@
                   lazy="${jsf.consumer.lazy}" timeout="${basic.jsf.timeout}" retries="${jsf.retries}">
         <jsf:parameter key="token" value="${basic.jsf.token}" hide="true" />
     </jsf:consumer>
+    
+    <jsf:consumer id="basicOrganStructWS" interface="com.jd.ql.basic.ws.BasicOrganStructWS" alias="${basic.jsf.alias}" protocol="jsf"
+                  lazy="${jsf.consumer.lazy}" timeout="${basic.jsf.timeout}" retries="${jsf.retries}">
+        <jsf:parameter key="token" value="${basic.jsf.token}" hide="true" />
+    </jsf:consumer>
 </beans>

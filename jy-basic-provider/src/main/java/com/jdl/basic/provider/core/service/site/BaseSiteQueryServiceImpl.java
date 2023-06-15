@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.service.site;
 
 import com.google.common.collect.Lists;
 import com.jd.etms.framework.utils.cache.annotation.Cache;
+import com.jd.ql.basic.domain.BaseOrganStruct;
 import com.jd.ql.basic.domain.BaseSite;
 import com.jd.ql.basic.dto.BaseSiteSimpleDto;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
@@ -23,6 +24,7 @@ import com.jdl.basic.provider.core.dao.basic.BasicSiteEsDao;
 import com.jdl.basic.provider.core.enums.BasicAreaEnum;
 import com.jdl.basic.provider.core.enums.BasicProvinceAgencyEnum;
 import com.jdl.basic.provider.core.enums.SiteOperateStateEnum;
+import com.jdl.basic.provider.core.manager.BasicOrganStructWSManager;
 import com.jdl.basic.provider.core.manager.IBasicSiteQueryWSManager;
 import com.jdl.basic.provider.core.po.BasicSiteEsDto;
 import org.apache.commons.collections.CollectionUtils;
@@ -61,6 +63,9 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
     private IBasicSiteQueryWSManager basicSiteQueryWSManager;
 
     @Autowired
+    private BasicOrganStructWSManager basicOrganStructWSManager;
+
+    @Autowired
     private DuccPropertyConfiguration duccPropertyConfiguration;
 
 
@@ -89,16 +94,18 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
     public Result<List<AreaVO>> queryAllAreaInfo(String provinceAgencyCode) {
         Result<List<AreaVO>> result = new Result<>();
         result.toSuccess();
+        result.setData(Lists.newArrayList());
         if(BasicProvinceAgencyEnum.WULIUZONGBU.getCode().equals(provinceAgencyCode)){
             //目前仅支持总部省区下返回枢纽
-            result.setData(Arrays.stream(BasicAreaEnum.values()).map(item -> {
-                AreaVO areaVO = new AreaVO();
-                areaVO.setAreaCode(item.getCode());
-                areaVO.setAreaName(item.getName());
-                return areaVO;
-            }).collect(Collectors.toList()));
-        }else{
-            result.setData(Collections.EMPTY_LIST);
+            List<BaseOrganStruct> list = basicOrganStructWSManager.getBaseOrganStructByParentCode(provinceAgencyCode);
+            if(CollectionUtils.isNotEmpty(list)){
+                result.getData().addAll(list.stream().map(item -> {
+                    AreaVO areaVO = new AreaVO();
+                    areaVO.setAreaCode(item.getOrganCode());
+                    areaVO.setAreaName(item.getOrganName());
+                    return areaVO;
+                }).collect(Collectors.toList()));    
+            }
         }
         return result;
     }
@@ -193,7 +200,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         siteQuery.setSiteName(siteQueryCondition.getSiteName());
         siteQuery.setSiteNamePym(siteQueryCondition.getSiteNamePym());
 //        siteQuery.setSiteType();
-//        siteQuery.setSubType();
+//        siteQuery.setSubType(siteQueryCondition.getSubTypes());
         if(StringUtils.isNotEmpty(siteQueryCondition.getSearchStr())){
             if(NumberHelper.isNumber(siteQueryCondition.getSearchStr())){
                 // 数字，则根据站点id查询
@@ -211,6 +218,16 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         basicSiteVO.setProvinceAgencyCode(item.getProvinceAgencyCode());
         basicSiteVO.setProvinceAgencyName(item.getProvinceAgencyName());
         basicSiteVO.setAreaCode(item.getAreaCode());
+        // 获取枢纽名称
+        Result<List<AreaVO>> areaResult = queryAllAreaInfo(BasicProvinceAgencyEnum.WULIUZONGBU.getCode());
+        if(areaResult != null && CollectionUtils.isNotEmpty(areaResult.getData())){
+            List<String> areaCodeList = areaResult.getData()
+                    .stream()
+                    .map(AreaVO::getAreaCode)
+                    .filter(areaCode -> Objects.equals(item.getAreaCode(), areaCode))
+                    .collect(Collectors.toList());
+            basicSiteVO.setAreaName(CollectionUtils.isNotEmpty(areaCodeList) ? areaCodeList.get(0) : null);
+        }
         basicSiteVO.setProvinceId(item.getProvinceId());
         basicSiteVO.setProvinceName(item.getProvinceName());
         basicSiteVO.setCityId(item.getCityId());

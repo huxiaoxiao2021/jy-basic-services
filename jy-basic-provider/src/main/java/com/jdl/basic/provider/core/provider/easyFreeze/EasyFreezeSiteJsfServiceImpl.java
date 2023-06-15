@@ -112,6 +112,8 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
                 result.toFail("此站点实际所属的大区与实际不一致，请重新选择!");
                 return result;
             }
+            // init basic info
+            fillBasicInfo(dto, basicDto);
             return easyFreezeSiteService.updateByPrimaryKeySelective(dto, loginUser);
         } catch (Exception e) {
             log.error("更新易冻品场地配置异常-{}", e.getMessage(), e);
