@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
+
 /**
  * @ClassName FrequencyTypeEnum
  * @Description 执行周期 D-每天 W-每周 M-每月
@@ -28,22 +30,22 @@ public enum FrequencyTypeEnum {
 	}
 	static {
 		List<FrequencyItem> dList = new ArrayList<>();
-		dList.add(new FrequencyItem(1,"1","当天"));
+		dList.add(new FrequencyItem(1,1,"当天"));
 		itemsListMap.put(DAILY.code, dList);
 		
 		List<FrequencyItem> wList = new ArrayList<>();
-		wList.add(new FrequencyItem(2,"2","周一"));
-		wList.add(new FrequencyItem(3,"3","周二"));
-		wList.add(new FrequencyItem(4,"4","周三"));
-		wList.add(new FrequencyItem(5,"5","周四"));
-		wList.add(new FrequencyItem(6,"6","周五"));
-		wList.add(new FrequencyItem(7,"7","周六"));
-		wList.add(new FrequencyItem(1,"1","周日"));
+		wList.add(new FrequencyItem(2,1,"周一"));
+		wList.add(new FrequencyItem(3,2,"周二"));
+		wList.add(new FrequencyItem(4,3,"周三"));
+		wList.add(new FrequencyItem(5,4,"周四"));
+		wList.add(new FrequencyItem(6,5,"周五"));
+		wList.add(new FrequencyItem(7,6,"周六"));
+		wList.add(new FrequencyItem(1,7,"周日"));
 		itemsListMap.put(WEEKLY.code, wList);
 		
 		List<FrequencyItem> mList = new ArrayList<>();
 		for(int i=1; i<=31; i++) {
-			mList.add(new FrequencyItem(i,i+"",i+"号"));
+			mList.add(new FrequencyItem(i,i,i+"号"));
 		}
 		itemsListMap.put(MONTHLY.code, mList);		
 	}
@@ -84,13 +86,13 @@ public enum FrequencyTypeEnum {
 		}
 		return null;
 	}	
-	public FrequencyItem getFrequencyItem(Integer order) {
-		if(order != null
-				&& order > 0
+	public FrequencyItem getFrequencyItem(Integer itemCode) {
+		if(itemCode != null
+				&& itemCode > 0
 				&& itemsListMap.containsKey(code)) {
 			List<FrequencyItem> list = itemsListMap.get(code);
-			if(list.size() >= order) {
-				return list.get(order - 1);
+			if(list.size() >= itemCode) {
+				return list.get(itemCode - 1);
 			}
 		}
 		return null;
@@ -100,7 +102,20 @@ public enum FrequencyTypeEnum {
 		if(curTime == null) {
 			curTime = new Date();
 		}
-        Collections.sort(dayList);
+		if(CollectionUtils.isEmpty(dayList)) {
+			return null;
+		}
+		List<Integer> orderDayList = new ArrayList<>();
+		for(Integer day : dayList) {
+			FrequencyItem item = getFrequencyItem(day);
+			if(item != null) {
+				orderDayList.add(item.order);
+			}
+		}
+		if(CollectionUtils.isEmpty(orderDayList)) {
+			return null;
+		}
+        Collections.sort(orderDayList);
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(curTime);
         calendar.set(Calendar.HOUR_OF_DAY, frequencyHour);
@@ -124,7 +139,7 @@ public enum FrequencyTypeEnum {
         
         int curDay = calendar.get(field);
         int nextDay = 0;
-        for(int day : dayList) {
+        for(int day : orderDayList) {
         	if(day == curDay) {
         		if(calendar.getTime().after(curTime)) {
         			return calendar.getTime();
@@ -135,7 +150,7 @@ public enum FrequencyTypeEnum {
         	}
         }
         if(nextDay == 0) {
-        	calendar.set(field, dayList.get(0));
+        	calendar.set(field, orderDayList.get(0));
         	if(MONTHLY.code.equals(code)){
         		calendar.add(Calendar.MONTH, 1);
         	}else {
@@ -180,10 +195,10 @@ public enum FrequencyTypeEnum {
 	public static class FrequencyItem{
 		
 		private Integer order;
-		private String code;
+		private Integer code;
 		private String name;
 		
-		public FrequencyItem(Integer order, String code, String name) {
+		public FrequencyItem(Integer order, Integer code, String name) {
 			super();
 			this.order = order;
 			this.code = code;
@@ -192,7 +207,7 @@ public enum FrequencyTypeEnum {
 		public Integer getOrder() {
 			return order;
 		}
-		public String getCode() {
+		public Integer getCode() {
 			return code;
 		}
 		public String getName() {
