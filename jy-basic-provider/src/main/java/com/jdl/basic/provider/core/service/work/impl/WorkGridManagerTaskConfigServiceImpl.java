@@ -277,6 +277,7 @@ public class WorkGridManagerTaskConfigServiceImpl implements WorkGridManagerTask
 		voData.setFrequencyTimeStr(DateHelper.getDateOfHH_mm(calendar.getTime()));
 		List<String> areaCodeList = workGridManagerTaskConfigAreaService.queryAreaCodeListByTaskConfigCode(voData.getTaskConfigCode());
 		voData.setWorkAreaList(workAreaService.queryListByAreaCodeList(areaCodeList));
+		voData.setWorkAreaCodeList(areaCodeList);
 		//特殊字段设置
 		return voData;
 	 }

@@ -1,6 +1,9 @@
 package com.jdl.basic.api.enums;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,13 +32,13 @@ public enum FrequencyTypeEnum {
 		itemsListMap.put(DAILY.code, dList);
 		
 		List<FrequencyItem> wList = new ArrayList<>();
-		wList.add(new FrequencyItem(1,"1","周一"));
-		wList.add(new FrequencyItem(2,"2","周二"));
-		wList.add(new FrequencyItem(3,"3","周三"));
-		wList.add(new FrequencyItem(4,"4","周四"));
-		wList.add(new FrequencyItem(5,"5","周五"));
-		wList.add(new FrequencyItem(6,"6","周六"));
-		wList.add(new FrequencyItem(7,"7","周日"));
+		wList.add(new FrequencyItem(2,"2","周一"));
+		wList.add(new FrequencyItem(3,"3","周二"));
+		wList.add(new FrequencyItem(4,"4","周三"));
+		wList.add(new FrequencyItem(5,"5","周四"));
+		wList.add(new FrequencyItem(6,"6","周五"));
+		wList.add(new FrequencyItem(7,"7","周六"));
+		wList.add(new FrequencyItem(1,"1","周日"));
 		itemsListMap.put(WEEKLY.code, wList);
 		
 		List<FrequencyItem> mList = new ArrayList<>();
@@ -91,7 +94,59 @@ public enum FrequencyTypeEnum {
 			}
 		}
 		return null;
-	}	
+	}
+	public Date getNextTime(Date startTime,int frequencyHour, int frequencyMinute, List<Integer> dayList){
+		Date curTime = startTime;
+		if(curTime == null) {
+			curTime = new Date();
+		}
+        Collections.sort(dayList);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(curTime);
+        calendar.set(Calendar.HOUR_OF_DAY, frequencyHour);
+        calendar.set(Calendar.MINUTE, frequencyMinute);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        
+        if(DAILY.code.equals(code)) {
+    		if(calendar.getTime().after(curTime)) {
+    			return calendar.getTime();
+    		}else {
+            	calendar.add(Calendar.DAY_OF_YEAR, 1);
+            	return calendar.getTime();
+    		}
+        }
+        
+        int field = Calendar.DAY_OF_WEEK;
+        if(MONTHLY.code.equals(code)) {
+        	field = Calendar.DAY_OF_MONTH;
+        }
+        
+        int curDay = calendar.get(field);
+        int nextDay = 0;
+        for(int day : dayList) {
+        	if(day == curDay) {
+        		if(calendar.getTime().after(curTime)) {
+        			return calendar.getTime();
+        		}
+        	}else if(day > curDay) {
+        		nextDay = day;
+        		break;
+        	}
+        }
+        if(nextDay == 0) {
+        	calendar.set(field, dayList.get(0));
+        	if(MONTHLY.code.equals(code)){
+        		calendar.add(Calendar.MONTH, 1);
+        	}else {
+        		calendar.add(Calendar.DATE, 7);
+        	}
+        	return calendar.getTime();
+        }else {
+        	calendar.set(field, nextDay);
+        	return calendar.getTime();
+        }
+	}
 	/**
 	 * 根据code获取enum
 	 * @param code

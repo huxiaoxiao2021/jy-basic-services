@@ -179,4 +179,16 @@ public interface WorkStationGridDao {
 	 * @return
 	 */
 	List<WorkStationGrid> queryListForWorkGridVo(WorkStationGridQuery query);
+	/**
+	 * 查询作业区下站点列表
+	 * @param query
+	 * @return
+	 */
+	List<Integer> querySiteListForManagerScan(WorkStationGridQuery query);
+	/**
+	 * 查询场地、作业区下的网格列表
+	 * @param workStationGridQuery
+	 * @return
+	 */	
+	List<WorkStationGrid> queryListForManagerSiteScan(WorkStationGridQuery query);
 }

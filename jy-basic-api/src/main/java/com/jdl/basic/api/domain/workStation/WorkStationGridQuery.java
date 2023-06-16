@@ -1,7 +1,10 @@
 package com.jdl.basic.api.domain.workStation;
 
 
+import java.util.List;
+
 import com.jdl.basic.api.domain.BasePagerCondition;
+
 import lombok.Data;
 
 /**
@@ -96,4 +99,8 @@ public class WorkStationGridQuery extends BasePagerCondition {
 	 * 关联场地网格key:work_grid
 	 */
 	private String refWorkGridKey;
+	/**
+	 * 作业区列表
+	 */
+	private List<String> areaCodeList;
 }

@@ -146,4 +146,16 @@ public interface WorkStationGridJsfService {
 	 * 初始化-单条数据
 	 */
 	void initWorkGrid(Long id);
+	/**
+	 * 查询作业区下的场地列表
+	 * @param workStationGridQuery
+	 * @return
+	 */
+	List<Integer> querySiteListForManagerScan(WorkStationGridQuery workStationGridQuery);
+	/**
+	 * 查询场地下作业区下的网格列表
+	 * @param workStationGridQuery
+	 * @return
+	 */
+	List<WorkStationGrid> queryListForManagerSiteScan(WorkStationGridQuery workStationGridQuery);
 }

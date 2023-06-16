@@ -652,5 +652,31 @@
         where g.yn = 1 
           and g.ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
         limit 100
-    </select>	
+    </select>
+    <select id="querySiteListForManagerScan" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGridQuery" resultType="java.lang.Integer">
+        select distinct g.site_code
+        from
+            work_station_grid g
+           <include refid="joinSql"/>            
+        where g.yn = 1 
+          and s.area_code in
+        <foreach collection="areaCodeList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=VARCHAR}
+        </foreach> 
+        limit #{offset}, #{limit}
+    </select> 
+    <select id="queryListForManagerSiteScan" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGridQuery" resultMap="WorkStationGrid">
+        select 
+            <include refid="Base_Column_List"/>
+        from
+            work_station_grid g
+           <include refid="joinSql"/>            
+        where g.yn = 1 
+          and g.site_code = #{siteCode,jdbcType=INTEGER}
+          and s.area_code in
+        <foreach collection="areaCodeList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=VARCHAR}
+        </foreach> 
+        limit #{offset}, #{limit}
+    </select>
 </mapper>
