@@ -252,7 +252,7 @@ public class WorkGridManagerTaskConfigServiceImpl implements WorkGridManagerTask
 					if(itemData != null) {
 						daysNum++;
 						frequencyDaysName.append(itemData.getName());
-						frequencyDayList.add(itemData.getOrder());
+						frequencyDayList.add(itemData.getCode());
 						frequencyDaysName.append(StringHelper.DAY_NAME__SPLIT);
 					}
 				}
