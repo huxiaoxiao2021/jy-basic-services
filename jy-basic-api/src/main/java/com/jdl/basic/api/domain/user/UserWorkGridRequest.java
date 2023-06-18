@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class UserWorkGridRequest extends BasePagerCondition {
+public class UserWorkGridRequest  {
 
     private static final long serialVersionUID = 1124727379456561276L;
 
@@ -29,4 +29,12 @@ public class UserWorkGridRequest extends BasePagerCondition {
     private Date updateTime;
     
     private Integer yn;
+
+    public String getWorkGridKey() {
+        return workGridKey;
+    }
+
+    public void setWorkGridKey(String workGridKey) {
+        this.workGridKey = workGridKey;
+    }
 }

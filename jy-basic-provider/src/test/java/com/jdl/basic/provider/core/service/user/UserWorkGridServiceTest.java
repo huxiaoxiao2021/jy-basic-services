@@ -29,21 +29,14 @@ public class UserWorkGridServiceTest {
     private UserWorkGridService userWorkGridService;
 
     @Test
-    public void  queryByCondition() {
-        UserWorkGridRequest request = new UserWorkGridRequest();
-        request.setWorkGridKey("CDWG00000022001");
-        Result<List<UserWorkGrid>> result = userWorkGridService.queryByCondition(request);
-        log.info("queryPageList response {}", JsonHelper.toJSONString(result));
-    }
-
-    @Test
-    public void queryDifference() {
-        UserWorkGridRequest request = new UserWorkGridRequest();
-        Date time = DateUtils.addDays(new Date(), -1);
-        request.setWorkGridKey("CDWG00000019007");
-        request.setCreateTime(time);
-        request.setUpdateTime(time);
-        Result<List<UserWorkGrid>> result = userWorkGridService.queryDifference(request);
+    public void  batchQueryUserWorkGridByGridKey() {
+        UserWorkGridBatchRequest request = new UserWorkGridBatchRequest();
+        List<UserWorkGrid> list = new ArrayList<>();
+        UserWorkGrid userWorkGrid = new UserWorkGrid();
+        userWorkGrid.setWorkGridKey("CDWG00000022001");
+        list.add(userWorkGrid);
+        request.setUserWorkGrids(list);
+        Result<List<UserWorkGrid>> result = userWorkGridService.batchQueryUserWorkGridByGridKey(request);
         log.info("queryPageList response {}", JsonHelper.toJSONString(result));
     }
 
@@ -110,10 +103,10 @@ public class UserWorkGridServiceTest {
         List<UserWorkGrid> userWorkGrids = new ArrayList<>();
         UserWorkGrid userWorkGrid = new UserWorkGrid();
         userWorkGrid.setUserId(2L);
-//        userWorkGrids.add(userWorkGrid);
+        userWorkGrids.add(userWorkGrid);
         UserWorkGridBatchRequest request = new UserWorkGridBatchRequest();
         request.setUserWorkGrids(userWorkGrids);
-        Result result = userWorkGridService.queryByUserIdsWithCondition(request);
+        Result result = userWorkGridService.queryByUserIds(request);
         log.info("getWorkGridDistributedStaff response {}", JsonHelper.toJSONString(result));
 
     }
@@ -123,6 +116,16 @@ public class UserWorkGridServiceTest {
         UserWorkGridRequest request = new UserWorkGridRequest();
         request.setWorkGridKey("CDWG00000022001");
         Result<List<JyUser>> result = userWorkGridService.getWorkGridDistributedStaff(request);
+
+        log.info("getWorkGridDistributedStaff response {}", JsonHelper.toJSONString(result));
+    }
+
+    @Test
+    public void queryDeletedUserWorkGrid() {
+        UserWorkGridRequest request = new UserWorkGridRequest();
+        request.setWorkGridKey("CDWG00000022001");
+        request.setUpdateTime(new Date());
+        Result<List<UserWorkGrid>> result = userWorkGridService.queryDeletedUserWorkGrid(request);
 
         log.info("getWorkGridDistributedStaff response {}", JsonHelper.toJSONString(result));
     }

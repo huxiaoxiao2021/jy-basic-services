@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -19,8 +18,8 @@ public class UserJsfServiceImpl implements UserJsfService {
     @Autowired
     private UserService userService;
     @Override
-    public Result<List<JyUser>> searchUserByCondition(JyUserQueryCondition condition) {
-        return userService.searchUserByCondition(condition);
+    public Result<List<JyUser>> searchUserBySiteCode(JyUserQueryCondition condition) {
+        return userService.searchUserBySiteCode(condition);
     }
 
     @Override
@@ -36,5 +35,10 @@ public class UserJsfServiceImpl implements UserJsfService {
     @Override
     public Result<List<JyUser>> queryDifference(JyUserQueryCondition condition) {
         return userService.queryDifference(condition);
+    }
+
+    @Override
+    public Result<List<JyUser>> batchQueryQuitUserByUserId(JyUserBatchRequest request) {
+        return userService.batchQueryQuitUserByUserId(request);
     }
 }
