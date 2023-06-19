@@ -1,6 +1,9 @@
 package com.jdl.basic.provider.core.dao.schedule;
 
 import com.jdl.basic.api.domain.schedule.WorkGridSchedule;
+import com.jdl.basic.api.domain.schedule.WorkGridScheduleBatchRequest;
+
+import java.util.List;
 
 public interface WorkGridScheduleDao {
     int deleteByPrimaryKey(Long id);
@@ -14,4 +17,6 @@ public interface WorkGridScheduleDao {
     int updateByPrimaryKeySelective(WorkGridSchedule record);
 
     int updateByPrimaryKey(WorkGridSchedule record);
+
+    List<WorkGridSchedule> queryRecordDetail(WorkGridScheduleBatchRequest request);
 }
