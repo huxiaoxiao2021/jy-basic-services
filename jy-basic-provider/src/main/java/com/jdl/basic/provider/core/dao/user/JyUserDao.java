@@ -4,6 +4,7 @@ import com.jdl.basic.api.domain.user.JyUser;
 import com.jdl.basic.api.domain.user.JyUserBatchRequest;
 import com.jdl.basic.api.domain.user.JyUserQueryCondition;
 
+import com.jdl.basic.api.domain.user.UnDistributedUserQueryDto;
 import java.util.List;
 
 public interface JyUserDao {
@@ -30,4 +31,6 @@ public interface JyUserDao {
     Integer queryUndistributedCountBySiteCode(JyUserQueryCondition condition);
 
     List<JyUser> queryDifference(JyUserQueryCondition condition);
+
+    List<JyUser> queryUnDistributedUserList(UnDistributedUserQueryDto dto);
 }
