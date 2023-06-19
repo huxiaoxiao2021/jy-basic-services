@@ -443,6 +443,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
             }
             Pager<BasicSiteVO> basicSitePagerData = new Pager<>(siteQueryPager.getPageNo(), siteQueryPager.getPageSize(), queryPageResult.getLeft());
             basicSitePagerData.setData(basicSiteVOS);
+            result.toSuccess();
             result.setData(basicSitePagerData);
         } catch (Exception e) {
             logger.error("根据条件{}查询站点异常!", JsonHelper.toJSONString(siteQueryPager), e);
