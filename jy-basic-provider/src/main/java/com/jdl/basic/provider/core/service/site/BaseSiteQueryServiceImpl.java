@@ -176,7 +176,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
             pageDto.setPageSize(limit > MAX_LIMIT ? MAX_LIMIT : limit);
             PageDto<List<BaseSiteSimpleDto>> pageSiteResult = basicSiteQueryWSManager.querySiteByCondition(convertOutSiteQuery(siteQueryCondition), pageDto);
             if(pageSiteResult != null && CollectionUtils.isNotEmpty(pageSiteResult.getData())){
-                baseEntity.getData().addAll(pageSiteResult.getData().stream().map(this::convertOwnBasicSite).collect(Collectors.toList()));
+                baseEntity.getData().addAll(convert2OwnBasicSiteList(pageSiteResult.getData()));
             }
             // 在查库房数据 todo
             
@@ -199,8 +199,13 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         siteQuery.setSiteCode(siteQueryCondition.getSiteCode());
         siteQuery.setSiteName(siteQueryCondition.getSiteName());
         siteQuery.setSiteNamePym(siteQueryCondition.getSiteNamePym());
-//        siteQuery.setSiteType();
-//        siteQuery.setSubType(siteQueryCondition.getSubTypes());
+        siteQuery.setDmsCode(siteQueryCondition.getDmsCode());
+        siteQuery.setSiteTypeList(siteQueryCondition.getSiteTypes());
+        siteQuery.setSubTypeStr(CollectionUtils.isEmpty(siteQueryCondition.getSubTypes()) 
+                ? null : siteQueryCondition.getSubTypes()
+                .stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(Constants.SEPARATOR_COMMA)));
         if(StringUtils.isNotEmpty(siteQueryCondition.getSearchStr())){
             if(NumberHelper.isNumber(siteQueryCondition.getSearchStr())){
                 // 数字，则根据站点id查询
@@ -298,10 +303,6 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
                     Constants.CONSTANT_SPECIAL_MARK_ASTERISK + subOverLength(siteQueryCondition.getSiteNamePym()) + Constants.CONSTANT_SPECIAL_MARK_ASTERISK);
             boolQueryBuilder.filter(siteNameWildcardQueryBuilder);
         }
-        // 所属分拣id
-        if(CollectionUtils.isNotEmpty(siteQueryCondition.getDmsIds())){
-            boolQueryBuilder.filter(QueryBuilders.termsQuery(BasicSiteEsDto.DMS_ID, siteQueryCondition.getDmsIds()));
-        }
         // 站点类型
         if(CollectionUtils.isNotEmpty(siteQueryCondition.getSiteTypes())){
             boolQueryBuilder.filter(QueryBuilders.termsQuery(BasicSiteEsDto.SITE_TYPE, siteQueryCondition.getSiteTypes()));
@@ -310,10 +311,6 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         if(CollectionUtils.isNotEmpty(siteQueryCondition.getSubTypes())){
             boolQueryBuilder.filter(QueryBuilders.termsQuery(BasicSiteEsDto.SUB_TYPE, siteQueryCondition.getSubTypes()));
         }
-        // 区域id
-        if(CollectionUtils.isNotEmpty(siteQueryCondition.getOrgIds())){
-            boolQueryBuilder.filter(QueryBuilders.termsQuery(BasicSiteEsDto.ORG_ID, siteQueryCondition.getOrgIds()));
-        }
         // 省区编码
         if(StringUtils.isNotEmpty(siteQueryCondition.getProvinceAgencyCode())){
             boolQueryBuilder.filter(QueryBuilders.termQuery(BasicSiteEsDto.PROVINCE_AGENCY_CODE, siteQueryCondition.getProvinceAgencyCode()));
@@ -321,30 +318,6 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         // 枢纽编码
         if(StringUtils.isNotEmpty(siteQueryCondition.getAreaCode())){
             boolQueryBuilder.filter(QueryBuilders.termQuery(BasicSiteEsDto.AREA_CODE, siteQueryCondition.getAreaCode()));
-        }
-        // 省id
-        if(CollectionUtils.isNotEmpty(siteQueryCondition.getProvinceIds())){
-            boolQueryBuilder.filter(QueryBuilders.termsQuery(BasicSiteEsDto.PROVINCE_ID, siteQueryCondition.getProvinceIds()));
-        }
-        // 市id
-        if(CollectionUtils.isNotEmpty(siteQueryCondition.getCityIds())){
-            boolQueryBuilder.filter(QueryBuilders.termsQuery(BasicSiteEsDto.CITY_ID, siteQueryCondition.getCityIds()));
-        }
-        // 县id
-        if(CollectionUtils.isNotEmpty(siteQueryCondition.getCountryIds())){
-            boolQueryBuilder.filter(QueryBuilders.termsQuery(BasicSiteEsDto.COUNTRY_ID, siteQueryCondition.getCountryIds()));
-        }
-        // 乡id
-        if(CollectionUtils.isNotEmpty(siteQueryCondition.getCountrySideIds())){
-            boolQueryBuilder.filter(QueryBuilders.termsQuery(BasicSiteEsDto.COUNTRYSIDE_ID, siteQueryCondition.getCountrySideIds()));
-        }
-        // 片区id
-        if(CollectionUtils.isNotEmpty(siteQueryCondition.getAreaCodes())){
-            boolQueryBuilder.filter(QueryBuilders.termsQuery(BasicSiteEsDto.AREA_CODE, siteQueryCondition.getAreaCodes()));
-        }
-        // 分区id
-        if(CollectionUtils.isNotEmpty(siteQueryCondition.getPartitionCodes())){
-            boolQueryBuilder.filter(QueryBuilders.termsQuery(BasicSiteEsDto.PARTITION_CODE, siteQueryCondition.getPartitionCodes()));
         }
         // 模糊地址
         if(StringUtils.isNotEmpty(siteQueryCondition.getAddress())){
@@ -420,14 +393,69 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
     @Override
     public Result<Pager<BasicSiteVO>> querySitePageByConditionFromBasicSite(Pager<SiteQueryCondition> siteQueryPager) {
         Result<Pager<BasicSiteVO>> result = new Result<Pager<BasicSiteVO>>();
-        CallerInfo info = Profiler.registerInfo("com.jdl.basic.api.service.site.SiteQueryService.querySitePageByConditionFromBasicSite", false, true);
+        final Result<Void> checkResult = this.checkParam4querySitePageByConditionFromBasicSite(siteQueryPager);
+        if (!checkResult.isSuccess()) {
+            result.setCode(checkResult.getCode());
+            result.setMessage(checkResult.getMessage());
+            return result;
+        }
+        if(duccPropertyConfiguration.getSiteQueryDowngradeSwitch()){
+            return queryPageSiteFromES(siteQueryPager);
+        }
+        return queryPageSiteFromExternal(siteQueryPager);
+    }
+
+    private Result<Pager<BasicSiteVO>> queryPageSiteFromExternal(Pager<SiteQueryCondition> siteQueryPager) {
+        CallerInfo info = Profiler.registerInfo("com.jdl.basic.api.service.site.SiteQueryService.queryPageSiteFromExternal",
+                false, true);
+        Result<Pager<BasicSiteVO>> baseEntity = initPageResult(siteQueryPager);
         try {
-            final Result<Void> checkResult = this.checkParam4querySitePageByConditionFromBasicSite(siteQueryPager);
-            if (!checkResult.isSuccess()) {
-                result.setCode(checkResult.getCode());
-                result.setMessage(checkResult.getMessage());
-                return result;
+            // 先查站点数据
+            PageDto<Object> pageDto = new PageDto<>();
+            pageDto.setCurPage(siteQueryPager.getPageNo());
+            pageDto.setPageSize(siteQueryPager.getPageSize());
+            PageDto<List<BaseSiteSimpleDto>> pageSiteResult = basicSiteQueryWSManager.querySiteByCondition(convertOutSiteQuery(siteQueryPager.getSearchVo()), pageDto);
+            if(pageSiteResult != null && CollectionUtils.isNotEmpty(pageSiteResult.getData())){
+                baseEntity.getData().setTotal((long) pageSiteResult.getTotalRow());
+                baseEntity.getData().getData().addAll(convert2OwnBasicSiteList(pageSiteResult.getData()));
             }
+            // 在查库房数据 todo
+
+
+
+        }catch (Exception e){
+            logger.error("根据条件{}分页查询站点异常!", JsonHelper.toJSONString(siteQueryPager), e);
+            baseEntity.toFail("服务异常!");
+            Profiler.functionError(info);
+        }finally {
+            Profiler.registerInfoEnd(info);
+        }
+        return baseEntity;
+    }
+
+    private Result<Pager<BasicSiteVO>> initPageResult(Pager<SiteQueryCondition> siteQueryPager) {
+        Result<Pager<BasicSiteVO>> baseEntity = new Result<Pager<BasicSiteVO>>();
+        baseEntity.setData(new Pager<>());
+        baseEntity.getData().setPageNo(siteQueryPager.getPageNo());
+        baseEntity.getData().setPageSize(siteQueryPager.getPageSize());
+        baseEntity.getData().setTotal(Constants.NUMBER_ZERO.longValue());
+        baseEntity.getData().setData(Lists.newArrayList());
+        return baseEntity;
+    }
+
+    private List<BasicSiteVO> convert2OwnBasicSiteList(List<BaseSiteSimpleDto> list) {
+        return list.stream()
+                // 过滤有效数据
+                .filter(item -> effectiveOperateState().contains(item.getOperateState()))
+                // 转换为分拣内部使用数据
+                .map(this::convertOwnBasicSite)
+                .collect(Collectors.toList());
+    }
+
+    private Result<Pager<BasicSiteVO>> queryPageSiteFromES(Pager<SiteQueryCondition> siteQueryPager) {
+        Result<Pager<BasicSiteVO>> result = new Result<Pager<BasicSiteVO>>();
+        CallerInfo info = Profiler.registerInfo("com.jdl.basic.api.service.site.SiteQueryService.queryPageSiteFromES", false, true);
+        try {
             // 构建es查询条件
             BoolQueryBuilder boolQueryBuilder = createQueryCondition(siteQueryPager.getSearchVo());
             int from = siteQueryPager.getPageSize() * (siteQueryPager.getPageNo() - 1);

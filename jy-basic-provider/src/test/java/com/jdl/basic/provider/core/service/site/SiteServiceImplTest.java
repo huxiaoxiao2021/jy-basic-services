@@ -72,10 +72,12 @@ public class SiteServiceImplTest {
         try {
             Pager<SiteQueryCondition> siteQueryPager = new Pager<>();
             siteQueryPager.setPageNo(1);
-            siteQueryPager.setPageSize(10);
+            siteQueryPager.setPageSize(10000);
             SiteQueryCondition siteQueryCondition = new SiteQueryCondition();
             siteQueryPager.setSearchVo(siteQueryCondition);
-            siteQueryCondition.setSiteNamePym("xzz");
+//            siteQueryCondition.setSiteNamePym("xzz");
+//            siteQueryCondition.setSiteCode(497);
+//            siteQueryCondition.setSiteName("分拣");
 
             Result<Pager<BasicSiteVO>> result = siteQueryService.querySitePageByConditionFromBasicSite(siteQueryPager);
             

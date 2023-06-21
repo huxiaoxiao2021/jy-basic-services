@@ -104,8 +104,8 @@ public class SiteServiceImpl implements SiteService {
         siteEsDto.setOrgId(item.getParentId());
         siteEsDto.setOrgName(item.getOrgName());
         siteEsDto.setSiteType(item.getDmsType());
-        siteEsDto.setProvinceAgencyCode(item.getProvinceAgencyCode());
-        siteEsDto.setProvinceAgencyName(item.getProvinceAgencyName());
+//        siteEsDto.setProvinceAgencyCode(item.getProvinceAgencyCode());
+//        siteEsDto.setProvinceAgencyName(item.getProvinceAgencyName());
         siteEsDto.setProvinceId(item.getProvinceId());
         siteEsDto.setCityId(item.getCityId());
         siteEsDto.setCountryId(item.getCountyId());
