@@ -123,8 +123,8 @@ public class UserWorkGridServiceTest {
     @Test
     public void queryDeletedUserWorkGrid() {
         UserWorkGridRequest request = new UserWorkGridRequest();
-        request.setWorkGridKey("CDWG00000022001");
-        request.setUpdateTime(new Date());
+        request.setWorkGridKey("CDWG00000019007");
+        request.setUpdateTime(DateUtils.addDays(new Date(), -15));
         Result<List<UserWorkGrid>> result = userWorkGridService.queryDeletedUserWorkGrid(request);
 
         log.info("getWorkGridDistributedStaff response {}", JsonHelper.toJSONString(result));

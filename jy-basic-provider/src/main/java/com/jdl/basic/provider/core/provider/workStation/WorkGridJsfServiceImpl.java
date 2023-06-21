@@ -176,4 +176,9 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	public Result<List<WorkGrid>> batchQueryByWorkGridKey(List<String> workGridKeys) {
 		return Result.success(workGridService.batchQueryByWorkGridKey(workGridKeys));
 	}
+
+	@Override
+	public Result<List<WorkGrid>> queryAreaWorkGrid(WorkGridQuery query) {
+		return Result.success(workGridService.queryAreaWorkGrid(query));
+	}
 }

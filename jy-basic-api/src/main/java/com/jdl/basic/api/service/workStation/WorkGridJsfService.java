@@ -113,4 +113,6 @@ public interface WorkGridJsfService {
 	 * @return
 	 */
 	Result<List<WorkGrid>> batchQueryByWorkGridKey(List<String> workGridKeys);
+
+	Result<List<WorkGrid>> queryAreaWorkGrid(WorkGridQuery query);
 }

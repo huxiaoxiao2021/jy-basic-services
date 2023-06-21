@@ -92,4 +92,11 @@ public class WorkGridServiceTest {
         logger.info("batchQueryByWorkGridKeyTest response {}", workGrids);
     }
 
+    @Test
+    public void queryAreaWorkGridTest() {
+        WorkGridQuery query = new WorkGridQuery();
+        query.setAreaCode("JBGQ");
+        workGridService.queryAreaWorkGrid(query);
+    }
+
 }

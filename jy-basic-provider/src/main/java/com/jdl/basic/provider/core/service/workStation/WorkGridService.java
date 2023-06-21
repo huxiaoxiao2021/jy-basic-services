@@ -130,4 +130,6 @@ public interface WorkGridService {
 	 * @return
 	 */
 	List<WorkGrid> batchQueryByWorkGridKey(List<String> workGridKeys);
+
+	List<WorkGrid> queryAreaWorkGrid(WorkGridQuery query);
 }

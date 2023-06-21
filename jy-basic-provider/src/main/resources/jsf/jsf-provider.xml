@@ -277,5 +277,13 @@
                   alias="${jsf.jy_basic.alias}"
                   server="jsf">
     </jsf:provider>
+
+    <jsf:provider id="workGridScheduleJsfService"
+                  timeout="100000000"
+                  interface="com.jdl.basic.api.service.schedule.WorkGridScheduleJsfService"
+                  ref="workGridScheduleJsfServiceImpl"
+                  alias="${jsf.jy_basic.alias}"
+                  server="jsf">
+    </jsf:provider>
 </beans>
 

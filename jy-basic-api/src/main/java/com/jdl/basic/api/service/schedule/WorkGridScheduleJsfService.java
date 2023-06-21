@@ -8,5 +8,9 @@ import java.util.List;
 
 public interface WorkGridScheduleJsfService {
 
-    Result<List<WorkGridSchedule>> queryRecordDetail(WorkGridScheduleBatchRequest request);
+    Result<List<WorkGridSchedule>> batchQueryByWorkGridKey(WorkGridScheduleBatchRequest request);
+
+    Result<Boolean> batchDeleteByWorkGridKey(WorkGridScheduleBatchRequest request);
+
+    Result<Boolean> batchInsert(WorkGridScheduleBatchRequest request);
 }

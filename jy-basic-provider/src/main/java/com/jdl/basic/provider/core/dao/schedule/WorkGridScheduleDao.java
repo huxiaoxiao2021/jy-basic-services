@@ -18,5 +18,9 @@ public interface WorkGridScheduleDao {
 
     int updateByPrimaryKey(WorkGridSchedule record);
 
-    List<WorkGridSchedule> queryRecordDetail(WorkGridScheduleBatchRequest request);
+    List<WorkGridSchedule> batchQueryByWorkGridKey(WorkGridScheduleBatchRequest request);
+
+    boolean batchDeleteByWorkGridKey(WorkGridScheduleBatchRequest request);
+
+    boolean batchInsert(WorkGridScheduleBatchRequest request);
 }

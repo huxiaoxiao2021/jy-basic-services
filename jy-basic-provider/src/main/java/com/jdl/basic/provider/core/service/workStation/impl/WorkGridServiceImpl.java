@@ -611,6 +611,11 @@ public class WorkGridServiceImpl implements WorkGridService {
 	}
 
 	@Override
+	public List<WorkGrid> queryAreaWorkGrid(WorkGridQuery query) {
+		return workGridDao.queryAreaWorkGrid(query);
+	}
+
+	@Override
 	public WorkGrid queryByWorkGridKey(String workGridKey) {
 		return workGridDao.queryByWorkGridKey(workGridKey);
 	}

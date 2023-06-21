@@ -46,7 +46,7 @@ public interface UserWorkGridService {
     Result<List<JyUser>> getWorkGridDistributedStaff(UserWorkGridRequest request);
 
     /**
-     * 查询给定时间至今已删除的网格分配记录
+     * 查询给定时间至今某网格已删除的网格分配记录
      * @param request
      * @return
      */

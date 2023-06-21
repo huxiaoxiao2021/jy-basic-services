@@ -21,6 +21,8 @@ public class WorkGridSchedule {
 
     private Integer scheduleType;
 
+    private Integer sourceType;
+
     private Byte yn;
 
     private Date createTime;
@@ -107,6 +109,14 @@ public class WorkGridSchedule {
 
     public void setScheduleType(Integer scheduleType) {
         this.scheduleType = scheduleType;
+    }
+
+    public Integer getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(Integer sourceType) {
+        this.sourceType = sourceType;
     }
 
     public Byte getYn() {
