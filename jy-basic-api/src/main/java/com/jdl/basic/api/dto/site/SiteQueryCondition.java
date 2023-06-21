@@ -49,6 +49,11 @@ public class SiteQueryCondition implements Serializable {
      *  支持模糊字段
      */
     private String address;
+
+    /**
+     * 机构ID
+     */
+    private Integer orgId;
     
     /**
      * 省区编码
@@ -59,6 +64,19 @@ public class SiteQueryCondition implements Serializable {
      * 枢纽编码
      */
     private String areaCode;
+
+    /**
+     * 省id
+     */
+    private Integer provinceId;
+    /**
+     * 市id
+     */
+    private Integer cityId;
+    /**
+     * 县id
+     */
+    private Integer countryId;
     
     /**
      * 搜索字符串
@@ -121,6 +139,14 @@ public class SiteQueryCondition implements Serializable {
         this.address = address;
     }
 
+    public Integer getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(Integer orgId) {
+        this.orgId = orgId;
+    }
+
     public String getProvinceAgencyCode() {
         return provinceAgencyCode;
     }
@@ -135,6 +161,30 @@ public class SiteQueryCondition implements Serializable {
 
     public void setAreaCode(String areaCode) {
         this.areaCode = areaCode;
+    }
+
+    public Integer getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(Integer provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public Integer getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
+    }
+
+    public Integer getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(Integer countryId) {
+        this.countryId = countryId;
     }
 
     public String getSearchStr() {

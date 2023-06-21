@@ -194,8 +194,12 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
 
     private BaseSite convertOutSiteQuery(SiteQueryCondition siteQueryCondition) {
         BaseSite siteQuery = new BaseSite();
+        siteQuery.setOrgId(siteQueryCondition.getOrgId());
         siteQuery.setProvinceAgencyCode(siteQueryCondition.getProvinceAgencyCode());
         siteQuery.setAreaCode(siteQueryCondition.getAreaCode());
+        siteQuery.setProvinceId(siteQueryCondition.getProvinceId());
+        siteQuery.setCityId(siteQueryCondition.getCityId());
+        siteQuery.setCountryId(siteQueryCondition.getCountryId());
         siteQuery.setSiteCode(siteQueryCondition.getSiteCode());
         siteQuery.setSiteName(siteQueryCondition.getSiteName());
         siteQuery.setSiteNamePym(siteQueryCondition.getSiteNamePym());
@@ -220,6 +224,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
 
     private BasicSiteVO convertOwnBasicSite(BaseSiteSimpleDto item) {
         BasicSiteVO basicSiteVO = new BasicSiteVO();
+        basicSiteVO.setOrgId(item.getOrgId());
         basicSiteVO.setProvinceAgencyCode(item.getProvinceAgencyCode());
         basicSiteVO.setProvinceAgencyName(item.getProvinceAgencyName());
         basicSiteVO.setAreaCode(item.getAreaCode());
@@ -318,6 +323,18 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         // 枢纽编码
         if(StringUtils.isNotEmpty(siteQueryCondition.getAreaCode())){
             boolQueryBuilder.filter(QueryBuilders.termQuery(BasicSiteEsDto.AREA_CODE, siteQueryCondition.getAreaCode()));
+        }
+        // 省ID
+        if(siteQueryCondition.getProvinceId() != null){
+            boolQueryBuilder.filter(QueryBuilders.termQuery(BasicSiteEsDto.PROVINCE_ID, siteQueryCondition.getProvinceId()));
+        }
+        // 市ID
+        if(siteQueryCondition.getCityId() != null){
+            boolQueryBuilder.filter(QueryBuilders.termQuery(BasicSiteEsDto.CITY_ID, siteQueryCondition.getCityId()));
+        }
+        // 县ID
+        if(siteQueryCondition.getCountryId() != null){
+            boolQueryBuilder.filter(QueryBuilders.termQuery(BasicSiteEsDto.COUNTRY_ID, siteQueryCondition.getCountryId()));
         }
         // 模糊地址
         if(StringUtils.isNotEmpty(siteQueryCondition.getAddress())){
