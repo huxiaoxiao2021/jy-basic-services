@@ -1718,4 +1718,9 @@ public class Constants {
 
     public static final int DEFAULT_PAGE_NO =1;
     public static final int DEFAULT_PAGE_SIZE_QUERY_USER =1024;
+
+    public static final String COLUMN_PAGE_SIZE="pageSize";
+    public static final String COLUMN_PAGE_NO="pageNo";
+    public static final String COLUMN_SITE_CODE="siteCode";
+
 }
