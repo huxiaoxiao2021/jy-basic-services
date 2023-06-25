@@ -470,13 +470,17 @@
 		<include refid="Base_Column_List"/>
 		from
 		work_grid
-		where  site_code = #{siteCode,jdbcType=INTEGER} and yn = 1
+		where  site_code = #{siteCode,jdbcType=INTEGER}
 		<if test="floor != null" >
 			and floor = #{floor,jdbcType=INTEGER}
+		</if>
+		<if test="gridNo != null" >
+			and grid_no = #{gridNo,jdbcType=VARCHAR}
 		</if>
 		<if test="areaCode != null" >
 			and area_code = #{areaCode,jdbcType=VARCHAR}
 		</if>
+		and yn = 1
 	</select>
 
 	<select id="batchQueryByWorkGridKey" parameterType="java.lang.String" resultMap="WorkGrid">

@@ -1,8 +1,11 @@
 package com.jdl.basic.provider.core.provider.workStation;
 
 
+import com.jdl.basic.common.utils.ObjectHelper;
+import com.jdl.basic.rpc.exception.JYBasicRpcException;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -180,5 +183,30 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	@Override
 	public Result<List<WorkGrid>> queryAreaWorkGrid(WorkGridQuery query) {
 		return Result.success(workGridService.queryAreaWorkGrid(query));
+	}
+
+	@Override
+	public Result<WorkGrid> exactQueryWorkGridByBizKey(WorkGrid query) {
+		checkWorkGridQuery(query);
+		List<WorkGrid> workGridList =workGridService.queryWorkGrid(query);
+		if (CollectionUtils.isNotEmpty(workGridList)){
+			return Result.success(workGridList.get(0));
+		}
+		return Result.fail("未查询到相应的网格数据！");
+	}
+
+	private void checkWorkGridQuery(WorkGrid query) {
+		if (ObjectHelper.isEmpty(query.getSiteCode())){
+			throw new JYBasicRpcException("参数错误：siteCode为空！");
+		}
+		if (ObjectHelper.isEmpty(query.getAreaCode())){
+			throw new JYBasicRpcException("参数错误：areaCode为空！");
+		}
+		if (ObjectHelper.isEmpty(query.getFloor())){
+			throw new JYBasicRpcException("参数错误：floor为空！");
+		}
+		if (ObjectHelper.isEmpty(query.getGridNo())){
+			throw new JYBasicRpcException("参数错误：gridNo为空！");
+		}
 	}
 }
