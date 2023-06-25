@@ -373,4 +373,14 @@
     and grid_distribute_flag =0
     limit #{pageSize}
   </select>
+  <select id="queryUserListBySiteAndPosition" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM
+    jy_user
+    WHERE user_status =1
+      and site_code = #{siteCode}
+      and position_code = #{positionCode,jdbcType=VARCHAR}
+    limit 200
+  </select>    
 </mapper>

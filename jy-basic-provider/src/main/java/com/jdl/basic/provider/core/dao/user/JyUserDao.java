@@ -65,4 +65,10 @@ public interface JyUserDao {
     List<JyUser> batchQueryQuitUserByUserId(JyUserBatchRequest request);
 
     List<JyUser> queryUnDistributedUserList(UnDistributedUserQueryDto dto);
+    /**
+     * 查询场地、岗位下的人员列表
+     * @param condition
+     * @return
+     */
+	List<JyUser> queryUserListBySiteAndPosition(JyUserQueryCondition condition);
 }
