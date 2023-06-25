@@ -5,6 +5,7 @@ import com.jdl.basic.api.domain.user.JyUser;
 import com.jdl.basic.api.domain.user.JyUserBatchRequest;
 import com.jdl.basic.api.domain.user.JyUserQueryCondition;
 
+import com.jdl.basic.api.domain.user.UnDistributedUserQueryDto;
 import java.util.List;
 
 public interface UserService {
@@ -69,4 +70,12 @@ public interface UserService {
    * @return
    */
   Result<List<JyUser>> batchQueryQuitUserByUserId(JyUserBatchRequest request);
+
+  List<JyUser> queryUnDistributedUserList(UnDistributedUserQueryDto dto);
+  /**
+   * 查询人员岗位下列表
+   * @param condition
+   * @return
+   */
+  Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryCondition condition);
 }

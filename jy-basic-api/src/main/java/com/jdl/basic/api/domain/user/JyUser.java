@@ -39,6 +39,36 @@ public class JyUser {
 
     private Date ts;
 
+    private Integer siteCode;
+
+    private String siteName;
+
+    private Integer siteType;
+
+    public Integer getSiteCode() {
+        return siteCode;
+    }
+
+    public void setSiteCode(Integer siteCode) {
+        this.siteCode = siteCode;
+    }
+
+    public String getSiteName() {
+        return siteName;
+    }
+
+    public void setSiteName(String siteName) {
+        this.siteName = siteName;
+    }
+
+    public Integer getSiteType() {
+        return siteType;
+    }
+
+    public void setSiteType(Integer siteType) {
+        this.siteType = siteType;
+    }
+
     public Long getId() {
         return id;
     }

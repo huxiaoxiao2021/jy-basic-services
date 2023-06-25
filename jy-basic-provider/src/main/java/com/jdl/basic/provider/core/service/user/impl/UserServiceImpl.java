@@ -6,6 +6,7 @@ import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.user.JyUser;
 import com.jdl.basic.api.domain.user.JyUserBatchRequest;
 import com.jdl.basic.api.domain.user.JyUserQueryCondition;
+import com.jdl.basic.api.domain.user.UnDistributedUserQueryDto;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.core.dao.user.JyUserDao;
@@ -123,4 +124,15 @@ public class UserServiceImpl implements UserService {
     return result.setData(jyUserDao.batchQueryQuitUserByUserId(request));
   }
 
+
+  @Override
+  public List<JyUser> queryUnDistributedUserList(UnDistributedUserQueryDto dto) {
+    return jyUserDao.queryUnDistributedUserList(dto);
+  }
+
+@Override
+public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryCondition condition) {
+	Result<List<JyUser>> result = Result.success();
+	return result.setData(jyUserDao.queryUserListBySiteAndPosition(condition));
+}
 }

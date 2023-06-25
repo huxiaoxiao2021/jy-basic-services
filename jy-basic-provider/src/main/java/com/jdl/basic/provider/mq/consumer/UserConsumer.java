@@ -4,8 +4,10 @@ import static com.jdl.basic.common.contants.Constants.LOCK_EXPIRE;
 
 import com.jd.jmq.common.message.Message;
 import com.jd.joyqueue.client.springboot2.annotation.JmqListener;
+import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.user.JyUser;
 import com.jdl.basic.api.enums.UserSatusEnum;
+import com.jdl.basic.api.enums.WorkSiteTypeEnum;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.BeanUtils;
 import com.jdl.basic.common.utils.DateHelper;
@@ -51,8 +53,8 @@ public class UserConsumer {
       }
       UserInfoBusinessDTO userInfo = JsonHelper.toObject(content, UserInfoBusinessDTO.class);
       if (ObjectHelper.isNotNull(userInfo)) {
-        if (ObjectHelper.isEmpty(userInfo.getUserName()) || ObjectHelper.isEmpty(userInfo.getEntryDate()) ||ObjectHelper.isEmpty(userInfo.getNature())){
-          log.error("用户数据必要参数不全：{}",content);
+        if (ObjectHelper.isEmpty(userInfo.getUserName()) || ObjectHelper.isEmpty(userInfo.getEntryDate()) || ObjectHelper.isEmpty(userInfo.getNature())) {
+          log.error("用户数据必要参数不全：{}", content);
           return;
         }
         JyUser condition = assembleUser(userInfo);
@@ -63,6 +65,18 @@ public class UserConsumer {
         }
         try {
           JyUser exitUser = userService.queryUserInfo(condition);
+          BaseStaffSiteOrgDto baseStaffSiteOrgDto = baseMajorManager.getBaseStaffByErp(userInfo.getUserName());
+          if (ObjectHelper.isNotNull(baseStaffSiteOrgDto)) {
+            condition.setSiteCode(baseStaffSiteOrgDto.getSiteCode());
+            condition.setSiteName(baseStaffSiteOrgDto.getSiteName());
+            WorkSiteTypeEnum siteTypeEnum = WorkSiteTypeEnum.getWorkingSiteTypeBySubType(baseStaffSiteOrgDto.getSubType());
+            if (ObjectHelper.isEmpty(siteTypeEnum)) {
+              log.info("非分拣中心类型场地数据：{}", content);
+              condition.setSiteType(WorkSiteTypeEnum.OTHER.getCode());
+              //return;
+            }
+            condition.setSiteType(siteTypeEnum.getCode());
+          }
           int rs = 0;
           Date now = new Date();
           if (ObjectHelper.isNotNull(exitUser)) {

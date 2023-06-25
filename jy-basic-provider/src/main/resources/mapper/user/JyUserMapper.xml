@@ -1,30 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jdl.basic.provider.core.dao.user.JyUserDao">
   <resultMap id="BaseResultMap" type="com.jdl.basic.api.domain.user.JyUser">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="user_erp" jdbcType="VARCHAR" property="userErp" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="sex" jdbcType="VARCHAR" property="sex" />
-    <result column="entry_date" jdbcType="VARCHAR" property="entryDate" />
-    <result column="organization_code" jdbcType="VARCHAR" property="organizationCode" />
-    <result column="organization_name" jdbcType="VARCHAR" property="organizationName" />
-    <result column="organization_full_name" jdbcType="VARCHAR" property="organizationFullName" />
-    <result column="user_status" jdbcType="INTEGER" property="userStatus" />
-    <result column="quit_action_date" jdbcType="VARCHAR" property="quitActionDate" />
-    <result column="nature" jdbcType="VARCHAR" property="nature" />
-    <result column="nature_desc" jdbcType="VARCHAR" property="natureDesc" />
-    <result column="position_code" jdbcType="VARCHAR" property="positionCode" />
-    <result column="position_name" jdbcType="VARCHAR" property="positionName" />
-    <result column="grid_distribute_flag" jdbcType="BIT" property="gridDistributeFlag" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="ts" jdbcType="TIMESTAMP" property="ts" />
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="user_erp" jdbcType="VARCHAR" property="userErp"/>
+    <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+    <result column="sex" jdbcType="VARCHAR" property="sex"/>
+    <result column="entry_date" jdbcType="VARCHAR" property="entryDate"/>
+    <result column="organization_code" jdbcType="VARCHAR" property="organizationCode"/>
+    <result column="organization_name" jdbcType="VARCHAR" property="organizationName"/>
+    <result column="organization_full_name" jdbcType="VARCHAR" property="organizationFullName"/>
+    <result column="user_status" jdbcType="INTEGER" property="userStatus"/>
+    <result column="quit_action_date" jdbcType="VARCHAR" property="quitActionDate"/>
+    <result column="nature" jdbcType="VARCHAR" property="nature"/>
+    <result column="nature_desc" jdbcType="VARCHAR" property="natureDesc"/>
+    <result column="position_code" jdbcType="VARCHAR" property="positionCode"/>
+    <result column="position_name" jdbcType="VARCHAR" property="positionName"/>
+    <result column="grid_distribute_flag" jdbcType="BIT" property="gridDistributeFlag"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    <result column="ts" jdbcType="TIMESTAMP" property="ts"/>
+    <result column="site_code" jdbcType="INTEGER" property="siteCode"/>
+    <result column="site_name" jdbcType="VARCHAR" property="siteName"/>
+    <result column="site_type" jdbcType="TINYINT" property="siteType"/>
+
   </resultMap>
   <sql id="Base_Column_List">
     id, user_erp, user_name, sex, entry_date, organization_code, organization_name, organization_full_name,
     user_status, quit_action_date, nature, nature_desc, position_code, position_name,
-    grid_distribute_flag, create_time, update_time, ts
+    grid_distribute_flag, create_time, update_time, ts,site_code,site_name,site_type
   </sql>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -116,6 +121,15 @@
       <if test="ts != null">
         ts,
       </if>
+      <if test="siteCode != null">
+        site_code,
+      </if>
+      <if test="siteName != null">
+        site_name,
+      </if>
+      <if test="siteType != null">
+        site_type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -172,6 +186,15 @@
       <if test="ts != null">
         #{ts,jdbcType=TIMESTAMP},
       </if>
+      <if test="siteCode != null">
+        #{siteCode},
+      </if>
+      <if test="siteName != null">
+        #{siteName},
+      </if>
+      <if test="siteType != null">
+        #{siteType},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.jdl.basic.api.domain.user.JyUser">
@@ -227,6 +250,15 @@
       </if>
       <if test="ts != null">
         ts = #{ts,jdbcType=TIMESTAMP},
+      </if>
+      <if test="siteCode != null">
+        site_code =#{siteCode},
+      </if>
+      <if test="siteName != null">
+        site_name=#{siteName},
+      </if>
+      <if test="siteType != null">
+        site_type =#{siteType},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -328,4 +360,27 @@
         #{item.id}
     </foreach>
   </select>
+
+  <select id="queryUnDistributedUserList" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM
+    jy_user
+    WHERE user_status =1
+    <if test="siteCode!=null">
+      and site_code = #{siteCode}
+    </if>
+    and grid_distribute_flag =0
+    limit #{pageSize}
+  </select>
+  <select id="queryUserListBySiteAndPosition" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM
+    jy_user
+    WHERE user_status =1
+      and site_code = #{siteCode}
+      and position_code = #{positionCode,jdbcType=VARCHAR}
+    limit 200
+  </select>    
 </mapper>
