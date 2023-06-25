@@ -2,6 +2,9 @@ package com.jdl.basic.provider.core.service.work;
 
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
+
+import java.util.List;
+
 import com.jdl.basic.api.domain.work.WorkGridManagerTask;
 import com.jdl.basic.api.domain.work.WorkGridManagerTaskQuery;
 
@@ -50,5 +53,10 @@ public interface WorkGridManagerTaskService {
 	 * @return
 	 */
 	Result<WorkGridManagerTask> queryByTaskCode(String taskCode);
+	/**
+	 * 查询任务字典
+	 * @return
+	 */
+	List<WorkGridManagerTask> queryWorkGridManagerTaskDictList();
 
 }

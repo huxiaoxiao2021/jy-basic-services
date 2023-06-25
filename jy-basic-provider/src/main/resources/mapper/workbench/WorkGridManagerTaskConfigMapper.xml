@@ -287,6 +287,9 @@
 	<sql id="queryCondition">
 		<where>
 			yn = 1 
+        <if test="taskCode != null and taskCode != ''" >
+          and task_code = #{taskCode,jdbcType=VARCHAR}
+         </if>			
 		</where>
 	</sql>
 </mapper>

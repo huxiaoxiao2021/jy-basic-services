@@ -1,9 +1,11 @@
 package com.jdl.basic.api.service.work;
 
-import com.jdl.basic.common.utils.PageDto;
-import com.jdl.basic.common.utils.Result;
+import java.util.List;
+
 import com.jdl.basic.api.domain.work.WorkGridManagerTask;
 import com.jdl.basic.api.domain.work.WorkGridManagerTaskQuery;
+import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
 
 /**
  * 作业区巡检任务表--JsfService接口
@@ -50,4 +52,9 @@ public interface WorkGridManagerTaskJsfService {
 	 * @return
 	 */
 	Result<WorkGridManagerTask> queryByTaskCode(String taskCode);
+	/**
+	 * 查询任务列表
+	 * @return
+	 */
+	List<WorkGridManagerTask> queryWorkGridManagerTaskDictList();
 }

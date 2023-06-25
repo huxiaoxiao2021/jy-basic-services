@@ -52,5 +52,10 @@ public interface WorkGridManagerTaskDao {
 	long queryCount(WorkGridManagerTaskQuery query);
 	
 	WorkGridManagerTask queryByTaskCode(String taskCode);
+	/**
+	 * 查询任务字典
+	 * @return
+	 */
+	List<WorkGridManagerTask> queryWorkGridManagerTaskDictList();
 
 }

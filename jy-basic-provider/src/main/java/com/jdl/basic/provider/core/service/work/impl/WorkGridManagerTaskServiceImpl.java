@@ -133,5 +133,9 @@ public class WorkGridManagerTaskServiceImpl implements WorkGridManagerTaskServic
 		result.setData(workGridManagerTaskDao.queryByTaskCode(taskCode));
 		return result;
 	}
+	@Override
+	public List<WorkGridManagerTask> queryWorkGridManagerTaskDictList() {
+		return workGridManagerTaskDao.queryWorkGridManagerTaskDictList();
+	}
 
 }

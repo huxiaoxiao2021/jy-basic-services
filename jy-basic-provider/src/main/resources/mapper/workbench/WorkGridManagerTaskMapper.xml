@@ -214,7 +214,15 @@
 
 	<sql id="queryCondition">
 		<where>
-			yn = 1 
+			yn = 1			 
 		</where>
 	</sql>
+    <select id="queryWorkGridManagerTaskDictList" resultMap="WorkGridManagerTask">
+        select
+            <include refid="Base_Column_List"/>
+        from
+            work_grid_manager_task t
+        where yn = 1
+            limit 100
+    </select>
 </mapper>
