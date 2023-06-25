@@ -54,9 +54,13 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
                 return result.toFail(String.format("用户【%s】已分配网格！", user.getUserErp()));
             }
         }
-        result.setData(userWorkGridDao.batchInsert(request) > 0);
-        batchRequest.setGridDistributeFlag(JyUserDistributeStatusEnum.DISTRIBUTED.getFlag());
-        userService.batchUpdateByUserIds(batchRequest);
+        if (userWorkGridDao.batchInsert(request) > 0) {
+            result.setData(Boolean.TRUE);
+            batchRequest.setGridDistributeFlag(JyUserDistributeStatusEnum.DISTRIBUTED.getFlag());
+            userService.batchUpdateByUserIds(batchRequest);
+        } else {
+            result.toFail("插入记录失败！");
+        }
         return result;
     }
 
