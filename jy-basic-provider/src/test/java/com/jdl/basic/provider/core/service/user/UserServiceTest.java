@@ -71,4 +71,24 @@ public class UserServiceTest {
         Result<List<JyUser>> result = userService.queryByUserIds(request);
         log.info("{}", JsonHelper.toJSONString(result));
     }
+
+    @Test
+    public void searchUserBySiteCode() {
+        JyUserQueryCondition condition = new JyUserQueryCondition();
+        condition.setSiteCode(910);
+        Result<List<JyUser>> result = userService.searchUserBySiteCode(condition);
+        log.info("{}", JsonHelper.toJSONString(result));
+    }
+
+    @Test
+    public void batchQueryQuitUserByUserId() {
+        JyUserBatchRequest request = new JyUserBatchRequest();
+        List<JyUser> users = new ArrayList<>();
+        JyUser user = new JyUser();
+        user.setId(1L);
+        users.add(user);
+        request.setUsers(users);
+        Result<List<JyUser>> result = userService.batchQueryQuitUserByUserId(request);
+        log.info("{}", JsonHelper.toJSONString(result));
+    }
 }

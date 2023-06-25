@@ -10,15 +10,15 @@ import java.util.List;
 
 public interface UserWorkGridJsfService {
 
-    Result<List<UserWorkGrid>> queryByCondition(UserWorkGridRequest request);
-
-    Result<List<UserWorkGrid>> queryDifference(UserWorkGridRequest request);
+    Result<List<UserWorkGrid>> batchQueryUserWorkGridByGridKey(UserWorkGridBatchRequest request);
 
     Result<Boolean> batchInsert(UserWorkGridBatchRequest request);
 
     Result<Boolean> batchDelete(UserWorkGridBatchRequest request);
 
-    Result<List<UserWorkGrid>> queryByUserIdsWithCondition(UserWorkGridBatchRequest request);
+    Result<List<UserWorkGrid>> queryByUserIds(UserWorkGridBatchRequest request);
 
     Result<List<JyUser>> getWorkGridDistributedStaff(UserWorkGridRequest request);
+
+    Result<List<UserWorkGrid>> queryDeletedUserWorkGrid(UserWorkGridRequest request);
 }

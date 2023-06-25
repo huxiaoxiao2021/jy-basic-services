@@ -27,29 +27,12 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
     private UserService userService;
 
     @Override
-    public Result<List<UserWorkGrid>> queryByCondition(UserWorkGridRequest request) {
+    public Result<List<UserWorkGrid>> batchQueryUserWorkGridByGridKey(UserWorkGridBatchRequest request) {
         Result<List<UserWorkGrid>> result = Result.success();
-        return result.setData(userWorkGridDao.queryByCondition(request));
-    }
-
-    @Override
-    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.queryDifference", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public Result<List<UserWorkGrid>> queryDifference(UserWorkGridRequest request) {
-        Result<List<UserWorkGrid>> result = Result.success();
-        if (StringUtils.isEmpty(request.getWorkGridKey())) {
+        if (CollectionUtils.isEmpty(request.getUserWorkGrids())) {
             return result.toFail("网格主键不能为空！");
         }
-        if (request.getWorkGridKey().trim().equals("")) {
-            return result.toFail("网格主键为空字符串！");
-        }
-        if (request.getCreateTime() == null) {
-            return result.toFail("人员分配到网格记录创建时间不能为空！");
-        }
-        if (request.getUpdateTime() == null) {
-            return result.toFail("人员分配到网格记录更新时间不能为空！");
-        }
-        result.setData(userWorkGridDao.queryDifference(request));
-        return result;
+        return result.setData(userWorkGridDao.batchQueryUserWorkGridByGridKey(request));
     }
 
     @Override
@@ -117,12 +100,12 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
     }
 
     @Override
-    public Result<List<UserWorkGrid>> queryByUserIdsWithCondition(UserWorkGridBatchRequest request) {
+    public Result<List<UserWorkGrid>> queryByUserIds(UserWorkGridBatchRequest request) {
         Result<List<UserWorkGrid>> result = Result.success();
         if (CollectionUtils.isEmpty(request.getUserWorkGrids())) {
             return result.setData(new ArrayList<>());
         }
-        result.setData(userWorkGridDao.queryByUserIdsWithCondition(request));
+        result.setData(userWorkGridDao.queryByUserIds(request));
         return result;
     }
 
@@ -133,7 +116,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             return result.toFail("网格主键不能为空！");
         }
         request.setWorkGridKey(request.getWorkGridKey().trim());
-        List<UserWorkGrid> userWorkGrids = userWorkGridDao.queryByCondition(request);
+        List<UserWorkGrid> userWorkGrids = userWorkGridDao.queryByWorkGridKey(request);
         if (userWorkGrids != null) {
             List<JyUser> users = getUsers(userWorkGrids);
             JyUserBatchRequest batchRequest = new JyUserBatchRequest();
@@ -146,5 +129,19 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             }
         }
         return result;
+    }
+
+    @Override
+    public Result<List<UserWorkGrid>> queryDeletedUserWorkGrid(UserWorkGridRequest request) {
+        Result<List<UserWorkGrid>> result = Result.success();
+        if (StringUtils.isEmpty(request.getWorkGridKey())) {
+            return result.toFail("网格主键不能为空！");
+        }
+        if (request.getUpdateTime() == null) {
+            return result.toFail("查询更新时间不能为空！");
+        }
+        System.out.println(request.getClass().getName());
+        System.out.println(request.getWorkGridKey());
+        return result.setData(userWorkGridDao.queryDeletedUserWorkGrid(request));
     }
 }

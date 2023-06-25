@@ -21,14 +21,8 @@ public class UserWorkGridJsfServiceImpl implements UserWorkGridJsfService {
     private UserWorkGridService userWorkGridService;
 
     @Override
-    public Result<List<UserWorkGrid>> queryByCondition(UserWorkGridRequest request) {
-        return userWorkGridService.queryByCondition(request);
-    }
-
-    @Override
-    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridJsfServiceImpl.queryDifference", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public Result<List<UserWorkGrid>> queryDifference(UserWorkGridRequest request) {
-        return userWorkGridService.queryDifference(request);
+    public Result<List<UserWorkGrid>> batchQueryUserWorkGridByGridKey(UserWorkGridBatchRequest request) {
+        return userWorkGridService.batchQueryUserWorkGridByGridKey(request);
     }
 
     @Override
@@ -43,14 +37,20 @@ public class UserWorkGridJsfServiceImpl implements UserWorkGridJsfService {
         return userWorkGridService.batchDelete(request);
     }
 
-    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridJsfServiceImpl.queryByUserIdsWithCondition", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public Result<List<UserWorkGrid>> queryByUserIdsWithCondition(UserWorkGridBatchRequest request) {
-        return userWorkGridService.queryByUserIdsWithCondition(request);
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridJsfServiceImpl.queryByUserIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<List<UserWorkGrid>> queryByUserIds(UserWorkGridBatchRequest request) {
+        return userWorkGridService.queryByUserIds(request);
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridJsfServiceImpl.getWorkGridDistributedStaff", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<List<JyUser>> getWorkGridDistributedStaff(UserWorkGridRequest request) {
         return userWorkGridService.getWorkGridDistributedStaff(request);
+    }
+
+    @Override
+    public Result<List<UserWorkGrid>> queryDeletedUserWorkGrid(UserWorkGridRequest request) {
+        return userWorkGridService.queryDeletedUserWorkGrid(request);
     }
 
 }

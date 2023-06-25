@@ -32,96 +32,37 @@
     grid_distribute_flag, create_time, update_time, ts,site_code,site_name,site_type
   </sql>
 
-  <sql id="queryCondition">
-    <if test="id != null">
-      and id = #{id}
-    </if>
-    <if test="userErp != null and userErp != ''">
-      and user_erp = #{userErp}
-    </if>
-    <if test="userName != null and userErp != ''">
-      and user_name = #{userName}
-    </if>
-    <if test="sex != null">
-      and sex = #{sex}
-    </if>
-    <if test="entryDate != null">
-      and entry_date = #{entryDate}
-    </if>
-    <if test="organizationCode != null">
-      and organization_code = #{organizationCode}
-    </if>
-    <if test="organizationName != null and organizationName != ''">
-      and organization_name = #{organizationName}
-    </if>
-    <if test="organizationFullName != null and organizationFullName != ''">
-      and organization_full_name = #{organizationFullName}
-    </if>
-    <if test="userStatus != null">
-      and user_status = #{userStatus}
-    </if>
-    <if test="quitActionDate != null">
-      and quit_action_date = #{quitActionDate}
-    </if>
-    <if test="nature != null">
-      and nature = #{nature}
-    </if>
-    <if test="natureDesc != null and natureDesc != ''">
-      and nature_desc = #{natureDesc}
-    </if>
-    <if test="positionCode != null">
-      and position_code = #{positionCode}
-    </if>
-    <if test="positionName != null and positionName != ''">
-      and position_name = #{positionName}
-    </if>
-    <if test="gridDistributeFlag != null">
-      and grid_distribute_flag = #{gridDistributeFlag}
-    </if>
-    <if test="createTime != null">
-      and create_time = #{createtime}
-    </if>
-    <if test="updateTime != null">
-      and update_time = #{updateTime}
-    </if>
-  </sql>
-
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="Base_Column_List" />
     from jy_user
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="queryUserInfo" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="Base_Column_List" />
     from jy_user
     where user_erp =#{userErp} and entry_date =#{entryDate} and nature =#{nature}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete
-    from jy_user
+    delete from jy_user
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.jdl.basic.api.domain.user.JyUser">
     insert into jy_user (id, user_erp, user_name,
-                         sex, entry_date, organization_code,
-                         organization_name, organization_full_name,
-                         user_status, quit_action_date, nature,
-                         nature_desc, position_code, position_name,
-                         grid_distribute_flag, create_time, update_time,
-                         ts)
+      sex, entry_date, organization_code,
+      organization_name, organization_full_name,
+      user_status, quit_action_date, nature,
+      nature_desc, position_code, position_name,
+      grid_distribute_flag, create_time, update_time,
+      ts)
     values (#{id,jdbcType=BIGINT}, #{userErp,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
-            #{sex,jdbcType=VARCHAR}, #{entryDate,jdbcType=VARCHAR},
-            #{organizationCode,jdbcType=VARCHAR},
-            #{organizationName,jdbcType=VARCHAR}, #{organizationFullName,jdbcType=VARCHAR},
-            #{userStatus,jdbcType=INTEGER}, #{quitActionDate,jdbcType=VARCHAR},
-            #{nature,jdbcType=VARCHAR},
-            #{natureDesc,jdbcType=VARCHAR}, #{positionCode,jdbcType=VARCHAR},
-            #{positionName,jdbcType=VARCHAR},
-            #{gridDistributeFlag,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP},
-            #{updateTime,jdbcType=TIMESTAMP},
-            #{ts,jdbcType=TIMESTAMP})
+      #{sex,jdbcType=VARCHAR}, #{entryDate,jdbcType=VARCHAR}, #{organizationCode,jdbcType=VARCHAR},
+      #{organizationName,jdbcType=VARCHAR}, #{organizationFullName,jdbcType=VARCHAR},
+      #{userStatus,jdbcType=INTEGER}, #{quitActionDate,jdbcType=VARCHAR}, #{nature,jdbcType=VARCHAR},
+      #{natureDesc,jdbcType=VARCHAR}, #{positionCode,jdbcType=VARCHAR}, #{positionName,jdbcType=VARCHAR},
+      #{gridDistributeFlag,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+      #{ts,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.jdl.basic.api.domain.user.JyUser">
     insert into jy_user
@@ -324,83 +265,100 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.jdl.basic.api.domain.user.JyUser">
     update jy_user
-    set user_erp               = #{userErp,jdbcType=VARCHAR},
-        user_name              = #{userName,jdbcType=VARCHAR},
-        sex                    = #{sex,jdbcType=VARCHAR},
-        entry_date             = #{entryDate,jdbcType=VARCHAR},
-        organization_code      = #{organizationCode,jdbcType=VARCHAR},
-        organization_name      = #{organizationName,jdbcType=VARCHAR},
-        organization_full_name = #{organizationFullName,jdbcType=VARCHAR},
-        user_status            = #{userStatus,jdbcType=INTEGER},
-        quit_action_date       = #{quitActionDate,jdbcType=VARCHAR},
-        nature                 = #{nature,jdbcType=VARCHAR},
-        nature_desc            = #{natureDesc,jdbcType=VARCHAR},
-        position_code          = #{positionCode,jdbcType=VARCHAR},
-        position_name          = #{positionName,jdbcType=VARCHAR},
-        grid_distribute_flag   = #{gridDistributeFlag,jdbcType=BIT},
-        create_time            = #{createTime,jdbcType=TIMESTAMP},
-        update_time            = #{updateTime,jdbcType=TIMESTAMP},
-        ts                     = #{ts,jdbcType=TIMESTAMP}
+    set user_erp = #{userErp,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      entry_date = #{entryDate,jdbcType=VARCHAR},
+      organization_code = #{organizationCode,jdbcType=VARCHAR},
+      organization_name = #{organizationName,jdbcType=VARCHAR},
+      organization_full_name = #{organizationFullName,jdbcType=VARCHAR},
+      user_status = #{userStatus,jdbcType=INTEGER},
+      quit_action_date = #{quitActionDate,jdbcType=VARCHAR},
+      nature = #{nature,jdbcType=VARCHAR},
+      nature_desc = #{natureDesc,jdbcType=VARCHAR},
+      position_code = #{positionCode,jdbcType=VARCHAR},
+      position_name = #{positionName,jdbcType=VARCHAR},
+      grid_distribute_flag = #{gridDistributeFlag,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      ts = #{ts,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="searchUserByCondition"
-    parameterType="com.jdl.basic.api.domain.user.JyUserQueryCondition" resultMap="BaseResultMap">
+  <select id="searchUserBySiteCode" parameterType="com.jdl.basic.api.domain.user.JyUserQueryCondition" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List"/>
     from
-    jy_user
+        jy_user
     where
-    user_status = 1
-    <include refid="queryCondition"/>
+        user_status = 1
+    and
+        site_code = #{siteCode, jdbcType=INTEGER}
   </select>
 
   <select id="queryByUserIds" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List"/>
     from
-    jy_user
+        jy_user
     where
-    id in
-    <foreach collection="users" item="item" separator="," open="(" close=")">
-      #{item.id}
-    </foreach>
-    <include refid="queryCondition"/>
+      id in
+      <foreach collection="users" item="item" separator="," open="(" close=")">
+        #{item.id}
+      </foreach>
   </select>
 
   <update id="batchUpdateByUserIds">
     update
-    jy_user
+        jy_user
     set
-    grid_distribute_flag = #{gridDistributeFlag}
+      grid_distribute_flag = #{gridDistributeFlag}
     where
-    id in
-    <foreach collection="users" item="item" separator="," open="(" close=")">
-      #{item.id}
-    </foreach>
+      id in
+        <foreach collection="users" item="item" separator="," open="(" close=")">
+          #{item.id}
+        </foreach>
   </update>
 
   <select id="queryUndistributedCountBySiteCode" resultType="java.lang.Integer">
-    select count(*)
-    from jy_user
-    where user_status = 1
-      and site_code = #{siteCode, jdbcType=INTEGER}
-      and grid_distribute_flag = 0
+    select
+        count(*)
+    from
+        jy_user
+    where
+        user_status = 1
+    and
+        site_code = #{siteCode, jdbcType=INTEGER}
+    and
+        grid_distribute_flag = 0
   </select>
 
   <select id="queryDifference" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List"/>
     from
-    jy_user
+        jy_user
     where
     (
-    create_time <![CDATA[ >= ]]> #{createTime,jdbcType=TIMESTAMP}
+        entry_date <![CDATA[ >= ]]> #{entryDate,jdbcType=VARCHAR}
     or
-    update_time <![CDATA[ >= ]]> #{updateTime,jdbcType=TIMESTAMP}
+        quit_action_date <![CDATA[ >= ]]> #{quitActionDate,jdbcType=VARCHAR}
     )
     and
-    site_code = #{siteCode, jdbcType=INTEGER}
+        site_code = #{siteCode, jdbcType=INTEGER}
+  </select>
+
+  <select id="batchQueryQuitUserByUserId" resultMap="BaseResultMap">
+    select
+        <include refid="Base_Column_List"/>
+    from
+        jy_user
+    where
+        user_status = 2
+    and id in
+    <foreach collection="users" item="item" separator="," open="(" close=")">
+        #{item.id}
+    </foreach>
   </select>
 
   <select id="queryUnDistributedUserList" resultMap="BaseResultMap">

@@ -12,6 +12,8 @@ import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.core.dao.user.JyUserDao;
 import com.jdl.basic.provider.core.service.user.UserService;
 import com.jdl.basic.rpc.exception.JYBasicRpcException;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,12 +48,12 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserServiceImpl.searchUserBySiteCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-  public Result<List<JyUser>> searchUserByCondition(JyUserQueryCondition condition) {
+  public Result<List<JyUser>> searchUserBySiteCode(JyUserQueryCondition condition) {
     Result<List<JyUser>> result = Result.success();
     if (condition.getSiteCode() == null) {
       return result.toFail("场地编码不能为空！");
     }
-    result.setData(jyUserDao.searchUserByCondition(condition));
+    result.setData(jyUserDao.searchUserBySiteCode(condition));
     return result;
   }
 
@@ -104,14 +106,24 @@ public class UserServiceImpl implements UserService {
     if (condition.getSiteCode() == null) {
       return result.toFail("场地编码不能为空！");
     }
-    if (condition.getCreateTime() == null) {
-      return result.toFail("创建时间不能为空！");
+    if (condition.getQuitActionDate() == null) {
+      return result.toFail("离职时间不能为空！");
     }
-    if (condition.getUpdateTime() == null) {
-      return result.toFail("更新时间不能为空！");
+    if (condition.getEntryDate() == null) {
+      return result.toFail("入职时间不能为空！");
     }
     return result.setData(jyUserDao.queryDifference(condition));
   }
+
+  @Override
+  public Result<List<JyUser>> batchQueryQuitUserByUserId(JyUserBatchRequest request) {
+    Result<List<JyUser>> result = Result.success();
+    if (CollectionUtils.isEmpty(request.getUsers())) {
+      return result.toFail("用户ID不能为空");
+    }
+    return result.setData(jyUserDao.batchQueryQuitUserByUserId(request));
+  }
+
 
   @Override
   public List<JyUser> queryUnDistributedUserList(UnDistributedUserQueryDto dto) {

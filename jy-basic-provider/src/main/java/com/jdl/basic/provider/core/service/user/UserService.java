@@ -34,7 +34,7 @@ public interface UserService {
    * @param condition
    * @return
    */
-  Result<List<JyUser>> searchUserByCondition(JyUserQueryCondition condition);
+  Result<List<JyUser>> searchUserBySiteCode(JyUserQueryCondition condition);
 
   /**
    * 根据员工id以及条件批量查询员工
@@ -43,11 +43,33 @@ public interface UserService {
    */
   Result<List<JyUser>> queryByUserIds(JyUserBatchRequest request);
 
+  /**
+   * 根据用户id批量修改
+   * @param request
+   * @return
+   */
   Result<Boolean> batchUpdateByUserIds(JyUserBatchRequest request);
 
+  /**
+   * 查询场地下未分配人员数量
+   * @param condition
+   * @return
+   */
   Result<Integer> queryUndistributedCountBySiteCode(JyUserQueryCondition condition);
 
+  /**
+   * 查询入职时间或离职时间大于给定时间的用户
+   * @param condition
+   * @return
+   */
   Result<List<JyUser>> queryDifference(JyUserQueryCondition condition);
+
+  /**
+   * 从给定的id中筛选出已离职的
+   * @param request
+   * @return
+   */
+  Result<List<JyUser>> batchQueryQuitUserByUserId(JyUserBatchRequest request);
 
   List<JyUser> queryUnDistributedUserList(UnDistributedUserQueryDto dto);
 }

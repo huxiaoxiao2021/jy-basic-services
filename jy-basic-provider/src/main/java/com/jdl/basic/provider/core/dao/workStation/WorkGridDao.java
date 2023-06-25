@@ -83,4 +83,6 @@ public interface WorkGridDao {
 	List<WorkGrid> queryWorkGrid(WorkGrid queryParams);
 
 	List<WorkGrid> batchQueryByWorkGridKey(List<String> workGridKeys);
+
+	List<WorkGrid> queryAreaWorkGrid(WorkGridQuery query);
 }

@@ -10,15 +10,45 @@ import java.util.List;
 
 public interface UserWorkGridService {
 
-    Result<List<UserWorkGrid>> queryByCondition(UserWorkGridRequest request);
+    /**
+     * 根据网格主键批量查询网格分配记录
+     * @param request
+     * @return
+     */
+    Result<List<UserWorkGrid>> batchQueryUserWorkGridByGridKey(UserWorkGridBatchRequest request);
 
-    Result<List<UserWorkGrid>> queryDifference(UserWorkGridRequest request);
-
+    /**
+     * 批量插入
+     * @param request
+     * @return
+     */
     Result<Boolean> batchInsert(UserWorkGridBatchRequest request);
 
+    /**
+     * 批量删除
+     * @param request
+     * @return
+     */
     Result<Boolean> batchDelete(UserWorkGridBatchRequest request);
 
-    Result<List<UserWorkGrid>> queryByUserIdsWithCondition(UserWorkGridBatchRequest request);
+    /**
+     * 根据用户id批量查询
+     * @param request
+     * @return
+     */
+    Result<List<UserWorkGrid>> queryByUserIds(UserWorkGridBatchRequest request);
 
+    /**
+     * 查询网格下已分配的用户
+     * @param request
+     * @return
+     */
     Result<List<JyUser>> getWorkGridDistributedStaff(UserWorkGridRequest request);
+
+    /**
+     * 查询给定时间至今某网格已删除的网格分配记录
+     * @param request
+     * @return
+     */
+    Result<List<UserWorkGrid>> queryDeletedUserWorkGrid(UserWorkGridRequest request);
 }

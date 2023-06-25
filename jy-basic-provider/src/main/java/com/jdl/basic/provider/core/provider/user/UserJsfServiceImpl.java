@@ -15,36 +15,37 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
 @Service("userJsfServiceImpl")
 public class UserJsfServiceImpl implements UserJsfService {
+    @Autowired
+    private UserService userService;
+    @Override
+    public Result<List<JyUser>> searchUserBySiteCode(JyUserQueryCondition condition) {
+        return userService.searchUserBySiteCode(condition);
+    }
 
-  @Autowired
-  private UserService userService;
+    @Override
+    public Result<List<JyUser>> queryByUserIds(JyUserBatchRequest request) {
+        return userService.queryByUserIds(request);
+    }
 
-  @Override
-  public Result<List<JyUser>> searchUserByCondition(JyUserQueryCondition condition) {
-    return userService.searchUserByCondition(condition);
-  }
-
-  @Override
-  public Result<List<JyUser>> queryByUserIds(JyUserBatchRequest request) {
-    return userService.queryByUserIds(request);
-  }
-
-  @Override
-  public Result<Integer> queryUndistributedCountBySiteCode(JyUserQueryCondition condition) {
-    return userService.queryUndistributedCountBySiteCode(condition);
-  }
+    @Override
+    public Result<Integer> queryUndistributedCountBySiteCode(JyUserQueryCondition condition) {
+        return userService.queryUndistributedCountBySiteCode(condition);
+    }
 
   @Override
   public Result<List<JyUser>> queryDifference(JyUserQueryCondition condition) {
     return userService.queryDifference(condition);
   }
 
+    @Override
+    public Result<List<JyUser>> batchQueryQuitUserByUserId(JyUserBatchRequest request) {
+        return userService.batchQueryQuitUserByUserId(request);
+    }
   @Override
   public Result<List<JyUser>> queryUnDistributedUserList(UnDistributedUserQueryDto dto) {
     checkUnDistributedUserQueryDto(dto);

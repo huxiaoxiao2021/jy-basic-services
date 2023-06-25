@@ -9,13 +9,15 @@ import com.jdl.basic.api.domain.user.UnDistributedUserQueryDto;
 import java.util.List;
 
 public interface UserJsfService {
-    Result<List<JyUser>> searchUserByCondition(JyUserQueryCondition condition);
+    Result<List<JyUser>> searchUserBySiteCode(JyUserQueryCondition condition);
 
     Result<List<JyUser>> queryByUserIds(JyUserBatchRequest request);
 
     Result<Integer> queryUndistributedCountBySiteCode(JyUserQueryCondition condition);
 
     Result<List<JyUser>> queryDifference(JyUserQueryCondition condition);
+
+    Result<List<JyUser>> batchQueryQuitUserByUserId(JyUserBatchRequest request);
 
     /**
      * 查询未分配到网格的人员列表

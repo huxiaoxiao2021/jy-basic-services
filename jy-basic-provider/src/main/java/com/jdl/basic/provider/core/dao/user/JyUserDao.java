@@ -22,15 +22,47 @@ public interface JyUserDao {
 
     JyUser queryUserInfo(JyUser condition);
 
-    List<JyUser> searchUserByCondition(JyUserQueryCondition condition);
+    /**
+     * 查询场地下的用户
+     * @param condition
+     * @return
+     */
+    List<JyUser> searchUserBySiteCode(JyUserQueryCondition condition);
 
+    /**
+     * 根据userId批量查询用户
+     * @param request
+     * @return
+     */
     List<JyUser> queryByUserIds(JyUserBatchRequest request);
 
+    /**
+     * 根据userId批量修改
+     * @param request
+     * @return
+     */
     int batchUpdateByUserIds(JyUserBatchRequest request);
 
+    /**
+     * 查询场地下未分配网格的用户数
+     * @param condition
+     * @return
+     */
     Integer queryUndistributedCountBySiteCode(JyUserQueryCondition condition);
 
+    /**
+     *
+     * @param condition
+     * @return
+     */
     List<JyUser> queryDifference(JyUserQueryCondition condition);
+
+    /**
+     * 从给出的用户ID中筛选出离职的
+     * @param request
+     * @return
+     */
+    List<JyUser> batchQueryQuitUserByUserId(JyUserBatchRequest request);
 
     List<JyUser> queryUnDistributedUserList(UnDistributedUserQueryDto dto);
 }

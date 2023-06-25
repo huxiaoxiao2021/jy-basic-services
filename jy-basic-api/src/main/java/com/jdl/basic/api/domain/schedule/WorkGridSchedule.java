@@ -7,9 +7,11 @@ public class WorkGridSchedule {
 
     private Long workGridId;
 
-    private String wokrGridKey;
+    private String workGridKey;
 
     private Integer scheduleNo;
+
+    private String scheduleKey;
 
     private String scheduleName;
 
@@ -18,6 +20,8 @@ public class WorkGridSchedule {
     private String endTime;
 
     private Integer scheduleType;
+
+    private Integer sourceType;
 
     private Byte yn;
 
@@ -51,12 +55,12 @@ public class WorkGridSchedule {
         this.workGridId = workGridId;
     }
 
-    public String getWokrGridKey() {
-        return wokrGridKey;
+    public String getWorkGridKey() {
+        return workGridKey;
     }
 
-    public void setWokrGridKey(String wokrGridKey) {
-        this.wokrGridKey = wokrGridKey;
+    public void setWorkGridKey(String workGridKey) {
+        this.workGridKey = workGridKey;
     }
 
     public Integer getScheduleNo() {
@@ -65,6 +69,14 @@ public class WorkGridSchedule {
 
     public void setScheduleNo(Integer scheduleNo) {
         this.scheduleNo = scheduleNo;
+    }
+
+    public String getScheduleKey() {
+        return scheduleKey;
+    }
+
+    public void setScheduleKey(String scheduleKey) {
+        this.scheduleKey = scheduleKey;
     }
 
     public String getScheduleName() {
@@ -97,6 +109,14 @@ public class WorkGridSchedule {
 
     public void setScheduleType(Integer scheduleType) {
         this.scheduleType = scheduleType;
+    }
+
+    public Integer getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(Integer sourceType) {
+        this.sourceType = sourceType;
     }
 
     public Byte getYn() {
