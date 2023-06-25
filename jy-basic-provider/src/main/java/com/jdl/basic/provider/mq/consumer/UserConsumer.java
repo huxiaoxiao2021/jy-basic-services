@@ -53,8 +53,8 @@ public class UserConsumer {
       }
       UserInfoBusinessDTO userInfo = JsonHelper.toObject(content, UserInfoBusinessDTO.class);
       if (ObjectHelper.isNotNull(userInfo)) {
-        if (ObjectHelper.isEmpty(userInfo.getUserName()) || ObjectHelper.isEmpty(userInfo.getEntryDate()) ||ObjectHelper.isEmpty(userInfo.getNature())){
-          log.error("用户数据必要参数不全：{}",content);
+        if (ObjectHelper.isEmpty(userInfo.getUserName()) || ObjectHelper.isEmpty(userInfo.getEntryDate()) || ObjectHelper.isEmpty(userInfo.getNature())) {
+          log.error("用户数据必要参数不全：{}", content);
           return;
         }
         JyUser condition = assembleUser(userInfo);
@@ -65,14 +65,15 @@ public class UserConsumer {
         }
         try {
           JyUser exitUser = userService.queryUserInfo(condition);
-          BaseStaffSiteOrgDto baseStaffSiteOrgDto =baseMajorManager.getBaseStaffByErp(userInfo.getUserName());
-          if (ObjectHelper.isNotNull(baseStaffSiteOrgDto)){
+          BaseStaffSiteOrgDto baseStaffSiteOrgDto = baseMajorManager.getBaseStaffByErp(userInfo.getUserName());
+          if (ObjectHelper.isNotNull(baseStaffSiteOrgDto)) {
             condition.setSiteCode(baseStaffSiteOrgDto.getSiteCode());
             condition.setSiteName(baseStaffSiteOrgDto.getSiteName());
-            WorkSiteTypeEnum siteTypeEnum =WorkSiteTypeEnum.getWorkingSiteTypeBySubType(baseStaffSiteOrgDto.getSubType());
-            if (ObjectHelper.isEmpty(siteTypeEnum)){
-              log.info("非分拣中心类型场地数据：{}",content);
-              return;
+            WorkSiteTypeEnum siteTypeEnum = WorkSiteTypeEnum.getWorkingSiteTypeBySubType(baseStaffSiteOrgDto.getSubType());
+            if (ObjectHelper.isEmpty(siteTypeEnum)) {
+              log.info("非分拣中心类型场地数据：{}", content);
+              condition.setSiteType(WorkSiteTypeEnum.OTHER.getCode());
+              //return;
             }
             condition.setSiteType(siteTypeEnum.getCode());
           }

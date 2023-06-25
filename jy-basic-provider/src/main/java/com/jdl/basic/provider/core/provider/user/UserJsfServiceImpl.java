@@ -49,7 +49,7 @@ public class UserJsfServiceImpl implements UserJsfService {
   @Override
   public Result<List<JyUser>> queryUnDistributedUserList(UnDistributedUserQueryDto dto) {
     checkUnDistributedUserQueryDto(dto);
-    PageHelper.startPage(dto.getPageNo(),dto.getPageSize());
+    //PageHelper.startPage(dto.getPageNo(),dto.getPageSize());
     List<JyUser> jyUserList = userService.queryUnDistributedUserList(dto);
     if (CollectionUtils.isNotEmpty(jyUserList)){
       return Result.success(jyUserList);
