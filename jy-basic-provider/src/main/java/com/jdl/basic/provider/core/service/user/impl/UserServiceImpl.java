@@ -129,4 +129,10 @@ public class UserServiceImpl implements UserService {
   public List<JyUser> queryUnDistributedUserList(UnDistributedUserQueryDto dto) {
     return jyUserDao.queryUnDistributedUserList(dto);
   }
+
+@Override
+public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryCondition condition) {
+	Result<List<JyUser>> result = Result.success();
+	return result.setData(jyUserDao.queryUserListBySiteAndPosition(condition));
+}
 }

@@ -25,6 +25,11 @@ public interface UserJsfService {
      * @return
      */
     Result<List<JyUser>> queryUnDistributedUserList(UnDistributedUserQueryDto unDistributedUserQueryDto);
-
+    /**
+     * 查询人员岗位下列表
+     * @param condition
+     * @return
+     */
+    Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryCondition condition);
 
 }

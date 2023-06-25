@@ -65,4 +65,9 @@ public class UserJsfServiceImpl implements UserJsfService {
       dto.setPageSize(Constants.DEFAULT_PAGE_SIZE_QUERY_USER);
     }
   }
+
+	@Override
+	public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryCondition condition) {
+		return userService.queryUserListBySiteAndPosition(condition);
+	}
 }

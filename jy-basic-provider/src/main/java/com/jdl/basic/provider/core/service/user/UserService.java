@@ -72,4 +72,10 @@ public interface UserService {
   Result<List<JyUser>> batchQueryQuitUserByUserId(JyUserBatchRequest request);
 
   List<JyUser> queryUnDistributedUserList(UnDistributedUserQueryDto dto);
+  /**
+   * 查询人员岗位下列表
+   * @param condition
+   * @return
+   */
+  Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryCondition condition);
 }
