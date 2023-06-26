@@ -1723,4 +1723,9 @@ public class Constants {
     public static final String COLUMN_PAGE_NO="pageNo";
     public static final String COLUMN_SITE_CODE="siteCode";
 
+    /**
+     * 用户打卡数据筛选天数
+     */
+    public static final Integer USER_SIGN_CHECK_DAYS= -7;
+
 }

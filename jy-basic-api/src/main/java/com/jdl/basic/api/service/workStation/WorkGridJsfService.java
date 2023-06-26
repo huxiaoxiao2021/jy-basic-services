@@ -115,4 +115,17 @@ public interface WorkGridJsfService {
 	Result<List<WorkGrid>> batchQueryByWorkGridKey(List<String> workGridKeys);
 
 	Result<List<WorkGrid>> queryAreaWorkGrid(WorkGridQuery query);
+
+	/**
+	 * 根据场地+作业区+楼层+网格号--精确查询网格数据
+	 *
+	 * siteCode
+	 * floor
+	 * gridNo
+	 * areaCode
+	 *
+	 * @param query
+	 * @return
+	 */
+	Result<WorkGrid> exactQueryWorkGridByBizKey(WorkGrid query);
 }

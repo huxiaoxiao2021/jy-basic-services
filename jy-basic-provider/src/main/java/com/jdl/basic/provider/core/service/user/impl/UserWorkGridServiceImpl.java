@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserWorkGridServiceImpl implements UserWorkGridService {
@@ -37,6 +38,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.batchInsert", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    @Transactional
     public Result<Boolean> batchInsert(UserWorkGridBatchRequest request) {
         Result<Boolean> result = Result.success();
         if (request.getUserWorkGrids() == null) {
