@@ -45,7 +45,7 @@ public class UserWorkGridServiceTest {
         List<UserWorkGrid> list = new ArrayList<>();
 
         UserWorkGrid userWorkGrid1 = new UserWorkGrid();
-        userWorkGrid1.setWorkGridKey("CDWG00000019007");
+        userWorkGrid1.setWorkGridKey("CDWG00000022111");
         userWorkGrid1.setNature("1");
         userWorkGrid1.setUserId(1L);
         userWorkGrid1.setCreateUserErp("wuyoude");
@@ -56,7 +56,7 @@ public class UserWorkGridServiceTest {
         userWorkGrid1.setUpdateTime(new Date());
 
         UserWorkGrid userWorkGrid2 = new UserWorkGrid();
-        userWorkGrid2.setWorkGridKey("CDWG00000022001");
+        userWorkGrid2.setWorkGridKey("CDWG00000022111");
         userWorkGrid2.setNature("2");
         userWorkGrid2.setUserId(2L);
         userWorkGrid2.setCreateUserErp("wuyoude");

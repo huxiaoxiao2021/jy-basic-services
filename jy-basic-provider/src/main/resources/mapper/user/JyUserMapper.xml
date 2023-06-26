@@ -294,6 +294,9 @@
         user_status = 1
     and
         site_code = #{siteCode, jdbcType=INTEGER}
+    <if test="nature != null and nature != ''">
+    and nature = #{nature, jdbcType=VARCHAR}
+    </if>
   </select>
 
   <select id="queryByUserIds" parameterType="java.lang.Long" resultMap="BaseResultMap">
