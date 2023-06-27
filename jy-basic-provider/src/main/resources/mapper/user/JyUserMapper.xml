@@ -15,6 +15,8 @@
     <result column="quit_action_date" jdbcType="VARCHAR" property="quitActionDate"/>
     <result column="nature" jdbcType="VARCHAR" property="nature"/>
     <result column="nature_desc" jdbcType="VARCHAR" property="natureDesc"/>
+    <result column="std_position_code" jdbcType="VARCHAR" property="stdPositionCode"/>
+    <result column="std_position_name" jdbcType="VARCHAR" property="stdPositionName"/>
     <result column="position_code" jdbcType="VARCHAR" property="positionCode"/>
     <result column="position_name" jdbcType="VARCHAR" property="positionName"/>
     <result column="grid_distribute_flag" jdbcType="BIT" property="gridDistributeFlag"/>
@@ -28,7 +30,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     id, user_erp, user_name, sex, entry_date, organization_code, organization_name, organization_full_name,
-    user_status, quit_action_date, nature, nature_desc, position_code, position_name,
+    user_status, quit_action_date, nature, nature_desc,position_code, position_name, std_position_code, std_position_name,
     grid_distribute_flag, create_time, update_time, ts,site_code,site_name,site_type
   </sql>
 
@@ -53,14 +55,14 @@
       sex, entry_date, organization_code,
       organization_name, organization_full_name,
       user_status, quit_action_date, nature,
-      nature_desc, position_code, position_name,
+      nature_desc,position_code, position_name, std_position_code, std_position_name,
       grid_distribute_flag, create_time, update_time,
       ts)
     values (#{id,jdbcType=BIGINT}, #{userErp,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
       #{sex,jdbcType=VARCHAR}, #{entryDate,jdbcType=VARCHAR}, #{organizationCode,jdbcType=VARCHAR},
       #{organizationName,jdbcType=VARCHAR}, #{organizationFullName,jdbcType=VARCHAR},
       #{userStatus,jdbcType=INTEGER}, #{quitActionDate,jdbcType=VARCHAR}, #{nature,jdbcType=VARCHAR},
-      #{natureDesc,jdbcType=VARCHAR}, #{positionCode,jdbcType=VARCHAR}, #{positionName,jdbcType=VARCHAR},
+      #{natureDesc,jdbcType=VARCHAR},#{positionCode,jdbcType=VARCHAR}, #{positionName,jdbcType=VARCHAR}, #{stdPositionCode,jdbcType=VARCHAR}, #{stdPositionName,jdbcType=VARCHAR},
       #{gridDistributeFlag,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
       #{ts,jdbcType=TIMESTAMP})
   </insert>
@@ -104,10 +106,16 @@
         nature_desc,
       </if>
       <if test="positionCode != null">
-        position_code,
+      position_code,
       </if>
       <if test="positionName != null">
         position_name,
+      </if>
+      <if test="stdPositionCode != null">
+        std_position_code,
+      </if>
+      <if test="stdPositionName != null">
+        std_position_name,
       </if>
       <if test="gridDistributeFlag != null">
         grid_distribute_flag,
@@ -169,10 +177,16 @@
         #{natureDesc,jdbcType=VARCHAR},
       </if>
       <if test="positionCode != null">
-        #{positionCode,jdbcType=VARCHAR},
+      #{positionCode,jdbcType=VARCHAR},
       </if>
       <if test="positionName != null">
         #{positionName,jdbcType=VARCHAR},
+      </if>
+      <if test="stdPositionCode != null">
+        #{stdPositionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="stdPositionName != null">
+        #{stdPositionName,jdbcType=VARCHAR},
       </if>
       <if test="gridDistributeFlag != null">
         #{gridDistributeFlag,jdbcType=BIT},
@@ -234,10 +248,16 @@
         nature_desc = #{natureDesc,jdbcType=VARCHAR},
       </if>
       <if test="positionCode != null">
-        position_code = #{positionCode,jdbcType=VARCHAR},
+      position_code = #{positionCode,jdbcType=VARCHAR},
       </if>
       <if test="positionName != null">
         position_name = #{positionName,jdbcType=VARCHAR},
+      </if>
+      <if test="stdPositionCode != null">
+        std_position_code = #{stdPositionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="stdPositionName != null">
+        std_position_name = #{stdPositionName,jdbcType=VARCHAR},
       </if>
       <if test="gridDistributeFlag != null">
         grid_distribute_flag = #{gridDistributeFlag,jdbcType=BIT},
@@ -278,6 +298,8 @@
       nature_desc = #{natureDesc,jdbcType=VARCHAR},
       position_code = #{positionCode,jdbcType=VARCHAR},
       position_name = #{positionName,jdbcType=VARCHAR},
+      std_position_code = #{stdPositionCode,jdbcType=VARCHAR},
+      std_position_name = #{stdPositionName,jdbcType=VARCHAR},
       grid_distribute_flag = #{gridDistributeFlag,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -382,5 +404,5 @@
       and site_code = #{siteCode}
       and position_code = #{positionCode,jdbcType=VARCHAR}
     limit 200
-  </select>    
+  </select>
 </mapper>

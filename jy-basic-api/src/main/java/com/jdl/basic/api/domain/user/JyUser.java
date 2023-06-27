@@ -31,6 +31,10 @@ public class JyUser {
 
     private String positionName;
 
+    private String stdPositionName;
+
+    private String stdPositionCode;
+
     private Boolean gridDistributeFlag;
 
     private Date createTime;
@@ -179,6 +183,22 @@ public class JyUser {
 
     public void setPositionName(String positionName) {
         this.positionName = positionName;
+    }
+
+    public String getStdPositionName() {
+        return stdPositionName;
+    }
+
+    public void setStdPositionName(String stdPositionName) {
+        this.stdPositionName = stdPositionName;
+    }
+
+    public String getStdPositionCode() {
+        return stdPositionCode;
+    }
+
+    public void setStdPositionCode(String stdPositionCode) {
+        this.stdPositionCode = stdPositionCode;
     }
 
     public Boolean getGridDistributeFlag() {

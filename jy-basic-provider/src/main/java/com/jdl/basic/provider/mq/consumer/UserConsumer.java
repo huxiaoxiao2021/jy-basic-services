@@ -75,7 +75,9 @@ public class UserConsumer {
               condition.setSiteType(WorkSiteTypeEnum.OTHER.getCode());
               //return;
             }
+            else {
             condition.setSiteType(siteTypeEnum.getCode());
+            }
           }
           int rs = 0;
           Date now = new Date();
@@ -111,11 +113,15 @@ public class UserConsumer {
         UserSatusEnum.ONJOB.getCode().equals(userInfo.getStatus())
             ? UserSatusEnum.ONJOB.getCode()
             : UserSatusEnum.QUIT.getCode());
-    //user.setQuitActionDate(userInfo.getQuitActionDate());
+    if (ObjectHelper.isNotNull(userInfo.getQuitActionDate())){
+      user.setQuitActionDate(DateHelper.getDateOfyyMMdd2(userInfo.getQuitActionDate()));
+    }
     user.setNature(userInfo.getNature());
     user.setNatureDesc(userInfo.getNatureDesc());
     user.setPositionCode(userInfo.getPositionCode());
     user.setPositionName(userInfo.getPositionName());
+    user.setStdPositionCode(userInfo.getStdPositionCode());
+    user.setStdPositionName(userInfo.getStdPositionName());
     return user;
   }
 
