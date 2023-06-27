@@ -540,9 +540,12 @@ public class WorkGridServiceImpl implements WorkGridService {
 		}
 		Map<Integer,List<WorkGridFlowDirection>> flowDataMap = new HashMap<>();
 		data.setFlowDataMap(flowDataMap);
-		Date curDate = new Date();
+		Date createTime = new Date();
 		for(GridFlowLineTypeEnum lineType : flowSiteCodes.keySet()) {
 			List<String> siteCodeStrList = flowSiteCodes.get(lineType);
+			if(siteCodeStrList.size() > importDatasLimit) {
+				return result.toFail(lineType.getName()+"流向站点不能超过！【"+importDatasLimit+"】个");
+			}
 			List<WorkGridFlowDirection> flowDataList = new ArrayList<>();
 			for(String siteCodeStr : siteCodeStrList) {
 				Integer siteCodeInt = null;
@@ -561,7 +564,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 				flowData.setOrgCode(workGridData.getOrgCode());
 				flowData.setOrgName(workGridData.getOrgName());
 				flowData.setCreateUser(data.getConfigFlowUser());
-				flowData.setCreateTime(curDate);
+				flowData.setCreateTime(createTime);
 				flowData.setLineType(lineType.getCode());
 				flowData.setFlowSiteCode(siteCodeInt);
 				flowData.setFlowOrgCode(siteInfo.getOrgId());
