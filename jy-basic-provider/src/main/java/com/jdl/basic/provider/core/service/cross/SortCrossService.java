@@ -77,5 +77,8 @@ public interface SortCrossService {
      * 根据滑道笼车信息查询场地流向
      */
     TableTrolleyJsfResp querySiteFlowByCrossCodeTableTrolley(TableTrolleyQuery tableTrolleyQuery);
-
+    /**
+     * 根据场地流向批量查询滑道笼车信息
+     */
+    TableTrolleyJsfResp queryCrossCodeTableTrolleyBySiteFlowList(TableTrolleyQuery request);
 }
