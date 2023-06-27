@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.core.dao.user;
 
+import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.JyUser;
 import com.jdl.basic.api.domain.user.JyUserBatchRequest;
 import com.jdl.basic.api.domain.user.JyUserQueryCondition;
@@ -71,4 +72,7 @@ public interface JyUserDao {
      * @return
      */
 	List<JyUser> queryUserListBySiteAndPosition(JyUserQueryCondition condition);
+
+    List<JyUser> queryNatureUndistributedUsers(JyUserQueryCondition condition);
+
 }

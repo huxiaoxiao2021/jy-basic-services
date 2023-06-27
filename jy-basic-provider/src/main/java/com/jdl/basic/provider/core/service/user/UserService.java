@@ -78,4 +78,12 @@ public interface UserService {
    * @return
    */
   Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryCondition condition);
+
+  /**
+   * 查询网格下某工种未分配员工
+   * @param condition
+   * @return
+   */
+  Result<List<JyUser>> queryNatureUndistributedUsers(JyUserQueryCondition condition);
+
 }

@@ -135,4 +135,10 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryCondition 
 	Result<List<JyUser>> result = Result.success();
 	return result.setData(jyUserDao.queryUserListBySiteAndPosition(condition));
 }
+
+  @Override
+  public Result<List<JyUser>> queryNatureUndistributedUsers(JyUserQueryCondition condition) {
+    Result<List<JyUser>> result = Result.success();
+    return result.setData(jyUserDao.queryNatureUndistributedUsers(condition));
+  }
 }

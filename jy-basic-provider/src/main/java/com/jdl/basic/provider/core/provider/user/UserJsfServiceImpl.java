@@ -70,4 +70,9 @@ public class UserJsfServiceImpl implements UserJsfService {
 	public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryCondition condition) {
 		return userService.queryUserListBySiteAndPosition(condition);
 	}
+
+    @Override
+    public Result<List<JyUser>> queryNatureUndistributedUsers(JyUserQueryCondition condition) {
+        return userService.queryNatureUndistributedUsers(condition);
+    }
 }

@@ -408,4 +408,18 @@
       and position_code = #{positionCode,jdbcType=VARCHAR}
     limit 200
   </select>
+
+  <select id="queryNatureUndistributedUsers" resultMap="BaseResultMap">
+    select
+        <include refid="Base_Column_List"/>
+    from
+        jy_user
+    where
+        user_status = 1
+    and
+        site_code = #{siteCode}
+    and
+        nature = #{nature}
+    and
+  </select>
 </mapper>
