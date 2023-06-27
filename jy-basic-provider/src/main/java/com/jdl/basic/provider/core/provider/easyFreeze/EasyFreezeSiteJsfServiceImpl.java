@@ -75,10 +75,10 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
         }else {
             dto.setSiteType("分拣");
         }
-        dto.setProvinceAgencyCode(basicDto.getProvinceAgencyCode());
-        dto.setProvinceAgencyName(basicDto.getProvinceAgencyName());
-        dto.setAreaHubCode(basicDto.getAreaCode());
-        dto.setAreaHubName(basicDto.getAreaName());
+        dto.setProvinceAgencyCode(StringUtils.isEmpty(basicDto.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : basicDto.getProvinceAgencyCode());
+        dto.setProvinceAgencyName(StringUtils.isEmpty(basicDto.getProvinceAgencyName()) ? Constants.EMPTY_FILL : basicDto.getProvinceAgencyName());
+        dto.setAreaHubCode(StringUtils.isEmpty(basicDto.getAreaCode()) ? Constants.EMPTY_FILL : basicDto.getAreaCode());
+        dto.setAreaHubName(StringUtils.isEmpty(basicDto.getAreaName()) ? Constants.EMPTY_FILL : basicDto.getAreaName());
     }
 
     @Override
@@ -166,6 +166,10 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
                     result.toFail("无此站点{ "+dtoList.get(i).getSiteCode()+" }信息! 请检查后重新导入!");
                     return result;
                 }
+                dtoList.get(i).setProvinceAgencyCode(StringUtils.isEmpty(basicDto.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : basicDto.getProvinceAgencyCode());
+                dtoList.get(i).setProvinceAgencyName(StringUtils.isEmpty(basicDto.getProvinceAgencyName()) ? Constants.EMPTY_FILL : basicDto.getProvinceAgencyName());
+                dtoList.get(i).setAreaHubCode(StringUtils.isEmpty(basicDto.getAreaCode()) ? Constants.EMPTY_FILL : basicDto.getAreaCode());
+                dtoList.get(i).setAreaHubName(StringUtils.isEmpty(basicDto.getAreaName()) ? Constants.EMPTY_FILL : basicDto.getAreaName());
 
             }
             return easyFreezeSiteService.importEasyFreezeSiteList(dtoList,loginUser);

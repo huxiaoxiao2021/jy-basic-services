@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service("siteWaveScheduleService")
@@ -51,7 +52,20 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
         }else {
             insertDataList.forEach((item) -> item.setVersionNum(1));
         }
-        siteWaveScheduleDao.batchInsert(insertDataList);
+        siteWaveScheduleDao.batchInsert(insertDataList.stream().peek(item -> {
+            if(item.getProvinceAgencyCode() == null){
+                item.setProvinceAgencyCode(Constants.EMPTY_FILL);
+            }
+            if(item.getProvinceAgencyName() == null){
+                item.setProvinceAgencyName(Constants.EMPTY_FILL);
+            }
+            if(item.getAreaHubCode() == null){
+                item.setAreaHubCode(Constants.EMPTY_FILL);
+            }
+            if(item.getAreaHubName() == null){
+                item.setAreaHubName(Constants.EMPTY_FILL);
+            }
+        }).collect(Collectors.toList()));
         return result;
     }
 

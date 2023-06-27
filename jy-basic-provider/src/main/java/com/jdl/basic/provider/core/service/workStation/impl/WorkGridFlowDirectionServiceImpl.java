@@ -4,6 +4,7 @@ import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.enums.ConfigFlowStatusEnum;
 import com.jdl.basic.api.enums.FlowSiteUseStatusEnum;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.enums.AreaEnum;
 import com.jdl.basic.common.utils.DateHelper;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 场地网格流向表--Service接口实现
@@ -316,6 +318,20 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		if(CollectionUtils.isEmpty(flowList)) {
 			return 0;
 		}
+		flowList = flowList.stream().peek(item -> {
+			if(item.getProvinceAgencyCode() == null){
+				item.setProvinceAgencyCode(Constants.EMPTY_FILL);
+			}
+			if(item.getProvinceAgencyName() == null){
+				item.setProvinceAgencyName(Constants.EMPTY_FILL);
+			}
+			if(item.getFlowProvinceAgencyCode() == null){
+				item.setFlowProvinceAgencyCode(Constants.EMPTY_FILL);
+			}
+			if(item.getFlowProvinceAgencyName() == null){
+				item.setFlowProvinceAgencyName(Constants.EMPTY_FILL);
+			}
+		}).collect(Collectors.toList());
 		return workGridFlowDirectionDao.batchInsert(flowList);
 	}
 	@Override
