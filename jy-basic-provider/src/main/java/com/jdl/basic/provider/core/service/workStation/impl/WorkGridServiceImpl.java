@@ -83,9 +83,16 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Autowired
 	@Qualifier("workAreaService")
 	private WorkAreaService workAreaService;
-	
+	/**
+	 * 导入总数据限制
+	 */
 	@Value("${beans.workGridService.importDatasLimit:100}")
 	private int importDatasLimit;
+	/**
+	 * 导入流向数限制
+	 */	
+	@Value("${beans.workGridService.importDatasPerFlowLimit:100}")
+	private int importDatasPerFlowLimit;	
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -544,7 +551,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		for(GridFlowLineTypeEnum lineType : flowSiteCodes.keySet()) {
 			List<String> siteCodeStrList = flowSiteCodes.get(lineType);
 			if(siteCodeStrList.size() > importDatasLimit) {
-				return result.toFail(lineType.getName()+"流向站点不能超过！【"+importDatasLimit+"】个");
+				return result.toFail(lineType.getName()+"流向站点不能超过！【"+importDatasPerFlowLimit+"】个");
 			}
 			List<WorkGridFlowDirection> flowDataList = new ArrayList<>();
 			for(String siteCodeStr : siteCodeStrList) {
