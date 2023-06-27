@@ -18,7 +18,7 @@ spring:
     testOnBorrow: false
     testOnReturn: false
     poolPreparedStatements: true
-  
+
     #配置监控统计拦截的filters，stat:监控统计、log4j：日志记录、wall：防御sql注入
     #如果允许时报错  java.lang.ClassNotFoundException: org.apache.log4j.Priority
     #则导入 log4j 依赖即可，Maven 地址：https://mvnrepository.com/artifact/log4j/log4j
@@ -37,10 +37,15 @@ spring:
         enabled: true
       ####--app consumer 定义--##########################################################
     consumers:
-      basic-consumer:
+      jmq2-consumer:
         password: 599985AD
         app: JYBasic
         address: jmq-cluster.jd.local:80
+        enabled: true
+      jmq4-consumer:
+        password: f0a10912179747fd9b31dd8e32c6009c
+        app: JYBasic
+        address: nameserver.jmq.jd.local:80
         enabled: true
   ####--topic 定义--#############################################################
 mq:
