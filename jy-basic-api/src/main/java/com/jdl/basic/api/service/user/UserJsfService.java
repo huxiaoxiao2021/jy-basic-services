@@ -32,4 +32,6 @@ public interface UserJsfService {
      */
     Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryCondition condition);
 
+    Result<List<JyUser>> queryNatureUndistributedUsers(JyUserQueryCondition condition);
+
 }
