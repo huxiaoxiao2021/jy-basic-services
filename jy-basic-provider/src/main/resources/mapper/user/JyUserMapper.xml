@@ -421,5 +421,6 @@
     and
         nature = #{nature}
     and
+        grid_distribute_flag = 0
   </select>
 </mapper>
