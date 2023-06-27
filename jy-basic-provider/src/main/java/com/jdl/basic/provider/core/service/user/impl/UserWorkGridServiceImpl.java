@@ -123,7 +123,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         }
         request.setWorkGridKey(request.getWorkGridKey().trim());
         List<UserWorkGrid> userWorkGrids = userWorkGridDao.queryByWorkGridKey(request);
-        if (userWorkGrids != null) {
+        if (CollectionUtils.isNotEmpty(userWorkGrids)) {
             List<JyUser> users = getUsers(userWorkGrids);
             JyUserBatchRequest batchRequest = new JyUserBatchRequest();
             batchRequest.setUsers(users);
@@ -133,6 +133,8 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             } else {
                 result.toFail(userResult.getMessage());
             }
+        } else {
+            result.setData(new ArrayList<>());
         }
         return result;
     }
