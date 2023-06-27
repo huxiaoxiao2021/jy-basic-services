@@ -564,6 +564,9 @@ public class WorkGridServiceImpl implements WorkGridService {
 				if(siteInfo == null) {
 					return result.toFail(lineType.getName()+"流向ID中站点无效！【"+siteCodeStr+"】");
 				}
+				if(siteCodeInt.equals(workGridData.getSiteCode())) {
+					return result.toFail(lineType.getName()+"流向ID不能是网格的站点！【"+siteCodeStr+"】");
+				}
 				WorkGridFlowDirection flowData = new WorkGridFlowDirection();
 				flowData.setRefWorkGridKey(workGridData.getBusinessKey());
 				flowData.setSiteCode(workGridData.getSiteCode());
