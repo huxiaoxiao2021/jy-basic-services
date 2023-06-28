@@ -405,7 +405,7 @@
     jy_user
     WHERE user_status =1
       and site_code = #{siteCode}
-      and position_code = #{positionCode,jdbcType=VARCHAR}
+      and position_name = #{positionName,jdbcType=VARCHAR}
     limit 200
   </select>
 
