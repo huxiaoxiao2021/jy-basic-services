@@ -43,7 +43,7 @@ public class UserConsumer {
   BaseMajorManager baseMajorManager;
 
 
-  @JmqListener(id = "basic-consumer", topics = {"${mq.consumer.topic.wlUserInfo}"})
+  @JmqListener(id = "jmq4-consumer", topics = {"${mq.consumer.topic.wlUserInfo}"})
   public void onMessage(List<Message> messages) {
     for (Message message : messages) {
       String content = message.getText();

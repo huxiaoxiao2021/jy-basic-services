@@ -21,7 +21,7 @@ public class BasicSortCrossDetailConsumer {
     @Autowired
     private SortCrossService sortCrossService;
 
-    @JmqListener(id= "basic-consumer", topics = {"${mq.consumer.topic.sort_cross_detail}"})
+    @JmqListener(id= "jmq2-consumer", topics = {"${mq.consumer.topic.sort_cross_detail}"})
     public void onMessage(List<Message> messages) {
         for (Message message : messages) {
 
