@@ -114,7 +114,7 @@ public class UserWorkGridServiceTest {
     @Test
     public void getWorkGridDistributedStaff() {
         UserWorkGridRequest request = new UserWorkGridRequest();
-        request.setWorkGridKey("CDWG00000022001");
+        request.setWorkGridKey("CDWG00000022111");
         Result<List<JyUser>> result = userWorkGridService.getWorkGridDistributedStaff(request);
 
         log.info("getWorkGridDistributedStaff response {}", JsonHelper.toJSONString(result));

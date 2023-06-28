@@ -82,9 +82,6 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         if (request.getUserWorkGrids() == null) {
             return result.toFail("删除记录不能为空！");
         }
-        if (StringUtils.isEmpty(request.getWorkGridKey())) {
-            return result.toFail("网格主键不能为空！");
-        }
         if (request.getUpdateTime() == null) {
             return result.toFail("修改时间不能为空！");
         }
