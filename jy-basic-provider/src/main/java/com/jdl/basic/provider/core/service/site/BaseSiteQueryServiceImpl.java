@@ -4,9 +4,13 @@ import com.google.common.collect.Lists;
 import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ql.basic.domain.BaseOrganStruct;
 import com.jd.ql.basic.domain.BaseSite;
+import com.jd.ql.basic.domain.PsStoreInfo;
 import com.jd.ql.basic.dto.BaseSiteSimpleDto;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jd.ql.basic.dto.PageDto;
+import com.jd.ql.basic.dto.PsStoreInfoRequest;
+import com.jd.ql.basic.enums.DmsStoreTypeEnum;
+import com.jd.ql.basic.util.PageUtil;
 import com.jd.ump.profiler.CallerInfo;
 import com.jd.ump.profiler.proxy.Profiler;
 import com.jdl.basic.api.dto.site.AreaVO;
@@ -25,6 +29,7 @@ import com.jdl.basic.provider.core.enums.BasicAreaEnum;
 import com.jdl.basic.provider.core.enums.BasicProvinceAgencyEnum;
 import com.jdl.basic.provider.core.enums.SiteOperateStateEnum;
 import com.jdl.basic.provider.core.manager.BasicOrganStructWSManager;
+import com.jdl.basic.provider.core.manager.BasicWareHouseWSManager;
 import com.jdl.basic.provider.core.manager.IBasicSiteQueryWSManager;
 import com.jdl.basic.provider.core.po.BasicSiteEsDto;
 import org.apache.commons.collections.CollectionUtils;
@@ -67,6 +72,9 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
 
     @Autowired
     private DuccPropertyConfiguration duccPropertyConfiguration;
+
+    @Autowired
+    private BasicWareHouseWSManager basicWareHouseWSManager;
 
 
     @Cache(key = "SiteQueryService.queryAllProvinceAgencyInfo", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
@@ -170,18 +178,25 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         CallerInfo info = Profiler.registerInfo("com.jdl.basic.api.service.site.SiteQueryService.querySiteFromBasic",
                 false, true);
         try {
+            limit = limit > MAX_LIMIT ? MAX_LIMIT : limit;
             // 先查站点数据
             PageDto<Object> pageDto = new PageDto<>();
             pageDto.setCurPage(Constants.CONSTANT_NUMBER_ONE);
-            pageDto.setPageSize(limit > MAX_LIMIT ? MAX_LIMIT : limit);
+            pageDto.setPageSize(limit);
             PageDto<List<BaseSiteSimpleDto>> pageSiteResult = basicSiteQueryWSManager.querySiteByCondition(convertOutSiteQuery(siteQueryCondition), pageDto);
             if(pageSiteResult != null && CollectionUtils.isNotEmpty(pageSiteResult.getData())){
                 baseEntity.getData().addAll(convert2OwnBasicSiteList(pageSiteResult.getData()));
             }
-            // 在查库房数据 todo
-            
-            
-            
+            // 在查库房数据
+            if(checkIsQueryWare(siteQueryCondition.getSiteTypes())){
+                PageUtil pageUtil = new PageUtil();
+                pageUtil.setCurPage(Constants.CONSTANT_NUMBER_ONE);
+                pageUtil.setPageSize(limit);
+                PageDto<List<PsStoreInfo>> pageWareResult = basicWareHouseWSManager.query(convertOutWareQuery(siteQueryCondition), pageUtil);
+                if(pageWareResult != null && CollectionUtils.isNotEmpty(pageWareResult.getData())){
+                    baseEntity.getData().addAll(wareConvert2OwnBasicSiteList(pageWareResult.getData()));
+                }
+            }
         }catch (Exception e){
             logger.error("根据条件{}查询站点异常!", JsonHelper.toJSONString(siteQueryCondition), e);
             baseEntity.toFail("服务异常!");
@@ -205,11 +220,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         siteQuery.setSiteNamePym(siteQueryCondition.getSiteNamePym());
         siteQuery.setDmsCode(siteQueryCondition.getDmsCode());
         siteQuery.setSiteTypeList(siteQueryCondition.getSiteTypes());
-        siteQuery.setSubTypeStr(CollectionUtils.isEmpty(siteQueryCondition.getSubTypes()) 
-                ? null : siteQueryCondition.getSubTypes()
-                .stream()
-                .map(Object::toString)
-                .collect(Collectors.joining(Constants.SEPARATOR_COMMA)));
+        siteQuery.setSubTypeList(siteQueryCondition.getSubTypes());
         if(StringUtils.isNotEmpty(siteQueryCondition.getSearchStr())){
             if(NumberHelper.isNumber(siteQueryCondition.getSearchStr())){
                 // 数字，则根据站点id查询
@@ -246,6 +257,20 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         basicSiteVO.setSiteName(item.getSiteName());
         basicSiteVO.setSiteType(item.getSiteType());
         basicSiteVO.setSubType(item.getSubType());
+        return basicSiteVO;
+    }
+
+    private BasicSiteVO wareConvertOwnBasicSite(PsStoreInfo item) {
+        BasicSiteVO basicSiteVO = new BasicSiteVO();
+        basicSiteVO.setOrgId(item.getOrgId());
+        basicSiteVO.setProvinceAgencyCode(item.getProvinceAgencyCode());
+        basicSiteVO.setProvinceAgencyName(item.getProvinceAgencyName());
+        basicSiteVO.setProvinceId(item.getProvinceId());
+        basicSiteVO.setProvinceName(item.getProvinceName());
+        basicSiteVO.setCityId(item.getCityId());
+        basicSiteVO.setSiteCode(item.getDmsSiteId());
+        basicSiteVO.setDmsSiteCode(item.getDmsCode());
+        basicSiteVO.setSiteName(item.getDmsStoreName());
         return basicSiteVO;
     }
 
@@ -436,10 +461,17 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
                 baseEntity.getData().setTotal((long) pageSiteResult.getTotalRow());
                 baseEntity.getData().getData().addAll(convert2OwnBasicSiteList(pageSiteResult.getData()));
             }
-            // 在查库房数据 todo
-
-
-
+            // 在查库房数据
+            if(checkIsQueryWare(siteQueryPager.getSearchVo().getSiteTypes())){
+                PageUtil pageUtil = new PageUtil();
+                pageUtil.setCurPage(siteQueryPager.getPageNo());
+                pageUtil.setPageSize(siteQueryPager.getPageSize());
+                PageDto<List<PsStoreInfo>> pageWareResult = basicWareHouseWSManager.query(convertOutWareQuery(siteQueryPager.getSearchVo()), pageUtil);
+                if(pageWareResult != null && CollectionUtils.isNotEmpty(pageWareResult.getData())){
+                    baseEntity.getData().setTotal(baseEntity.getData().getTotal() + pageWareResult.getTotalRow());
+                    baseEntity.getData().getData().addAll(wareConvert2OwnBasicSiteList(pageWareResult.getData()));
+                }
+            }
         }catch (Exception e){
             logger.error("根据条件{}分页查询站点异常!", JsonHelper.toJSONString(siteQueryPager), e);
             baseEntity.toFail("服务异常!");
@@ -448,6 +480,36 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
             Profiler.registerInfoEnd(info);
         }
         return baseEntity;
+    }
+
+    /**
+     * 根据站点类型判断是否查询仓数据
+     * 
+     * @param siteTypes
+     * @return
+     */
+    private boolean checkIsQueryWare(List<Integer> siteTypes) {
+        if(CollectionUtils.isNotEmpty(siteTypes)){
+            List<Integer> wmsTypes = Arrays.stream(DmsStoreTypeEnum.values())
+                    .map(item -> Integer.parseInt(item.getDmsStoreType()))
+                    .collect(Collectors.toList());
+            return siteTypes.stream().noneMatch(wmsTypes::contains);
+        }
+        return true;
+    }
+
+    private PsStoreInfoRequest convertOutWareQuery(SiteQueryCondition siteQueryCondition) {
+        PsStoreInfoRequest psStoreInfoRequest = new PsStoreInfoRequest();
+        psStoreInfoRequest.setDmsStoreName(siteQueryCondition.getSiteName());
+        psStoreInfoRequest.setDmsSiteId(siteQueryCondition.getSiteCode());
+        psStoreInfoRequest.setDmsCode(siteQueryCondition.getDmsCode());
+        psStoreInfoRequest.setOrgId(siteQueryCondition.getOrgId());
+        psStoreInfoRequest.setSiteNamePym(siteQueryCondition.getSiteNamePym());
+        psStoreInfoRequest.setProvinceId(siteQueryCondition.getProvinceId());
+        psStoreInfoRequest.setCityId(siteQueryCondition.getCityId());
+        psStoreInfoRequest.setCountyId(siteQueryCondition.getCountryId());
+        psStoreInfoRequest.setProvinceAgencyCode(siteQueryCondition.getProvinceAgencyCode());
+        return psStoreInfoRequest;
     }
 
     private Result<Pager<BasicSiteVO>> initPageResult(Pager<SiteQueryCondition> siteQueryPager) {
@@ -467,6 +529,12 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
                 // 转换为分拣内部使用数据
                 .map(this::convertOwnBasicSite)
                 .collect(Collectors.toList());
+    }
+
+    private List<BasicSiteVO> wareConvert2OwnBasicSiteList(List<PsStoreInfo> list) {
+        return list.stream()
+                // 转换为分拣内部使用数据
+                .map(this::wareConvertOwnBasicSite).collect(Collectors.toList());
     }
 
     private Result<Pager<BasicSiteVO>> queryPageSiteFromES(Pager<SiteQueryCondition> siteQueryPager) {

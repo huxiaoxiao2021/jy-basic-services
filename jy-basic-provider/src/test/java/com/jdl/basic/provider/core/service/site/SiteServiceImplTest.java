@@ -9,6 +9,7 @@ import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.ApplicationLaunch;
 import com.jdl.basic.provider.dto.BasicPsStoreInfo;
 import com.jdl.basic.provider.dto.BasicSiteChangeMQ;
+import org.assertj.core.util.Lists;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -72,12 +73,13 @@ public class SiteServiceImplTest {
         try {
             Pager<SiteQueryCondition> siteQueryPager = new Pager<>();
             siteQueryPager.setPageNo(1);
-            siteQueryPager.setPageSize(10000);
+            siteQueryPager.setPageSize(10);
             SiteQueryCondition siteQueryCondition = new SiteQueryCondition();
             siteQueryPager.setSearchVo(siteQueryCondition);
 //            siteQueryCondition.setSiteNamePym("xzz");
-//            siteQueryCondition.setSiteCode(497);
+//            siteQueryCondition.setSiteCode(910);
 //            siteQueryCondition.setSiteName("分拣");
+//            siteQueryCondition.setSubTypes(Lists.newArrayList(6420,6450));
 
             Result<Pager<BasicSiteVO>> result = siteQueryService.querySitePageByConditionFromBasicSite(siteQueryPager);
             
