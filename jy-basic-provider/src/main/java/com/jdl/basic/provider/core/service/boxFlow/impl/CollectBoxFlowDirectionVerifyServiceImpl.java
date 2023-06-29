@@ -6,16 +6,14 @@ import com.jd.jdl.aidata.isc.outer.api.common.model.JdMetaResult;
 import com.jd.jdl.aidata.isc.outer.api.sort.interfaces.SortWorkbenchBusiness;
 import com.jd.jdl.aidata.isc.outer.api.sort.model.BoxFlowParam;
 import com.jd.jdl.aidata.isc.outer.api.sort.model.BoxFlowResult;
+import com.jd.jim.cli.Cluster;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jd.ump.profiler.CallerInfo;
 import com.jd.ump.profiler.proxy.Profiler;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowInfo;
-import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowDirectionConfReq;
-import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowDirectionConfResp;
-import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowFinishBoxReq;
-import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowFinishBoxResp;
+import com.jdl.basic.api.domain.boxFlow.dto.*;
 import com.jdl.basic.common.enums.CollectBoxFlowInfoStatusEnum;
 import com.jdl.basic.common.enums.CollectClaimEnum;
 import com.jdl.basic.common.utils.JsonHelper;
@@ -26,10 +24,14 @@ import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.boxFlow.CollectBoxFlowDirectionConfDao;
 import com.jdl.basic.provider.core.service.boxFlow.ICollectBoxFlowDirectionConfService;
 import com.jdl.basic.provider.core.service.boxFlow.ICollectBoxFlowDirectionVerifyService;
+import com.jdl.basic.provider.mq.producer.DefaultJMQProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -37,10 +39,15 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.jdl.basic.common.enums.CollectBoxFlowNoticTypeEnum.ROUTER_WARNING;
+
+
 @Service("collectBoxFlowDirectionVerifyService")
 @Slf4j
 public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlowDirectionVerifyService {
-
+    private static String  CHECK_ROUTE_NOTIC_ERP_CACHE_PREFIX = "route-check-";
+    
+    private static String BDP_PUSH_ERP = "大数据推送规则";
     @Resource
     private CollectBoxFlowDirectionConfDao collectBoxFlowDirectionConfMapper;
     @Autowired
@@ -49,6 +56,22 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
     private CollectBoxFlowInfoDao collectBoxFlowInfoDao;
     @Autowired
     private SortWorkbenchBusiness jsfSortWorkbenchBusiness;
+    /**
+     * 路由离线校验，每批休眠时间避免调用大数据接口qps超过15
+     */
+    @Value("${collect.box.check.route.sleep.millisecond:10}")
+    private Integer checkRouteSleepMillis;
+    @Autowired
+    Cluster cluster;
+    @Value("${collect.box.check.route.notice.erp.cache.day:2}")
+    private Integer noticeErpCacheDay;
+
+    @Value("${collect.box.check.route.notice.msg:集包规则路由错误，可能会到导致错分，请到分拣工作台-[集包规则配置]修改：始发分拣:{0},目的地分拣:{1},建包流向:{2} 路由错误信息:[{3}]}")
+    private String noticeMsg;
+
+    @Autowired(required = false)
+    @Qualifier("collectBoxFlowNoticeMQ")
+    private DefaultJMQProducer collectBoxFlowNoticeMQ;
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionVerifyServiceImpl.verifyBoxFlowDirectionConf", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
@@ -249,6 +272,9 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
             if(CollectionUtils.isNotEmpty(confs)){
                 id = confs.get(confs.size() -1).getId();
                 for(CollectBoxFlowDirectionConf conf : confs){
+                    //设置 场地对应操作人员缓存，以便推送信息
+                    setNoticeErpCache(conf.getCreateUserErp(), conf.getUpdateUserErp(), conf.getStartSiteId());
+                    
                     BoxFlowParam boxFlowParam = new BoxFlowParam();
                     Integer boxReceiveId = conf.getBoxReceiveId();
                     String boxReceiveName = conf.getBoxReceiveName();
@@ -256,6 +282,7 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
                     String startSiteName = conf.getStartSiteName();
                     Integer endSiteId = conf.getEndSiteId();
                     String endSiteName = conf.getEndSiteName();
+                    
                     boxFlowParam.setBoxReceiveId(boxReceiveId);
                     boxFlowParam.setBoxReceiveName(boxReceiveName);
                     boxFlowParam.setStartSiteId(startSiteId);
@@ -295,11 +322,61 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
                         log.error(errorMsg);
                         conf.setRouteErrorType(boxFlowResult.getProblemType());
                         collectBoxFlowDirectionConfMapper.updateByPrimaryKey(conf);
+                        routeErrorNotice(startSiteId, startSiteName, endSiteId, endSiteName, boxReceiveId, boxReceiveName, boxFlowResult.getProblemTypeDesc());
                     }
                 }
             }
         }while (CollectionUtils.isNotEmpty(confs));
         
+    }
+    
+    private void routeErrorNotice(Integer startSiteId, String startSiteName, Integer endSiteId, String endSiteName, 
+                                  Integer boxReceiveId, String boxReceiveName, String problemTypeDesc){
+        String erps = cluster.get(CHECK_ROUTE_NOTIC_ERP_CACHE_PREFIX + startSiteId);
+        if(StringUtils.isBlank(erps)){
+            log.error("离线校验路由错误erps为空 无法发送咚咚消息，默认校验通过，请求参数：startSiteId:{}," +
+                            "startSiteName:{},endSiteId:{},endSiteName:{}，boxReceiveId:{},boxReceiveName:{},problemTypeDesc:{}", 
+                    startSiteId, startSiteName, endSiteId, endSiteName, boxReceiveId, boxReceiveName, problemTypeDesc);
+            return;
+        }
+        String message = MessageFormat.format(noticeMsg,
+                startSiteName, endSiteName, boxReceiveName, problemTypeDesc);
+        CollectBoxFlowNoticDto dto = new CollectBoxFlowNoticDto();
+        dto.setReceiveErps(erps);
+        dto.setOperateType(ROUTER_WARNING.getCode());
+        dto.setMessage(message);
+
+        try {
+            collectBoxFlowNoticeMQ.send(startSiteId + "|" + endSiteId + "|" + boxReceiveId, JsonHelper.toJSONString(dto));
+        } catch (Exception ex) {
+            log.error("箱号规则路由校验，MQ发送通知失败:{}",startSiteId + "|" + endSiteId + "|" + boxReceiveId, ex);
+        }
+    }
+    
+    private void setNoticeErpCache(String createErp, String updateErp, Integer createSiteCode){
+        if((StringUtils.isBlank(createErp) || BDP_PUSH_ERP.equals(createErp)) 
+                && StringUtils.isBlank(updateErp) || BDP_PUSH_ERP.equals(updateErp)){
+            return;
+        }
+        
+        String key = CHECK_ROUTE_NOTIC_ERP_CACHE_PREFIX + createSiteCode;
+        String erps = cluster.get(key);
+        List<String> erpList = StringUtils.isBlank(erps) ? new ArrayList<>() : Arrays.asList(erps.split(","));
+        // createErp是有效的 而且 缓存中不存在
+        if(StringUtils.isNotBlank(createErp) && !BDP_PUSH_ERP.equals(createErp) 
+                && !erpList.contains(createErp)){
+            erpList.add(createErp);
+        }
+        // updateErp是有效的 而且 缓存中不存在
+        if(StringUtils.isNotBlank(updateErp) && !BDP_PUSH_ERP.equals(updateErp)
+                && !erpList.contains(createErp)){
+            erpList.add(updateErp);
+        }
+        
+        if(CollectionUtils.isEmpty(erpList)){
+            return;
+        }
+        cluster.set(key, String.join(",", erpList));
     }
     
 }

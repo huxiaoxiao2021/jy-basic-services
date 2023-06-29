@@ -15,7 +15,18 @@ public class CollectBoxFlowNoticDto implements Serializable {
      */
     private String effectTime;
     /**
-     * 操作类型
+     * 操作类型: 1 新增 2 激活 3 回滚 4路由校验预警
      */
     private Integer operateType;
+
+
+    /**
+     * 信息接收人erp ,以英文逗号分割
+     */
+    private String receiveErps;
+
+    /**
+     * 通知消息
+     */
+    private String message;
 }
