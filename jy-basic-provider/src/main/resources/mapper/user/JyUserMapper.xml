@@ -44,7 +44,7 @@
     select
     <include refid="Base_Column_List" />
     from jy_user
-    where user_erp =#{userErp} and entry_date =#{entryDate} and nature =#{nature}
+    where user_erp =#{userErp} and user_status =1
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from jy_user

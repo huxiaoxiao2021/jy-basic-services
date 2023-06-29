@@ -11,7 +11,7 @@ import java.util.List;
 public interface UserService {
 
   /**
-   * 查询用户信息 (erp、用工种类、入职时间)
+   * 查询用户信息
    */
   JyUser queryUserInfo(JyUser condition);
 

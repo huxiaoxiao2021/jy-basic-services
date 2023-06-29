@@ -28,10 +28,8 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public JyUser queryUserInfo(JyUser condition) {
-    if (ObjectHelper.isEmpty(condition.getUserErp())
-        || ObjectHelper.isEmpty(condition.getEntryDate())
-        || ObjectHelper.isEmpty(condition.getNature())) {
-      throw new JYBasicRpcException("查询参数错误：erp、入职时间、用工种类不能为空！");
+    if (ObjectHelper.isEmpty(condition.getUserErp())) {
+      throw new JYBasicRpcException("查询参数错误：erp为空！");
     }
     return jyUserDao.queryUserInfo(condition);
   }

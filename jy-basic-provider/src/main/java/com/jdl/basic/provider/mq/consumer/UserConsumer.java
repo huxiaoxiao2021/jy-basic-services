@@ -58,7 +58,7 @@ public class UserConsumer {
           return;
         }
         JyUser condition = assembleUser(userInfo);
-        String userLockKey = String.format(Constants.USER_LOCK_PREFIX, condition.getUserErp(), condition.getEntryDate(), condition.getNature());
+        String userLockKey = String.format(Constants.USER_LOCK_PREFIX, condition.getUserErp());
         String uuid = UUID.randomUUID().toString().replace("-", "");
         if (!jimDbLock.lock(userLockKey, uuid, LOCK_EXPIRE, TimeUnit.SECONDS)) {
           throw new JYBasicRpcException("未获取到锁,稍后重试！");
@@ -85,10 +85,13 @@ public class UserConsumer {
             condition.setId(exitUser.getId());
             condition.setUpdateTime(now);
             rs = userService.updateUser(condition);
-          } else {
+          } else if (UserSatusEnum.ONJOB.getCode().equals(condition.getUserStatus())){
             condition.setCreateTime(now);
             condition.setUpdateTime(now);
             rs = userService.saveUser(condition);
+          }
+          else {
+            return;
           }
           if (rs <= 0) {
             log.error("同步用户数据失败");
