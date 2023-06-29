@@ -35,10 +35,10 @@
     <jsf:consumer id="jsfSortWorkbenchBusiness"
                   interface="com.jd.jdl.aidata.isc.outer.api.sort.interfaces.SortWorkbenchBusiness"
                   alias="${jsf.sortWorkbenchBusiness.alias}"
-                  timeout="${jsf.timeout.default}"
-                  retries="${jsf.retries.default}"
+                  timeout="${basic.jsf.timeout}"
+                  retries="${jsf.retries}"
                   serialization="hessian"
                   lazy="${jsf.consumer.lazy}">
-        <jsf:parameter key="token" value="${basic.sortWorkbenchBusiness.token}" hide="true" />
+        <jsf:parameter key="token" value="${jsf.sortWorkbenchBusiness.token}" hide="true" />
     </jsf:consumer>
 </beans>
