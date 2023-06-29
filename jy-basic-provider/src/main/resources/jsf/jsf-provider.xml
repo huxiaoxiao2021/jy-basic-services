@@ -260,7 +260,7 @@
                   timeout="3600000"
                   interface="com.jd.lsb.task.handler.Handler"
                   ref="collectBoxFlowDirectionVerifyJsfServiceImpl"
-                  alias="${jsf.jy_basic.alias}"
+                  alias="${jsf.boxFlowRouterVerifyTask.alias}"
                   server="jsf">
     </jsf:provider>
 </beans>

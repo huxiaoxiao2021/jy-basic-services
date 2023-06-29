@@ -104,6 +104,8 @@ jsf:
   sortWorkbenchBusiness:
     alias: sortWorkbenchBusiness-test
     token: sortWorkbenchBusiness-token
+  boxFlowRouterVerifyTask:
+    alias: boxFlowRouterVerifyTask
 basic:
   jsf:
     token: 123456

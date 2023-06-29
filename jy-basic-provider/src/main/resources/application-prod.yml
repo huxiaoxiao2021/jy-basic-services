@@ -100,6 +100,8 @@ jsf:
   sortWorkbenchBusiness:
     alias: 未提供
     token: 未提供
+  boxFlowRouterVerifyTask:
+    alias: boxFlowRouterVerifyTask
 basic:
   jsf:
     token: 96KYOS24GJ

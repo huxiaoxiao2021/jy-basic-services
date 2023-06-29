@@ -98,7 +98,8 @@ jsf:
   sortWorkbenchBusiness:
     alias: sort_uat
     token: 1509F68AB5241F90592551E04E60AAEE
-
+  boxFlowRouterVerifyTask:
+    alias: boxFlowRouterVerifyTask-uat
 basic:
   jsf:
     token: 96KYOS24GJ
