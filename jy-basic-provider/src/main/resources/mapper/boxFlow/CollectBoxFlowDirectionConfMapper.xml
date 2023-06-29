@@ -572,7 +572,10 @@
         and id > #{id,jdbcType=BIGINT}
         <if test="version != null">
             and (version = #{version,jdbcType=VARCHAR} or version is null)
-        </if> 
+        </if>
+        <if test="collectClaim != null">
+            and collect_claim = #{collectClaim,jdbcType=INTEGER}
+        </if>
         order by id asc
         limit 10
     </select>
