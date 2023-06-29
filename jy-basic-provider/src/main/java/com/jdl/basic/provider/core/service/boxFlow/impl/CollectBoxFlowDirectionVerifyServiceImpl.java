@@ -302,15 +302,7 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
                     CallerInfo callerInfo = Profiler.registerInfo(Constants.UMP_APP_NAME +".CollectBoxFlowDirectionVerifyServiceImpl.getBoxFlowDiagnosticResult",
                             Constants.UMP_APP_NAME,false,true);
                     try {
-                        //jdMetaResult = jsfSortWorkbenchBusiness.getBoxFlowDiagnosticResult(boxFlowParam);
-                        if(id == 14117){
-                            jdMetaResult = new JdMetaResult<>();
-                            jdMetaResult.setCode("200");
-                            BoxFlowResult boxFlowResult = new BoxFlowResult();
-                            boxFlowResult.setProblemType(1);
-                            boxFlowResult.setProblemTypeDesc("测试路由错误");
-                            jdMetaResult.setData(boxFlowResult);
-                        }
+                        jdMetaResult = jsfSortWorkbenchBusiness.getBoxFlowDiagnosticResult(boxFlowParam);
                     }catch (Exception e){
                         log.error("离线校验路由规则失败，请求参数：conf.id:{}, boxReceiveId:{},boxReceiveName:{},startSiteId:{}," +
                                         "startSiteName:{},endSiteId:{},endSiteName:{}, result:{}", conf.getId(), boxReceiveId, boxReceiveName,
