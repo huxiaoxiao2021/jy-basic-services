@@ -27,7 +27,7 @@
         <result column="collect_claim" jdbcType="INTEGER" property="collectClaim"/>
         <result column="if_change_since_last_update" jdbcType="INTEGER" property="ifChangeSinceLastUpdate"/>
         <result column="version" jdbcType="VARCHAR" property="version"/>
-        <result column="route_error_type" jdbcType="VARCHAR" property="routeErrorType"/>
+        <result column="route_error_type" jdbcType="INTEGER" property="routeErrorType"/>
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
@@ -58,14 +58,15 @@
                                                      box_receive_name, box_pkg_name, transport_type,
                                                      flow_type, create_user_erp, update_user_erp,
                                                      create_time, update_time, ts,
-                                                     yn,collect_claim,if_change_since_last_update)
+                                                     yn,collect_claim,if_change_since_last_update,route_error_type)
         values (#{startOrgId,jdbcType=INTEGER}, #{startOrgName,jdbcType=VARCHAR}, #{startSiteId,jdbcType=INTEGER},
                 #{startSiteName,jdbcType=VARCHAR}, #{endOrgId,jdbcType=INTEGER}, #{endOrgName,jdbcType=VARCHAR},
                 #{endSiteId,jdbcType=INTEGER}, #{endSiteName,jdbcType=VARCHAR}, #{boxReceiveId,jdbcType=INTEGER},
                 #{boxReceiveName,jdbcType=VARCHAR}, #{boxPkgName,jdbcType=VARCHAR}, #{transportType,jdbcType=INTEGER},
                 #{flowType,jdbcType=INTEGER}, #{createUserErp,jdbcType=VARCHAR}, #{updateUserErp,jdbcType=VARCHAR},
                 #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{ts,jdbcType=TIMESTAMP},
-                #{yn,jdbcType=BOOLEAN},#{collectClaim,jdbcType=INTEGER},#{ifChangeSinceLastUpdate,jdbcType=INTEGER})
+                #{yn,jdbcType=BOOLEAN},#{collectClaim,jdbcType=INTEGER},#{ifChangeSinceLastUpdate,jdbcType=INTEGER},
+        #{routeErrorType,jdbcType=INTEGER})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id"
             parameterType="com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf" useGeneratedKeys="true">
@@ -136,7 +137,10 @@
                 if_change_since_last_update,
             </if>
             <if test="version != null">
-                version
+                version,
+            </if>
+            <if test="routeErrorType != null">
+                route_error_type
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -204,7 +208,10 @@
                 #{ifChangeSinceLastUpdate,jdbcType=INTEGER},
             </if>
             <if test="version != null">
-                #{version,jdbcType=VARCHAR}
+                #{version,jdbcType=VARCHAR},
+            </if>
+            <if test="routeErrorType != null">
+                #{routeErrorType,jdbcType=INTEGER}
             </if>
         </trim>
     </insert>
@@ -305,7 +312,8 @@
             ts               = #{ts,jdbcType=TIMESTAMP},
             yn               = #{yn,jdbcType=BOOLEAN},
             collect_claim    = #{collectClaim,jdbcType=INTEGER},
-            if_change_since_last_update = #{ifChangeSinceLastUpdate,jdbcType=INTEGER}
+            if_change_since_last_update = #{ifChangeSinceLastUpdate,jdbcType=INTEGER},
+             route_error_type = #{routeErrorType,jdbcType=INTEGER}
         where id = #{id,jdbcType=BIGINT}
     </update>
 

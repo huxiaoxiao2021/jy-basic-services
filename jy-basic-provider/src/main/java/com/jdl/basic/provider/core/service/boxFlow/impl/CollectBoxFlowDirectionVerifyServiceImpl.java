@@ -37,6 +37,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.jdl.basic.common.enums.CollectBoxFlowNoticTypeEnum.ROUTER_WARNING;
@@ -64,7 +65,7 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
     @Autowired
     Cluster cluster;
     @Value("${collect.box.check.route.notice.erp.cache.day:2}")
-    private Integer noticeErpCacheDay;
+    private Long noticeErpCacheDay;
 
     @Value("${collect.box.check.route.notice.msg:集包规则路由错误，可能会到导致错分，请到分拣工作台-[集包规则配置]修改：始发分拣:{0},目的地分拣:{1},建包流向:{2} 路由错误信息:[{3}]}")
     private String noticeMsg;
@@ -72,6 +73,9 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
     @Autowired(required = false)
     @Qualifier("collectBoxFlowNoticeMQ")
     private DefaultJMQProducer collectBoxFlowNoticeMQ;
+    
+    @Value("${collect.box.check.route.sleep.millisecond:50}")
+    private Integer sleepMillisecond;
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionVerifyServiceImpl.verifyBoxFlowDirectionConf", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
@@ -267,6 +271,11 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
         Long id = 1L;
         List<CollectBoxFlowDirectionConf> confs = null;
         do{
+            try {
+                Thread.sleep(sleepMillisecond);
+            } catch (InterruptedException e) {
+                log.error("调大数据路由校验休眠异常", e);
+            }
             confs = collectBoxFlowDirectionConfMapper.selectPageById(id, CollectClaimEnum.MIXABLE.getCode(), 
                     collectBoxFlowInfo.getVersion());
             if(CollectionUtils.isNotEmpty(confs)){
@@ -376,7 +385,7 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
         if(CollectionUtils.isEmpty(erpList)){
             return;
         }
-        cluster.set(key, String.join(",", erpList));
+        cluster.set(key, String.join(",", erpList), noticeErpCacheDay, TimeUnit.DAYS, true);
     }
     
 }
