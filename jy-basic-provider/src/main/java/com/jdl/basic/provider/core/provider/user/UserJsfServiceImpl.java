@@ -1,10 +1,9 @@
 package com.jdl.basic.provider.core.provider.user;
 
-import com.github.pagehelper.PageHelper;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.JyUser;
 import com.jdl.basic.api.domain.user.JyUserBatchRequest;
-import com.jdl.basic.api.domain.user.JyUserQueryCondition;
+import com.jdl.basic.api.domain.user.JyUserQueryDto;
 import com.jdl.basic.api.domain.user.UnDistributedUserQueryDto;
 import com.jdl.basic.api.service.user.UserJsfService;
 import com.jdl.basic.common.contants.Constants;
@@ -23,8 +22,8 @@ public class UserJsfServiceImpl implements UserJsfService {
     @Autowired
     private UserService userService;
     @Override
-    public Result<List<JyUser>> searchUserBySiteCode(JyUserQueryCondition condition) {
-        return userService.searchUserBySiteCode(condition);
+    public Result<List<JyUser>> searchUserBySiteCode(JyUserQueryDto dto) {
+        return userService.searchUserBySiteCode(dto);
     }
 
     @Override
@@ -33,13 +32,13 @@ public class UserJsfServiceImpl implements UserJsfService {
     }
 
     @Override
-    public Result<Integer> queryUndistributedCountBySiteCode(JyUserQueryCondition condition) {
-        return userService.queryUndistributedCountBySiteCode(condition);
+    public Result<Integer> queryUndistributedCountBySiteCode(JyUserQueryDto dto) {
+        return userService.queryUndistributedCountBySiteCode(dto);
     }
 
   @Override
-  public Result<List<JyUser>> queryDifference(JyUserQueryCondition condition) {
-    return userService.queryDifference(condition);
+  public Result<List<JyUser>> queryDifference(JyUserQueryDto dto) {
+    return userService.queryDifference(dto);
   }
 
     @Override
@@ -67,12 +66,12 @@ public class UserJsfServiceImpl implements UserJsfService {
   }
 
 	@Override
-	public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryCondition condition) {
-		return userService.queryUserListBySiteAndPosition(condition);
+	public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
+		return userService.queryUserListBySiteAndPosition(dto);
 	}
 
     @Override
-    public Result<List<JyUser>> queryNatureUndistributedUsers(JyUserQueryCondition condition) {
-        return userService.queryNatureUndistributedUsers(condition);
+    public Result<List<JyUser>> queryNatureUndistributedUsers(JyUserQueryDto dto) {
+        return userService.queryNatureUndistributedUsers(dto);
     }
 }

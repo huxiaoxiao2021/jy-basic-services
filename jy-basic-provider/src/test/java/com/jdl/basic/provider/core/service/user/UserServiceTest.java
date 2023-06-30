@@ -3,7 +3,8 @@ package com.jdl.basic.provider.core.service.user;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.JyUser;
 import com.jdl.basic.api.domain.user.JyUserBatchRequest;
-import com.jdl.basic.api.domain.user.JyUserQueryCondition;
+import com.jdl.basic.api.domain.user.JyUserQueryDto;
+import com.jdl.basic.provider.core.service.user.model.JyUserQueryCondition;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.ApplicationLaunch;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -28,18 +30,17 @@ public class UserServiceTest {
 
     @Test
     public void queryDifference() {
-        JyUserQueryCondition condition = new JyUserQueryCondition();
+        JyUserQueryDto condition = new JyUserQueryDto();
         condition.setSiteCode(910);
-        Date time = DateUtils.addDays(new Date(), -1);
-        condition.setCreateTime(time);
-        condition.setUpdateTime(time);
+        condition.setEntryDate("2023-06-29");
+        condition.setQuitActionDate("2023-06-30");
         Result<List<JyUser>> result = userService.queryDifference(condition);
         log.info("{}", JsonHelper.toJSONString(result));
     }
 
     @Test
     public void queryUndistributedCountBySiteCode() {
-        JyUserQueryCondition condition = new JyUserQueryCondition();
+        JyUserQueryDto condition = new JyUserQueryDto();
         condition.setSiteCode(910);
         Result<Integer> result = userService.queryUndistributedCountBySiteCode(condition);
         log.info("{}", JsonHelper.toJSONString(result));
@@ -74,9 +75,13 @@ public class UserServiceTest {
 
     @Test
     public void searchUserBySiteCode() {
-        JyUserQueryCondition condition = new JyUserQueryCondition();
+        JyUserQueryDto condition = new JyUserQueryDto();
         condition.setSiteCode(910);
         Result<List<JyUser>> result = userService.searchUserBySiteCode(condition);
+        log.info("{}", JsonHelper.toJSONString(result));
+
+        condition.setJobType(1);
+        result = userService.searchUserBySiteCode(condition);
         log.info("{}", JsonHelper.toJSONString(result));
     }
 
@@ -89,6 +94,15 @@ public class UserServiceTest {
         users.add(user);
         request.setUsers(users);
         Result<List<JyUser>> result = userService.batchQueryQuitUserByUserId(request);
+        log.info("{}", JsonHelper.toJSONString(result));
+    }
+
+    @Test
+    public void queryNatureUndistributedUsers() {
+        JyUserQueryDto condition = new JyUserQueryDto();
+        condition.setSiteCode(910);
+        condition.setJobType(1);
+        Result<List<JyUser>> result = userService.queryNatureUndistributedUsers(condition);
         log.info("{}", JsonHelper.toJSONString(result));
     }
 }

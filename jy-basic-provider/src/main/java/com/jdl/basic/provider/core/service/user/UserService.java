@@ -3,7 +3,8 @@ package com.jdl.basic.provider.core.service.user;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.JyUser;
 import com.jdl.basic.api.domain.user.JyUserBatchRequest;
-import com.jdl.basic.api.domain.user.JyUserQueryCondition;
+import com.jdl.basic.api.domain.user.JyUserQueryDto;
+import com.jdl.basic.provider.core.service.user.model.JyUserQueryCondition;
 
 import com.jdl.basic.api.domain.user.UnDistributedUserQueryDto;
 import java.util.List;
@@ -31,10 +32,10 @@ public interface UserService {
 
   /**
    * 根据条件查询员工
-   * @param condition
+   * @param dto
    * @return
    */
-  Result<List<JyUser>> searchUserBySiteCode(JyUserQueryCondition condition);
+  Result<List<JyUser>> searchUserBySiteCode(JyUserQueryDto dto);
 
   /**
    * 根据员工id以及条件批量查询员工
@@ -52,17 +53,17 @@ public interface UserService {
 
   /**
    * 查询场地下未分配人员数量
-   * @param condition
+   * @param dto
    * @return
    */
-  Result<Integer> queryUndistributedCountBySiteCode(JyUserQueryCondition condition);
+  Result<Integer> queryUndistributedCountBySiteCode(JyUserQueryDto dto);
 
   /**
    * 查询入职时间或离职时间大于给定时间的用户
-   * @param condition
+   * @param dto
    * @return
    */
-  Result<List<JyUser>> queryDifference(JyUserQueryCondition condition);
+  Result<List<JyUser>> queryDifference(JyUserQueryDto dto);
 
   /**
    * 从给定的id中筛选出已离职的
@@ -74,16 +75,16 @@ public interface UserService {
   List<JyUser> queryUnDistributedUserList(UnDistributedUserQueryDto dto);
   /**
    * 查询人员岗位下列表
-   * @param condition
+   * @param dto
    * @return
    */
-  Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryCondition condition);
+  Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto);
 
   /**
    * 查询网格下某工种未分配员工
-   * @param condition
+   * @param dto
    * @return
    */
-  Result<List<JyUser>> queryNatureUndistributedUsers(JyUserQueryCondition condition);
+  Result<List<JyUser>> queryNatureUndistributedUsers(JyUserQueryDto dto);
 
 }

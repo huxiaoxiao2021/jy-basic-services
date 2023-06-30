@@ -1,9 +1,8 @@
 package com.jdl.basic.provider.core.dao.user;
 
-import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.JyUser;
 import com.jdl.basic.api.domain.user.JyUserBatchRequest;
-import com.jdl.basic.api.domain.user.JyUserQueryCondition;
+import com.jdl.basic.provider.core.service.user.model.JyUserQueryCondition;
 
 import com.jdl.basic.api.domain.user.UnDistributedUserQueryDto;
 import java.util.List;
