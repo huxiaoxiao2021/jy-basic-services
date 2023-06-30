@@ -1,9 +1,10 @@
-package com.jdl.basic.api.domain.user;
+package com.jdl.basic.provider.core.service.user.model;
 
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class JyUserQueryCondition implements Serializable {
@@ -36,6 +37,8 @@ public class JyUserQueryCondition implements Serializable {
     private String quitActionDate;
 
     private String nature;
+
+    private List<String> natureList;
 
     private String natureDesc;
 

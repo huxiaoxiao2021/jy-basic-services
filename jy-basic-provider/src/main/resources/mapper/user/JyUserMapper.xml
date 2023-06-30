@@ -307,7 +307,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="searchUserBySiteCode" parameterType="com.jdl.basic.api.domain.user.JyUserQueryCondition" resultMap="BaseResultMap">
+  <select id="searchUserBySiteCode" parameterType="com.jdl.basic.provider.core.service.user.model.JyUserQueryCondition" resultMap="BaseResultMap">
     select
         <include refid="Base_Column_List"/>
     from
@@ -316,9 +316,13 @@
         user_status = 1
     and
         site_code = #{siteCode, jdbcType=INTEGER}
-    <if test="nature != null and nature != ''">
-    and nature = #{nature, jdbcType=VARCHAR}
+    <if test="natureList != null and natureList.size() > 0">
+    and nature in
+      <foreach collection="natureList" item="item" separator="," open="(" close=")">
+        #{item}
+      </foreach>
     </if>
+    limit 10000
   </select>
 
   <select id="queryByUserIds" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -371,6 +375,7 @@
     )
     and
         site_code = #{siteCode, jdbcType=INTEGER}
+    limit 10000
   </select>
 
   <select id="batchQueryQuitUserByUserId" resultMap="BaseResultMap">
@@ -384,6 +389,7 @@
     <foreach collection="users" item="item" separator="," open="(" close=")">
         #{item.id}
     </foreach>
+    limit 10000
   </select>
 
   <select id="queryUnDistributedUserList" resultMap="BaseResultMap">
@@ -419,8 +425,11 @@
     and
         site_code = #{siteCode}
     and
-        nature = #{nature}
-    and
         grid_distribute_flag = 0
+    and nature in
+    <foreach collection="natureList" item="item" separator="," open="(" close=")">
+      #{item}
+    </foreach>
+    limit 10000
   </select>
 </mapper>
