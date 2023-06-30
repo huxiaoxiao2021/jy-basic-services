@@ -147,8 +147,8 @@ public class WorkGridManagerCaseServiceImpl implements WorkGridManagerCaseServic
 		//特殊字段设置
 		return data;
 	 }
-	@Cache(key = "workGridManagerCaseService.queryCaseWithItemListByTaskCode@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
-	,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)	
+	@Cache(key = "workGridManagerCaseService.queryCaseWithItemListByTaskCode@args0", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
+	,redisEnable = true, redisExpiredTime = 60 * 60 * 1000)	
 	@Override
 	public List<WorkGridManagerCaseWithItem> queryCaseWithItemListByTaskCode(String taskCode) {
 		List<String> caseCodeList = workGridManagerTaskCaseService.queryCaseCodeListByTaskCode(taskCode);
