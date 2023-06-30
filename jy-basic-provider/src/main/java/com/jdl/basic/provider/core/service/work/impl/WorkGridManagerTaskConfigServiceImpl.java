@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jdl.basic.api.domain.work.WorkGridManagerTaskConfig;
 import com.jdl.basic.api.domain.work.WorkGridManagerTaskConfigArea;
 import com.jdl.basic.api.domain.work.WorkGridManagerTaskConfigQuery;
@@ -165,6 +166,8 @@ public class WorkGridManagerTaskConfigServiceImpl implements WorkGridManagerTask
 		result.setData(workGridManagerTaskConfigDao.deleteById(deleteData) == 1);
 		return result;
 	 }
+	@Cache(key = "workGridManagerTaskConfigService.queryByTaskConfigCode@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+	,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)	
 	@Override
 	public Result<WorkGridManagerTaskConfigVo> queryByTaskConfigCode(String taskConfigCode) {
 		Result<WorkGridManagerTaskConfigVo> result = Result.success();

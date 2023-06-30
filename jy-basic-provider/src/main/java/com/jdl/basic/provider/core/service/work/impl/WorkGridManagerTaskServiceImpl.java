@@ -12,7 +12,7 @@ import org.springframework.beans.BeanUtils;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.contants.DmsConstants;
-
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jdl.basic.api.domain.work.WorkGridManagerTask;
 import com.jdl.basic.api.domain.work.WorkGridManagerTaskQuery;
 import com.jdl.basic.provider.core.dao.work.WorkGridManagerTaskDao;
@@ -127,6 +127,8 @@ public class WorkGridManagerTaskServiceImpl implements WorkGridManagerTaskServic
 		//特殊字段设置
 		return data;
 	 }
+	@Cache(key = "workGridManagerTaskService.queryByTaskCode@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+	,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)	
 	@Override
 	public Result<WorkGridManagerTask> queryByTaskCode(String taskCode) {
 		Result<WorkGridManagerTask> result = Result.success();

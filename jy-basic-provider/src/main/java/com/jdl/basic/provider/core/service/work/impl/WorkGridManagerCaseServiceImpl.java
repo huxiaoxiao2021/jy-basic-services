@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jdl.basic.api.domain.work.WorkGridManagerCase;
 import com.jdl.basic.api.domain.work.WorkGridManagerCaseItem;
 import com.jdl.basic.api.domain.work.WorkGridManagerCaseQuery;
@@ -146,6 +147,8 @@ public class WorkGridManagerCaseServiceImpl implements WorkGridManagerCaseServic
 		//特殊字段设置
 		return data;
 	 }
+	@Cache(key = "workGridManagerCaseService.queryCaseWithItemListByTaskCode@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+	,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)	
 	@Override
 	public List<WorkGridManagerCaseWithItem> queryCaseWithItemListByTaskCode(String taskCode) {
 		List<String> caseCodeList = workGridManagerTaskCaseService.queryCaseCodeListByTaskCode(taskCode);
