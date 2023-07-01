@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public JyUser queryUserInfo(JyUser condition) {
     if (ObjectHelper.isEmpty(condition.getUserErp())) {
-      throw new JYBasicRpcException("查询参数错误：erp为空！");
+//      throw new JYBasicRpcException("查询参数错误：erp为空！");
     }
     return jyUserDao.queryUserInfo(condition);
   }
@@ -58,6 +58,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserServiceImpl.queryByUserIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
   public Result<List<JyUser>> queryByUserIds(JyUserBatchRequest request) {
     Result<List<JyUser>> result = Result.success();
     if (request.getUsers() == null) {
@@ -69,6 +70,7 @@ public class UserServiceImpl implements UserService {
 
 
   @Override
+  @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserServiceImpl.batchUpdateByUserIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
   public Result<Boolean> batchUpdateByUserIds(JyUserBatchRequest request) {
     Result<Boolean> result = Result.success();
     if (CollectionUtils.isEmpty(request.getUsers())) {
@@ -81,6 +83,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserServiceImpl.queryUndistributedCountBySiteCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
   public Result<Integer> queryUndistributedCountBySiteCode(JyUserQueryDto dto) {
     Result<Integer> result = Result.success();
     JyUserQueryCondition condition = convertQuery(dto);
@@ -91,6 +94,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserServiceImpl.queryDifference", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
   public Result<List<JyUser>> queryDifference(JyUserQueryDto dto) {
     Result<List<JyUser>> result = Result.success();
     JyUserQueryCondition condition = convertQuery(dto);
@@ -107,6 +111,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserServiceImpl.batchQueryQuitUserByUserId", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
   public Result<List<JyUser>> batchQueryQuitUserByUserId(JyUserBatchRequest request) {
     Result<List<JyUser>> result = Result.success();
     if (CollectionUtils.isEmpty(request.getUsers())) {
@@ -117,11 +122,13 @@ public class UserServiceImpl implements UserService {
 
 
   @Override
+  @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserServiceImpl.queryUnDistributedUserList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
   public List<JyUser> queryUnDistributedUserList(UnDistributedUserQueryDto dto) {
     return jyUserDao.queryUnDistributedUserList(dto);
   }
 
 @Override
+@JProfiler(jKey = Constants.UMP_APP_NAME + ".UserServiceImpl.queryUserListBySiteAndPosition", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
 	Result<List<JyUser>> result = Result.success();
     JyUserQueryCondition condition = convertQuery(dto);
@@ -129,6 +136,7 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
 }
 
   @Override
+  @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserServiceImpl.queryNatureUndistributedUsers", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
   public Result<List<JyUser>> queryNatureUndistributedUsers(JyUserQueryDto dto) {
     Result<List<JyUser>> result = Result.success();
     JyUserQueryCondition condition = convertQuery(dto);

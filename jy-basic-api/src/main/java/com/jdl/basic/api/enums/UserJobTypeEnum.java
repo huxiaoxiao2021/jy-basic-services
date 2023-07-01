@@ -1,5 +1,7 @@
 package com.jdl.basic.api.enums;
 
+import java.util.HashMap;
+
 public enum UserJobTypeEnum {
   FULL_TIME_LABORER("A","全日制劳动合同工",1),
   LABOR_DISPATCHER("E","劳务派遣工",2),
@@ -25,6 +27,13 @@ public enum UserJobTypeEnum {
    */
   private Integer jyJobTypeCode;
 
+  private static HashMap<String, UserJobTypeEnum> map;
+  static {
+    map = new HashMap<>();
+    for (UserJobTypeEnum userJobTypeEnum: UserJobTypeEnum.values()) {
+      map.put(userJobTypeEnum.code, userJobTypeEnum);
+    }
+  }
 
   UserJobTypeEnum(String code, String name, Integer jyJobTypeCode) {
     this.code = code;
@@ -36,23 +45,15 @@ public enum UserJobTypeEnum {
     return code;
   }
 
-  public void setCode(String code) {
-    this.code = code;
-  }
-
   public String getName() {
     return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
   }
 
   public Integer getJyJobTypeCode() {
     return jyJobTypeCode;
   }
 
-  public void setJyJobTypeCode(Integer jyJobTypeCode) {
-    this.jyJobTypeCode = jyJobTypeCode;
+  public static UserJobTypeEnum getJyJobCodeByNature(String nature) {
+    return map.get(nature);
   }
 }
