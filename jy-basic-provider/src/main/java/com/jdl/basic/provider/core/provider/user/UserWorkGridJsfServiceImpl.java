@@ -3,18 +3,20 @@ package com.jdl.basic.provider.core.provider.user;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
-import com.jdl.basic.api.domain.user.JyUser;
-import com.jdl.basic.api.domain.user.UserWorkGrid;
-import com.jdl.basic.api.domain.user.UserWorkGridBatchRequest;
-import com.jdl.basic.api.domain.user.UserWorkGridRequest;
+import com.jdl.basic.api.domain.user.*;
+import com.jdl.basic.api.enums.UserJobTypeEnum;
 import com.jdl.basic.api.service.user.UserWorkGridJsfService;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.provider.core.service.user.UserWorkGridService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service("userWorkGridJsfServiceImpl")
 public class UserWorkGridJsfServiceImpl implements UserWorkGridJsfService {
     @Autowired
@@ -44,8 +46,35 @@ public class UserWorkGridJsfServiceImpl implements UserWorkGridJsfService {
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridJsfServiceImpl.getWorkGridDistributedStaff", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public Result<List<JyUser>> getWorkGridDistributedStaff(UserWorkGridRequest request) {
-        return userWorkGridService.getWorkGridDistributedStaff(request);
+    public Result<List<JyUserDto>> getWorkGridDistributedStaff(UserWorkGridRequest request) {
+        return convertUResult(userWorkGridService.getWorkGridDistributedStaff(request));
+    }
+
+    private Result<List<JyUserDto>> convertUResult(Result<List<JyUser>> inputResult) {
+        Result<List<JyUserDto>> result = Result.success();
+
+        if (inputResult.isFail()) {
+            return result.toFail(inputResult.getMessage());
+        }
+        List<JyUserDto> userDtos = new ArrayList<>();
+        for (JyUser user : inputResult.getData()) {
+            JyUserDto dto = convertUserDto(user);
+            userDtos.add(dto);
+        }
+        result.setData(userDtos);
+        return result;
+    }
+
+    private JyUserDto convertUserDto(JyUser user) {
+        JyUserDto dto = new JyUserDto();
+        BeanUtils.copyProperties(user, dto);
+        UserJobTypeEnum userJobTypeEnum = UserJobTypeEnum.getJyJobCodeByNature(user.getNature());
+        if (userJobTypeEnum != null) {
+            dto.setJyJobCode(userJobTypeEnum.getJyJobTypeCode());
+            return dto;
+        }
+        log.warn("获取工种枚举为空  入参{}", user.getNature());
+        return dto;
     }
 
     @Override
