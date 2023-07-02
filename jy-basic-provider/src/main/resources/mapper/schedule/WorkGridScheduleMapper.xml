@@ -3,7 +3,6 @@
 <mapper namespace="com.jdl.basic.provider.core.dao.schedule.WorkGridScheduleDao">
   <resultMap id="BaseResultMap" type="com.jdl.basic.api.domain.schedule.WorkGridSchedule">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="work_grid_id" jdbcType="BIGINT" property="workGridId" />
     <result column="work_grid_key" jdbcType="VARCHAR" property="workGridKey" />
     <result column="schedule_no" jdbcType="INTEGER" property="scheduleNo" />
     <result column="schedule_name" jdbcType="VARCHAR" property="scheduleName" />
@@ -21,7 +20,7 @@
     <result column="ts" jdbcType="TIMESTAMP" property="ts" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, work_grid_id, work_grid_key, schedule_no, schedule_name, start_time, end_time,
+    id, work_grid_key, schedule_no, schedule_name, start_time, end_time,
     schedule_type, yn, create_time, update_time, create_user_erp, create_user_name, update_user_erp,
     update_user_name, ts
   </sql>
@@ -36,13 +35,13 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.jdl.basic.api.domain.schedule.WorkGridSchedule">
-    insert into work_grid_schedule (id, work_grid_id, work_grid_key,
+    insert into work_grid_schedule (id, work_grid_key,
       schedule_no, schedule_name, start_time,
       end_time, schedule_type, yn,
       create_time, update_time, create_user_erp,
       create_user_name, update_user_erp, update_user_name,
       ts)
-    values (#{id,jdbcType=BIGINT}, #{workGridId,jdbcType=BIGINT}, #{workGridKey,jdbcType=VARCHAR},
+    values (#{id,jdbcType=BIGINT}, #{workGridKey,jdbcType=VARCHAR},
       #{scheduleNo,jdbcType=INTEGER}, #{scheduleName,jdbcType=VARCHAR}, #{startTime,jdbcType=VARCHAR},
       #{endTime,jdbcType=VARCHAR}, #{scheduleType,jdbcType=INTEGER}, #{yn,jdbcType=TINYINT},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{createUserErp,jdbcType=VARCHAR},
@@ -54,9 +53,6 @@
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
-      </if>
-      <if test="workGridId != null">
-        work_grid_id,
       </if>
       <if test="workGridKey != null">
         work_grid_key,
@@ -105,9 +101,6 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="workGridId != null">
-        #{workGridId,jdbcType=BIGINT},
-      </if>
       <if test="workGridKey != null">
         #{workGridKey,jdbcType=VARCHAR},
       </if>
@@ -155,9 +148,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.jdl.basic.api.domain.schedule.WorkGridSchedule">
     update work_grid_schedule
     <set>
-      <if test="workGridId != null">
-        work_grid_id = #{workGridId,jdbcType=BIGINT},
-      </if>
       <if test="workGridKey != null">
         work_grid_key = #{workGridKey,jdbcType=VARCHAR},
       </if>
@@ -205,7 +195,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.jdl.basic.api.domain.schedule.WorkGridSchedule">
     update work_grid_schedule
-    set work_grid_id = #{workGridId,jdbcType=BIGINT},
+    set
       work_grid_key = #{workGridKey,jdbcType=VARCHAR},
       schedule_no = #{scheduleNo,jdbcType=INTEGER},
       schedule_name = #{scheduleName,jdbcType=VARCHAR},
