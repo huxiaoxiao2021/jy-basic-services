@@ -29,6 +29,8 @@ public class JyUserQueryDto {
 
     private String positionCode;
 
+    private String positionName;
+    
     private Boolean gridDistributeFlag;
 
     private Date createTime;
