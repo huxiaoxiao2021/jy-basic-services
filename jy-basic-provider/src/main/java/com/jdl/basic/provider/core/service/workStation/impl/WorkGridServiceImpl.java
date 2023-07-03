@@ -83,9 +83,16 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Autowired
 	@Qualifier("workAreaService")
 	private WorkAreaService workAreaService;
-	
+	/**
+	 * 导入总数据限制
+	 */
 	@Value("${beans.workGridService.importDatasLimit:100}")
 	private int importDatasLimit;
+	/**
+	 * 导入流向数限制
+	 */	
+	@Value("${beans.workGridService.importDatasPerFlowLimit:100}")
+	private int importDatasPerFlowLimit;	
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -540,8 +547,12 @@ public class WorkGridServiceImpl implements WorkGridService {
 		}
 		Map<Integer,List<WorkGridFlowDirection>> flowDataMap = new HashMap<>();
 		data.setFlowDataMap(flowDataMap);
+		Date createTime = new Date();
 		for(GridFlowLineTypeEnum lineType : flowSiteCodes.keySet()) {
 			List<String> siteCodeStrList = flowSiteCodes.get(lineType);
+			if(siteCodeStrList.size() > importDatasLimit) {
+				return result.toFail(lineType.getName()+"流向站点不能超过！【"+importDatasPerFlowLimit+"】个");
+			}
 			List<WorkGridFlowDirection> flowDataList = new ArrayList<>();
 			for(String siteCodeStr : siteCodeStrList) {
 				Integer siteCodeInt = null;
@@ -553,6 +564,9 @@ public class WorkGridServiceImpl implements WorkGridService {
 				if(siteInfo == null) {
 					return result.toFail(lineType.getName()+"流向ID中站点无效！【"+siteCodeStr+"】");
 				}
+				if(siteCodeInt.equals(workGridData.getSiteCode())) {
+					return result.toFail(lineType.getName()+"流向ID不能是网格的站点！【"+siteCodeStr+"】");
+				}
 				WorkGridFlowDirection flowData = new WorkGridFlowDirection();
 				flowData.setRefWorkGridKey(workGridData.getBusinessKey());
 				flowData.setSiteCode(workGridData.getSiteCode());
@@ -560,6 +574,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 				flowData.setOrgCode(workGridData.getOrgCode());
 				flowData.setOrgName(workGridData.getOrgName());
 				flowData.setCreateUser(data.getConfigFlowUser());
+				flowData.setCreateTime(createTime);
 				flowData.setLineType(lineType.getCode());
 				flowData.setFlowSiteCode(siteCodeInt);
 				flowData.setFlowOrgCode(siteInfo.getOrgId());
