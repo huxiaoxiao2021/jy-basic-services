@@ -68,9 +68,9 @@ public class UserWorkGridJsfServiceImpl implements UserWorkGridJsfService {
     private JyUserDto convertUserDto(JyUser user) {
         JyUserDto dto = new JyUserDto();
         BeanUtils.copyProperties(user, dto);
-        UserJobTypeEnum userJobTypeEnum = UserJobTypeEnum.getJyJobCodeByNature(user.getNature());
+        UserJobTypeEnum userJobTypeEnum = UserJobTypeEnum.getJyJobEnumByNature(user.getNature());
         if (userJobTypeEnum != null) {
-            dto.setJyJobCode(userJobTypeEnum.getJyJobTypeCode());
+            dto.setNature(String.valueOf(userJobTypeEnum.getJyJobTypeCode()));
             return dto;
         }
         log.warn("获取工种枚举为空  入参{}", user.getNature());

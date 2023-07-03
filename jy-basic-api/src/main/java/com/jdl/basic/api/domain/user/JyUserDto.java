@@ -31,8 +31,6 @@ public class JyUserDto implements Serializable {
 
     private String nature;
 
-    private Integer jyJobCode;
-
     private String natureDesc;
 
     private String positionCode;

@@ -10,6 +10,8 @@
     <result column="end_time" jdbcType="VARCHAR" property="endTime" />
     <result column="schedule_type" jdbcType="INTEGER" property="scheduleType" />
     <result column="source_type" jdbcType="INTEGER" property="sourceType" />
+    <result column="site_code" jdbcType="INTEGER" property="siteCode" />
+    <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
     <result column="yn" jdbcType="TINYINT" property="yn" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -21,7 +23,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     id, work_grid_key, schedule_no, schedule_name, start_time, end_time,
-    schedule_type, yn, create_time, update_time, create_user_erp, create_user_name, update_user_erp,
+    schedule_type, source_type, site_code, area_code, yn, create_time, update_time, create_user_erp, create_user_name, update_user_erp,
     update_user_name, ts
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -250,6 +252,9 @@
         start_time,
         end_time,
         schedule_type,
+        source_type,
+        site_code,
+        area_code,
         create_time,
         update_time,
         create_user_erp,
@@ -266,6 +271,9 @@
         #{item.startTime},
         #{item.endTime},
         #{item.scheduleType},
+        #{item.sourceType},
+        #{item.siteCode},
+        #{item.areaCode},
         #{item.createTime},
         #{item.updateTime},
         #{item.createUserErp},

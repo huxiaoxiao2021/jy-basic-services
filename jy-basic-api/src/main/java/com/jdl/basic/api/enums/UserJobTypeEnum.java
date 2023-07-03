@@ -53,7 +53,7 @@ public enum UserJobTypeEnum {
     return jyJobTypeCode;
   }
 
-  public static UserJobTypeEnum getJyJobCodeByNature(String nature) {
+  public static UserJobTypeEnum getJyJobEnumByNature(String nature) {
     return map.get(nature);
   }
 }

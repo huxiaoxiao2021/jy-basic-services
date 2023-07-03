@@ -5,8 +5,6 @@ import java.util.Date;
 public class WorkGridSchedule {
     private Long id;
 
-    private Long workGridId;
-
     private String workGridKey;
 
     private Integer scheduleNo;
@@ -22,6 +20,10 @@ public class WorkGridSchedule {
     private Integer scheduleType;
 
     private Integer sourceType;
+
+    private Integer siteCode;
+
+    private String areaCode;
 
     private Byte yn;
 
@@ -45,14 +47,6 @@ public class WorkGridSchedule {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getWorkGridId() {
-        return workGridId;
-    }
-
-    public void setWorkGridId(Long workGridId) {
-        this.workGridId = workGridId;
     }
 
     public String getWorkGridKey() {
@@ -117,6 +111,22 @@ public class WorkGridSchedule {
 
     public void setSourceType(Integer sourceType) {
         this.sourceType = sourceType;
+    }
+
+    public Integer getSiteCode() {
+        return siteCode;
+    }
+
+    public void setSiteCode(Integer siteCode) {
+        this.siteCode = siteCode;
+    }
+
+    public String getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
     }
 
     public Byte getYn() {
