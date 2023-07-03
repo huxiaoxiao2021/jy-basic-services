@@ -163,6 +163,7 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
     JyJobTypeEnum jobTypeEnum = JyJobTypeEnum.getJobTypeEnum(dto.getJobType());
     condition.setNatureList(jobTypeEnum == null ? new ArrayList<>() : jobTypeEnum.getUserJobTypeCodeList());
     condition.setPositionCode(dto.getPositionCode());
+    condition.setPositionName(dto.getPositionName());
     condition.setGridDistributeFlag(dto.getGridDistributeFlag());
     condition.setCreateTime(dto.getCreateTime());
     condition.setUpdateTime(dto.getUpdateTime());
