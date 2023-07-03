@@ -88,10 +88,10 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
                 }
                 WorkStationGrid updateItem = new WorkStationGrid();
                 updateItem.setId(item.getId());
-                updateItem.setProvinceAgencyCode(baseSite.getProvinceAgencyCode());
-                updateItem.setProvinceAgencyName(baseSite.getProvinceAgencyName());
-                updateItem.setAreaHubCode(baseSite.getAreaCode());
-                updateItem.setAreaHubName(baseSite.getAreaName());
+                updateItem.setProvinceAgencyCode(StringUtils.isEmpty(baseSite.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyCode() );
+                updateItem.setProvinceAgencyName(StringUtils.isEmpty(baseSite.getProvinceAgencyName()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyName());
+                updateItem.setAreaHubCode(StringUtils.isEmpty(baseSite.getAreaCode()) ? Constants.EMPTY_FILL : baseSite.getAreaCode());
+                updateItem.setAreaHubName(StringUtils.isEmpty(baseSite.getAreaName()) ? Constants.EMPTY_FILL : baseSite.getAreaName());
                 list.add(updateItem);
             }
             Integer singleCount = workStationGridDao.brushUpdateById(list);
@@ -129,10 +129,10 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
                 }
                 WorkGrid updateItem = new WorkGrid();
                 updateItem.setId(item.getId());
-                updateItem.setProvinceAgencyCode(baseSite.getProvinceAgencyCode());
-                updateItem.setProvinceAgencyName(baseSite.getProvinceAgencyName());
-                updateItem.setAreaHubCode(baseSite.getAreaCode());
-                updateItem.setAreaHubName(baseSite.getAreaName());
+                updateItem.setProvinceAgencyCode(StringUtils.isEmpty(baseSite.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyCode() );
+                updateItem.setProvinceAgencyName(StringUtils.isEmpty(baseSite.getProvinceAgencyName()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyName());
+                updateItem.setAreaHubCode(StringUtils.isEmpty(baseSite.getAreaCode()) ? Constants.EMPTY_FILL : baseSite.getAreaCode());
+                updateItem.setAreaHubName(StringUtils.isEmpty(baseSite.getAreaName()) ? Constants.EMPTY_FILL : baseSite.getAreaName());
                 list.add(updateItem);
             }
             Integer singleCount = workGridDao.brushUpdateById(list);
@@ -174,14 +174,14 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
                 }
                 WorkGridFlowDirection updateItem = new WorkGridFlowDirection();
                 updateItem.setId(item.getId());
-                updateItem.setProvinceAgencyCode(baseSite.getProvinceAgencyCode());
-                updateItem.setProvinceAgencyName(baseSite.getProvinceAgencyName());
-                updateItem.setAreaHubCode(baseSite.getAreaCode());
-                updateItem.setAreaHubName(baseSite.getAreaName());
-                updateItem.setFlowProvinceAgencyCode(flowBaseSite == null ? Constants.EMPTY_FILL : flowBaseSite.getProvinceAgencyCode());
-                updateItem.setFlowProvinceAgencyName(flowBaseSite == null ? Constants.EMPTY_FILL : flowBaseSite.getProvinceAgencyName());
-                updateItem.setFlowAreaHubCode(flowBaseSite == null ? Constants.EMPTY_FILL : flowBaseSite.getAreaCode());
-                updateItem.setFlowAreaHubName(flowBaseSite == null ? Constants.EMPTY_FILL : flowBaseSite.getAreaName());
+                updateItem.setProvinceAgencyCode(StringUtils.isEmpty(baseSite.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyCode() );
+                updateItem.setProvinceAgencyName(StringUtils.isEmpty(baseSite.getProvinceAgencyName()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyName());
+                updateItem.setAreaHubCode(StringUtils.isEmpty(baseSite.getAreaCode()) ? Constants.EMPTY_FILL : baseSite.getAreaCode());
+                updateItem.setAreaHubName(StringUtils.isEmpty(baseSite.getAreaName()) ? Constants.EMPTY_FILL : baseSite.getAreaName());
+                updateItem.setFlowProvinceAgencyCode(flowBaseSite == null ? Constants.EMPTY_FILL : StringUtils.isEmpty(baseSite.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyCode() );
+                updateItem.setFlowProvinceAgencyName(flowBaseSite == null ? Constants.EMPTY_FILL : StringUtils.isEmpty(baseSite.getProvinceAgencyName()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyName());
+                updateItem.setFlowAreaHubCode(flowBaseSite == null ? Constants.EMPTY_FILL : StringUtils.isEmpty(baseSite.getAreaCode()) ? Constants.EMPTY_FILL : baseSite.getAreaCode());
+                updateItem.setFlowAreaHubName(flowBaseSite == null ? Constants.EMPTY_FILL : StringUtils.isEmpty(baseSite.getAreaName()) ? Constants.EMPTY_FILL : baseSite.getAreaName());
                 list.add(updateItem);
             }
             Integer singleCount = workGridFlowDirectionDao.brushUpdateById(list);
@@ -223,14 +223,14 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
                 }
                 WorkGridFlowDetailOffline updateItem = new WorkGridFlowDetailOffline();
                 updateItem.setId(item.getId());
-                updateItem.setProvinceAgencyCode(baseSite.getProvinceAgencyCode());
-                updateItem.setProvinceAgencyName(baseSite.getProvinceAgencyName());
-                updateItem.setAreaHubCode(baseSite.getAreaCode());
-                updateItem.setAreaHubName(baseSite.getAreaName());
-                updateItem.setFlowProvinceAgencyCode(flowBaseSite == null ? Constants.EMPTY_FILL : flowBaseSite.getProvinceAgencyCode());
-                updateItem.setFlowProvinceAgencyName(flowBaseSite == null ? Constants.EMPTY_FILL : flowBaseSite.getProvinceAgencyName());
-                updateItem.setFlowAreaHubCode(flowBaseSite == null ? Constants.EMPTY_FILL : flowBaseSite.getAreaCode());
-                updateItem.setFlowAreaHubName(flowBaseSite == null ? Constants.EMPTY_FILL : flowBaseSite.getAreaName());
+                updateItem.setProvinceAgencyCode(StringUtils.isEmpty(baseSite.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyCode() );
+                updateItem.setProvinceAgencyName(StringUtils.isEmpty(baseSite.getProvinceAgencyName()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyName());
+                updateItem.setAreaHubCode(StringUtils.isEmpty(baseSite.getAreaCode()) ? Constants.EMPTY_FILL : baseSite.getAreaCode());
+                updateItem.setAreaHubName(StringUtils.isEmpty(baseSite.getAreaName()) ? Constants.EMPTY_FILL : baseSite.getAreaName());
+                updateItem.setFlowProvinceAgencyCode(flowBaseSite == null ? Constants.EMPTY_FILL : StringUtils.isEmpty(baseSite.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyCode() );
+                updateItem.setFlowProvinceAgencyName(flowBaseSite == null ? Constants.EMPTY_FILL : StringUtils.isEmpty(baseSite.getProvinceAgencyName()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyName());
+                updateItem.setFlowAreaHubCode(flowBaseSite == null ? Constants.EMPTY_FILL : StringUtils.isEmpty(baseSite.getAreaCode()) ? Constants.EMPTY_FILL : baseSite.getAreaCode());
+                updateItem.setFlowAreaHubName(flowBaseSite == null ? Constants.EMPTY_FILL : StringUtils.isEmpty(baseSite.getAreaName()) ? Constants.EMPTY_FILL : baseSite.getAreaName());
                 list.add(updateItem);
             }
             Integer singleCount = workGridFlowDetailOfflineDao.brushUpdateById(list);
@@ -268,10 +268,10 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
                 }
                 SiteWaveSchedule updateItem = new SiteWaveSchedule();
                 updateItem.setId(item.getId());
-                updateItem.setProvinceAgencyCode(baseSite.getProvinceAgencyCode());
-                updateItem.setProvinceAgencyName(baseSite.getProvinceAgencyName());
-                updateItem.setAreaHubCode(baseSite.getAreaCode());
-                updateItem.setAreaHubName(baseSite.getAreaName());
+                updateItem.setProvinceAgencyCode(StringUtils.isEmpty(baseSite.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyCode() );
+                updateItem.setProvinceAgencyName(StringUtils.isEmpty(baseSite.getProvinceAgencyName()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyName());
+                updateItem.setAreaHubCode(StringUtils.isEmpty(baseSite.getAreaCode()) ? Constants.EMPTY_FILL : baseSite.getAreaCode());
+                updateItem.setAreaHubName(StringUtils.isEmpty(baseSite.getAreaName()) ? Constants.EMPTY_FILL : baseSite.getAreaName());
                 list.add(updateItem);
             }
             Integer singleCount = siteWaveScheduleDao.brushUpdateById(list);
@@ -309,10 +309,10 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
                 }
                 SiteAttendPlan updateItem = new SiteAttendPlan();
                 updateItem.setId(item.getId());
-                updateItem.setProvinceAgencyCode(baseSite.getProvinceAgencyCode());
-                updateItem.setProvinceAgencyName(baseSite.getProvinceAgencyName());
-                updateItem.setAreaHubCode(baseSite.getAreaCode());
-                updateItem.setAreaHubName(baseSite.getAreaName());
+                updateItem.setProvinceAgencyCode(StringUtils.isEmpty(baseSite.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyCode() );
+                updateItem.setProvinceAgencyName(StringUtils.isEmpty(baseSite.getProvinceAgencyName()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyName());
+                updateItem.setAreaHubCode(StringUtils.isEmpty(baseSite.getAreaCode()) ? Constants.EMPTY_FILL : baseSite.getAreaCode());
+                updateItem.setAreaHubName(StringUtils.isEmpty(baseSite.getAreaName()) ? Constants.EMPTY_FILL : baseSite.getAreaName());
                 list.add(updateItem);
             }
             Integer singleCount = siteAttendPlanDao.brushUpdateById(list);
@@ -350,8 +350,8 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
                 }
                 SortCrossDetail updateItem = new SortCrossDetail();
                 updateItem.setId(item.getId());
-                updateItem.setProvinceAgencyCode(baseSite.getProvinceAgencyCode());
-                updateItem.setAreaHubCode(baseSite.getAreaCode());
+                updateItem.setProvinceAgencyCode(StringUtils.isEmpty(baseSite.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyCode() );
+                updateItem.setAreaHubCode(StringUtils.isEmpty(baseSite.getAreaCode()) ? Constants.EMPTY_FILL : baseSite.getAreaCode());
                 list.add(updateItem);
             }
             Integer singleCount = sortCrossDetailDao.brushUpdateById(list);
@@ -393,14 +393,14 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
                 }
                 CollectBoxFlowDirectionConf updateItem = new CollectBoxFlowDirectionConf();
                 updateItem.setId(item.getId());
-                updateItem.setStartProvinceAgencyCode(startBaseSite.getProvinceAgencyCode());
-                updateItem.setStartProvinceAgencyName(startBaseSite.getProvinceAgencyName());
-                updateItem.setStartAreaHubCode(startBaseSite.getAreaCode());
-                updateItem.setStartAreaHubName(startBaseSite.getAreaName());
-                updateItem.setEndProvinceAgencyCode(endBaseSite.getProvinceAgencyCode());
-                updateItem.setEndProvinceAgencyName(endBaseSite.getProvinceAgencyName());
-                updateItem.setEndAreaHubCode(endBaseSite.getAreaCode());
-                updateItem.setEndAreaHubName(endBaseSite.getAreaName());
+                updateItem.setStartProvinceAgencyCode(StringUtils.isEmpty(startBaseSite.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : startBaseSite.getProvinceAgencyCode() );
+                updateItem.setStartProvinceAgencyName(StringUtils.isEmpty(startBaseSite.getProvinceAgencyName()) ? Constants.EMPTY_FILL : startBaseSite.getProvinceAgencyName());
+                updateItem.setStartAreaHubCode(StringUtils.isEmpty(startBaseSite.getAreaCode()) ? Constants.EMPTY_FILL : startBaseSite.getAreaCode());
+                updateItem.setStartAreaHubName(StringUtils.isEmpty(startBaseSite.getAreaName()) ? Constants.EMPTY_FILL : startBaseSite.getAreaName());
+                updateItem.setEndProvinceAgencyCode(StringUtils.isEmpty(endBaseSite.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : endBaseSite.getProvinceAgencyCode() );
+                updateItem.setEndProvinceAgencyName(StringUtils.isEmpty(endBaseSite.getProvinceAgencyName()) ? Constants.EMPTY_FILL : endBaseSite.getProvinceAgencyName());
+                updateItem.setEndAreaHubCode(StringUtils.isEmpty(endBaseSite.getAreaCode()) ? Constants.EMPTY_FILL : endBaseSite.getAreaCode());
+                updateItem.setEndAreaHubName(StringUtils.isEmpty(endBaseSite.getAreaName()) ? Constants.EMPTY_FILL : endBaseSite.getAreaName());
                 list.add(updateItem);
             }
             Integer singleCount = collectBoxFlowDirectionConfDao.brushUpdateById(list);
@@ -438,10 +438,10 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
                 }
                 EasyFreezeSitePO updateItem = new EasyFreezeSitePO();
                 updateItem.setId(item.getId());
-                updateItem.setProvinceAgencyCode(baseSite.getProvinceAgencyCode());
-                updateItem.setProvinceAgencyName(baseSite.getProvinceAgencyName());
-                updateItem.setAreaHubCode(baseSite.getAreaCode());
-                updateItem.setAreaHubName(baseSite.getAreaName());
+                updateItem.setProvinceAgencyCode(StringUtils.isEmpty(baseSite.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyCode() );
+                updateItem.setProvinceAgencyName(StringUtils.isEmpty(baseSite.getProvinceAgencyName()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyName());
+                updateItem.setAreaHubCode(StringUtils.isEmpty(baseSite.getAreaCode()) ? Constants.EMPTY_FILL : baseSite.getAreaCode());
+                updateItem.setAreaHubName(StringUtils.isEmpty(baseSite.getAreaName()) ? Constants.EMPTY_FILL : baseSite.getAreaName());
                 list.add(updateItem);
             }
             Integer singleCount = easyFreezeSiteDao.brushUpdateById(list);
@@ -479,10 +479,10 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
                 }
                 ConfigTransferDpSite updateItem = new ConfigTransferDpSite();
                 updateItem.setId(item.getId());
-                updateItem.setHandoverProvinceAgencyCode(baseSite.getProvinceAgencyCode());
-                updateItem.setHandoverProvinceAgencyName(baseSite.getProvinceAgencyName());
-                updateItem.setHandoverAreaHubCode(baseSite.getAreaCode());
-                updateItem.setHandoverAreaHubName(baseSite.getAreaName());
+                updateItem.setHandoverProvinceAgencyCode(StringUtils.isEmpty(baseSite.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyCode());
+                updateItem.setHandoverProvinceAgencyName(StringUtils.isEmpty(baseSite.getProvinceAgencyName()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyName());
+                updateItem.setHandoverAreaHubCode(StringUtils.isEmpty(baseSite.getAreaCode()) ? Constants.EMPTY_FILL : baseSite.getAreaCode());
+                updateItem.setHandoverAreaHubName(StringUtils.isEmpty(baseSite.getAreaName()) ? Constants.EMPTY_FILL : baseSite.getAreaName());
                 list.add(updateItem);
             }
             Integer singleCount = configTransferDpSiteDao.brushUpdateById(list);

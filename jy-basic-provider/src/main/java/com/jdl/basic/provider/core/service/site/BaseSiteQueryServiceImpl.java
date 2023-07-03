@@ -23,7 +23,6 @@ import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.NumberHelper;
 import com.jdl.basic.common.utils.Pager;
 import com.jdl.basic.common.utils.Result;
-import com.jdl.basic.provider.config.ducc.DuccPropertyConfiguration;
 import com.jdl.basic.provider.core.dao.basic.BasicSiteEsDao;
 import com.jdl.basic.provider.core.enums.BasicAreaEnum;
 import com.jdl.basic.provider.core.enums.BasicProvinceAgencyEnum;
@@ -71,9 +70,6 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
     private BasicOrganStructWSManager basicOrganStructWSManager;
 
     @Autowired
-    private DuccPropertyConfiguration duccPropertyConfiguration;
-
-    @Autowired
     private BasicWareHouseWSManager basicWareHouseWSManager;
 
 
@@ -96,7 +92,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         return result;
     }
 
-    @Cache(key = "SiteQueryService.queryAllAreaInfo", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
+    @Cache(key = "SiteQueryService.queryAllAreaInfo@args0", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
             ,redisEnable = true, redisExpiredTime = 60 * 60 * 1000)
     @Override
     public Result<List<AreaVO>> queryAllAreaInfo(String provinceAgencyCode) {
@@ -166,13 +162,6 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
      */
     @Override
     public Result<List<BasicSiteVO>> querySiteByConditionFromBasicSite(SiteQueryCondition siteQueryCondition, Integer limit) {
-        if(duccPropertyConfiguration.getSiteQueryDowngradeSwitch()){
-            return querySiteFromES(siteQueryCondition, limit);
-        }
-        return querySiteFromExternal(siteQueryCondition, limit);
-    }
-
-    private Result<List<BasicSiteVO>> querySiteFromExternal(SiteQueryCondition siteQueryCondition, Integer limit) {
         Result<List<BasicSiteVO>> baseEntity = new Result<List<BasicSiteVO>>();
         baseEntity.setData(Lists.newArrayList());
         CallerInfo info = Profiler.registerInfo("com.jdl.basic.api.service.site.SiteQueryService.querySiteFromBasic",
@@ -180,12 +169,14 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         try {
             limit = limit > MAX_LIMIT ? MAX_LIMIT : limit;
             // 先查站点数据
-            PageDto<Object> pageDto = new PageDto<>();
-            pageDto.setCurPage(Constants.CONSTANT_NUMBER_ONE);
-            pageDto.setPageSize(limit);
-            PageDto<List<BaseSiteSimpleDto>> pageSiteResult = basicSiteQueryWSManager.querySiteByCondition(convertOutSiteQuery(siteQueryCondition), pageDto);
-            if(pageSiteResult != null && CollectionUtils.isNotEmpty(pageSiteResult.getData())){
-                baseEntity.getData().addAll(convert2OwnBasicSiteList(pageSiteResult.getData()));
+            if(checkIsQuerySite(siteQueryCondition.getSiteTypes())){
+                PageDto<Object> pageDto = new PageDto<>();
+                pageDto.setCurPage(Constants.CONSTANT_NUMBER_ONE);
+                pageDto.setPageSize(limit);
+                PageDto<List<BaseSiteSimpleDto>> pageSiteResult = basicSiteQueryWSManager.querySiteByCondition(convertOutSiteQuery(siteQueryCondition), pageDto);
+                if(pageSiteResult != null && CollectionUtils.isNotEmpty(pageSiteResult.getData())){
+                    baseEntity.getData().addAll(convert2OwnBasicSiteList(pageSiteResult.getData()));
+                }
             }
             // 在查库房数据
             if(checkIsQueryWare(siteQueryCondition.getSiteTypes())){
@@ -206,7 +197,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         }
         return baseEntity;
     }
-
+    
     private BaseSite convertOutSiteQuery(SiteQueryCondition siteQueryCondition) {
         BaseSite siteQuery = new BaseSite();
         siteQuery.setOrgId(siteQueryCondition.getOrgId());
@@ -434,6 +425,8 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
      */
     @Override
     public Result<Pager<BasicSiteVO>> querySitePageByConditionFromBasicSite(Pager<SiteQueryCondition> siteQueryPager) {
+        CallerInfo info = Profiler.registerInfo("com.jdl.basic.api.service.site.SiteQueryService.queryPageSiteFromExternal",
+                false, true);
         Result<Pager<BasicSiteVO>> result = new Result<Pager<BasicSiteVO>>();
         final Result<Void> checkResult = this.checkParam4querySitePageByConditionFromBasicSite(siteQueryPager);
         if (!checkResult.isSuccess()) {
@@ -441,25 +434,18 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
             result.setMessage(checkResult.getMessage());
             return result;
         }
-        if(duccPropertyConfiguration.getSiteQueryDowngradeSwitch()){
-            return queryPageSiteFromES(siteQueryPager);
-        }
-        return queryPageSiteFromExternal(siteQueryPager);
-    }
-
-    private Result<Pager<BasicSiteVO>> queryPageSiteFromExternal(Pager<SiteQueryCondition> siteQueryPager) {
-        CallerInfo info = Profiler.registerInfo("com.jdl.basic.api.service.site.SiteQueryService.queryPageSiteFromExternal",
-                false, true);
         Result<Pager<BasicSiteVO>> baseEntity = initPageResult(siteQueryPager);
         try {
             // 先查站点数据
-            PageDto<Object> pageDto = new PageDto<>();
-            pageDto.setCurPage(siteQueryPager.getPageNo());
-            pageDto.setPageSize(siteQueryPager.getPageSize());
-            PageDto<List<BaseSiteSimpleDto>> pageSiteResult = basicSiteQueryWSManager.querySiteByCondition(convertOutSiteQuery(siteQueryPager.getSearchVo()), pageDto);
-            if(pageSiteResult != null && CollectionUtils.isNotEmpty(pageSiteResult.getData())){
-                baseEntity.getData().setTotal((long) pageSiteResult.getTotalRow());
-                baseEntity.getData().getData().addAll(convert2OwnBasicSiteList(pageSiteResult.getData()));
+            if(checkIsQuerySite(siteQueryPager.getSearchVo().getSiteTypes())){
+                PageDto<Object> pageDto = new PageDto<>();
+                pageDto.setCurPage(siteQueryPager.getPageNo());
+                pageDto.setPageSize(siteQueryPager.getPageSize());
+                PageDto<List<BaseSiteSimpleDto>> pageSiteResult = basicSiteQueryWSManager.querySiteByCondition(convertOutSiteQuery(siteQueryPager.getSearchVo()), pageDto);
+                if(pageSiteResult != null && CollectionUtils.isNotEmpty(pageSiteResult.getData())){
+                    baseEntity.getData().setTotal((long) pageSiteResult.getTotalRow());
+                    baseEntity.getData().getData().addAll(convert2OwnBasicSiteList(pageSiteResult.getData()));
+                }
             }
             // 在查库房数据
             if(checkIsQueryWare(siteQueryPager.getSearchVo().getSiteTypes())){
@@ -483,17 +469,35 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
     }
 
     /**
-     * 根据站点类型判断是否查询仓数据
+     * 根据站点类型判断是否查询站点数据（只要有非库房类型则需要查询）
+     *
+     * @param siteTypes
+     * @return
+     */
+    private boolean checkIsQuerySite(List<Integer> siteTypes) {
+        if(CollectionUtils.isNotEmpty(siteTypes)){
+            // 所有库房类型
+            List<Integer> wmsTypes = Arrays.stream(DmsStoreTypeEnum.values())
+                    .map(item -> Integer.parseInt(item.getDmsStoreType()))
+                    .collect(Collectors.toList());
+            return siteTypes.stream().anyMatch(item -> !wmsTypes.contains(item));
+        }
+        return true;
+    }
+    
+    /**
+     * 根据站点类型判断是否查询仓数据（只要有库房类型则需要查询）
      * 
      * @param siteTypes
      * @return
      */
     private boolean checkIsQueryWare(List<Integer> siteTypes) {
         if(CollectionUtils.isNotEmpty(siteTypes)){
+            // 所有库房类型
             List<Integer> wmsTypes = Arrays.stream(DmsStoreTypeEnum.values())
                     .map(item -> Integer.parseInt(item.getDmsStoreType()))
                     .collect(Collectors.toList());
-            return siteTypes.stream().noneMatch(wmsTypes::contains);
+            return siteTypes.stream().anyMatch(wmsTypes::contains);
         }
         return true;
     }
@@ -611,7 +615,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         }
         if (siteQueryPager.getPageSize() == null) {
             logger.warn("checkParam4querySitePageByConditionFromBasicSite pageSize为空 {}", JsonHelper.toJSONString(siteQueryPager));
-            siteQueryPager.setPageSize(20);
+            siteQueryPager.setPageSize(Constants.CONSTANT_NUMBER_TEN);
         }
         return result;
     }

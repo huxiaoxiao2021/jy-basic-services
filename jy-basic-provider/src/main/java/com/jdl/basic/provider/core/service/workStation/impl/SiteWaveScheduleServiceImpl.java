@@ -8,7 +8,6 @@ import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.Result;
-import com.jdl.basic.provider.config.ducc.DuccPropertyConfiguration;
 import com.jdl.basic.provider.core.dao.workStation.SiteWaveScheduleDao;
 import com.jdl.basic.provider.core.service.workStation.SiteWaveScheduleService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +26,6 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
     @Autowired
     private SiteWaveScheduleDao siteWaveScheduleDao;
 
-    @Autowired
-    private DuccPropertyConfiguration duccService;
-
     @Override
     @Transactional
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".SiteWaveScheduleServiceImpl.importDatas", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
@@ -42,8 +38,7 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
 
         //经过列转行后无法直接通过id增删改查
         //区域orgCode、场地siteCode确定唯一场地班次时间
-        SiteWaveSchedule oldData = duccService.getSiteWaveScheduleProvinceSwitch() 
-                ? siteWaveScheduleDao.queryOldDataByBusinessKeyNew(insertDataList.get(0)) : siteWaveScheduleDao.queryOldDataByBusinessKey(insertDataList.get(0));
+        SiteWaveSchedule oldData = siteWaveScheduleDao.queryOldDataByBusinessKey(insertDataList.get(0));
         if (oldData != null) {
             log.info("删除旧数据入参{}", oldData);
             //先删除旧数据后插入新数据
@@ -78,8 +73,7 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
         if(!checkResult.isSuccess()){
             return Result.fail(checkResult.getMessage());
         }
-        List<SiteWaveSchedule> pageList = duccService.getSiteWaveScheduleProvinceSwitch() 
-                ? siteWaveScheduleDao.queryPageListNew(query) : siteWaveScheduleDao.queryPageList(query);
+        List<SiteWaveSchedule> pageList = siteWaveScheduleDao.queryPageList(query);
         result.setData(pageList);
         return result;
     }
@@ -115,8 +109,7 @@ public class SiteWaveScheduleServiceImpl implements SiteWaveScheduleService {
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".SiteWaveScheduleServiceImpl.queryTotalCount", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Long> queryTotalCount(SiteWaveScheduleQuery query) {
         Result<Long> result = Result.success();
-        List<Long> totalList = duccService.getSiteWaveScheduleProvinceSwitch() 
-                ? siteWaveScheduleDao.queryTotalCountNew(query) : siteWaveScheduleDao.queryTotalCount(query);
+        List<Long> totalList = siteWaveScheduleDao.queryTotalCount(query);
         return result.setData(totalList.stream().count());
     }
 

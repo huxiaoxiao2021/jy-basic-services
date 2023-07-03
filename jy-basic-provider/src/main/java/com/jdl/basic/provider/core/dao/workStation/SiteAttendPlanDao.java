@@ -13,24 +13,14 @@ public interface SiteAttendPlanDao {
 
     SiteAttendPlan queryOldDataByBusinessKey(SiteAttendPlan siteAttendPlan);
     
-    SiteAttendPlan queryOldDataByBusinessKeyNew(SiteAttendPlan siteAttendPlan);
-
     int deleteOldDataByBusinessKey(SiteAttendPlan siteAttendPlan);
     
-    int deleteOldDataByBusinessKeyNew(SiteAttendPlan siteAttendPlan);
-
     List<SiteAttendPlan> queryPageList(@Param("query") SiteAttendPlanQuery query, @Param("dates") List<Date> dates);
     
-    List<SiteAttendPlan> queryPageListNew(@Param("query") SiteAttendPlanQuery query, @Param("dates") List<Date> dates);
-
     List<SiteAttendPlan> queryPageDetail(SiteAttendPlan siteAttendPlan);
     
-    List<SiteAttendPlan> queryPageDetailNew(SiteAttendPlan siteAttendPlan);
-
     List<Long> queryTotalCount(@Param("query") SiteAttendPlanQuery query, @Param("dates") List<Date> dates);
     
-    List<Long> queryTotalCountNew(@Param("query") SiteAttendPlanQuery query, @Param("dates") List<Date> dates);
-
     Integer confirmOneRecord(SiteAttendPlan vo);
 
     /**

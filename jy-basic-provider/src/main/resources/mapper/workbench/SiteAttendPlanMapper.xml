@@ -124,20 +124,7 @@
             plan_attend_time = #{planAttendTime, jdbcType=TIMESTAMP} and
             site_code = #{siteCode, jdbcType=INTEGER}
         group by
-            s.plan_attend_time, s.org_code, s.site_code
-    </select>
-
-    <select id="queryOldDataByBusinessKeyNew" parameterType="com.jdl.basic.api.domain.workStation.SiteAttendPlan" resultMap="resultMap">
-        select
-        <include refid="baseColumnList"/>
-        from
-        site_attend_plan s
-        where
-        s.yn = 1 and
-        plan_attend_time = #{planAttendTime, jdbcType=TIMESTAMP} and
-        site_code = #{siteCode, jdbcType=INTEGER}
-        group by
-        s.plan_attend_time, s.province_agency_code, s.site_code
+            s.plan_attend_time, s.site_code
     </select>
 
     <update id="deleteOldDataByBusinessKey" parameterType="com.jdl.basic.api.domain.workStation.SiteAttendPlan">
@@ -151,22 +138,6 @@
         where
             s.yn = 1 and
             plan_attend_time = #{planAttendTime, jdbcType=TIMESTAMP} and
-            org_code = #{orgCode, jdbcType=INTEGER} and
-            site_code = #{siteCode, jdbcType=INTEGER}
-    </update>
-
-    <update id="deleteOldDataByBusinessKeyNew" parameterType="com.jdl.basic.api.domain.workStation.SiteAttendPlan">
-        update
-            site_attend_plan s
-        set
-            s.update_user = #{updateUser, jdbcType=VARCHAR},
-            s.update_user_name = #{updateUserName, jdbcType=VARCHAR},
-            s.update_time = #{updateTime, jdbcType=TIMESTAMP},
-            s.yn = 0
-        where
-            s.yn = 1 and
-            plan_attend_time = #{planAttendTime, jdbcType=TIMESTAMP} and
-            province_agency_code = #{provinceAgenctCode, jdbcType=VARCHAR} and
             site_code = #{siteCode, jdbcType=INTEGER}
     </update>
 
@@ -177,17 +148,7 @@
             site_attend_plan s
         <include refid="queryCondition"/>
         group by
-            s.plan_attend_time, s.org_code, s.site_code
-    </select>
-
-    <select id="queryTotalCountNew" parameterType="com.jdl.basic.api.domain.workStation.SiteAttendPlanQuery" resultType="java.lang.Long">
-        select
-        count(*)
-        from
-        site_attend_plan s
-        <include refid="queryCondition"/>
-        group by
-        s.plan_attend_time, s.province_agency_code, s.site_code
+            s.plan_attend_time, s.site_code
     </select>
 
     <select id="queryPageList" parameterType="com.jdl.basic.api.domain.workStation.SiteAttendPlanQuery" resultMap="resultMap">
@@ -197,20 +158,7 @@
             site_attend_plan s
         <include refid="queryCondition"/>
         group by
-            s.plan_attend_time, s.org_code, s.site_code
-        <if test="query.pageNumber > 0">
-            limit #{query.offset}, #{query.limit}
-        </if>
-    </select>
-
-    <select id="queryPageListNew" parameterType="com.jdl.basic.api.domain.workStation.SiteAttendPlanQuery" resultMap="resultMap">
-        select
-        <include refid="baseColumnList"/>
-        from
-        site_attend_plan s
-        <include refid="queryCondition"/>
-        group by
-        s.plan_attend_time, s.province_agency_code, s.site_code
+            s.plan_attend_time, s.site_code
         <if test="query.pageNumber > 0">
             limit #{query.offset}, #{query.limit}
         </if>
@@ -224,20 +172,7 @@
         where
             s.yn = 1 and
             s.plan_attend_time = #{planAttendTime, jdbcType=TIMESTAMP} and
-            s.org_code = #{orgCode, jdbcType=INTEGER} and
             s.site_code = #{siteCode, jdbcType=INTEGER}
-    </select>
-
-    <select id="queryPageDetailNew" parameterType="com.jdl.basic.api.domain.workStation.SiteAttendPlan" resultMap="resultMap">
-        select
-        <include refid="baseColumnList"/>
-        from
-        site_attend_plan s
-        where
-        s.yn = 1 and
-        s.plan_attend_time = #{planAttendTime, jdbcType=TIMESTAMP} and
-        s.province_agency_code = #{provinceAgenctCode, jdbcType=VARCHAR} and
-        s.site_code = #{siteCode, jdbcType=INTEGER}
     </select>
 
     <update id="confirmOneRecord" parameterType="com.jdl.basic.api.domain.workStation.SiteAttendPlan">

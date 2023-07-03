@@ -16,20 +16,14 @@ public interface SiteWaveScheduleDao {
 
     SiteWaveSchedule queryOldDataByBusinessKey(SiteWaveSchedule siteWaveSchedule);
     
-    SiteWaveSchedule queryOldDataByBusinessKeyNew(SiteWaveSchedule siteWaveSchedule);
-
     int deleteOldDataByBusinessKey(SiteWaveSchedule siteWaveSchedule);
 
     List<SiteWaveSchedule> queryPageList(SiteWaveScheduleQuery query);
-
-    List<SiteWaveSchedule> queryPageListNew(SiteWaveScheduleQuery query);
 
     List<SiteWaveSchedule> queryPageDetail(SiteWaveSchedule siteWaveSchedule);
 
     List<Long> queryTotalCount(SiteWaveScheduleQuery query);
     
-    List<Long> queryTotalCountNew(SiteWaveScheduleQuery query);
-
     /**
      * 刷数-分页查询
      * @param startId

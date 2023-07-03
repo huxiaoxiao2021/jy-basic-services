@@ -107,10 +107,8 @@
             site_wave_schedule s
         where
             s.yn = 1 and
-            s.org_code = #{orgCode, jdbcType=INTEGER} and
             s.site_code = #{siteCode, jdbcType=INTEGER}
         group by
-            s.org_code,
             s.site_code
     </select>
 
@@ -133,7 +131,7 @@
         from
             site_wave_schedule s
         <include refid="queryCondition"/>
-        group by s.org_code, s.site_code
+        group by s.site_code
     </select>
 
     <select id="queryPageList" parameterType="com.jdl.basic.api.domain.workStation.SiteWaveScheduleQuery" resultMap="BaseResultMap">
@@ -143,48 +141,11 @@
             site_wave_schedule s
         <include refid="queryCondition"/>
         group by
-            s.org_code, s.site_code
+            s.site_code
         <if test="pageNumber > 0">
             limit #{offset}, #{limit}
         </if>
     </select>
-
-    <select id="queryOldDataByBusinessKeyNew" parameterType="com.jdl.basic.api.domain.workStation.SiteWaveSchedule" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from
-        site_wave_schedule s
-        where
-        s.yn = 1 and
-        s.province_agency_code = #{provinceAgencyCode, jdbcType=VARCHAR} and
-        s.site_code = #{siteCode, jdbcType=INTEGER}
-        group by
-        s.province_agency_code,
-        s.site_code
-    </select>
-    
-    <select id="queryTotalCountNew" parameterType="com.jdl.basic.api.domain.workStation.SiteWaveScheduleQuery" resultType="java.lang.Long">
-        select
-        count(*)
-        from
-        site_wave_schedule s
-        <include refid="queryCondition"/>
-        group by s.province_agency_code, s.site_code
-    </select>
-    
-    <select id="queryPageListNew" parameterType="com.jdl.basic.api.domain.workStation.SiteWaveScheduleQuery" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from
-        site_wave_schedule s
-        <include refid="queryCondition"/>
-        group by
-        s.province_agency_code, s.site_code
-        <if test="pageNumber > 0">
-            limit #{offset}, #{limit}
-        </if>
-    </select>
-
     <select id="queryPageDetail" parameterType="com.jdl.basic.api.domain.workStation.SiteWaveSchedule" resultMap="BaseResultMap">
         select
             <include refid="Base_Column_List"/>
