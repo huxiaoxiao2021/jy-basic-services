@@ -74,7 +74,9 @@ public class WorkGridManagerTaskJsfServiceImpl implements WorkGridManagerTaskJsf
 	 }
 	@Override
 	public Result<WorkGridManagerTask> queryByTaskCode(String taskCode) {
-		return workGridManagerTaskService.queryByTaskCode(taskCode);
+		Result<WorkGridManagerTask> result = Result.success();
+		result.setData(workGridManagerTaskService.queryByTaskCodeWithCache(taskCode));
+		return result;
 	}
 	@Override
 	public List<WorkGridManagerTask> queryWorkGridManagerTaskDictList() {
