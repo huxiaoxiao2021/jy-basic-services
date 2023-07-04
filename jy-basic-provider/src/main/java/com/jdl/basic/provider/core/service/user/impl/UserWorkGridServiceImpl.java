@@ -46,15 +46,6 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         if (request.getUserWorkGrids() == null) {
             return result.toFail("插入记录不能为空！");
         }
-        if (StringUtils.isEmpty(request.getUpdateUserErp()) || StringUtils.isEmpty(request.getUpdateUserName())) {
-            return result.toFail("网格分配操作人不能为空！");
-        }
-        if (StringUtils.isEmpty(request.getWorkGridKey())) {
-            return result.toFail("分配的网格不能为空");
-        }
-        if (request.getUpdateTime() == null) {
-            return result.toFail("网格分配操作时间不能为空！");
-        }
         List<JyUser> users = getUsers(request.getUserWorkGrids());
         JyUserBatchRequest batchRequest = new JyUserBatchRequest();
         batchRequest.setUsers(users);
