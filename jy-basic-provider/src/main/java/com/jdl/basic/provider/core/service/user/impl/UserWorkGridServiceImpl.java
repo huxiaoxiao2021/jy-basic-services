@@ -8,6 +8,7 @@ import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.provider.core.dao.user.UserWorkGridDao;
 import com.jdl.basic.provider.core.service.user.UserService;
 import com.jdl.basic.provider.core.service.user.UserWorkGridService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class UserWorkGridServiceImpl implements UserWorkGridService {
 
@@ -47,6 +49,9 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         if (StringUtils.isEmpty(request.getUpdateUserErp()) || StringUtils.isEmpty(request.getUpdateUserName())) {
             return result.toFail("网格分配操作人不能为空！");
         }
+        if (StringUtils.isEmpty(request.getWorkGridKey())) {
+            return result.toFail("分配的网格不能为空");
+        }
         if (request.getUpdateTime() == null) {
             return result.toFail("网格分配操作时间不能为空！");
         }
@@ -67,12 +72,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             batchRequest.setGridDistributeFlag(JyUserDistributeStatusEnum.DISTRIBUTED.getFlag());
             userService.batchUpdateByUserIds(batchRequest);
 
-            UserWorkGridRequest updateRequest = new UserWorkGridRequest();
-            updateRequest.setWorkGridKey(request.getWorkGridKey());
-            updateRequest.setUpdateUserErp(request.getUpdateUserErp());
-            updateRequest.setUpdateUserName(request.getUpdateUserName());
-            updateRequest.setUpdateTime(request.getUpdateTime());
-            userWorkGridDao.updateAfterInsert(updateRequest);
+            updateAfterInsertOrDelete(request);
         } else {
             result.toFail("插入记录失败！");
         }
@@ -110,9 +110,21 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         batchRequest.setUsers(users);
         batchRequest.setGridDistributeFlag(JyUserDistributeStatusEnum.UNDISTRIBUTED.getFlag());
         // 移出网格 将人员分配状态修改未分配
-        userService.batchUpdateByUserIds(batchRequest);
-        result.setData(userWorkGridDao.batchDelete(request) > 0);
+        if (userWorkGridDao.batchDelete(request) > 0) {
+            userService.batchUpdateByUserIds(batchRequest);
+            result.setData(Boolean.TRUE);
+            updateAfterInsertOrDelete(request);
+        }
         return result;
+    }
+
+    private void updateAfterInsertOrDelete(UserWorkGridBatchRequest request) {
+        UserWorkGridRequest updateRequest = new UserWorkGridRequest();
+        updateRequest.setWorkGridKey(request.getWorkGridKey());
+        updateRequest.setUpdateUserErp(request.getUpdateUserErp());
+        updateRequest.setUpdateUserName(request.getUpdateUserName());
+        updateRequest.setUpdateTime(request.getUpdateTime());
+        userWorkGridDao.updateAfterInsertOrDelete(updateRequest);
     }
 
     @Override

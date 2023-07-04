@@ -47,7 +47,7 @@ public class UserWorkGridServiceTest {
         UserWorkGrid userWorkGrid1 = new UserWorkGrid();
         userWorkGrid1.setWorkGridKey("CDWG00000022111");
         userWorkGrid1.setNature("1");
-        userWorkGrid1.setUserId(1L);
+        userWorkGrid1.setUserId(20L);
         userWorkGrid1.setCreateUserErp("wuyoude");
         userWorkGrid1.setCreateUserName("吴有德");
         userWorkGrid1.setCreateTime(new Date());
@@ -67,12 +67,17 @@ public class UserWorkGridServiceTest {
         userWorkGrid2.setUpdateTime(new Date());
 
         list.add(userWorkGrid1);
-        list.add(userWorkGrid2);
+
 
         UserWorkGridBatchRequest request = new UserWorkGridBatchRequest();
         request.setUserWorkGrids(list);
+        request.setUpdateUserName("吴有德");
+        request.setUpdateUserErp("wuyoude");
+        request.setUpdateTime(new Date());
+        request.setWorkGridKey("CDWG00000022111");
 
-        userWorkGridService.batchInsert(request);
+        Result result = userWorkGridService.batchInsert(request);
+        log.info("batchInsert response {}", JsonHelper.toJSONString(result));
     }
 
     @Test
