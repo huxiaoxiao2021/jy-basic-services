@@ -98,8 +98,8 @@ jsf:
     alias: jy-basic-server
     token: anktYmFzaWMtc2VydmVyLXRva2Vu
   sortWorkbenchBusiness:
-    alias: 未提供
-    token: 未提供
+    alias: sort_pub
+    token: 973BFAFDBF2DBC182140F9024EDF1946
   boxFlowRouterVerifyTask:
     alias: boxFlowRouterVerifyTask
 basic:
