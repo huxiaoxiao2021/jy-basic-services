@@ -38,7 +38,7 @@ public interface WorkGridManagerTaskConfigService {
 	 * @param taskConfigCode
 	 * @return
 	 */
-	Result<WorkGridManagerTaskConfigVo> queryByTaskConfigCode(String taskConfigCode);	
+	WorkGridManagerTaskConfigVo queryByTaskConfigCode(String taskConfigCode);	
 	/**
 	 * 根据id查询
 	 * @param id

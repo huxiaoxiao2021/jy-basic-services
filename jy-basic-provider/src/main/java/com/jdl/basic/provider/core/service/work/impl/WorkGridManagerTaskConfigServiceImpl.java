@@ -169,10 +169,8 @@ public class WorkGridManagerTaskConfigServiceImpl implements WorkGridManagerTask
 	@Cache(key = "workGridManagerTaskConfigService.queryByTaskConfigCode@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
 	,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)	
 	@Override
-	public Result<WorkGridManagerTaskConfigVo> queryByTaskConfigCode(String taskConfigCode) {
-		Result<WorkGridManagerTaskConfigVo> result = Result.success();
-		result.setData(fillWorkGridManagerTaskConfig(workGridManagerTaskConfigDao.queryByTaskConfigCode(taskConfigCode)));
-		return result;
+	public WorkGridManagerTaskConfigVo queryByTaskConfigCode(String taskConfigCode) {
+		return fillWorkGridManagerTaskConfig(workGridManagerTaskConfigDao.queryByTaskConfigCode(taskConfigCode));
 	}	
 	/**
 	 * 根据id查询
