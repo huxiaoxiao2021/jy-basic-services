@@ -71,8 +71,6 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             result.setData(Boolean.TRUE);
             batchRequest.setGridDistributeFlag(JyUserDistributeStatusEnum.DISTRIBUTED.getFlag());
             userService.batchUpdateByUserIds(batchRequest);
-
-            updateAfterInsertOrDelete(request);
         } else {
             result.toFail("插入记录失败！");
         }
@@ -113,18 +111,10 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         if (userWorkGridDao.batchDelete(request) > 0) {
             userService.batchUpdateByUserIds(batchRequest);
             result.setData(Boolean.TRUE);
-            updateAfterInsertOrDelete(request);
+        } else {
+            result.toFail("删除记录失败！");
         }
         return result;
-    }
-
-    private void updateAfterInsertOrDelete(UserWorkGridBatchRequest request) {
-        UserWorkGridRequest updateRequest = new UserWorkGridRequest();
-        updateRequest.setWorkGridKey(request.getWorkGridKey());
-        updateRequest.setUpdateUserErp(request.getUpdateUserErp());
-        updateRequest.setUpdateUserName(request.getUpdateUserName());
-        updateRequest.setUpdateTime(request.getUpdateTime());
-        userWorkGridDao.updateAfterInsertOrDelete(updateRequest);
     }
 
     @Override
