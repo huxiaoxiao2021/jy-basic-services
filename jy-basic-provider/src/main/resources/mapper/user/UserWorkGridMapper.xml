@@ -152,15 +152,4 @@
             #{item.workGridKey}
         </foreach>
     </select>
-
-    <update id="updateAfterInsertOrDelete">
-        update
-            user_work_grid
-        set
-            update_time = #{updateTime, jdbcType=TIMESTAMP},
-            update_user_erp = #{updateUserErp, jdbcType=VARCHAR},
-            update_user_name = #{updateUserName, jdbcType=VARCHAR}
-        where
-            work_grid_key = #{workGridKey, jdbcType=VARCHAR}
-    </update>
 </mapper>
