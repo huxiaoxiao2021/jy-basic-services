@@ -78,8 +78,8 @@ public class UserWorkGridJsfServiceImpl implements UserWorkGridJsfService {
     }
 
     @Override
-    public Result<List<UserWorkGrid>> queryDeletedUserWorkGrid(UserWorkGridRequest request) {
-        return userWorkGridService.queryDeletedUserWorkGrid(request);
+    public Result<List<UserWorkGrid>> batchQueryDeletedUserWorkGrid(UserWorkGridBatchRequest request) {
+        return userWorkGridService.batchQueryDeletedUserWorkGrid(request);
     }
 
 }

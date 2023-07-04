@@ -121,11 +121,15 @@ public class UserWorkGridServiceTest {
     }
 
     @Test
-    public void queryDeletedUserWorkGrid() {
-        UserWorkGridRequest request = new UserWorkGridRequest();
-        request.setWorkGridKey("CDWG00000019007");
+    public void batchQueryDeletedUserWorkGrid() {
+        UserWorkGridBatchRequest request = new UserWorkGridBatchRequest();
+        List<UserWorkGrid> userWorkGrids = new ArrayList<>();
+        UserWorkGrid userWorkGrid = new UserWorkGrid();
+        userWorkGrid.setWorkGridKey("CDWG00000019007");
+        userWorkGrids.add(userWorkGrid);
+        request.setUserWorkGrids(userWorkGrids);
         request.setUpdateTime(DateUtils.addDays(new Date(), -15));
-        Result<List<UserWorkGrid>> result = userWorkGridService.queryDeletedUserWorkGrid(request);
+        Result<List<UserWorkGrid>> result = userWorkGridService.batchQueryDeletedUserWorkGrid(request);
 
         log.info("getWorkGridDistributedStaff response {}", JsonHelper.toJSONString(result));
     }

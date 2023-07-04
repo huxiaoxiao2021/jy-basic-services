@@ -17,5 +17,5 @@ public interface UserWorkGridJsfService {
 
     Result<List<JyUserDto>> getWorkGridDistributedStaff(UserWorkGridRequest request);
 
-    Result<List<UserWorkGrid>> queryDeletedUserWorkGrid(UserWorkGridRequest request);
+    Result<List<UserWorkGrid>> batchQueryDeletedUserWorkGrid(UserWorkGridBatchRequest request);
 }

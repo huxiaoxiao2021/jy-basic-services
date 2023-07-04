@@ -138,7 +138,7 @@
         </foreach>
     </select>
 
-    <select id="queryDeletedUserWorkGrid" resultMap="BaseResultMap">
+    <select id="batchQueryDeletedUserWorkGrid" resultMap="BaseResultMap">
         select
             <include refid="Base_Column_List"/>
         from
@@ -147,7 +147,20 @@
             yn = 0
         and
             update_time <![CDATA[ >= ]]> #{updateTime,jdbcType=TIMESTAMP}
-        and
-            work_grid_key = #{workGridKey,jdbcType=VARCHAR}
+        and work_grid_key in
+        <foreach collection="userWorkGrids" item="item" separator="," open="(" close=")">
+            #{item.workGridKey}
+        </foreach>
     </select>
+
+    <update id="updateAfterInsert">
+        update
+            user_work_grid
+        set
+            update_time = #{updateTime, jdbcType=TIMESTAMP},
+            update_user_erp = #{updateUserErp, jdbcType=VARCHAR},
+            update_user_name = #{updateUserName, jdbcType=VARCHAR}
+        where
+            work_grid_key = #{workGridKey, jdbcType=VARCHAR}
+    </update>
 </mapper>

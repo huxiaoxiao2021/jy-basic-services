@@ -44,6 +44,12 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         if (request.getUserWorkGrids() == null) {
             return result.toFail("插入记录不能为空！");
         }
+        if (StringUtils.isEmpty(request.getUpdateUserErp()) || StringUtils.isEmpty(request.getUpdateUserName())) {
+            return result.toFail("网格分配操作人不能为空！");
+        }
+        if (request.getUpdateTime() == null) {
+            return result.toFail("网格分配操作时间不能为空！");
+        }
         List<JyUser> users = getUsers(request.getUserWorkGrids());
         JyUserBatchRequest batchRequest = new JyUserBatchRequest();
         batchRequest.setUsers(users);
@@ -60,6 +66,13 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             result.setData(Boolean.TRUE);
             batchRequest.setGridDistributeFlag(JyUserDistributeStatusEnum.DISTRIBUTED.getFlag());
             userService.batchUpdateByUserIds(batchRequest);
+
+            UserWorkGridRequest updateRequest = new UserWorkGridRequest();
+            updateRequest.setWorkGridKey(request.getWorkGridKey());
+            updateRequest.setUpdateUserErp(request.getUpdateUserErp());
+            updateRequest.setUpdateUserName(request.getUpdateUserName());
+            updateRequest.setUpdateTime(request.getUpdateTime());
+            userWorkGridDao.updateAfterInsert(updateRequest);
         } else {
             result.toFail("插入记录失败！");
         }
@@ -137,9 +150,9 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
     }
 
     @Override
-    public Result<List<UserWorkGrid>> queryDeletedUserWorkGrid(UserWorkGridRequest request) {
+    public Result<List<UserWorkGrid>> batchQueryDeletedUserWorkGrid(UserWorkGridBatchRequest request) {
         Result<List<UserWorkGrid>> result = Result.success();
-        if (StringUtils.isEmpty(request.getWorkGridKey())) {
+        if (CollectionUtils.isEmpty(request.getUserWorkGrids())) {
             return result.toFail("网格主键不能为空！");
         }
         if (request.getUpdateTime() == null) {
@@ -147,6 +160,6 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         }
         System.out.println(request.getClass().getName());
         System.out.println(request.getWorkGridKey());
-        return result.setData(userWorkGridDao.queryDeletedUserWorkGrid(request));
+        return result.setData(userWorkGridDao.batchQueryDeletedUserWorkGrid(request));
     }
 }

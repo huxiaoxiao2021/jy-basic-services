@@ -44,9 +44,11 @@ public interface UserWorkGridDao {
     List<UserWorkGrid> batchQueryUserWorkGridByGridKey(UserWorkGridBatchRequest request);
 
     /**
-     * 查询从updateTime至今已删除的网格分配记录
+     * 批量查询从updateTime至今已删除的网格分配记录
      * @param request
      * @return
      */
-    List<UserWorkGrid> queryDeletedUserWorkGrid(UserWorkGridRequest request);
+    List<UserWorkGrid> batchQueryDeletedUserWorkGrid(UserWorkGridBatchRequest request);
+
+    int updateAfterInsert(UserWorkGridRequest request);
 }
