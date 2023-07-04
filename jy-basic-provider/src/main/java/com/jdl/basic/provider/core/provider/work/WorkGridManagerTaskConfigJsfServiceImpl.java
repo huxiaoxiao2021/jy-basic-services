@@ -57,7 +57,7 @@ public class WorkGridManagerTaskConfigJsfServiceImpl implements WorkGridManagerT
 	@Override
 	public Result<WorkGridManagerTaskConfigVo> queryByTaskConfigCode(String taskConfigCode) {
 		Result<WorkGridManagerTaskConfigVo> result = Result.success();
-		result.setData(workGridManagerTaskConfigService.queryByTaskConfigCode(taskConfigCode));
+		result.setData(workGridManagerTaskConfigService.queryByTaskConfigCodeWithCache(taskConfigCode));
 		return result;
 	}	
 	/**

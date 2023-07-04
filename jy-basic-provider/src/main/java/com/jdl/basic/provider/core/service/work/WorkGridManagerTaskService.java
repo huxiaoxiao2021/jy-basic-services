@@ -52,7 +52,7 @@ public interface WorkGridManagerTaskService {
 	 * @param taskCode
 	 * @return
 	 */
-	Result<WorkGridManagerTask> queryByTaskCode(String taskCode);
+	WorkGridManagerTask queryByTaskCodeWithCache(String taskCode);
 	/**
 	 * 查询任务字典
 	 * @return

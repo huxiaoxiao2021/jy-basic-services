@@ -130,10 +130,8 @@ public class WorkGridManagerTaskServiceImpl implements WorkGridManagerTaskServic
 	@Cache(key = "workGridManagerTaskService.queryByTaskCode@args0", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
 	,redisEnable = true, redisExpiredTime = 60 * 60 * 1000)	
 	@Override
-	public Result<WorkGridManagerTask> queryByTaskCode(String taskCode) {
-		Result<WorkGridManagerTask> result = Result.success();
-		result.setData(workGridManagerTaskDao.queryByTaskCode(taskCode));
-		return result;
+	public WorkGridManagerTask queryByTaskCodeWithCache(String taskCode) {
+		return workGridManagerTaskDao.queryByTaskCode(taskCode);
 	}
 	@Override
 	public List<WorkGridManagerTask> queryWorkGridManagerTaskDictList() {
