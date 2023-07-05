@@ -295,5 +295,8 @@
     <if test="areaCode != null and areaCode != ''">
     and area_code = #{areaCode}
     </if>
+    <if test="workGridKey != null and workGridKey != ''">
+    and work_grid_key = #{workGridKey}
+    </if>
   </select>
 </mapper>
