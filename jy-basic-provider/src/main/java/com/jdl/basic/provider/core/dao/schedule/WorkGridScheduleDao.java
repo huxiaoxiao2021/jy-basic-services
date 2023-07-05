@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.dao.schedule;
 
 import com.jdl.basic.api.domain.schedule.WorkGridSchedule;
 import com.jdl.basic.api.domain.schedule.WorkGridScheduleBatchRequest;
+import com.jdl.basic.api.domain.schedule.WorkGridScheduleRequest;
 
 import java.util.List;
 
@@ -23,4 +24,6 @@ public interface WorkGridScheduleDao {
     boolean batchDeleteByWorkGridKey(WorkGridScheduleBatchRequest request);
 
     boolean batchInsert(WorkGridScheduleBatchRequest request);
+
+    List<WorkGridSchedule> querySiteScheduleByCondition(WorkGridScheduleRequest request);
 }

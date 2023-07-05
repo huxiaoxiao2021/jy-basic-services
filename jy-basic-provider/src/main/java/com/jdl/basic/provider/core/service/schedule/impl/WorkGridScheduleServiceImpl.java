@@ -3,6 +3,7 @@ package com.jdl.basic.provider.core.service.schedule.impl;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.schedule.WorkGridSchedule;
 import com.jdl.basic.api.domain.schedule.WorkGridScheduleBatchRequest;
+import com.jdl.basic.api.domain.schedule.WorkGridScheduleRequest;
 import com.jdl.basic.provider.core.dao.schedule.WorkGridScheduleDao;
 import com.jdl.basic.provider.core.service.schedule.WorkGridScheduleService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -48,5 +49,14 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
             return result.toFail("插入记录不能为空！");
         }
         return result.setData(workGridScheduleDao.batchInsert(request));
+    }
+
+    @Override
+    public Result<List<WorkGridSchedule>> querySiteScheduleByCondition(WorkGridScheduleRequest request) {
+        Result<List<WorkGridSchedule>> result = Result.success();
+        if (request.getSiteCode() == null) {
+            return result.toFail("场地编码不能为空！");
+        }
+        return result.setData(workGridScheduleDao.querySiteScheduleByCondition(request));
     }
 }

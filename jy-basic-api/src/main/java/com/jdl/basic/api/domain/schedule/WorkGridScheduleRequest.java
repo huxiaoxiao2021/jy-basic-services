@@ -11,7 +11,9 @@ public class WorkGridScheduleRequest implements Serializable {
 
     private Long id;
 
-    private Long workGridId;
+    private Integer siteCode;
+
+    private String areaCode;
 
     private String workGridKey;
 
