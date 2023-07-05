@@ -128,4 +128,6 @@ public interface WorkGridJsfService {
 	 * @return
 	 */
 	Result<WorkGrid> exactQueryWorkGridByBizKey(WorkGrid query);
+
+	Result<List<WorkGrid>> queryAllGridBySiteCode(WorkGridQuery query);
 }

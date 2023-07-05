@@ -506,4 +506,15 @@
 		and
 			area_code = #{areaCode}
 	</select>
+
+	<select id="queryAllGridBySiteCode" resultMap="WorkGrid">
+		select
+			<include refid="Base_Column_List"/>
+		from
+			work_grid
+		where
+			yn = 1
+		and
+			site_code = #{siteCode}
+	</select>
 </mapper>

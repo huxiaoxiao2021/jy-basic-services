@@ -132,4 +132,6 @@ public interface WorkGridService {
 	List<WorkGrid> batchQueryByWorkGridKey(List<String> workGridKeys);
 
 	List<WorkGrid> queryAreaWorkGrid(WorkGridQuery query);
+
+	List<WorkGrid> queryAllGridBySiteCode(WorkGridQuery query);
 }
