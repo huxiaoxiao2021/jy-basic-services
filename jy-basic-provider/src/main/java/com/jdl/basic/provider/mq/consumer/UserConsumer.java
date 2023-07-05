@@ -6,6 +6,7 @@ import com.jd.jmq.common.message.Message;
 import com.jd.joyqueue.client.springboot2.annotation.JmqListener;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.user.JyUser;
+import com.jdl.basic.api.domain.user.RemoveUserDto;
 import com.jdl.basic.api.enums.UserSatusEnum;
 import com.jdl.basic.api.enums.WorkSiteTypeEnum;
 import com.jdl.basic.common.contants.Constants;
@@ -18,6 +19,7 @@ import com.jdl.basic.provider.config.lock.JimDbLock;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.cross.SortCrossService;
 import com.jdl.basic.provider.core.service.user.UserService;
+import com.jdl.basic.provider.core.service.user.UserWorkGridService;
 import com.jdl.basic.provider.dto.SortCrossModifyDto;
 import com.jdl.basic.provider.dto.UserInfoBusinessDTO;
 import com.jdl.basic.rpc.exception.JYBasicRpcException;
@@ -37,6 +39,8 @@ public class UserConsumer {
 
   @Autowired
   UserService userService;
+  @Autowired
+  UserWorkGridService userWorkGridService;
   @Autowired
   JimDbLock jimDbLock;
   @Autowired
@@ -73,7 +77,7 @@ public class UserConsumer {
             if (ObjectHelper.isEmpty(siteTypeEnum)) {
               log.info("非分拣中心类型场地数据：{}", content);
               condition.setSiteType(WorkSiteTypeEnum.OTHER.getCode());
-              //return;
+              return;
             }
             else {
             condition.setSiteType(siteTypeEnum.getCode());
@@ -85,6 +89,15 @@ public class UserConsumer {
             condition.setId(exitUser.getId());
             condition.setUpdateTime(now);
             rs = userService.updateUser(condition);
+            //如果离职了把网格关系移除掉
+            if (UserSatusEnum.QUIT.getCode().equals(userInfo.getStatus())){
+              RemoveUserDto dto =new RemoveUserDto();
+              dto.setUserId(exitUser.getId());
+              dto.setUpdateUserErp("sys");
+              dto.setUpdateUserName("系统离职");
+              dto.setUpdateTime(new Date());
+              userWorkGridService.removeFromGridByUserId(dto);
+            }
           } else if (UserSatusEnum.ONJOB.getCode().equals(condition.getUserStatus())){
             condition.setCreateTime(now);
             condition.setUpdateTime(now);

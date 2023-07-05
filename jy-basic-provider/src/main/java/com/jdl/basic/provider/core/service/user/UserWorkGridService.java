@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.service.user;
 
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.JyUser;
+import com.jdl.basic.api.domain.user.RemoveUserDto;
 import com.jdl.basic.api.domain.user.UserWorkGrid;
 import com.jdl.basic.api.domain.user.UserWorkGridBatchRequest;
 import com.jdl.basic.api.domain.user.UserWorkGridRequest;
@@ -51,4 +52,6 @@ public interface UserWorkGridService {
      * @return
      */
     Result<List<UserWorkGrid>> batchQueryDeletedUserWorkGrid(UserWorkGridBatchRequest request);
+
+    boolean removeFromGridByUserId(RemoveUserDto removeUserDto);
 }

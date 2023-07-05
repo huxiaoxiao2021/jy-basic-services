@@ -48,12 +48,12 @@
     </sql>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from user_work_grid
     where id = #{id,jdbcType=BIGINT}
   </select>
-  
+
   <select id="queryByWorkGridKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
         <include refid="Base_Column_List"/>
@@ -63,7 +63,7 @@
         yn = 1
     and work_grid_key = #{workGridKey,jdbcType=VARCHAR}
   </select>
-  
+
   <insert id="batchInsert" parameterType="com.jdl.basic.api.domain.user.UserWorkGrid">
     insert into user_work_grid
         (
@@ -152,4 +152,16 @@
             #{item.workGridKey}
         </foreach>
     </select>
+
+  <select id="removeFromGridByUserId">
+    update
+    user_work_grid
+    set
+    yn = 0,
+    update_time = #{updateTime, jdbcType=TIMESTAMP},
+    update_user_erp = #{updateUserErp, jdbcType=VARCHAR},
+    update_user_name = #{updateUserName, jdbcType=VARCHAR}
+    where user_id = #{userId}
+    and yn = 1
+  </select>
 </mapper>

@@ -155,4 +155,9 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         System.out.println(request.getWorkGridKey());
         return result.setData(userWorkGridDao.batchQueryDeletedUserWorkGrid(request));
     }
+
+    @Override
+    public boolean removeFromGridByUserId(RemoveUserDto removeUserDto) {
+        return userWorkGridDao.removeFromGridByUserId(removeUserDto) >0;
+    }
 }

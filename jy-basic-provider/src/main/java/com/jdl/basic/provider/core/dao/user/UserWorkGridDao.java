@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.core.dao.user;
 
+import com.jdl.basic.api.domain.user.RemoveUserDto;
 import com.jdl.basic.api.domain.user.UserWorkGrid;
 import com.jdl.basic.api.domain.user.UserWorkGridBatchRequest;
 import com.jdl.basic.api.domain.user.UserWorkGridRequest;
@@ -51,4 +52,6 @@ public interface UserWorkGridDao {
     List<UserWorkGrid> batchQueryDeletedUserWorkGrid(UserWorkGridBatchRequest request);
 
     int updateAfterInsertOrDelete(UserWorkGridRequest request);
+
+    int removeFromGridByUserId(RemoveUserDto removeUserDto);
 }
