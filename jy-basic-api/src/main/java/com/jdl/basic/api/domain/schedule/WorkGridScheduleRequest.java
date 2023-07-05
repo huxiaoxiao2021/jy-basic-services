@@ -23,6 +23,8 @@ public class WorkGridScheduleRequest implements Serializable {
 
     private String scheduleName;
 
+    private Integer sourceType;
+
     private String startTime;
 
     private String endTime;
