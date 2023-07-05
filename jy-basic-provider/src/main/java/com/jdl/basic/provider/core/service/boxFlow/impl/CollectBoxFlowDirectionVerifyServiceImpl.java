@@ -370,7 +370,7 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
         
         String key = CHECK_ROUTE_NOTIC_ERP_CACHE_PREFIX + createSiteCode;
         String erps = cluster.get(key);
-        List<String> erpList = StringUtils.isBlank(erps) ? new ArrayList<>() : Arrays.asList(erps.split(","));
+        List<String> erpList = StringUtils.isBlank(erps) ? new ArrayList<>() : new ArrayList(Arrays.asList(erps.split(",")));
         // createErp是有效的 而且 缓存中不存在
         if(StringUtils.isNotBlank(createErp) && !BDP_PUSH_ERP.equals(createErp) 
                 && !erpList.contains(createErp)){
