@@ -248,6 +248,7 @@
     (
         work_grid_key,
         schedule_no,
+        schedule_key,
         schedule_name,
         start_time,
         end_time,
@@ -267,6 +268,7 @@
       (
         #{item.workGridKey},
         #{item.scheduleNo},
+        #{item.scheduleKey},
         #{item.scheduleName},
         #{item.startTime},
         #{item.endTime},

@@ -45,4 +45,5 @@ public interface WorkAreaJsfService {
 	 */
 	Result<PageDto<WorkArea>> queryPageList(WorkAreaQuery query);
 
+	Result<WorkArea> queryByAreaCode(String areaCode);
 }
