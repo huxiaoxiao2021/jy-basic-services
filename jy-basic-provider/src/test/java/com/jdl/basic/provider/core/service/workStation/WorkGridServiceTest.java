@@ -98,4 +98,14 @@ public class WorkGridServiceTest {
         query.setAreaCode("JBGQ");
         workGridService.queryAreaWorkGrid(query);
     }
+
+
+    @Test
+    public void queryAllGridBySiteCode() {
+        WorkGridQuery query = new WorkGridQuery();
+        query.setSiteCode(910);
+        List<WorkGrid> result = workGridService.queryAllGridBySiteCode(query);
+        logger.info("result {}", JsonHelper.toJSONString(result));
+    }
+
 }
