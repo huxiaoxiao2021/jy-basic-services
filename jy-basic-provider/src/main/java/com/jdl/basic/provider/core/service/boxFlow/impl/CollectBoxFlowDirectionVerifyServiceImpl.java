@@ -49,6 +49,7 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
     private static String  CHECK_ROUTE_NOTIC_ERP_CACHE_PREFIX = "route-check-";
     
     private static String BDP_PUSH_ERP = "大数据推送规则";
+    private static String BDP_PUSH_ERP2 = "大数据更新规则";
     @Resource
     private CollectBoxFlowDirectionConfDao collectBoxFlowDirectionConfMapper;
     @Autowired
@@ -363,8 +364,8 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
     }
     
     private void setNoticeErpCache(String createErp, String updateErp, Integer createSiteCode){
-        if((StringUtils.isBlank(createErp) || BDP_PUSH_ERP.equals(createErp)) 
-                && StringUtils.isBlank(updateErp) || BDP_PUSH_ERP.equals(updateErp)){
+        if((StringUtils.isBlank(createErp) || BDP_PUSH_ERP.equals(createErp) || BDP_PUSH_ERP2.equals(createErp)) 
+                && StringUtils.isBlank(updateErp) || BDP_PUSH_ERP.equals(updateErp) || BDP_PUSH_ERP2.equals(updateErp)){
             return;
         }
         
@@ -373,12 +374,12 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
         List<String> erpList = StringUtils.isBlank(erps) ? new ArrayList<>() : new ArrayList(Arrays.asList(erps.split(",")));
         // createErp是有效的 而且 缓存中不存在
         if(StringUtils.isNotBlank(createErp) && !BDP_PUSH_ERP.equals(createErp) 
-                && !erpList.contains(createErp)){
+                && !erpList.contains(createErp) && !BDP_PUSH_ERP2.equals(createErp)){
             erpList.add(createErp);
         }
         // updateErp是有效的 而且 缓存中不存在
         if(StringUtils.isNotBlank(updateErp) && !BDP_PUSH_ERP.equals(updateErp)
-                && !erpList.contains(createErp)){
+                && !erpList.contains(createErp) && !BDP_PUSH_ERP2.equals(updateErp)){
             erpList.add(updateErp);
         }
         
