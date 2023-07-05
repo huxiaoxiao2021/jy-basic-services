@@ -72,7 +72,7 @@ public class WorkAreaJsfServiceImpl implements WorkAreaJsfService {
 
 	@Override
 	public Result<WorkArea> queryByAreaCode(String areaCode) {
-		return null;
+		return Result.success(workAreaService.queryByAreaCode(areaCode));
 	}
 
 }
