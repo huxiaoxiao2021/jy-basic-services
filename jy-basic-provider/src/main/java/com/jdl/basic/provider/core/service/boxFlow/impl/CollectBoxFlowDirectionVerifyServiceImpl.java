@@ -28,6 +28,7 @@ import com.jdl.basic.provider.mq.producer.DefaultJMQProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -324,20 +325,29 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
                         log.info("离线校验路由规则boxFlowResult为空，默认校验通过，请求参数：conf.id:{},boxReceiveId:{},boxReceiveName:{},startSiteId:{}," +
                                         "startSiteName:{},endSiteId:{},endSiteName:{}, result:{}", conf.getId(), boxReceiveId, boxReceiveName,
                                 startSiteId, startSiteName, endSiteId, endSiteName, JsonHelper.toJSONString(jdMetaResult));
+                        modifyRouteErrorType(conf.getRouteErrorType(), 0, conf);
                         continue;
                     }
                     if(boxFlowResult.getProblemType() != null){
                         String errorMsg = MessageFormat.format("离线校验路由规则路由错误：始发分拣:{0},目的地分拣:{1},建包流向:{2} 路由错误:[{3}],conf.id:{4}",
                                 startSiteName, endSiteName, boxReceiveName, boxFlowResult.getProblemTypeDesc(), conf.getId());
                         log.error(errorMsg);
-                        conf.setRouteErrorType(boxFlowResult.getProblemType());
-                        collectBoxFlowDirectionConfMapper.updateByPrimaryKey(conf);
+                        modifyRouteErrorType(conf.getRouteErrorType(), boxFlowResult.getProblemType(), conf);
                         routeErrorNotice(startSiteId, startSiteName, endSiteId, endSiteName, boxReceiveId, boxReceiveName, boxFlowResult.getProblemTypeDesc());
+                        continue;
                     }
+                    modifyRouteErrorType(conf.getRouteErrorType(), 0, conf);
                 }
             }
         }while (CollectionUtils.isNotEmpty(confs));
         
+    }
+    
+    private void modifyRouteErrorType(Integer oldType , Integer newType, CollectBoxFlowDirectionConf conf){
+        if(ObjectUtils.notEqual(oldType, newType)){
+            conf.setRouteErrorType(newType);
+            collectBoxFlowDirectionConfMapper.updateByPrimaryKey(conf);
+        }
     }
     
     private void routeErrorNotice(Integer startSiteId, String startSiteName, Integer endSiteId, String endSiteName, 
