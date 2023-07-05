@@ -22,7 +22,7 @@
     <result column="ts" jdbcType="TIMESTAMP" property="ts" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, work_grid_key, schedule_no, schedule_name, start_time, end_time,
+    id, work_grid_key, schedule_no, schedule_key, schedule_name, start_time, end_time,
     schedule_type, source_type, site_code, area_code, yn, create_time, update_time, create_user_erp, create_user_name, update_user_erp,
     update_user_name, ts
   </sql>
