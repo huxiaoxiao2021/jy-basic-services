@@ -385,7 +385,7 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
         if(CollectionUtils.isEmpty(erpList)){
             return;
         }
-        cluster.set(key, String.join(",", erpList), noticeErpCacheDay, TimeUnit.DAYS, true);
+        cluster.pSetEx(key, String.join(",", erpList), noticeErpCacheDay, TimeUnit.DAYS);
     }
     
 }
