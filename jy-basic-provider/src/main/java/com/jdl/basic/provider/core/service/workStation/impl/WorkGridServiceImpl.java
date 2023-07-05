@@ -616,11 +616,6 @@ public class WorkGridServiceImpl implements WorkGridService {
 	}
 
 	@Override
-	public List<WorkGrid> queryAllGridBySiteCode(WorkGridQuery query) {
-		return workGridDao.queryAllGridBySiteCode(query);
-	}
-
-	@Override
 	public WorkGrid queryByWorkGridKey(String workGridKey) {
 		return workGridDao.queryByWorkGridKey(workGridKey);
 	}

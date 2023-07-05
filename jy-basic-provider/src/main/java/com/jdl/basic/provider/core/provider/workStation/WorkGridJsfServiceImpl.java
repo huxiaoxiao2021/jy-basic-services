@@ -195,14 +195,6 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 		return Result.fail("未查询到相应的网格数据！");
 	}
 
-	@Override
-	public Result<List<WorkGrid>> queryAllGridBySiteCode(WorkGridQuery query) {
-		if (query.getSiteCode() == null) {
-			return Result.fail("场地编码不能为空！");
-		}
-		return Result.success(workGridService.queryAllGridBySiteCode(query));
-	}
-
 	private void checkWorkGridQuery(WorkGrid query) {
 		if (ObjectHelper.isEmpty(query.getSiteCode())){
 			throw new JYBasicRpcException("参数错误：siteCode为空！");
