@@ -5,8 +5,10 @@ import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.api.enums.UserJobTypeEnum;
 import com.jdl.basic.api.service.user.UserJsfService;
 import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.core.service.user.UserService;
+import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
@@ -62,6 +64,9 @@ public class UserJsfServiceImpl implements UserJsfService {
     }
     if (ObjectHelper.isEmpty(dto.getPageSize())){
       dto.setPageSize(Constants.DEFAULT_PAGE_SIZE_QUERY_USER);
+    }
+    if (ObjectHelper.isEmpty(dto.getCheckDay())){
+      dto.setCheckDay(DateHelper.getDateOfyyMMdd2(DateHelper.addDays(new Date(),Constants.USER_SIGN_CHECK_DAYS)));
     }
   }
 

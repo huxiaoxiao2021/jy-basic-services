@@ -10,4 +10,5 @@ public class UnDistributedUserQueryDto implements Serializable {
   private String siteCode;
   private Integer pageNo;
   private Integer pageSize;
+  private String checkDay;
 }

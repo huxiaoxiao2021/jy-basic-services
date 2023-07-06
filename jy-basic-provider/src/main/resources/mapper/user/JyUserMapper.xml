@@ -401,6 +401,7 @@
     <if test="siteCode!=null">
       and site_code = #{siteCode}
     </if>
+    and entry_date &lt;= #{checkDay}
     and grid_distribute_flag =0
     limit #{pageSize}
   </select>
