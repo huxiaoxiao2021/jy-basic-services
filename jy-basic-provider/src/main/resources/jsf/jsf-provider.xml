@@ -254,5 +254,14 @@
                   alias="${jsf.jy_basic.alias}"
                   server="jsf">
     </jsf:provider>
+
+    <!-- 车型积分配置jsf服务 -->
+    <jsf:provider id="vehicleIntegralConfigJsfService"
+                  interface="com.jdl.basic.api.service.vehicle.VehicleIntegralConfigJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="vehicleIntegralConfigJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
 </beans>
 
