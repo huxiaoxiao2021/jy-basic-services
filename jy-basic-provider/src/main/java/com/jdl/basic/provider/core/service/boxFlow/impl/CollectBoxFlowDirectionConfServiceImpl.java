@@ -180,7 +180,9 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
             collectBoxFlowDirectionConf.setIfChangeSinceLastUpdate(conf.getIfChangeSinceLastUpdate());
         }
         collectBoxFlowDirectionConf.setVersion(conf.getVersion());
-
+        if(conf.getRouteErrorType() != null){
+            collectBoxFlowDirectionConf.setRouteErrorType(conf.getRouteErrorType());
+        }
         int i = collectBoxFlowDirectionConfMapper.updateByPrimaryKeySelective(collectBoxFlowDirectionConf);
         if (i != 1) {
             return result.toFail("更新失败");
