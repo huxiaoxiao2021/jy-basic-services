@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jdl.basic.provider.core.dao.vehicle.VehicleIntegralConfigDao">
+
+  <resultMap id="BaseResultMap" type="com.jdl.basic.api.domain.vehicle.VehicleIntegralConfig">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="vehicle_type" jdbcType="INTEGER" property="vehicleType" />
+    <result column="vehicle_type_name" jdbcType="VARCHAR" property="vehicleTypeName" />
+    <result column="priority_fraction" jdbcType="DOUBLE" property="priorityFraction" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_user_erp" jdbcType="VARCHAR" property="createUserErp" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="update_user_erp" jdbcType="VARCHAR" property="updateUserErp" />
+    <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="yn" jdbcType="BIT" property="yn" />
+    <result column="ts" jdbcType="TIMESTAMP" property="ts" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, vehicle_type, vehicle_type_name, priority_fraction, remark, create_user_erp, create_user_name, update_user_erp,
+    update_user_name, create_time, update_time, yn, ts
+  </sql>
+
+
+
+  <select id="findConfigByVehicleType" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select  <include refid="Base_Column_List" />
+    from vehicle_integral_config
+    where yn = 1 and vehicle_type = #{vehicleType}
+  </select>
+
+</mapper>
