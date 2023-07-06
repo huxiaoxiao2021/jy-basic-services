@@ -402,6 +402,7 @@
       and site_code = #{siteCode}
     </if>
     and entry_date &lt;= #{checkDay}
+    and site_type in (1,2,3)
     and grid_distribute_flag =0
     limit #{pageSize}
   </select>
