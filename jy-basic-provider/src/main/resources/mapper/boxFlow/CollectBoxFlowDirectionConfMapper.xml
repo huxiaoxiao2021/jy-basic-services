@@ -284,7 +284,10 @@
                 if_change_since_last_update = #{ifChangeSinceLastUpdate,jdbcType=INTEGER},
             </if>
             <if test="version != null">
-                version = #{version,jdbcType=VARCHAR}
+                version = #{version,jdbcType=VARCHAR},
+            </if>
+            <if test="routeErrorType != null">
+                route_error_type = #{routeErrorType,jdbcType=INTEGER}
             </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
