@@ -152,10 +152,10 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
             configTransferDpSite.setHandoverSiteName(handoverSiteInfo.getSiteName());
             configTransferDpSite.setHandoverOrgId(handoverSiteInfo.getOrgId());
             configTransferDpSite.setHandoverOrgName(handoverSiteInfo.getOrgName());
-            configTransferDpSite.setHandoverProvinceAgencyCode(handoverSiteInfo.getProvinceAgencyCode());
-            configTransferDpSite.setHandoverProvinceAgencyName(handoverSiteInfo.getProvinceAgencyName());
-            configTransferDpSite.setHandoverAreaHubCode(handoverSiteInfo.getAreaCode());
-            configTransferDpSite.setHandoverAreaHubName(handoverSiteInfo.getAreaName());
+            configTransferDpSite.setHandoverProvinceAgencyCode(StringUtils.isEmpty(handoverSiteInfo.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : handoverSiteInfo.getProvinceAgencyCode());
+            configTransferDpSite.setHandoverProvinceAgencyName(StringUtils.isEmpty(handoverSiteInfo.getProvinceAgencyName()) ? Constants.EMPTY_FILL : handoverSiteInfo.getProvinceAgencyName());
+            configTransferDpSite.setHandoverAreaHubCode(StringUtils.isEmpty(handoverSiteInfo.getAreaCode()) ? Constants.EMPTY_FILL : handoverSiteInfo.getAreaCode());
+            configTransferDpSite.setHandoverAreaHubName(StringUtils.isEmpty(handoverSiteInfo.getAreaName()) ? Constants.EMPTY_FILL : handoverSiteInfo.getAreaName());
 
 
             final BaseStaffSiteOrgDto preSortSiteInfo = baseMajorManager.getBaseSiteBySiteId(configTransferDpSite.getPreSortSiteCode());
@@ -243,10 +243,10 @@ public class ConfigTransferDpServiceImpl implements ConfigTransferDpService {
                 configTransferDpSite.setHandoverSiteName(handoverSiteInfo.getSiteName());
                 configTransferDpSite.setHandoverOrgId(handoverSiteInfo.getOrgId());
                 configTransferDpSite.setHandoverOrgName(handoverSiteInfo.getOrgName());
-                configTransferDpSite.setHandoverProvinceAgencyCode(handoverSiteInfo.getProvinceAgencyCode());
-                configTransferDpSite.setHandoverProvinceAgencyName(handoverSiteInfo.getProvinceAgencyName());
-                configTransferDpSite.setHandoverAreaHubCode(handoverSiteInfo.getAreaCode());
-                configTransferDpSite.setHandoverAreaHubName(handoverSiteInfo.getAreaName());
+                configTransferDpSite.setHandoverProvinceAgencyCode(StringUtils.isEmpty(handoverSiteInfo.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : handoverSiteInfo.getProvinceAgencyCode());
+                configTransferDpSite.setHandoverProvinceAgencyName(StringUtils.isEmpty(handoverSiteInfo.getProvinceAgencyName()) ? Constants.EMPTY_FILL : handoverSiteInfo.getProvinceAgencyName());
+                configTransferDpSite.setHandoverAreaHubCode(StringUtils.isEmpty(handoverSiteInfo.getAreaCode()) ? Constants.EMPTY_FILL : handoverSiteInfo.getAreaCode());
+                configTransferDpSite.setHandoverAreaHubName(StringUtils.isEmpty(handoverSiteInfo.getAreaName()) ? Constants.EMPTY_FILL : handoverSiteInfo.getAreaName());
 
 
                 final BaseStaffSiteOrgDto preSortSiteInfo = baseMajorManager.getBaseSiteBySiteId(configTransferDpSite.getPreSortSiteCode());

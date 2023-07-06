@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.service.easyFreezeSite.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.easyFreeze.EasyFreezeSiteDto;
 import com.jdl.basic.api.domain.LoginUser;
@@ -9,6 +10,7 @@ import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.enums.AreaEnum;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.basic.provider.core.dao.easyFreezeSite.EasyFreezeSiteDao;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.po.EasyFreezeSitePO;
@@ -46,6 +48,9 @@ public class EasyFreezeSiteServiceImpl implements EasyFreezeSiteService {
             result.toFail("该场地已存在，请勿重复录入!");
             return result;
         }
+        // fill basic info
+        fillSiteDate(Lists.newArrayList(dto), loginUser);
+        
         EasyFreezeSitePO sitePO = new EasyFreezeSitePO();
         BeanUtils.copyProperties(dto,sitePO);
         sitePO.setCreateTime(new Date());
@@ -172,6 +177,14 @@ public class EasyFreezeSiteServiceImpl implements EasyFreezeSiteService {
                 dto.setCreateUser(loginUser.getUserErp());
                 dto.setUpdateUser(loginUser.getUserErp());
             }
+            dto.setProvinceAgencyCode((baseSite == null || StringUtils.isEmpty(baseSite.getProvinceAgencyCode())
+                    ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyCode()));
+            dto.setProvinceAgencyName((baseSite == null || StringUtils.isEmpty(baseSite.getProvinceAgencyName())
+                    ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyName()));
+            dto.setAreaHubCode((baseSite == null || StringUtils.isEmpty(baseSite.getAreaCode())
+                    ? Constants.EMPTY_FILL : baseSite.getAreaCode()));
+            dto.setAreaHubName((baseSite == null || StringUtils.isEmpty(baseSite.getAreaName())
+                    ? Constants.EMPTY_FILL : baseSite.getAreaName()));
         });
 
     }
