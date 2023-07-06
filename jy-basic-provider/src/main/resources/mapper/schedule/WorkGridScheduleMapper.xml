@@ -22,7 +22,7 @@
     <result column="ts" jdbcType="TIMESTAMP" property="ts" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, work_grid_key, schedule_no, schedule_name, start_time, end_time,
+    id, work_grid_key, schedule_no, schedule_key, schedule_name, start_time, end_time,
     schedule_type, source_type, site_code, area_code, yn, create_time, update_time, create_user_erp, create_user_name, update_user_erp,
     update_user_name, ts
   </sql>
@@ -248,6 +248,7 @@
     (
         work_grid_key,
         schedule_no,
+        schedule_key,
         schedule_name,
         start_time,
         end_time,
@@ -267,6 +268,7 @@
       (
         #{item.workGridKey},
         #{item.scheduleNo},
+        #{item.scheduleKey},
         #{item.scheduleName},
         #{item.startTime},
         #{item.endTime},
@@ -283,4 +285,20 @@
       )
     </foreach>
   </insert>
+
+  <select id="querySiteScheduleByCondition" resultMap="BaseResultMap">
+    select
+        <include refid="Base_Column_List"/>
+    from
+        work_grid_schedule
+    where
+        yn = 1
+    and site_code = #{siteCode}
+    <if test="areaCode != null and areaCode != ''">
+    and area_code = #{areaCode}
+    </if>
+    <if test="workGridKey != null and workGridKey != ''">
+    and work_grid_key = #{workGridKey}
+    </if>
+  </select>
 </mapper>

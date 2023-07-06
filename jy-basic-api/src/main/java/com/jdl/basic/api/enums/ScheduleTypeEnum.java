@@ -1,4 +1,4 @@
-package com.jdl.basic.api.domain.schedule;
+package com.jdl.basic.api.enums;
 
 public enum ScheduleTypeEnum {
 
