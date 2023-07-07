@@ -412,19 +412,19 @@
             and start_org_id = #{startOrgId,jdbcType=INTEGER}
         </if>
         <if test="startProvinceAgencyCode != null">
-            and start_province_agency_code = #{startProvinceAgencyCode,jdbcType=VARCHAR},
+            and start_province_agency_code = #{startProvinceAgencyCode,jdbcType=VARCHAR}
         </if>
         <if test="startAreaHubCode != null">
-            and start_area_hub_code = #{startAreaHubCode,jdbcType=VARCHAR},
+            and start_area_hub_code = #{startAreaHubCode,jdbcType=VARCHAR}
         </if>
         <if test="endOrgId != null">
             and end_org_id = #{endOrgId,jdbcType=VARCHAR}
         </if>
         <if test="endProvinceAgencyCode != null">
-            and end_province_agency_code = #{endProvinceAgencyCode,jdbcType=VARCHAR},
+            and end_province_agency_code = #{endProvinceAgencyCode,jdbcType=VARCHAR}
         </if>
         <if test="endAreaHubCode != null">
-            and end_area_hub_code = #{endAreaHubCode,jdbcType=VARCHAR},
+            and end_area_hub_code = #{endAreaHubCode,jdbcType=VARCHAR}
         </if>
         <if test="startSiteId != null">
             and start_site_id = #{startSiteId,jdbcType=INTEGER}
@@ -475,19 +475,19 @@
             and start_org_id = #{startOrgId,jdbcType=INTEGER}
         </if>
         <if test="startProvinceAgencyCode != null">
-            and start_province_agency_code = #{startProvinceAgencyCode,jdbcType=VARCHAR},
+            and start_province_agency_code = #{startProvinceAgencyCode,jdbcType=VARCHAR}
         </if>
         <if test="startAreaHubCode != null">
-            and start_area_hub_code = #{startAreaHubCode,jdbcType=VARCHAR},
+            and start_area_hub_code = #{startAreaHubCode,jdbcType=VARCHAR}
         </if>
         <if test="endOrgId != null">
             and end_org_id = #{endOrgId,jdbcType=VARCHAR}
         </if>
         <if test="endProvinceAgencyCode != null">
-            and end_province_agency_code = #{endProvinceAgencyCode,jdbcType=VARCHAR},
+            and end_province_agency_code = #{endProvinceAgencyCode,jdbcType=VARCHAR}
         </if>
         <if test="endAreaHubCode != null">
-            and end_area_hub_code = #{endAreaHubCode,jdbcType=VARCHAR},
+            and end_area_hub_code = #{endAreaHubCode,jdbcType=VARCHAR}
         </if>
         <if test="startSiteId != null">
             and start_site_id = #{startSiteId,jdbcType=INTEGER}
@@ -565,19 +565,19 @@
             and start_org_id = #{conf.startOrgId,jdbcType=INTEGER}
         </if>
         <if test="conf.startProvinceAgencyCode != null">
-            and start_province_agency_code = #{conf.startProvinceAgencyCode,jdbcType=VARCHAR},
+            and start_province_agency_code = #{conf.startProvinceAgencyCode,jdbcType=VARCHAR}
         </if>
         <if test="conf.startAreaHubCode != null">
-            and start_area_hub_code = #{conf.startAreaHubCode,jdbcType=VARCHAR},
+            and start_area_hub_code = #{conf.startAreaHubCode,jdbcType=VARCHAR}
         </if>
         <if test="conf.endOrgId != null">
             and end_org_id = #{conf.endOrgId,jdbcType=VARCHAR}
         </if>
         <if test="conf.endProvinceAgencyCode != null">
-            and end_province_agency_code = #{conf.endProvinceAgencyCode,jdbcType=VARCHAR},
+            and end_province_agency_code = #{conf.endProvinceAgencyCode,jdbcType=VARCHAR}
         </if>
         <if test="conf.endAreaHubCode != null">
-            and end_area_hub_code = #{conf.endAreaHubCode,jdbcType=VARCHAR},
+            and end_area_hub_code = #{conf.endAreaHubCode,jdbcType=VARCHAR}
         </if>
         <if test="conf.startSiteId != null">
             and start_site_id = #{conf.startSiteId,jdbcType=INTEGER}
@@ -637,19 +637,19 @@
             and start_org_id = #{startOrgId,jdbcType=INTEGER}
         </if>
         <if test="startProvinceAgencyCode != null">
-            and start_province_agency_code = #{startProvinceAgencyCode,jdbcType=VARCHAR},
+            and start_province_agency_code = #{startProvinceAgencyCode,jdbcType=VARCHAR}
         </if>
         <if test="startAreaHubCode != null">
-            and start_area_hub_code = #{startAreaHubCode,jdbcType=VARCHAR},
+            and start_area_hub_code = #{startAreaHubCode,jdbcType=VARCHAR}
         </if>
         <if test="endOrgId != null">
             and end_org_id = #{endOrgId,jdbcType=VARCHAR}
         </if>
         <if test="startProvinceAgencyCode != null">
-            and start_province_agency_code = #{startProvinceAgencyCode,jdbcType=VARCHAR},
+            and start_province_agency_code = #{startProvinceAgencyCode,jdbcType=VARCHAR}
         </if>
         <if test="startAreaHubCode != null">
-            and start_area_hub_code = #{startAreaHubCode,jdbcType=VARCHAR},
+            and start_area_hub_code = #{startAreaHubCode,jdbcType=VARCHAR}
         </if>
         <if test="startSiteId != null">
             and start_site_id = #{startSiteId,jdbcType=INTEGER}

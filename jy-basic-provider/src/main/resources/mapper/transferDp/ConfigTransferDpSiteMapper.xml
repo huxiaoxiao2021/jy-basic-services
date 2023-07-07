@@ -431,10 +431,10 @@
             AND handover_org_name = #{handoverOrgName}
         </if>
         <if test="handoverProvinceAgencyCode != null and handoverProvinceAgencyCode != ''" >
-            AND handover_province_agency_code = #{handoverProvinceAgencyCode},
+            AND handover_province_agency_code = #{handoverProvinceAgencyCode}
         </if>
         <if test="handoverAreaHubCode != null and handoverAreaHubCode != ''" >
-            AND handover_area_hub_code = #{handoverAreaHubCode},
+            AND handover_area_hub_code = #{handoverAreaHubCode}
         </if>
         <if test="handoverSiteCode != null">
             AND handover_site_code = #{handoverSiteCode}

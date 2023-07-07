@@ -539,10 +539,10 @@
             AND org_name = #{orgName}
         </if>
         <if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
-            AND province_agency_code = #{provinceAgencyCode},
+            AND province_agency_code = #{provinceAgencyCode}
         </if>
         <if test="areaHubCode != null and areaHubCode != ''" >
-            AND area_hub_code = #{areaHubCode},
+            AND area_hub_code = #{areaHubCode}
         </if>
         <if test="siteCode != null">
             AND site_code = #{siteCode}
