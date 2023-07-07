@@ -47,10 +47,10 @@ public class UserWorkGridJsfServiceImpl implements UserWorkGridJsfService {
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridJsfServiceImpl.getWorkGridDistributedStaff", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<List<JyUserDto>> getWorkGridDistributedStaff(UserWorkGridRequest request) {
-        return convertUResult(userWorkGridService.getWorkGridDistributedStaff(request));
+        return convertToResult(userWorkGridService.getWorkGridDistributedStaff(request));
     }
 
-    private Result<List<JyUserDto>> convertUResult(Result<List<JyUser>> inputResult) {
+    private Result<List<JyUserDto>> convertToResult(Result<List<JyUser>> inputResult) {
         Result<List<JyUserDto>> result = Result.success();
 
         if (inputResult.isFail()) {

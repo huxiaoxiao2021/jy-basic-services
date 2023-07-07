@@ -51,7 +51,5 @@ public interface UserWorkGridDao {
      */
     List<UserWorkGrid> batchQueryDeletedUserWorkGrid(UserWorkGridBatchRequest request);
 
-    int updateAfterInsertOrDelete(UserWorkGridRequest request);
-
     int removeFromGridByUserId(RemoveUserDto removeUserDto);
 }

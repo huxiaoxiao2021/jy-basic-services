@@ -37,7 +37,7 @@ public interface UserService {
   Result<List<JyUser>> searchUserBySiteCode(JyUserQueryDto dto);
 
   /**
-   * 根据员工id以及条件批量查询员工
+   * 根据员工id批量查询员工
    * @param request
    * @return
    */

@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
   public Result<List<JyUser>> batchQueryQuitUserByUserId(JyUserBatchRequest request) {
     Result<List<JyUser>> result = Result.success();
     if (CollectionUtils.isEmpty(request.getUsers())) {
-      return result.toFail("用户ID不能为空");
+      return result.setData(new ArrayList<>());
     }
     return result.setData(jyUserDao.batchQueryQuitUserByUserId(request));
   }
