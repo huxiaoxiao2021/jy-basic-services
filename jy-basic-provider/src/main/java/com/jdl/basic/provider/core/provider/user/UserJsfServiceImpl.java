@@ -23,12 +23,12 @@ public class UserJsfServiceImpl implements UserJsfService {
     private UserService userService;
     @Override
     public Result<List<JyUserDto>> searchUserBySiteCode(JyUserQueryDto dto) {
-        return convertUResult(userService.searchUserBySiteCode(dto));
+        return convertToResult(userService.searchUserBySiteCode(dto));
     }
 
     @Override
     public Result<List<JyUserDto>> queryByUserIds(JyUserBatchRequest request) {
-        return convertUResult(userService.queryByUserIds(request));
+        return convertToResult(userService.queryByUserIds(request));
     }
 
     @Override
@@ -38,12 +38,12 @@ public class UserJsfServiceImpl implements UserJsfService {
 
   @Override
   public Result<List<JyUserDto>> queryDifference(JyUserQueryDto dto) {
-    return convertUResult(userService.queryDifference(dto));
+    return convertToResult(userService.queryDifference(dto));
   }
 
     @Override
     public Result<List<JyUserDto>> batchQueryQuitUserByUserId(JyUserBatchRequest request) {
-        return convertUResult(userService.batchQueryQuitUserByUserId(request));
+        return convertToResult(userService.batchQueryQuitUserByUserId(request));
     }
   @Override
   public Result<List<JyUser>> queryUnDistributedUserList(UnDistributedUserQueryDto dto) {
@@ -67,15 +67,15 @@ public class UserJsfServiceImpl implements UserJsfService {
 
 	@Override
 	public Result<List<JyUserDto>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
-		return convertUResult(userService.queryUserListBySiteAndPosition(dto));
+		return convertToResult(userService.queryUserListBySiteAndPosition(dto));
 	}
 
     @Override
     public Result<List<JyUserDto>> queryNatureUndistributedUsers(JyUserQueryDto dto) {
-        return convertUResult(userService.queryNatureUndistributedUsers(dto));
+        return convertToResult(userService.queryNatureUndistributedUsers(dto));
     }
 
-    private Result<List<JyUserDto>> convertUResult(Result<List<JyUser>> inputResult) {
+    private Result<List<JyUserDto>> convertToResult(Result<List<JyUser>> inputResult) {
         Result<List<JyUserDto>> result = Result.success();
 
         if (inputResult.isFail()) {
