@@ -5,6 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="work_grid_key" jdbcType="VARCHAR" property="workGridKey" />
     <result column="schedule_no" jdbcType="INTEGER" property="scheduleNo" />
+    <result column="schedule_key" jdbcType="VARCHAR" property="scheduleKey" />
     <result column="schedule_name" jdbcType="VARCHAR" property="scheduleName" />
     <result column="start_time" jdbcType="VARCHAR" property="startTime" />
     <result column="end_time" jdbcType="VARCHAR" property="endTime" />
