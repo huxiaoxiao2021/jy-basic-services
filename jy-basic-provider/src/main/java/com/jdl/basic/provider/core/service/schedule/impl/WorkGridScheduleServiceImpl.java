@@ -59,4 +59,9 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         }
         return result.setData(workGridScheduleDao.querySiteScheduleByCondition(request));
     }
+
+    @Override
+    public WorkGridSchedule queryWorkGridScheduleByKey(WorkGridScheduleRequest request) {
+        return workGridScheduleDao.queryWorkGridScheduleByKey(request);
+    }
 }

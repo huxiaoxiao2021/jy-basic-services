@@ -302,4 +302,15 @@
     and work_grid_key = #{workGridKey}
     </if>
   </select>
+
+  <select id="queryWorkGridScheduleByKey" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM
+      work_grid_schedule
+    WHERE
+      schedule_key = #{scheduleKey}
+      AND yn = 1
+    limit 1
+  </select>
 </mapper>

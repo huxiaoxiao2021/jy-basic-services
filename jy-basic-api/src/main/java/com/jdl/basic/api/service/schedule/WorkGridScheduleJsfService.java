@@ -16,4 +16,6 @@ public interface WorkGridScheduleJsfService {
     Result<Boolean> batchInsert(WorkGridScheduleBatchRequest request);
 
     Result<List<WorkGridSchedule>> querySiteScheduleByCondition(WorkGridScheduleRequest request);
+
+    Result<WorkGridSchedule> queryWorkGridScheduleByKey(WorkGridScheduleRequest request);
 }

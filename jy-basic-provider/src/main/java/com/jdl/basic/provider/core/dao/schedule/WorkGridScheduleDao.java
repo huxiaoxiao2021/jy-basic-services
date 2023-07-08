@@ -26,4 +26,6 @@ public interface WorkGridScheduleDao {
     boolean batchInsert(WorkGridScheduleBatchRequest request);
 
     List<WorkGridSchedule> querySiteScheduleByCondition(WorkGridScheduleRequest request);
+
+    WorkGridSchedule queryWorkGridScheduleByKey(WorkGridScheduleRequest request);
 }

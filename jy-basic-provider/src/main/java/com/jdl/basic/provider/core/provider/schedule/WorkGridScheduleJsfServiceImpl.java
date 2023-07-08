@@ -36,4 +36,9 @@ public class WorkGridScheduleJsfServiceImpl implements WorkGridScheduleJsfServic
     public Result<List<WorkGridSchedule>> querySiteScheduleByCondition(WorkGridScheduleRequest request) {
         return workGridScheduleService.querySiteScheduleByCondition(request);
     }
+
+    @Override
+    public Result<WorkGridSchedule> queryWorkGridScheduleByKey(WorkGridScheduleRequest request) {
+        return Result.success(workGridScheduleService.queryWorkGridScheduleByKey(request));
+    }
 }
