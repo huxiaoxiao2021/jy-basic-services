@@ -442,6 +442,9 @@
             <if test="siteType != null" >
                 and t.site_type = #{siteType,jdbcType=INTEGER}
             </if>
+						<if test="businessKey != null and businessKey != ''" >
+							and t.business_key = #{businessKey,jdbcType=VARCHAR}
+						</if>
 		</where>
 	</sql>
 
