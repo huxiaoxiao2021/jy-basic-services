@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.provider.schedule;
 
 import com.jd.dms.java.utils.sdk.base.Result;
+import com.jdl.basic.api.domain.schedule.BatchWorkGridScheduleQueryDto;
 import com.jdl.basic.api.domain.schedule.WorkGridSchedule;
 import com.jdl.basic.api.domain.schedule.WorkGridScheduleBatchRequest;
 import com.jdl.basic.api.domain.schedule.WorkGridScheduleRequest;
@@ -40,5 +41,10 @@ public class WorkGridScheduleJsfServiceImpl implements WorkGridScheduleJsfServic
     @Override
     public Result<WorkGridSchedule> queryWorkGridScheduleByKey(WorkGridScheduleRequest request) {
         return Result.success(workGridScheduleService.queryWorkGridScheduleByKey(request));
+    }
+
+    @Override
+    public Result<List<WorkGridSchedule>> listWorkGridScheduleByKeys(BatchWorkGridScheduleQueryDto dto) {
+        return Result.success(workGridScheduleService.listWorkGridScheduleByKeys(dto));
     }
 }

@@ -313,4 +313,18 @@
       AND yn = 1
     limit 1
   </select>
+  <select id="listWorkGridScheduleByKeys" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM
+    work_grid_schedule
+    WHERE
+    schedule_key
+    in
+    <foreach collection="scheduleKeyList" item="item" separator="," open="(" close=")">
+      #{item}
+    </foreach>
+    AND yn = 1
+    group by schedule_key
+  </select>
 </mapper>

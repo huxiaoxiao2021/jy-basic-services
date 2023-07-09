@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.service.schedule;
 
 import com.jd.dms.java.utils.sdk.base.Result;
+import com.jdl.basic.api.domain.schedule.BatchWorkGridScheduleQueryDto;
 import com.jdl.basic.api.domain.schedule.WorkGridSchedule;
 import com.jdl.basic.api.domain.schedule.WorkGridScheduleBatchRequest;
 import com.jdl.basic.api.domain.schedule.WorkGridScheduleRequest;
@@ -18,4 +19,6 @@ public interface WorkGridScheduleService {
     Result<List<WorkGridSchedule>> querySiteScheduleByCondition(WorkGridScheduleRequest request);
 
     WorkGridSchedule queryWorkGridScheduleByKey(WorkGridScheduleRequest request);
+
+    List<WorkGridSchedule> listWorkGridScheduleByKeys(BatchWorkGridScheduleQueryDto dto);
 }
