@@ -40,7 +40,8 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         if (request.getUpdateTime() == null) {
             return result.toFail("修改时间不能为空！");
         }
-        return result.setData(workGridScheduleDao.batchDeleteByWorkGridKey(request));
+        workGridScheduleDao.batchDeleteByWorkGridKey(request);
+        return result.setData(Boolean.TRUE);
     }
 
     @Override
