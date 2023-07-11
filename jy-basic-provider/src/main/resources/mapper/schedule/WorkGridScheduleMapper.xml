@@ -324,7 +324,6 @@
     <foreach collection="scheduleKeyList" item="item" separator="," open="(" close=")">
       #{item}
     </foreach>
-    AND yn = 1
-    group by schedule_key
+    order by id desc
   </select>
 </mapper>
