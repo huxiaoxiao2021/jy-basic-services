@@ -414,6 +414,9 @@
     WHERE user_status =1
       and site_code = #{siteCode}
       and position_name = #{positionName,jdbcType=VARCHAR}
+      <if test="organizationCode != null and organizationCode != ''">
+          and organization_code = #{organizationCode,jdbcType=VARCHAR}
+      </if>
     limit 200
   </select>
 
