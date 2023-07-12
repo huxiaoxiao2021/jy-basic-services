@@ -38,10 +38,15 @@ spring:
         enabled: true
       ####--app consumer 定义--##########################################################
     consumers:
-      basic-consumer:
+      jmq2-consumer:
         password: 599985AD
         app: JYBasic
         address: jmq-cluster.jd.local:80
+        enabled: true
+      jmq4-consumer:
+        password: f0a10912179747fd9b31dd8e32c6009c
+        app: JYBasic
+        address: nameserver.jmq.jd.local:80
         enabled: true
   ####--topic 定义--#############################################################
 mq:
