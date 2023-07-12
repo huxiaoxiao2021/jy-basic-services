@@ -64,6 +64,9 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
     private ConfigTransferDpSiteDao configTransferDpSiteDao;
 
     @Autowired
+    private WorkStationAttendPlanDao workStationAttendPlanDao;
+
+    @Autowired
     private BaseMajorManager baseMajorManager;
     
     @Override
@@ -495,6 +498,47 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
         }
         if(log.isInfoEnabled()){
             log.info("config_transfer_dp_site 表省区刷数:{}", updatedCount);
+        }
+    }
+
+    @Override
+    public void workStationAttendPlanBrush(Integer startId, Integer maxLoopCount) {
+        // 起始id
+        int offsetId = startId;
+        int updatedCount = 0; // 更新数量
+        int loopCount = 0; // 循环次数
+        while (loopCount < maxLoopCount) {
+            List<WorkStationAttendPlan> singleList = workStationAttendPlanDao.brushQueryAllByPage(offsetId);
+            if(CollectionUtils.isEmpty(singleList)){
+                break;
+            }
+            List<WorkStationAttendPlan> list = Lists.newArrayList();
+            for (WorkStationAttendPlan item : singleList) {
+                if(item.getSiteCode() == null){
+                    continue;
+                }
+                BaseStaffSiteOrgDto baseSite = baseMajorManager.getBaseSiteBySiteId(item.getSiteCode());
+                if(baseSite == null){
+                    continue;
+                }
+                WorkStationAttendPlan updateItem = new WorkStationAttendPlan();
+                updateItem.setId(item.getId());
+                updateItem.setProvinceAgencyCode(StringUtils.isEmpty(baseSite.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyCode());
+                updateItem.setProvinceAgencyName(StringUtils.isEmpty(baseSite.getProvinceAgencyName()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyName());
+                updateItem.setAreaHubCode(StringUtils.isEmpty(baseSite.getAreaCode()) ? Constants.EMPTY_FILL : baseSite.getAreaCode());
+                updateItem.setAreaHubName(StringUtils.isEmpty(baseSite.getAreaName()) ? Constants.EMPTY_FILL : baseSite.getAreaName());
+                list.add(updateItem);
+            }
+            Integer singleCount = workStationAttendPlanDao.brushUpdateById(list);
+            updatedCount += singleCount;
+
+            WorkStationAttendPlan workStationAttendPlan = singleList.stream().max((a, b) -> (int) (a.getId() - b.getId())).get();
+            offsetId = workStationAttendPlan.getId().intValue();
+
+            loopCount ++;
+        }
+        if(log.isInfoEnabled()){
+            log.info("work_station_attend_plan 表省区刷数:{}", updatedCount);
         }
     }
 

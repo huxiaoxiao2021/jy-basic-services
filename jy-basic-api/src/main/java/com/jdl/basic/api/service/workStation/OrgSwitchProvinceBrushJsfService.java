@@ -58,4 +58,9 @@ public interface OrgSwitchProvinceBrushJsfService {
      */
     void configTransferDpSiteBrush(Integer startId, Integer maxLoopCount);
 
+    /**
+     * work_station_attend_plan 表刷数省区字段
+     */
+    void workStationAttendPlanBrush(Integer startId, Integer maxLoopCount);
+
 }

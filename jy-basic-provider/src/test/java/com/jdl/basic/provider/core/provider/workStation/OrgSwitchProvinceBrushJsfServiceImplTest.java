@@ -82,5 +82,11 @@ public class OrgSwitchProvinceBrushJsfServiceImplTest {
 
         orgSwitchProvinceBrushJsfService.configTransferDpSiteBrush(0, 1000);
     }
+
+    @Test
+    public void workStationAttendPlanBrush() {
+        orgSwitchProvinceBrushJsfService.workStationAttendPlanBrush(0, 1000);
+    }
+    
     
 }
