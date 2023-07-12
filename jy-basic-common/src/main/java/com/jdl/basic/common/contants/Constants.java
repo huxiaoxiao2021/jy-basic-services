@@ -1711,4 +1711,21 @@ public class Constants {
      * UMP appName
      */
     public static final String UMP_APP_NAME = "jy-basic-services";
+
+    public static final String USER_LOCK_PREFIX  = "jy_user_lock_%s";
+
+    public static final int  LOCK_EXPIRE  = 10;
+
+    public static final int DEFAULT_PAGE_NO =1;
+    public static final int DEFAULT_PAGE_SIZE_QUERY_USER =256;
+
+    public static final String COLUMN_PAGE_SIZE="pageSize";
+    public static final String COLUMN_PAGE_NO="pageNo";
+    public static final String COLUMN_SITE_CODE="siteCode";
+
+    /**
+     * 用户打卡数据筛选天数
+     */
+    public static final Integer USER_SIGN_CHECK_DAYS= -7;
+
 }

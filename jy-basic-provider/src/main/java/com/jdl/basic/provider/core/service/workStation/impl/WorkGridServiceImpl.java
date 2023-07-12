@@ -55,7 +55,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 场地网格表--Service接口实现
- * 
+ *
  * @author wuyoude
  * @date 2023年04月25日 00:18:56
  *
@@ -78,8 +78,8 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Autowired
 	private WorkStationGridMachineService machineService;
 	@Autowired
-	private BaseMajorRpc baseMajorManager;	
-	
+	private BaseMajorRpc baseMajorManager;
+
 	@Autowired
 	@Qualifier("workAreaService")
 	private WorkAreaService workAreaService;
@@ -90,9 +90,9 @@ public class WorkGridServiceImpl implements WorkGridService {
 	private int importDatasLimit;
 	/**
 	 * 导入流向数限制
-	 */	
+	 */
 	@Value("${beans.workGridService.importDatasPerFlowLimit:100}")
-	private int importDatasPerFlowLimit;	
+	private int importDatasPerFlowLimit;
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -129,7 +129,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		Result<WorkGrid> result = Result.success();
 		result.setData(workGridDao.queryById(id));
 		return result;
-	}	
+	}
 	/**
 	 * 根据id查询
 	 * @param id
@@ -139,7 +139,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		Result<WorkGridVo> result = Result.success();
 		result.setData(toWorkGridVoForConfigFlow(workGridDao.queryById(id)));
 		return result;
-	 }	
+	 }
 	private WorkGridVo toWorkGridVoForConfigFlow(WorkGrid data) {
 		if(data == null) {
 			return null;
@@ -160,7 +160,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		Result<WorkGrid> result = Result.success();
 		result.setData(workGridDao.queryByBusinessKeys(workGrid));
 		return result;
-	 }	
+	 }
 	/**
 	 * 按条件分页查询
 	 * @param query
@@ -229,7 +229,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 			voData.setFlowDirectionType(workArea.getFlowDirectionType());
 		}
 		voData.setFlowInfo(queryFlowInfoByWorkGridKey(voData));
-	}	
+	}
 	private void loadWorkInfo(WorkGridVo voData) {
 		if(voData == null) {
 			return;
@@ -360,14 +360,14 @@ public class WorkGridServiceImpl implements WorkGridService {
 		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
 		if(!checkResult.isSuccess()){
 		    return Result.fail(checkResult.getMessage());
-		}		
+		}
 		List<WorkGrid> dataList = workGridDao.queryList(query);
 	    List<WorkGridVo> voDataList = new ArrayList<WorkGridVo>();
 	    for (WorkGrid tmp : dataList) {
 	    	voDataList.add(this.toWorkGridVo(tmp));
 	    }
 		result.setData(voDataList);
-		return result;	    
+		return result;
 	}
 	@Override
 	public Result<Boolean> deleteByIds(DeleteRequest<WorkGrid> deleteRequest) {
@@ -443,7 +443,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		}
 		if(dataList.size() > importDatasLimit) {
 			return result.toFail("导入数据不能超过"+importDatasLimit+"条！");
-		}		
+		}
 		//逐条校验
 		int rowNum = 1;
 		Map<String,Integer> uniqueKeysRowNumMap = new HashMap<String,Integer>();
@@ -527,7 +527,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		if(flowSiteCodes.isEmpty()) {
 			return result.toFail("配置无效，流向ID为空！");
 		}
-		
+
 		WorkGrid workGridQuery = new WorkGrid();
 		workGridQuery.setSiteCode(siteCode);
 		workGridQuery.setFloor(floor);
@@ -604,8 +604,39 @@ public class WorkGridServiceImpl implements WorkGridService {
 		}
 		return null;
 	}
+
+	@Override
+	public List<WorkGrid> queryFloorDictList(WorkGrid queryParams) {
+		return workGridDao.queryFloorDictList(queryParams);
+	}
+
+	@Override
+	public List<WorkGrid> queryAreaDictList(WorkGrid queryParams) {
+		return workGridDao.queryAreaDictList(queryParams);
+	}
+
+	@Override
+	public List<WorkGrid> queryWorkGrid(WorkGrid queryParams) {
+		return workGridDao.queryWorkGrid(queryParams);
+	}
+
+	@Override
+	public List<WorkGrid> batchQueryByWorkGridKey(List<String> workGridKeys) {
+		return workGridDao.batchQueryByWorkGridKey(workGridKeys);
+	}
+
+	@Override
+	public List<WorkGrid> queryAreaWorkGrid(WorkGridQuery query) {
+		return workGridDao.queryAreaWorkGrid(query);
+	}
+
+	@Override
+	public List<WorkGrid> queryAllGridBySiteCode(WorkGridQuery query) {
+		return workGridDao.queryAllGridBySiteCode(query);
+	}
+
 	@Override
 	public WorkGrid queryByWorkGridKey(String workGridKey) {
 		return workGridDao.queryByWorkGridKey(workGridKey);
-	}	
+	}
 }

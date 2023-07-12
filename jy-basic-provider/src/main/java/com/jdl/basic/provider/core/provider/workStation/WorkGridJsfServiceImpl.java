@@ -1,8 +1,11 @@
 package com.jdl.basic.provider.core.provider.workStation;
 
 
+import com.jdl.basic.common.utils.ObjectHelper;
+import com.jdl.basic.rpc.exception.JYBasicRpcException;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -26,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 场地网格表--JsfService接口实现
- * 
+ *
  * @author wuyoude
  * @date 2023年04月25日 00:18:56
  *
@@ -38,10 +41,10 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	@Autowired
 	@Qualifier("workGridService")
 	private WorkGridService workGridService;
-	
+
 	@Autowired
 	@Qualifier("jimdbRemoteLockService")
-	private LockService lockService;	
+	private LockService lockService;
 
 	/**
 	 * 插入一条数据
@@ -70,7 +73,7 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	@Override
 	public Result<WorkGrid> queryById(Long id) {
 		return workGridService.queryById(id);
-	}	
+	}
 	/**
 	 * 根据id查询
 	 * @param id
@@ -148,5 +151,70 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 			}
 		});
 		return result;
+	}
+
+	@Override
+	public Result<List<WorkGrid>> queryFloorDictList(WorkGrid queryParams) {
+		return Result.success(workGridService.queryFloorDictList(queryParams));
+	}
+
+	@Override
+	public Result<List<WorkGrid>> queryAreaDictList(WorkGrid queryParams) {
+		return Result.success(workGridService.queryAreaDictList(queryParams));
+	}
+
+	@Override
+	public Result<List<WorkGrid>> queryWorkGrid(WorkGrid queryParams) {
+		return Result.success(workGridService.queryWorkGrid(queryParams));
+	}
+
+	@Override
+	public Result<WorkGrid> queryByWorkGridKey(String workGridKey) {
+		Result<WorkGrid> result = Result.success();
+		result.setData(workGridService.queryByWorkGridKey(workGridKey));
+		return result;
+	}
+
+	@Override
+	public Result<List<WorkGrid>> batchQueryByWorkGridKey(List<String> workGridKeys) {
+		return Result.success(workGridService.batchQueryByWorkGridKey(workGridKeys));
+	}
+
+	@Override
+	public Result<List<WorkGrid>> queryAreaWorkGrid(WorkGridQuery query) {
+		return Result.success(workGridService.queryAreaWorkGrid(query));
+	}
+
+	@Override
+	public Result<WorkGrid> exactQueryWorkGridByBizKey(WorkGrid query) {
+		checkWorkGridQuery(query);
+		List<WorkGrid> workGridList =workGridService.queryWorkGrid(query);
+		if (CollectionUtils.isNotEmpty(workGridList)){
+			return Result.success(workGridList.get(0));
+		}
+		return Result.fail("未查询到相应的网格数据！");
+	}
+
+	@Override
+	public Result<List<WorkGrid>> queryAllGridBySiteCode(WorkGridQuery query) {
+		if (query.getSiteCode() == null) {
+			return Result.fail("场地编码不能为空！");
+		}
+		return Result.success(workGridService.queryAllGridBySiteCode(query));
+	}
+
+	private void checkWorkGridQuery(WorkGrid query) {
+		if (ObjectHelper.isEmpty(query.getSiteCode())){
+			throw new JYBasicRpcException("参数错误：siteCode为空！");
+		}
+		if (ObjectHelper.isEmpty(query.getAreaCode())){
+			throw new JYBasicRpcException("参数错误：areaCode为空！");
+		}
+		if (ObjectHelper.isEmpty(query.getFloor())){
+			throw new JYBasicRpcException("参数错误：floor为空！");
+		}
+		if (ObjectHelper.isEmpty(query.getGridNo())){
+			throw new JYBasicRpcException("参数错误：gridNo为空！");
+		}
 	}
 }

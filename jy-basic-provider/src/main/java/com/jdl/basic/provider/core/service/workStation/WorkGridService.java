@@ -13,7 +13,7 @@ import com.jdl.basic.api.domain.workStation.WorkGridVo;
 
 /**
  * 场地网格表--Service接口
- * 
+ *
  * @author wuyoude
  * @date 2023年04月25日 00:18:56
  *
@@ -42,7 +42,7 @@ public interface WorkGridService {
 	 * 根据id查询
 	 * @param id
 	 * @return
-	 */	
+	 */
 	Result<WorkGrid> queryById(Long id);
 	/**
 	 * 根据id查询
@@ -105,4 +105,33 @@ public interface WorkGridService {
 	 */
 	String getUniqueKeysStr(WorkGrid data);
 
+	/**
+	 * 查询场地网格的楼层列表信息
+	 * @return
+	 */
+	List<WorkGrid> queryFloorDictList(WorkGrid queryParams);
+
+	/**
+	 * 查询场地网格的作业区信息
+	 * @return
+	 */
+	List<WorkGrid> queryAreaDictList(WorkGrid queryParams);
+
+	/**
+	 * 查询场地网格信息
+	 * @param queryParams
+	 * @return
+	 */
+	List<WorkGrid> queryWorkGrid(WorkGrid queryParams);
+
+	/**
+	 * 根据网格主键批量查询网格
+	 * @param workGridKeys
+	 * @return
+	 */
+	List<WorkGrid> batchQueryByWorkGridKey(List<String> workGridKeys);
+
+	List<WorkGrid> queryAreaWorkGrid(WorkGridQuery query);
+
+	List<WorkGrid> queryAllGridBySiteCode(WorkGridQuery query);
 }

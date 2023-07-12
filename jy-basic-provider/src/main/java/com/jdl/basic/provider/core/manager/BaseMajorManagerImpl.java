@@ -41,4 +41,15 @@ public class BaseMajorManagerImpl implements BaseMajorManager {
         }
         return null;
     }
+
+    @Override
+    @Cache(key = "baseMajorManagerImpl.getBaseStaffByErp@args0", memoryEnable = true, memoryExpiredTime = 1 * 60 * 1000, redisEnable = false)
+    public BaseStaffSiteOrgDto getBaseStaffByErp(String erp) {
+        try {
+            return basicPrimaryWS.getBaseStaffByErp(erp);
+        } catch (Exception e) {
+            log.error("invoke getBaseStaffByErp error:{}",erp,e);
+        }
+        return null;
+    }
 }

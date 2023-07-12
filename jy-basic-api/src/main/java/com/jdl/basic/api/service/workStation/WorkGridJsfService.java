@@ -2,6 +2,7 @@ package com.jdl.basic.api.service.workStation;
 
 import java.util.List;
 
+import com.jdl.basic.api.domain.user.UserWorkGrid;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
 import com.jdl.basic.api.domain.workStation.WorkGridImport;
@@ -12,7 +13,7 @@ import com.jdl.basic.common.utils.Result;
 
 /**
  * 场地网格表--JsfService接口
- * 
+ *
  * @author wuyoude
  * @date 2023年04月25日 00:18:56
  *
@@ -42,7 +43,7 @@ public interface WorkGridJsfService {
 	 * @param id
 	 * @return
 	 */
-	Result<WorkGrid> queryById(Long id);	
+	Result<WorkGrid> queryById(Long id);
 	/**
 	 * 根据id查询
 	 * @param id
@@ -78,5 +79,55 @@ public interface WorkGridJsfService {
 	 * @param dataList
 	 * @return
 	 */
-	Result<Boolean> importDatas(List<WorkGridImport> dataList);	
+	Result<Boolean> importDatas(List<WorkGridImport> dataList);
+
+	/**
+	 * 查询场地网格的楼层列表信息
+	 * @return
+	 */
+	Result<List<WorkGrid>> queryFloorDictList(WorkGrid queryParams);
+
+	/**
+	 * 查询场地网格的作业区信息
+	 * @return
+	 */
+	Result<List<WorkGrid>> queryAreaDictList(WorkGrid queryParams);
+
+	/**
+	 * 查询场地网格信息
+	 * @param queryParams
+	 * @return
+	 */
+	Result<List<WorkGrid>> queryWorkGrid(WorkGrid queryParams);
+
+	/**
+	 * 根据网格主键查询单个网格
+	 * @param workGridKey
+	 * @return
+	 */
+	Result<WorkGrid> queryByWorkGridKey(String workGridKey);
+
+	/**
+	 * 根据网格主键批量查询网格
+	 * @param workGridKeys
+	 * @return
+	 */
+	Result<List<WorkGrid>> batchQueryByWorkGridKey(List<String> workGridKeys);
+
+	Result<List<WorkGrid>> queryAreaWorkGrid(WorkGridQuery query);
+
+	/**
+	 * 根据场地+作业区+楼层+网格号--精确查询网格数据
+	 *
+	 * siteCode
+	 * floor
+	 * gridNo
+	 * areaCode
+	 *
+	 * @param query
+	 * @return
+	 */
+	Result<WorkGrid> exactQueryWorkGridByBizKey(WorkGrid query);
+
+	Result<List<WorkGrid>> queryAllGridBySiteCode(WorkGridQuery query);
 }

@@ -70,4 +70,9 @@ public class WorkAreaJsfServiceImpl implements WorkAreaJsfService {
 		return workAreaService.queryPageList(query);
 	 }
 
+	@Override
+	public Result<WorkArea> queryByAreaCode(String areaCode) {
+		return Result.success(workAreaService.queryByAreaCode(areaCode));
+	}
+
 }
