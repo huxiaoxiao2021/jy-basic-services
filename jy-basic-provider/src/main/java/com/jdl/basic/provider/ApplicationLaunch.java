@@ -1,7 +1,5 @@
 package com.jdl.basic.provider;
 
-import com.jd.jmq.client.api.ClientMode;
-import com.jd.jmq.client.api.MQClientManager;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -10,7 +8,6 @@ import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.PropertySource;
 
 /**
  * @ProjectName：JY-MSP
