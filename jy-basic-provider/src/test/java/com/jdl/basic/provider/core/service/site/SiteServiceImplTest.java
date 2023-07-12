@@ -9,6 +9,7 @@ import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.ApplicationLaunch;
 import com.jdl.basic.provider.dto.BasicPsStoreInfo;
 import com.jdl.basic.provider.dto.BasicSiteChangeMQ;
+import org.apache.commons.collections4.CollectionUtils;
 import org.assertj.core.util.Lists;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 类的描述
@@ -77,12 +80,30 @@ public class SiteServiceImplTest {
             SiteQueryCondition siteQueryCondition = new SiteQueryCondition();
             siteQueryPager.setSearchVo(siteQueryCondition);
 //            siteQueryCondition.setSiteNamePym("xzz");
-//            siteQueryCondition.setSiteCode(910);
-//            siteQueryCondition.setSiteName("分拣");
+//            siteQueryCondition.setSiteCode(65478);
+//            siteQueryCondition.setSiteName("测试仓库");
 //            siteQueryCondition.setSubTypes(Lists.newArrayList(6420,6450));
+//            siteQueryCondition.setProvinceAgencyCode("100000");
+            siteQueryCondition.setSiteTypes(Lists.newArrayList(901,902,903,904,905,906));
 
             Result<Pager<BasicSiteVO>> result = siteQueryService.querySitePageByConditionFromBasicSite(siteQueryPager);
-            
+//            Result<Pager<BasicSiteVO>> result = null;
+//            List<Integer> siteList = Lists.newArrayList();
+//            
+//            Integer pageNo = 1;
+//            Integer pageSize = 100;
+//            while (true){
+//                siteQueryPager.setPageNo(pageNo);
+//                siteQueryPager.setPageSize(pageSize);
+//                result = siteQueryService.querySitePageByConditionFromBasicSite(siteQueryPager);
+//                
+//                if(CollectionUtils.isEmpty(result.getData().getData())){
+//                    break;
+//                }
+//                List<Integer> single = result.getData().getData().stream().map(BasicSiteVO::getSiteCode).collect(Collectors.toList());
+//                siteList.addAll(single);
+//                pageNo ++;
+//            }
             Assert.assertTrue(true);
         }catch (Exception e){
             logger.error("服务异常!", e);

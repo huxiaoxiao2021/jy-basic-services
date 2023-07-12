@@ -254,6 +254,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
     private BasicSiteVO wareConvertOwnBasicSite(PsStoreInfo item) {
         BasicSiteVO basicSiteVO = new BasicSiteVO();
         basicSiteVO.setOrgId(item.getOrgId());
+        basicSiteVO.setOrgName(item.getOrgName());
         basicSiteVO.setProvinceAgencyCode(item.getProvinceAgencyCode());
         basicSiteVO.setProvinceAgencyName(item.getProvinceAgencyName());
         basicSiteVO.setProvinceId(item.getProvinceId());

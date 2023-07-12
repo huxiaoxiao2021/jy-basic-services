@@ -34,7 +34,7 @@ public interface OrgSwitchProvinceBrushJsfService {
     void siteWaveScheduleBrush();
 
     /**
-     * site_wave_schedule 表刷数省区字段
+     * site_attend_plan 表刷数省区字段
      */
     void siteAttendPlanBrush();
 

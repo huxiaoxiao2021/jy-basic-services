@@ -329,7 +329,8 @@ public class WorkStationAttendPlanServiceImpl implements WorkStationAttendPlanSe
 		if(siteInfo == null) {
 			return result.toFail("青龙ID在基础资料中不存在！");
 		}
-		data.setOrgCode(siteInfo.getOrgId());
+		// fill base info
+		fillBaseInfo(data, siteInfo);
 		
 		WorkStation workStationCheckQuery = new WorkStation();
 		workStationCheckQuery.setWorkCode(workCode);
@@ -355,6 +356,16 @@ public class WorkStationAttendPlanServiceImpl implements WorkStationAttendPlanSe
 		data.setRefGridKey(workStationGridData.getData().getBusinessKey());
 		return result;
 	}
+
+	private void fillBaseInfo(WorkStationAttendPlan data, BaseStaffSiteOrgDto siteInfo) {
+		data.setOrgCode(siteInfo.getOrgId());
+		data.setOrgName(siteInfo.getOrgName());
+		data.setProvinceAgencyCode(siteInfo.getProvinceAgencyCode());
+		data.setProvinceAgencyName(siteInfo.getProvinceAgencyName());
+		data.setAreaHubCode(siteInfo.getAreaCode());
+		data.setAreaHubName(siteInfo.getAreaName());
+	}
+
 	@Override
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationAttendPlanServiceImpl.queryWaveDictList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<List<WorkStationAttendPlan>> queryWaveDictList(WorkStationAttendPlanQuery query) {

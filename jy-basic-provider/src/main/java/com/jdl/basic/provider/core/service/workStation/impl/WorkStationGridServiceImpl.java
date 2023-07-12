@@ -142,6 +142,8 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(siteType == null) {
 			siteType = WorkSiteTypeEnum.OTHER;
 		}
+		// fill base info
+		fillBaseInfo(workGrid, siteInfo);
 		workGrid.setSiteType(siteType.getCode());
 		workGrid.setSiteTypeName(siteType.getName());
 		Result<WorkGrid> saveResult= workGridService.saveData(workGrid);
@@ -150,6 +152,15 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			return saveResult.getData();
 		}
 		return null;
+	}
+
+	private void fillBaseInfo(WorkGrid workGrid, BaseStaffSiteOrgDto siteInfo) {
+		workGrid.setOrgCode(siteInfo == null ? -1 : siteInfo.getOrgId());
+		workGrid.setOrgName(siteInfo == null ? Constants.EMPTY_FILL : siteInfo.getOrgName());
+		workGrid.setProvinceAgencyCode(siteInfo == null ? Constants.EMPTY_FILL : siteInfo.getProvinceAgencyCode());
+		workGrid.setProvinceAgencyName(siteInfo == null ? Constants.EMPTY_FILL : siteInfo.getProvinceAgencyName());
+		workGrid.setAreaHubCode(siteInfo == null ? Constants.EMPTY_FILL : siteInfo.getAreaCode());
+		workGrid.setAreaHubName(siteInfo == null ? Constants.EMPTY_FILL : siteInfo.getAreaName());
 	}
 
 	private void addMachine(WorkStationGrid insertData) {

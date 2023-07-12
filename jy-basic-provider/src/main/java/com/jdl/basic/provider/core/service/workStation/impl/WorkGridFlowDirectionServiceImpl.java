@@ -279,29 +279,50 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	 */
 	private Result<Boolean> checkAndFillNewData(WorkGridFlowDirection flowData,WorkGrid workGridData){
 		Result<Boolean> result = Result.success();
-		Integer siteCode = flowData.getFlowSiteCode();
-		if(siteCode == null) {
+		Integer flowSiteCode = flowData.getFlowSiteCode();
+		if(flowSiteCode == null) {
 			return result.toFail("流向场地ID为空！");
+		
 		}
-		BaseStaffSiteOrgDto siteInfo = baseMajorManager.getBaseSiteBySiteId(flowData.getFlowSiteCode());
-		if(siteInfo == null) {
+		BaseStaffSiteOrgDto currentSiteInfo = baseMajorManager.getBaseSiteBySiteId(flowData.getSiteCode());
+		if(currentSiteInfo == null){
+			return result.toFail("场地编码无效！【"+flowData.getSiteCode()+"】");
+		}
+		BaseStaffSiteOrgDto flowSiteInfo = baseMajorManager.getBaseSiteBySiteId(flowData.getFlowSiteCode());
+		if(flowSiteInfo == null) {
 			return result.toFail("流向ID中站点无效！【"+flowData.getFlowSiteCode()+"】");
 		}
-		if(siteCode.equals(workGridData.getSiteCode())) {
-			return result.toFail("流向场地ID不能是网格场地ID【"+siteCode+"】");
+		if(flowSiteCode.equals(workGridData.getSiteCode())) {
+			return result.toFail("流向场地ID不能是网格场地ID【"+flowSiteCode+"】");
 		}
-		flowData.setSiteCode(workGridData.getSiteCode());
-		flowData.setSiteName(workGridData.getSiteName());
-		flowData.setOrgCode(workGridData.getOrgCode());
-		flowData.setOrgName(workGridData.getOrgName());
-		flowData.setFlowOrgCode(siteInfo.getOrgId());
-		String orgName = AreaEnum.getAreaNameByCode(siteInfo.getOrgId());
-		if(orgName == null) {
-			orgName = siteInfo.getOrgName();
-		}
-		flowData.setFlowOrgName(orgName);
-		flowData.setFlowSiteName(siteInfo.getSiteName());
+		// fill base info
+		fillBaseInfo(flowData, currentSiteInfo, flowSiteInfo);
+		
 		return result;
+	}
+
+	private void fillBaseInfo(WorkGridFlowDirection flowData, BaseStaffSiteOrgDto currentSiteInfo, BaseStaffSiteOrgDto flowSiteInfo) {
+		flowData.setSiteCode(currentSiteInfo.getSiteCode());
+		flowData.setSiteName(currentSiteInfo.getSiteName());
+		flowData.setOrgCode(currentSiteInfo.getOrgId());
+		flowData.setOrgName(currentSiteInfo.getOrgName());
+		flowData.setProvinceAgencyCode(currentSiteInfo.getProvinceAgencyCode());
+		flowData.setProvinceAgencyName(currentSiteInfo.getProvinceAgencyName());
+		flowData.setAreaHubCode(currentSiteInfo.getAreaCode());
+		flowData.setAreaHubName(currentSiteInfo.getAreaName());
+
+		flowData.setFlowSiteCode(flowSiteInfo.getSiteCode());
+		flowData.setFlowSiteName(flowSiteInfo.getSiteName());
+		flowData.setFlowOrgCode(flowSiteInfo.getOrgId());
+		String flowOrgName = AreaEnum.getAreaNameByCode(flowSiteInfo.getOrgId());
+		if(flowOrgName == null) {
+			flowOrgName = flowSiteInfo.getOrgName();
+		}
+		flowData.setFlowOrgName(flowOrgName);
+		flowData.setFlowProvinceAgencyCode(flowSiteInfo.getProvinceAgencyCode());
+		flowData.setFlowProvinceAgencyName(flowSiteInfo.getProvinceAgencyName());
+		flowData.setFlowAreaHubCode(flowSiteInfo.getAreaCode());
+		flowData.setFlowAreaHubName(flowSiteInfo.getAreaName());
 	}
 
 	private String getUniqueKeysStr(WorkGridFlowDirection data) {
@@ -318,20 +339,6 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		if(CollectionUtils.isEmpty(flowList)) {
 			return 0;
 		}
-		flowList = flowList.stream().peek(item -> {
-			if(item.getProvinceAgencyCode() == null){
-				item.setProvinceAgencyCode(Constants.EMPTY_FILL);
-			}
-			if(item.getProvinceAgencyName() == null){
-				item.setProvinceAgencyName(Constants.EMPTY_FILL);
-			}
-			if(item.getFlowProvinceAgencyCode() == null){
-				item.setFlowProvinceAgencyCode(Constants.EMPTY_FILL);
-			}
-			if(item.getFlowProvinceAgencyName() == null){
-				item.setFlowProvinceAgencyName(Constants.EMPTY_FILL);
-			}
-		}).collect(Collectors.toList());
 		return workGridFlowDirectionDao.batchInsert(flowList);
 	}
 	@Override

@@ -337,6 +337,10 @@ public class WorkGridServiceImpl implements WorkGridService {
 			updateData.setUpdateUser(workGrid.getUpdateUser());
 			updateData.setUpdateUserName(workGrid.getUpdateUserName());
 			updateData.setUpdateTime(workGrid.getUpdateTime());
+			updateData.setProvinceAgencyCode(workGrid.getProvinceAgencyCode());
+			updateData.setProvinceAgencyName(workGrid.getProvinceAgencyName());
+			updateData.setAreaHubCode(workGrid.getAreaHubCode());
+			updateData.setAreaHubName(workGrid.getAreaHubName());
 			this.updateById(updateData);
 			result.setData(workGridDao.queryById(oldData.getId()));
 		}else {
@@ -573,6 +577,10 @@ public class WorkGridServiceImpl implements WorkGridService {
 				flowData.setSiteName(workGridData.getSiteName());
 				flowData.setOrgCode(workGridData.getOrgCode());
 				flowData.setOrgName(workGridData.getOrgName());
+				flowData.setProvinceAgencyCode(workGridData.getProvinceAgencyCode());
+				flowData.setProvinceAgencyName(workGridData.getProvinceAgencyName());
+				flowData.setAreaHubCode(workGridData.getAreaHubCode());
+				flowData.setAreaHubName(workGridData.getAreaHubName());
 				flowData.setCreateUser(data.getConfigFlowUser());
 				flowData.setCreateTime(createTime);
 				flowData.setLineType(lineType.getCode());
@@ -584,6 +592,10 @@ public class WorkGridServiceImpl implements WorkGridService {
 				}
 				flowData.setFlowOrgName(orgName);
 				flowData.setFlowSiteName(siteInfo.getSiteName());
+				flowData.setFlowProvinceAgencyCode(siteInfo.getProvinceAgencyCode());
+				flowData.setFlowProvinceAgencyName(siteInfo.getProvinceAgencyName());
+				flowData.setFlowAreaHubCode(siteInfo.getAreaCode());
+				flowData.setFlowAreaHubName(siteInfo.getAreaName());
 				flowData.setFlowDirectionType(workArea.getFlowDirectionType());
 				flowDataList.add(flowData);
 			}
