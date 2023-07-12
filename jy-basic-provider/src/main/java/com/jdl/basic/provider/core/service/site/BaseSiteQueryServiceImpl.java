@@ -6,7 +6,6 @@ import com.jd.ql.basic.domain.BaseOrganStruct;
 import com.jd.ql.basic.domain.BaseSite;
 import com.jd.ql.basic.domain.PsStoreInfo;
 import com.jd.ql.basic.dto.BaseSiteSimpleDto;
-import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jd.ql.basic.dto.PageDto;
 import com.jd.ql.basic.dto.PsStoreInfoRequest;
 import com.jd.ql.basic.enums.DmsStoreTypeEnum;
@@ -572,38 +571,6 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         }
         return result;
     }
-
-    @Override
-    public Result<Pager<BasicSiteVO>> getFJSiteByProvinceAgencyCode(Pager<SiteQueryCondition> siteQueryPager) {
-        SiteQueryCondition siteQueryCondition =siteQueryPager.getSearchVo();
-        checkParams4QueryFjSites(siteQueryCondition);
-        List<BaseStaffSiteOrgDto> baseStaffSiteOrgDtoList = basicSiteQueryWSManager.getBaseSiteByProvinceAgencyCodeSubTypePage(siteQueryCondition.getProvinceAgencyCode(),siteQueryCondition.getSubTypes(),siteQueryPager.getPageNo());
-        if (CollectionUtils.isNotEmpty(baseStaffSiteOrgDtoList)){
-            List<BasicSiteVO> basicSiteVOList =baseStaffSiteOrgDtoList
-                .stream()
-                .map(baseStaffSiteOrgDto ->
-                {
-                    BasicSiteVO basicSiteVO =assembleBasicSiteVO(baseStaffSiteOrgDto);
-                    return basicSiteVO;
-                }).collect(Collectors.toList());
-
-            Pager pager =new Pager();
-            pager.setPageNo(siteQueryPager.getPageNo());
-            pager.setPageSize(siteQueryPager.getPageSize());
-            pager.setData(basicSiteVOList);
-            return Result.success(pager);
-        }
-        return Result.success();
-    }
-
-    private BasicSiteVO assembleBasicSiteVO(BaseStaffSiteOrgDto baseStaffSiteOrgDto) {
-        return null;
-    }
-
-    private void checkParams4QueryFjSites(SiteQueryCondition siteQueryCondition) {
-    }
-
-
     private Result<Void> checkParam4querySitePageByConditionFromBasicSite(Pager<SiteQueryCondition> siteQueryPager){
         Result<Void> result = new Result<>();
         if (siteQueryPager == null) {

@@ -55,12 +55,4 @@ public interface SiteQueryService {
      * @time 2022-10-12 14:06:56 周三
      */
     Result<Pager<BasicSiteVO>> querySitePageByConditionFromBasicSite(Pager<SiteQueryCondition> siteQueryPager);
-
-    /**
-     * 根据省区编码查询省区下的分拣中心场地
-     * @param siteQueryPager
-     * @return
-     */
-    Result<Pager<BasicSiteVO>> getFJSiteByProvinceAgencyCode(Pager<SiteQueryCondition> siteQueryPager);
-
 }

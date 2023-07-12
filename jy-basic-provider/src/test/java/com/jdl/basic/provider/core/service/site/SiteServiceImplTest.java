@@ -42,6 +42,22 @@ public class SiteServiceImplTest {
     @Autowired
     private SiteQueryService siteQueryService;
 
+    @Test
+    public void queryAllProvinceAgencyInfo() {
+        try {
+            int count = 1;
+            while (count < 10){
+
+                Result<List<ProvinceAgencyVO>> result = siteQueryService.queryAllProvinceAgencyInfo();
+                count ++;
+            }
+
+            Assert.assertTrue(true);
+        }catch (Exception e){
+            logger.error("服务异常!", e);
+            Assert.fail();
+        }
+    }
 
     @Test
     public void queryProvinceAgencyInfoByCode() {
