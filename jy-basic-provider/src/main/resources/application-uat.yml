@@ -57,6 +57,7 @@ mq:
   consumer:
     topic:
       sort_cross_detail: basic_sort_cross_detail
+      wlUserInfo: wlUserInfo
   jmq4producer:
     password: f0a10912179747fd9b31dd8e32c6009c
     app: JYBasic
