@@ -60,12 +60,6 @@ public class OrgSwitchProvinceBrushJsfServiceImplTest {
     }
 
     @Test
-    public void sortCrossDetailBrush() {
-
-        orgSwitchProvinceBrushJsfService.sortCrossDetailBrush(0, 1000);
-    }
-
-    @Test
     public void collectBoxFlowDirectionConfBrush() {
 
         orgSwitchProvinceBrushJsfService.collectBoxFlowDirectionConfBrush(0, 1000);

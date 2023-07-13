@@ -1,6 +1,5 @@
 package com.jdl.basic.provider.core.service.cross.impl;
 
-import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.cross.*;
@@ -9,10 +8,8 @@ import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.BeanUtils;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
-import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.basic.provider.common.Jimdb.CacheService;
 import com.jdl.basic.provider.core.dao.cross.SortCrossDetailDao;
-import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.cross.SortCrossService;
 import com.jdl.basic.provider.dto.SortCrossModifyDto;
 import lombok.extern.slf4j.Slf4j;
@@ -47,9 +44,6 @@ public class SortCrossServiceImpl implements SortCrossService {
     @Qualifier("JimdbCacheService")
     private CacheService cacheService;
 
-    @Autowired
-    private BaseMajorManager baseMajorManager;
-    
     private static final String INSERT_EVENT = "INSERT";
     
     @Override
@@ -179,8 +173,6 @@ public class SortCrossServiceImpl implements SortCrossService {
                 }
             }else {
                 sortCrossDetail.setSiteType(0);
-                // fill org & province info
-                fillBasicInfo(sortCrossDetail);
                 if (crossDetailDao.insert(sortCrossDetail) < 0) {
                     return false;
                 }
@@ -194,15 +186,5 @@ public class SortCrossServiceImpl implements SortCrossService {
             cacheService.del(key);
         }
         return true;
-    }
-
-    private void fillBasicInfo(SortCrossDetail sortCrossDetail) {
-        if(sortCrossDetail.getDmsId() != null){
-            BaseStaffSiteOrgDto baseSite = baseMajorManager.getBaseSiteBySiteId(sortCrossDetail.getDmsId());
-            sortCrossDetail.setProvinceAgencyCode((baseSite == null || StringUtils.isEmpty(baseSite.getProvinceAgencyCode())) 
-                    ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyCode());
-            sortCrossDetail.setAreaHubCode((baseSite == null || StringUtils.isEmpty(baseSite.getAreaCode()))
-                    ? Constants.EMPTY_FILL : baseSite.getAreaCode());
-        }
     }
 }

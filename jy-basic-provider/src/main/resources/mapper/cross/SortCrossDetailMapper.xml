@@ -16,8 +16,6 @@
     <result column="MODIFIER_ACCOUNT" jdbcType="VARCHAR" property="modifierAccount" />
     <result column="DMS_ID" jdbcType="INTEGER" property="dmsId" />
     <result column="ORG_ID" jdbcType="INTEGER" property="orgId" />
-    <result column="province_agency_code" property="provinceAgencyCode" javaType="java.lang.String" jdbcType="VARCHAR" />
-    <result column="area_hub_code" property="areaHubCode" javaType="java.lang.String" jdbcType="VARCHAR" />
     <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
     <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="YN" jdbcType="TINYINT" property="yn" />
@@ -34,7 +32,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     ID, TABLETROLLEY_CODE, CROSS_CODE, SITE_CODE, SITE_NAME, SITE_TYPE, SUB_TYPE, THIRD_TYPE, 
-    CREATOR, CREATOR_ACCOUNT, MODIFIER, MODIFIER_ACCOUNT, DMS_ID, ORG_ID,province_agency_code,area_hub_code, CREATE_TIME, 
+    CREATOR, CREATOR_ACCOUNT, MODIFIER, MODIFIER_ACCOUNT, DMS_ID, ORG_ID, CREATE_TIME, 
     UPDATE_TIME, YN, TS, BELONG_CODE, BELONG_NAME, enable_flag
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -53,14 +51,14 @@
                                        SITE_CODE, SITE_NAME, SITE_TYPE,
                                        SUB_TYPE, THIRD_TYPE, CREATOR,
                                        CREATOR_ACCOUNT, MODIFIER, MODIFIER_ACCOUNT,
-                                       DMS_ID, ORG_ID, province_agency_code,area_hub_code, CREATE_TIME,
+                                       DMS_ID, ORG_ID, CREATE_TIME,
                                        UPDATE_TIME, YN, TS,
                                        BELONG_CODE, BELONG_NAME)
         values (#{id,jdbcType=BIGINT}, #{tabletrolleyCode,jdbcType=VARCHAR}, #{crossCode,jdbcType=VARCHAR},
                 #{siteCode,jdbcType=VARCHAR}, #{siteName,jdbcType=VARCHAR}, #{siteType,jdbcType=INTEGER},
                 #{subType,jdbcType=INTEGER}, #{thirdType,jdbcType=INTEGER}, #{creator,jdbcType=VARCHAR},
                 #{creatorAccount,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{modifierAccount,jdbcType=VARCHAR},
-                #{dmsId,jdbcType=INTEGER}, #{orgId,jdbcType=INTEGER},#{provinceAgencyCode,jdbcType=VARCHAR},#{areaHubCode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+                #{dmsId,jdbcType=INTEGER}, #{orgId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
                 #{updateTime,jdbcType=TIMESTAMP}, #{yn,jdbcType=TINYINT}, #{ts,jdbcType=TIMESTAMP},
                 #{belongCode,jdbcType=INTEGER}, #{belongName,jdbcType=VARCHAR})
     </insert>
@@ -108,12 +106,6 @@
             </if>
             <if test="orgId != null">
                 ORG_ID,
-            </if>
-            <if test="provinceAgencyCode != null" >
-                province_agency_code,
-            </if>
-            <if test="areaHubCode != null" >
-                area_hub_code,
             </if>
             <if test="createTime != null">
                 CREATE_TIME,
@@ -177,12 +169,6 @@
             <if test="orgId != null">
                 #{orgId,jdbcType=INTEGER},
             </if>
-            <if test="provinceAgencyCode != null" >
-                #{provinceAgencyCode,jdbcType=VARCHAR},
-            </if>
-            <if test="areaHubCode != null" >
-                #{areaHubCode,jdbcType=VARCHAR},
-            </if>
             <if test="createTime != null">
                 #{createTime,jdbcType=TIMESTAMP},
             </if>
@@ -245,12 +231,6 @@
             <if test="orgId != null">
                 ORG_ID = #{orgId,jdbcType=INTEGER},
             </if>
-            <if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
-                province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR},
-            </if>
-            <if test="areaHubCode != null and areaHubCode != ''" >
-                area_hub_code = #{areaHubCode,jdbcType=VARCHAR},
-            </if>
             <if test="createTime != null">
                 CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
             </if>
@@ -290,7 +270,6 @@
             MODIFIER_ACCOUNT  = #{modifierAccount,jdbcType=VARCHAR},
             DMS_ID            = #{dmsId,jdbcType=INTEGER},
             ORG_ID            = #{orgId,jdbcType=INTEGER},
-            province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR},area_hub_code = #{areaHubCode,jdbcType=VARCHAR},
             CREATE_TIME       = #{createTime,jdbcType=TIMESTAMP},
             UPDATE_TIME       = #{updateTime,jdbcType=TIMESTAMP},
             YN                = #{yn,jdbcType=TINYINT},
@@ -319,12 +298,6 @@
         </if>
         <if test="orgId != null and orgId != ''">
             and org_id = #{orgId,jdbcType=INTEGER}
-        </if>
-        <if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
-            and province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR}
-        </if>
-        <if test="areaHubCode != null and areaHubCode != ''" >
-            and area_hub_code = #{areaHubCode,jdbcType=VARCHAR}
         </if>
         <if test="siteType != null and siteType != ''">
             and site_type = #{siteType,jdbcType=INTEGER}
@@ -447,33 +420,4 @@
             and dms_id = #{dmsId,jdbcType=INTEGER}
         </if>
     </select>
-
-    <!-- 刷数sql start -->
-    <select id="brushQueryAllByPage" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-        select
-            id,site_code
-        from
-            sort_cross_detail
-        where yn = 1
-          and id > #{id,jdbcType=BIGINT}
-        order by id
-            limit 100
-    </select>
-    <update id="brushUpdateById" parameterType="java.util.List">
-        <foreach collection="list" item="item" index="index"  separator=";">
-            UPDATE sort_cross_detail
-            <set>
-                <if test="item.provinceAgencyCode != null and item.provinceAgencyCode != ''" >
-                    province_agency_code = #{item.provinceAgencyCode,jdbcType=VARCHAR},
-                </if>
-                <if test="item.areaHubCode != null and item.areaHubCode != ''" >
-                    area_hub_code = #{item.areaHubCode,jdbcType=VARCHAR},
-                </if>
-                update_time = now()
-            </set>
-            WHERE yn = 1
-            AND id = #{item.id}
-        </foreach>
-    </update>
-    <!-- 刷数sql end -->
 </mapper>

@@ -3,14 +3,12 @@ package com.jdl.basic.provider.core.provider.workStation;
 import com.google.common.collect.Lists;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf;
-import com.jdl.basic.api.domain.cross.SortCrossDetail;
 import com.jdl.basic.api.domain.transferDp.ConfigTransferDpSite;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.service.workStation.OrgSwitchProvinceBrushJsfService;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.basic.provider.core.dao.boxFlow.CollectBoxFlowDirectionConfDao;
-import com.jdl.basic.provider.core.dao.cross.SortCrossDetailDao;
 import com.jdl.basic.provider.core.dao.easyFreezeSite.EasyFreezeSiteDao;
 import com.jdl.basic.provider.core.dao.transferDp.ConfigTransferDpSiteDao;
 import com.jdl.basic.provider.core.dao.workStation.*;
@@ -50,9 +48,6 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
 
     @Autowired
     private SiteAttendPlanDao siteAttendPlanDao;
-
-    @Autowired
-    private SortCrossDetailDao sortCrossDetailDao;
 
     @Autowired
     private CollectBoxFlowDirectionConfDao collectBoxFlowDirectionConfDao;
@@ -328,45 +323,6 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
         }
         if(log.isInfoEnabled()){
             log.info("site_wave_schedule 表省区刷数:{}", updatedCount);
-        }
-    }
-
-    @Override
-    public void sortCrossDetailBrush(Integer startId, Integer maxLoopCount) {
-        // 起始id
-        int offsetId = startId;
-        int updatedCount = 0; // 更新数量
-        int loopCount = 0; // 循环次数
-        while (loopCount < maxLoopCount) {
-            List<SortCrossDetail> singleList = sortCrossDetailDao.brushQueryAllByPage(offsetId);
-            if(CollectionUtils.isEmpty(singleList)){
-                break;
-            }
-            List<SortCrossDetail> list = Lists.newArrayList();
-            for (SortCrossDetail item : singleList) {
-                if(StringUtils.isEmpty(item.getSiteCode())){
-                    continue;
-                }
-                BaseStaffSiteOrgDto baseSite = baseMajorManager.getBaseSiteBySiteId(Integer.valueOf(item.getSiteCode()));
-                if(baseSite == null){
-                    continue;
-                }
-                SortCrossDetail updateItem = new SortCrossDetail();
-                updateItem.setId(item.getId());
-                updateItem.setProvinceAgencyCode(StringUtils.isEmpty(baseSite.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : baseSite.getProvinceAgencyCode() );
-                updateItem.setAreaHubCode(StringUtils.isEmpty(baseSite.getAreaCode()) ? Constants.EMPTY_FILL : baseSite.getAreaCode());
-                list.add(updateItem);
-            }
-            Integer singleCount = sortCrossDetailDao.brushUpdateById(list);
-            updatedCount += singleCount;
-
-            SortCrossDetail sortCrossDetail = singleList.stream().max((a, b) -> (int) (a.getId() - b.getId())).get();
-            offsetId = sortCrossDetail.getId().intValue();
-
-            loopCount ++;
-        }
-        if(log.isInfoEnabled()){
-            log.info("sort_cross_detail 表省区刷数:{}", updatedCount);
         }
     }
     

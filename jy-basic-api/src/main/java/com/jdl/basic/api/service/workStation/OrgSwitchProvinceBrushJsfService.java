@@ -39,11 +39,6 @@ public interface OrgSwitchProvinceBrushJsfService {
     void siteAttendPlanBrush();
 
     /**
-     * sort_cross_detail 表刷数省区字段
-     */
-    void sortCrossDetailBrush(Integer startId, Integer maxLoopCount);
-
-    /**
      * collect_box_flow_direction_conf 表刷数省区字段
      */
     void collectBoxFlowDirectionConfBrush(Integer startId, Integer maxLoopCount);
