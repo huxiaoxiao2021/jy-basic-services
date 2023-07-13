@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jdl.basic.provider.core.dao.work.WorkGridManagerTaskConfigAreaDao" >
+
+	<resultMap id="WorkGridManagerTaskConfigArea" type="com.jdl.basic.api.domain.work.WorkGridManagerTaskConfigArea" >
+		<id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+		<result column="task_config_code" property="taskConfigCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="area_code" property="areaCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="create_user" property="createUser" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="create_user_name" property="createUserName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="update_user" property="updateUser" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="update_user_name" property="updateUserName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result column="yn" property="yn" javaType="java.lang.Integer" jdbcType="TINYINT" />
+		<result column="ts" property="ts" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+		id,task_config_code,area_code,create_user,create_user_name,update_user,
+		update_user_name,create_time,update_time,yn,ts
+	</sql>
+
+	<insert id="insert" parameterType="com.jdl.basic.api.domain.work.WorkGridManagerTaskConfigArea" useGeneratedKeys="true" keyProperty="id">
+		insert into work_grid_manager_task_config_area
+			(
+			<trim suffixOverrides=",">
+				<if test="id != null" >
+					id,
+				</if>
+				<if test="taskConfigCode != null" >
+					task_config_code,
+				</if>
+				<if test="areaCode != null" >
+					area_code,
+				</if>
+				<if test="createUser != null" >
+					create_user,
+				</if>
+				<if test="createUserName != null" >
+					create_user_name,
+				</if>
+				<if test="updateUser != null" >
+					update_user,
+				</if>
+				<if test="updateUserName != null" >
+					update_user_name,
+				</if>
+				<if test="createTime != null" >
+					create_time,
+				</if>
+				<if test="updateTime != null" >
+					update_time,
+				</if>
+				<if test="yn != null" >
+					yn,
+				</if>
+				<if test="ts != null" >
+					ts,
+				</if>
+			</trim>
+			)
+			values
+			(
+			<trim suffixOverrides=",">
+				<if test="id != null" >
+					#{id,jdbcType=BIGINT},
+				</if>
+				<if test="taskConfigCode != null" >
+					#{taskConfigCode,jdbcType=VARCHAR},
+				</if>
+				<if test="areaCode != null" >
+					#{areaCode,jdbcType=VARCHAR},
+				</if>
+				<if test="createUser != null" >
+					#{createUser,jdbcType=VARCHAR},
+				</if>
+				<if test="createUserName != null" >
+					#{createUserName,jdbcType=VARCHAR},
+				</if>
+				<if test="updateUser != null" >
+					#{updateUser,jdbcType=VARCHAR},
+				</if>
+				<if test="updateUserName != null" >
+					#{updateUserName,jdbcType=VARCHAR},
+				</if>
+				<if test="createTime != null" >
+					#{createTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="updateTime != null" >
+					#{updateTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="yn != null" >
+					#{yn,jdbcType=TINYINT},
+				</if>
+				<if test="ts != null" >
+					#{ts,jdbcType=TIMESTAMP},
+				</if>
+			</trim>
+			)
+	</insert>
+	<insert id="batchInsert" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+	    insert into work_grid_manager_task_config_area
+	       (task_config_code,area_code,create_user,create_user_name,create_time)
+	    values
+	    <foreach collection="list" item="item" index="index" separator=",">
+	      <trim prefix=" (" suffix=")" suffixOverrides=",">
+	        #{item.taskConfigCode},
+	        #{item.areaCode},
+	        #{item.createUser},
+	        #{item.createUserName},
+	        #{item.createTime},
+	      </trim>
+	    </foreach>
+	 </insert>
+	<update id="updateById" parameterType="com.jdl.basic.api.domain.work.WorkGridManagerTaskConfigArea">
+		update work_grid_manager_task_config_area
+			<set>
+				<if test="taskConfigCode != null" >
+					task_config_code = #{taskConfigCode,jdbcType=VARCHAR},
+				</if>
+				<if test="areaCode != null" >
+					area_code = #{areaCode,jdbcType=VARCHAR},
+				</if>
+				<if test="createUser != null" >
+					create_user = #{createUser,jdbcType=VARCHAR},
+				</if>
+				<if test="createUserName != null" >
+					create_user_name = #{createUserName,jdbcType=VARCHAR},
+				</if>
+				<if test="updateUser != null" >
+					update_user = #{updateUser,jdbcType=VARCHAR},
+				</if>
+				<if test="updateUserName != null" >
+					update_user_name = #{updateUserName,jdbcType=VARCHAR},
+				</if>
+				<if test="createTime != null" >
+					create_time = #{createTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="updateTime != null" >
+					update_time = #{updateTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="yn != null" >
+					yn = #{yn,jdbcType=TINYINT},
+				</if>
+				<if test="ts != null" >
+					ts = #{ts,jdbcType=TIMESTAMP},
+				</if>
+			</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<update id="deleteById" parameterType="com.jdl.basic.api.domain.work.WorkGridManagerTaskConfigArea">
+		update work_grid_manager_task_config_area
+			set 
+			<if test="updateUser != null" >
+				update_user = #{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			   yn = 0
+		where yn = 1 and id = #{id,jdbcType=BIGINT}
+	</update>
+    <update id="deleteByTaskConfigCode" parameterType="com.jdl.basic.api.domain.work.WorkGridManagerTaskConfigArea">
+        update work_grid_manager_task_config_area
+            set 
+            <if test="updateUser != null" >
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+               yn = 0
+        where yn =1 and task_config_code = #{taskConfigCode,jdbcType=VARCHAR}
+    </update>
+	<select id="queryById" parameterType="java.lang.Long" resultMap="WorkGridManagerTaskConfigArea">
+		select
+			<include refid="Base_Column_List"/>
+		from
+			work_grid_manager_task_config_area t
+		where yn = 1 and id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="queryList" resultMap="WorkGridManagerTaskConfigArea">
+		select
+			<include refid="Base_Column_List"/>
+		from
+			work_grid_manager_task_config_area t
+		<include refid="queryCondition"/>
+		limit #{offset}, #{limit}
+	</select>
+
+	<select id="queryCount" resultType="long">
+		select
+			count(1)
+		from
+			work_grid_manager_task_config_area t
+		<include refid="queryCondition"/>
+	</select>
+
+	<sql id="queryCondition">
+		<where>
+			yn = 1 
+		</where>
+	</sql>
+    <select id="queryAreaCodeListByTaskConfigCode" resultType="java.lang.String">
+        select
+            area_code
+        from
+            work_grid_manager_task_config_area t
+        where yn = 1 
+          and task_config_code = #{taskConfigCode,jdbcType=VARCHAR}
+        limit 200
+    </select>	
+</mapper>

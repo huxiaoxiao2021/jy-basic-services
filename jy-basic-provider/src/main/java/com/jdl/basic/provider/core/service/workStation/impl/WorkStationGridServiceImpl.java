@@ -769,4 +769,39 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	public List<WorkStationGrid> queryListForWorkGridVo(WorkStationGridQuery query) {
 		return workStationGridDao.queryListForWorkGridVo(query);
 	}
+
+	@Override
+	public List<Integer> querySiteListForManagerScan(WorkStationGridQuery query) {
+		if(CollectionUtils.isEmpty(query.getAreaCodeList())) {
+			return new ArrayList<>();
+		}
+		if(query.getPageSize() == null
+				|| query.getPageSize() <= 0) {
+			query.setPageSize(DmsConstants.PAGE_SIZE_DEFAULT);
+		}
+		query.setOffset(0);
+		query.setLimit(query.getPageSize());
+		if(query.getPageNumber() > 0) {
+			query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
+		}
+		return workStationGridDao.querySiteListForManagerScan(query);
+	}
+
+	@Override
+	public List<WorkStationGrid> queryListForManagerSiteScan(WorkStationGridQuery query) {
+		if(query.getSiteCode() == null 
+				|| CollectionUtils.isEmpty(query.getAreaCodeList())) {
+			return new ArrayList<>();
+		}
+		if(query.getPageSize() == null
+				|| query.getPageSize() <= 0) {
+			query.setPageSize(DmsConstants.PAGE_SIZE_DEFAULT);
+		}
+		query.setOffset(0);
+		query.setLimit(query.getPageSize());
+		if(query.getPageNumber() > 0) {
+			query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
+		}
+		return workStationGridDao.queryListForManagerSiteScan(query);
+	}
 }

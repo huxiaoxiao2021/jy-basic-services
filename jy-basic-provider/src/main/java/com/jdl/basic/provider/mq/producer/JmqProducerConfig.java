@@ -16,12 +16,21 @@ public class JmqProducerConfig {
     @Value("${mq.topic.collectBoxFlowNotice}")
     private String collectBoxFlowNoticeTopic;
     
+    @Value("${mq.topic.workGridManagerTaskConfigMq}")
+    private String workGridManagerTaskConfigMq;
+    
     @Bean(name = "collectBoxFlowNoticeMQ")
     public DefaultJMQProducer collectBoxFlowNoticeMQ(){
         DefaultJMQProducer mqProducer = new DefaultJMQProducer();
         mqProducer.setTopic(collectBoxFlowNoticeTopic);
         return mqProducer;
     }
-
+    
+    @Bean(name = "workGridManagerTaskConfigMq")
+    public DefaultJMQProducer workGridManagerTaskConfigMq(){
+        DefaultJMQProducer mqProducer = new DefaultJMQProducer();
+        mqProducer.setTopic(workGridManagerTaskConfigMq);
+        return mqProducer;
+    }
 
 }
