@@ -70,12 +70,15 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
 
     @Autowired
     private BasicWareHouseWSManager basicWareHouseWSManager;
-
-
-    @Cache(key = "SiteQueryService.queryAllProvinceAgencyInfo", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
-            ,redisEnable = true, redisExpiredTime = 60 * 60 * 1000)
+    
     @Override
     public Result<List<ProvinceAgencyVO>> queryAllProvinceAgencyInfo() {
+        return queryAllProvinceAgencyInfo4Cache();
+    }
+
+    @Cache(key = "SiteQueryService.queryAllProvinceAgencyInfo4Cache", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 60 * 60 * 1000)
+    public Result<List<ProvinceAgencyVO>> queryAllProvinceAgencyInfo4Cache() {
         Result<List<ProvinceAgencyVO>> result = new Result<>();
         result.toSuccess();
         result.setData(Arrays.stream(BasicProvinceAgencyEnum.values()).map(item -> {
@@ -90,11 +93,15 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         }).collect(Collectors.toList()));
         return result;
     }
-
-    @Cache(key = "SiteQueryService.queryAllAreaInfo@args0", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
-            ,redisEnable = true, redisExpiredTime = 60 * 60 * 1000)
+    
     @Override
     public Result<List<AreaVO>> queryAllAreaInfo(String provinceAgencyCode) {
+        return queryAllAreaInfo4Cache(provinceAgencyCode);
+    }
+
+    @Cache(key = "SiteQueryService.queryAllAreaInfo4Cache@args0", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 60 * 60 * 1000)
+    public Result<List<AreaVO>> queryAllAreaInfo4Cache(String provinceAgencyCode) {
         Result<List<AreaVO>> result = new Result<>();
         result.toSuccess();
         result.setData(Lists.newArrayList());
@@ -107,16 +114,20 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
                     areaVO.setAreaCode(item.getOrganCode());
                     areaVO.setAreaName(item.getOrganName());
                     return areaVO;
-                }).collect(Collectors.toList()));    
+                }).collect(Collectors.toList()));
             }
         }
         return result;
     }
-
-    @Cache(key = "SiteQueryService.queryProvinceAgencyInfoByCode@args0", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
-            ,redisEnable = true, redisExpiredTime = 60 * 60 * 1000)
+    
     @Override
     public Result<ProvinceAgencyVO> queryProvinceAgencyInfoByCode(String provinceAgencyCode) {
+        return queryProvinceAgencyInfoByCode4Cache(provinceAgencyCode);
+    }
+
+    @Cache(key = "SiteQueryService.queryProvinceAgencyInfoByCode4Cache@args0", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 60 * 60 * 1000)
+    public Result<ProvinceAgencyVO> queryProvinceAgencyInfoByCode4Cache(String provinceAgencyCode) {
         Result<ProvinceAgencyVO> result = new Result<>();
         result.toSuccess();
         Optional<ProvinceAgencyVO> first = Arrays.stream(BasicProvinceAgencyEnum.values()).filter(item -> Objects.equals(item.getCode(), provinceAgencyCode)).map(item -> {
@@ -132,11 +143,15 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         }
         return result;
     }
-
-    @Cache(key = "SiteQueryService.queryAreaVOInfoByCode@args0", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
-            ,redisEnable = true, redisExpiredTime = 60 * 60 * 1000)
+    
     @Override
     public Result<AreaVO> queryAreaVOInfoByCode(String areaCode) {
+        return queryAreaVOInfoByCode4Cache(areaCode);
+    }
+
+    @Cache(key = "SiteQueryService.queryAreaVOInfoByCode4Cache@args0", memoryEnable = true, memoryExpiredTime = 30 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 60 * 60 * 1000)
+    public Result<AreaVO> queryAreaVOInfoByCode4Cache(String areaCode) {
         Result<AreaVO> result = new Result<>();
         result.toSuccess();
         Optional<AreaVO> first = Arrays.stream(BasicAreaEnum.values()).filter(item -> Objects.equals(item.getCode(), areaCode)).map(item -> {
