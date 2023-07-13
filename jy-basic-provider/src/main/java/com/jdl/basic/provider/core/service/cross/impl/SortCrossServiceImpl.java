@@ -47,13 +47,21 @@ public class SortCrossServiceImpl implements SortCrossService {
     
     private static final String INSERT_EVENT = "INSERT";
     
-    private static final Integer NO_INIT = -1;
-    
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossServiceImpl.queryPage", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public PageDto<SortCrossDetail> queryPage(SortCrossQuery query) {
         if(query.getPageNumber() < Constants.YN_YES || query.getPageSize() <= Constants.YN_NO){
             return null;
+        }
+        
+        // 如果查询条件中包含站点ID，执行刷站点类型逻辑
+        if (!StringUtils.isEmpty(query.getSiteCode())) {
+            List<SortCrossDetail> details = crossDetailDao.queryNotInitPage(query);
+            if (!CollectionUtils.isEmpty(details)){
+                for (SortCrossDetail detail : details) {
+                    sortCrossService.initSiteType(detail);
+                }
+            }
         }
         PageDto<SortCrossDetail> pageDto = new PageDto<>();
         query.setLimit(query.getPageSize());
@@ -63,33 +71,15 @@ public class SortCrossServiceImpl implements SortCrossService {
             pageDto.setTotalRow((int) count);
             pageDto.setResult(crossDetailDao.queryPage(query));
         }else {
-            // 如果无查询数据，并且查询条件中包含站点ID，执行刷站点类型逻辑
-            pageDto.setResult(initSiteTypeByQuery(query));
-            if (CollectionUtils.isEmpty(pageDto.getResult())) {
-                pageDto.setTotalRow(0);
-            }else {
-                pageDto.setTotalPage(pageDto.getResult().size());
-            }
+            pageDto.setResult(new ArrayList<>());
+            pageDto.setTotalRow(0);
         }
         return pageDto;
     }
-
-    private List<SortCrossDetail> initSiteTypeByQuery(SortCrossQuery query) {
-        if (StringUtils.isEmpty(query.getSiteCode())) {
-            return new ArrayList<>();
-        }
-        List<SortCrossDetail> details = crossDetailDao.queryNotInitPage(query);
-        if (!CollectionUtils.isEmpty(details)){
-            for (SortCrossDetail detail : details) {
-                sortCrossService.initSiteType(detail);
-            }
-        }
-        return crossDetailDao.queryPage(query);
-    }
-
+    
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossServiceImpl.updateEnableByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public boolean updateEnableByIds(SortCrossUpdateRequest request) {
+    public boolean updateEnableByIds(SortCrossUpdateRequest  request) {
         if (request == null 
                 || CollectionUtils.isEmpty(request.getIds()) 
                 || request.getEnableFlag() == null

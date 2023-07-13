@@ -442,8 +442,6 @@
         <if test="siteCode != null and siteCode != ''">
             and site_code = #{siteCode,jdbcType=VARCHAR}
         </if>        
-        <if test="pageNumber > 0">
-            limit #{offset}, #{limit}
-        </if>
+        limit 100
     </select>
 </mapper>
