@@ -24,10 +24,10 @@ public interface JyUserDao {
 
     /**
      * 查询场地下的用户
-     * @param condition
+     * @param siteCode
      * @return
      */
-    List<JyUser> searchUserBySiteCode(JyUserQueryCondition condition);
+    List<JyUser> searchUserBySiteCode(Integer siteCode);
 
     /**
      * 根据userId批量查询用户
@@ -50,12 +50,9 @@ public interface JyUserDao {
      */
     Integer queryUndistributedCountBySiteCode(JyUserQueryCondition condition);
 
-    /**
-     *
-     * @param condition
-     * @return
-     */
-    List<JyUser> queryDifference(JyUserQueryCondition condition);
+    Integer queryQuitUserCountByTime(JyUserQueryCondition condition);
+
+    Integer queryNewUserCountByTime(JyUserQueryCondition condition);
 
     /**
      * 从给出的用户ID中筛选出离职的

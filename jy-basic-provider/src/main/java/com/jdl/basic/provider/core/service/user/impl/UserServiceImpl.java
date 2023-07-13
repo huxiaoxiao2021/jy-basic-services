@@ -1,12 +1,10 @@
 package com.jdl.basic.provider.core.service.user.impl;
 
 import com.jd.dms.java.utils.sdk.base.Result;
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
-import com.jdl.basic.api.domain.user.JyUser;
-import com.jdl.basic.api.domain.user.JyUserBatchRequest;
-import com.jdl.basic.api.domain.user.JyUserQueryDto;
-import com.jdl.basic.api.domain.user.UnDistributedUserQueryDto;
+import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.api.enums.JyJobTypeEnum;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.ObjectHelper;
@@ -46,14 +44,14 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Cache(key = "UserServiceImpl.searchUserBySiteCode@args0", redisEnable = true, memoryEnable = true)
   @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserServiceImpl.searchUserBySiteCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-  public Result<List<JyUser>> searchUserBySiteCode(JyUserQueryDto dto) {
+  public Result<List<JyUser>> searchUserBySiteCode(Integer siteCode) {
     Result<List<JyUser>> result = Result.success();
-    JyUserQueryCondition condition = convertQuery(dto);
-    if (condition.getSiteCode() == null) {
+    if (siteCode == null) {
       return result.toFail("场地编码不能为空！");
     }
-    result.setData(jyUserDao.searchUserBySiteCode(condition));
+    result.setData(jyUserDao.searchUserBySiteCode(siteCode));
     return result;
   }
 
@@ -63,6 +61,10 @@ public class UserServiceImpl implements UserService {
     Result<List<JyUser>> result = Result.success();
     if (request.getUsers() == null) {
       return result.setData(new ArrayList<>());
+    }
+    // 查询场景针对某一个网格 限制300
+    if (request.getUsers().size() > 300) {
+      return result.toFail(String.format("根据用户ID批量查询人员分配网格超出查询上限,查询量【%s】,上限【%s】", request.getUsers().size(), 300));
     }
     result.setData(jyUserDao.queryByUserIds(request));
     return result;
@@ -95,8 +97,8 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserServiceImpl.queryDifference", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-  public Result<List<JyUser>> queryDifference(JyUserQueryDto dto) {
-    Result<List<JyUser>> result = Result.success();
+  public Result<UserChangeDto> queryDifference(JyUserQueryDto dto) {
+    Result<UserChangeDto> result = Result.success();
     JyUserQueryCondition condition = convertQuery(dto);
     if (condition.getSiteCode() == null) {
       return result.toFail("场地编码不能为空！");
@@ -107,7 +109,10 @@ public class UserServiceImpl implements UserService {
     if (condition.getEntryDate() == null) {
       return result.toFail("入职时间不能为空！");
     }
-    return result.setData(jyUserDao.queryDifference(condition));
+    UserChangeDto userChangeDto = new UserChangeDto();
+    userChangeDto.setTotalNew(jyUserDao.queryNewUserCountByTime(condition));
+    userChangeDto.setTotalResign(jyUserDao.queryQuitUserCountByTime(condition));
+    return result.setData(userChangeDto);
   }
 
   @Override
@@ -116,6 +121,10 @@ public class UserServiceImpl implements UserService {
     Result<List<JyUser>> result = Result.success();
     if (CollectionUtils.isEmpty(request.getUsers())) {
       return result.setData(new ArrayList<>());
+    }
+    // 最多查询50个网格 平均每个网格一天删除20条记录
+    if (request.getUsers().size() > 1000) {
+      return result.toFail(String.format("人员分配网格超出查询上限,查询量【%s】,上限【%s】", request.getUsers().size(), 1000));
     }
     return result.setData(jyUserDao.batchQueryQuitUserByUserId(request));
   }

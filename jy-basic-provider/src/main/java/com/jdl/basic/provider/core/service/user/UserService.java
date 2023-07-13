@@ -1,10 +1,7 @@
 package com.jdl.basic.provider.core.service.user;
 
 import com.jd.dms.java.utils.sdk.base.Result;
-import com.jdl.basic.api.domain.user.JyUser;
-import com.jdl.basic.api.domain.user.JyUserBatchRequest;
-import com.jdl.basic.api.domain.user.JyUserQueryDto;
-import com.jdl.basic.api.domain.user.UnDistributedUserQueryDto;
+import com.jdl.basic.api.domain.user.*;
 
 import java.util.List;
 
@@ -31,10 +28,10 @@ public interface UserService {
 
   /**
    * 根据条件查询员工
-   * @param dto
+   * @param siteCode
    * @return
    */
-  Result<List<JyUser>> searchUserBySiteCode(JyUserQueryDto dto);
+  Result<List<JyUser>> searchUserBySiteCode(Integer siteCode);
 
   /**
    * 根据员工id批量查询员工
@@ -58,11 +55,11 @@ public interface UserService {
   Result<Integer> queryUndistributedCountBySiteCode(JyUserQueryDto dto);
 
   /**
-   * 查询入职时间或离职时间大于给定时间的用户
+   * 查询场地下入职时间或离职时间大于给定时间的用户数
    * @param dto
    * @return
    */
-  Result<List<JyUser>> queryDifference(JyUserQueryDto dto);
+  Result<UserChangeDto> queryDifference(JyUserQueryDto dto);
 
   /**
    * 从给定的id中筛选出已离职的

@@ -4,6 +4,7 @@ import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.JyUser;
 import com.jdl.basic.api.domain.user.JyUserBatchRequest;
 import com.jdl.basic.api.domain.user.JyUserQueryDto;
+import com.jdl.basic.api.domain.user.UserChangeDto;
 import com.jdl.basic.provider.core.service.user.model.JyUserQueryCondition;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.ApplicationLaunch;
@@ -34,7 +35,7 @@ public class UserServiceTest {
         condition.setSiteCode(910);
         condition.setEntryDate("2023-06-29");
         condition.setQuitActionDate("2023-06-30");
-        Result<List<JyUser>> result = userService.queryDifference(condition);
+        Result<UserChangeDto> result = userService.queryDifference(condition);
         log.info("{}", JsonHelper.toJSONString(result));
     }
 
@@ -77,11 +78,11 @@ public class UserServiceTest {
     public void searchUserBySiteCode() {
         JyUserQueryDto condition = new JyUserQueryDto();
         condition.setSiteCode(910);
-        Result<List<JyUser>> result = userService.searchUserBySiteCode(condition);
+        Result<List<JyUser>> result = userService.searchUserBySiteCode(condition.getSiteCode());
         log.info("{}", JsonHelper.toJSONString(result));
 
         condition.setJobType(1);
-        result = userService.searchUserBySiteCode(condition);
+        result = userService.searchUserBySiteCode(condition.getSiteCode());
         log.info("{}", JsonHelper.toJSONString(result));
     }
 
