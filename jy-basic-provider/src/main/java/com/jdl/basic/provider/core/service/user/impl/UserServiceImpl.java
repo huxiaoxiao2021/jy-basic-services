@@ -1,29 +1,38 @@
 package com.jdl.basic.provider.core.service.user.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.jd.dms.java.utils.sdk.base.Result;
-import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.api.enums.JyJobTypeEnum;
+import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
+import com.jdl.basic.provider.config.cache.CacheService;
 import com.jdl.basic.provider.core.dao.user.JyUserDao;
 import com.jdl.basic.provider.core.service.user.UserService;
 import com.jdl.basic.provider.core.service.user.model.JyUserQueryCondition;
-import com.jdl.basic.rpc.exception.JYBasicRpcException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
   @Autowired
   JyUserDao jyUserDao;
+
+  @Autowired
+  CacheService jimdbCacheService;
 
   @Override
   public JyUser queryUserInfo(JyUser condition) {
@@ -44,14 +53,21 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  @Cache(key = "UserServiceImpl.searchUserBySiteCode@args0", redisEnable = true, memoryEnable = true)
   @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserServiceImpl.searchUserBySiteCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
   public Result<List<JyUser>> searchUserBySiteCode(Integer siteCode) {
     Result<List<JyUser>> result = Result.success();
     if (siteCode == null) {
       return result.toFail("场地编码不能为空！");
     }
-    result.setData(jyUserDao.searchUserBySiteCode(siteCode));
+    List<JyUser> jyUsers;
+    if (jimdbCacheService.exists(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode))) {
+      String json = jimdbCacheService.get(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode));
+      jyUsers = JSON.parseObject(json, new TypeReference<ArrayList<JyUser>>(){});
+    } else {
+      jyUsers = jyUserDao.searchUserBySiteCode(siteCode);
+      jimdbCacheService.setEx(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode), jyUsers, 24L, TimeUnit.HOURS);
+    }
+    result.setData(jyUsers);
     return result;
   }
 

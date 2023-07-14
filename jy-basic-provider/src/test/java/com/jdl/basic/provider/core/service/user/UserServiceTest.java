@@ -80,10 +80,6 @@ public class UserServiceTest {
         condition.setSiteCode(910);
         Result<List<JyUser>> result = userService.searchUserBySiteCode(condition.getSiteCode());
         log.info("{}", JsonHelper.toJSONString(result));
-
-        condition.setJobType(1);
-        result = userService.searchUserBySiteCode(condition.getSiteCode());
-        log.info("{}", JsonHelper.toJSONString(result));
     }
 
     @Test

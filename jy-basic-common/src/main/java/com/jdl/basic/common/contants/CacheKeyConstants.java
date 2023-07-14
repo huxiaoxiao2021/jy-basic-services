@@ -298,4 +298,9 @@ public class CacheKeyConstants {
      * 消费滑道笼车mq锁
      */
     public static final String CACHE_KEY_INSERT_OR_UPDATE_SORT_CROSS = "k_sort_cross_upsert:%s";
+
+    /**
+     * 查询场地下员工缓存key
+     */
+    public static final String CACHE_KEY_SEARCH_SITE_USER = "k_search_site_user:%s";
 }
