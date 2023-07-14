@@ -600,6 +600,10 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
             logger.warn("checkParam4querySitePageByConditionFromBasicSite pageSize为空 {}", JsonHelper.toJSONString(siteQueryPager));
             siteQueryPager.setPageSize(Constants.CONSTANT_NUMBER_TEN);
         }
+        if(siteQueryPager.getSearchVo() == null){
+            logger.warn("checkParam4querySitePageByConditionFromBasicSite searchVo为空 {}", JsonHelper.toJSONString(siteQueryPager));
+            siteQueryPager.setSearchVo(new SiteQueryCondition());
+        }
         return result;
     }
 }
