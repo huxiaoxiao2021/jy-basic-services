@@ -25,16 +25,19 @@ import com.jdl.basic.provider.core.dao.workStation.WorkStationDao;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationGridDao;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.position.PositionRecordService;
+import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 岗位查询服务实现
@@ -64,6 +67,11 @@ public class PositionRecordServiceImpl implements PositionRecordService {
 
     @Autowired
     private BaseMajorManager baseMajorManager;
+
+    @Autowired
+    @Qualifier("workStationGridService")
+    private WorkStationGridService workStationGridService;
+
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.insertPosition", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
@@ -266,4 +274,30 @@ public class PositionRecordServiceImpl implements PositionRecordService {
 		return null;
 	}
 
+    @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".PositionRecordServiceImpl.queryWorkGridKeyByPositionCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<String> queryWorkGridKeyByPositionCode(String positionCode) {
+        Result<String> res = new Result<>();
+        res.toSuccess();
+
+        PositionRecord positionRecord = positionRecordDao.queryByPositionCode(positionCode);
+        if(positionRecord == null) {
+            res.toFail("未查到该岗位信息");
+            return res;
+        }
+
+        Result<WorkStationGrid> workStationGridResult = workStationGridService.queryWorkStationGridBybusinessKeyWithCache(positionRecord.getRefGridKey());
+        if(!workStationGridResult.isSuccess()) {
+            res.toFail(workStationGridResult.getMessage());
+            return res;
+        }
+
+        if(Objects.isNull(workStationGridResult.getData()) || StringUtils.isBlank(workStationGridResult.getData().getRefWorkGridKey())) {
+            res.toFail("未查到岗位码信息");
+            return res;
+        }
+
+        res.setData(workStationGridResult.getData().getRefWorkGridKey());
+        return res;
+    }
 }
