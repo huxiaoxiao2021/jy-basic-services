@@ -534,7 +534,7 @@
         order by g.site_code  
         limit #{offset}, #{limit}
     </select> 
-    <select id="queryListForManagerSiteScan" parameterType="com.jdl.basic.api.domain.workStation.WorkGridQuery" resultMap="WorkStationGrid">
+    <select id="queryListForManagerSiteScan" parameterType="com.jdl.basic.api.domain.workStation.WorkGridQuery" resultMap="WorkGrid">
         select 
             <include refid="Base_Column_List"/>
         from
