@@ -51,7 +51,7 @@ import org.springframework.context.annotation.PropertySources;
 public class ApplicationLaunch extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
-        MQClientManager.getInstance().setClientMode(ClientMode.JMQ_NATIVE);
+        // MQClientManager.getInstance().setClientMode(ClientMode.JMQ_NATIVE);
         try {
             SpringApplication.run(ApplicationLaunch.class, args);
             log.info("ServiceBootApplication start success!");
