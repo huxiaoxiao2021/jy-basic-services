@@ -15,4 +15,14 @@ public interface VehicleIntegralConfigJsfService {
      */
     Result<VehicleIntegralConfig> findConfigByVehicleType(Integer vehicleType);
 
+    /**
+     * 新增积分配置
+     */
+    Result<Void> add(VehicleIntegralConfig config);
+
+    /**
+     * 根据车型修改积分配置
+     */
+    Result<Void> updateByVehicleType(VehicleIntegralConfig config);
+
 }

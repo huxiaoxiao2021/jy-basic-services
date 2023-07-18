@@ -28,4 +28,16 @@ public class VehicleIntegralConfigServiceImpl implements VehicleIntegralConfigSe
     public VehicleIntegralConfig findConfigByVehicleType(Integer vehicleType) {
         return vehicleIntegralConfigDao.findConfigByVehicleType(vehicleType);
     }
+
+    @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".VehicleIntegralConfigServiceImpl.add", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
+    public void add(VehicleIntegralConfig config) {
+        vehicleIntegralConfigDao.add(config);
+    }
+
+    @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".VehicleIntegralConfigServiceImpl.updateByVehicleType", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
+    public void updateByVehicleType(VehicleIntegralConfig config) {
+        vehicleIntegralConfigDao.updateByVehicleType(config);
+    }
 }

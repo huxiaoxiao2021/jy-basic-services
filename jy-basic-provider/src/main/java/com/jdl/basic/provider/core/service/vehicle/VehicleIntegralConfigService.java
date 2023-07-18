@@ -12,4 +12,14 @@ public interface VehicleIntegralConfigService {
      */
     VehicleIntegralConfig findConfigByVehicleType(Integer vehicleType);
 
+    /**
+     * 新增积分配置
+     */
+    void add(VehicleIntegralConfig config);
+
+    /**
+     * 根据车型修改积分配置
+     */
+    void updateByVehicleType(VehicleIntegralConfig config);
+
 }
