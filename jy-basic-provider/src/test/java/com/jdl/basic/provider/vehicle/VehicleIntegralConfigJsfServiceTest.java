@@ -55,6 +55,7 @@ public class VehicleIntegralConfigJsfServiceTest {
         config.setUpdateUserName("sys.dms1");
         config.setCreateTime(new Date());
         config.setUpdateTime(new Date());
+        config.setYn(0);
         Result<Void> result = vehicleIntegralConfigJsfService.updateByVehicleType(config);
         Assert.assertNotNull(result);
     }
