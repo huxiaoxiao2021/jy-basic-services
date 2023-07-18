@@ -538,7 +538,7 @@
         select 
             <include refid="Base_Column_List"/>
         from
-            work_station_grid g
+            work_grid g
         where g.yn = 1 
           and g.site_code = #{siteCode,jdbcType=INTEGER}
           and g.area_code in
