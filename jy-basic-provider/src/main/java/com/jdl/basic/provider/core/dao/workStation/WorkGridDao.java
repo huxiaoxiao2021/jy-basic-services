@@ -87,4 +87,8 @@ public interface WorkGridDao {
 	List<WorkGrid> queryAreaWorkGrid(WorkGridQuery query);
 
 	List<WorkGrid> queryAllGridBySiteCode(WorkGridQuery query);
+	
+	List<Integer> querySiteListForManagerScan(WorkGridQuery workGridQuery);
+	
+	List<WorkGrid> queryListForManagerSiteScan(WorkGridQuery workGridQuery);
 }

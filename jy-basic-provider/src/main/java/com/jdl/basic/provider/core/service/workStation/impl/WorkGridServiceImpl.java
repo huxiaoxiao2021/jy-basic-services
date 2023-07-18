@@ -639,4 +639,37 @@ public class WorkGridServiceImpl implements WorkGridService {
 	public WorkGrid queryByWorkGridKey(String workGridKey) {
 		return workGridDao.queryByWorkGridKey(workGridKey);
 	}
+	@Override
+	public List<Integer> querySiteListForManagerScan(WorkGridQuery query) {
+		if(CollectionUtils.isEmpty(query.getAreaCodeList())) {
+			return new ArrayList<>();
+		}
+		if(query.getPageSize() == null
+				|| query.getPageSize() <= 0) {
+			query.setPageSize(DmsConstants.PAGE_SIZE_DEFAULT);
+		}
+		query.setOffset(0);
+		query.setLimit(query.getPageSize());
+		if(query.getPageNumber() > 0) {
+			query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
+		}
+		return workGridDao.querySiteListForManagerScan(query);
+	}
+	@Override
+	public List<WorkGrid> queryListForManagerSiteScan(WorkGridQuery query) {
+		if(query.getSiteCode() == null 
+				|| CollectionUtils.isEmpty(query.getAreaCodeList())) {
+			return new ArrayList<>();
+		}
+		if(query.getPageSize() == null
+				|| query.getPageSize() <= 0) {
+			query.setPageSize(DmsConstants.PAGE_SIZE_DEFAULT);
+		}
+		query.setOffset(0);
+		query.setLimit(query.getPageSize());
+		if(query.getPageNumber() > 0) {
+			query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
+		}		
+		return workGridDao.queryListForManagerSiteScan(query);
+	}
 }

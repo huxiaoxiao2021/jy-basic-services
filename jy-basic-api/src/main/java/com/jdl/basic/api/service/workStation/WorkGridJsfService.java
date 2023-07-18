@@ -130,4 +130,16 @@ public interface WorkGridJsfService {
 	Result<WorkGrid> exactQueryWorkGridByBizKey(WorkGrid query);
 
 	Result<List<WorkGrid>> queryAllGridBySiteCode(WorkGridQuery query);
+	/**
+	 * 查询作业区下的场地列表
+	 * @param workGridQuery
+	 * @return
+	 */
+	List<Integer> querySiteListForManagerScan(WorkGridQuery workGridQuery);
+	/**
+	 * 查询场地+作业区下的网格列表
+	 * @param workGridQuery
+	 * @return
+	 */
+	List<WorkGrid> queryListForManagerSiteScan(WorkGridQuery workGridQuery);
 }
