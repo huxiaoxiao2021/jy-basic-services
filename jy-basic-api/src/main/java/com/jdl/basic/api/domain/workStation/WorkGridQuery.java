@@ -8,7 +8,7 @@ import com.jdl.basic.api.domain.BasePagerCondition;
 
 /**
  * 场地网格表-查询条件实体类
- * 
+ *
  * @author wuyoude
  * @date 2023年04月25日 00:18:56
  *
@@ -18,7 +18,7 @@ import com.jdl.basic.api.domain.BasePagerCondition;
 public class WorkGridQuery extends BasePagerCondition implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * 业务主键：site_code、floor、grid_no、area_code
 	 */
@@ -83,5 +83,10 @@ public class WorkGridQuery extends BasePagerCondition implements Serializable {
 	* 分页-pageSize
 	*/
 	private Integer pageSize;
+
+    /**
+     * 流向维护状态,0-未配置,1-已配置
+     */
+    private Integer configFlowStatus;
 
 }
