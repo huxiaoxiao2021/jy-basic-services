@@ -25,7 +25,7 @@ public class UserJsfServiceImpl implements UserJsfService {
     private UserService userService;
     @Override
     public Result<List<JyUserDto>> searchUserBySiteCode(JyUserQueryDto dto) {
-        return convertToResult(userService.searchUserBySiteCode(dto));
+        return convertToResult(userService.searchUserBySiteCode(dto.getSiteCode()));
     }
 
     @Override
@@ -39,8 +39,8 @@ public class UserJsfServiceImpl implements UserJsfService {
     }
 
   @Override
-  public Result<List<JyUserDto>> queryDifference(JyUserQueryDto dto) {
-    return convertToResult(userService.queryDifference(dto));
+  public Result<UserChangeDto> queryDifference(JyUserQueryDto dto) {
+    return userService.queryDifference(dto);
   }
 
     @Override

@@ -30,10 +30,15 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
     private UserService userService;
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.batchQueryUserWorkGridByGridKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<List<UserWorkGrid>> batchQueryUserWorkGridByGridKey(UserWorkGridBatchRequest request) {
         Result<List<UserWorkGrid>> result = Result.success();
         if (CollectionUtils.isEmpty(request.getUserWorkGrids())) {
             return result.toFail("网格主键不能为空！");
+        }
+        // 场地网格数量不会超200
+        if (request.getUserWorkGrids().size() > 200) {
+            return result.toFail(String.format("根据网格主键查询人员分配网格超出查询上限,查询量【%s】,上限【%s】", request.getUserWorkGrids().size(), 200));
         }
         return result.setData(userWorkGridDao.batchQueryUserWorkGridByGridKey(request));
     }
@@ -77,7 +82,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
     }
 
     @Override
-    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.userWorkGrids", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.batchDelete", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> batchDelete(UserWorkGridBatchRequest request) {
         Result<Boolean> result = Result.success();
 
@@ -109,16 +114,22 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.queryByUserIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<List<UserWorkGrid>> queryByUserIds(UserWorkGridBatchRequest request) {
         Result<List<UserWorkGrid>> result = Result.success();
         if (CollectionUtils.isEmpty(request.getUserWorkGrids())) {
             return result.setData(new ArrayList<>());
+        }
+        // 目前场地没有超出1000人的场地
+        if (request.getUserWorkGrids().size() > 1000) {
+            return result.toFail(String.format("根据用户id查询人员分配网格超出查询上限,查询量【%s】,上限【%s】", request.getUserWorkGrids().size(), 1000));
         }
         result.setData(userWorkGridDao.queryByUserIds(request));
         return result;
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.getWorkGridDistributedStaff", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<List<JyUser>> getWorkGridDistributedStaff(UserWorkGridRequest request) {
         Result<List<JyUser>> result = Result.success();
         if (StringUtils.isEmpty(request.getWorkGridKey())) {
@@ -143,6 +154,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.batchQueryDeletedUserWorkGrid", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<List<UserWorkGrid>> batchQueryDeletedUserWorkGrid(UserWorkGridBatchRequest request) {
         Result<List<UserWorkGrid>> result = Result.success();
         if (CollectionUtils.isEmpty(request.getUserWorkGrids())) {
@@ -151,12 +163,15 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         if (request.getUpdateTime() == null) {
             return result.toFail("查询更新时间不能为空！");
         }
-        System.out.println(request.getClass().getName());
-        System.out.println(request.getWorkGridKey());
+        // 最多查询50个网格 平均每个网格一天删除20条记录
+        if (request.getUserWorkGrids().size() > 1000) {
+            return result.toFail(String.format("根据网格主键查询被删除人员分配网格超出查询上限,查询量【%s】,上限【%s】", request.getUserWorkGrids().size(), 1000));
+        }
         return result.setData(userWorkGridDao.batchQueryDeletedUserWorkGrid(request));
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.removeFromGridByUserId", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public boolean removeFromGridByUserId(RemoveUserDto removeUserDto) {
         return userWorkGridDao.removeFromGridByUserId(removeUserDto) >0;
     }
