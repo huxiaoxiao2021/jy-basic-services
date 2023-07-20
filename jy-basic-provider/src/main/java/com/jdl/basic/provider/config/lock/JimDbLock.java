@@ -16,6 +16,11 @@ public class JimDbLock {
   @Autowired
   @Qualifier("jimClient")
   private Cluster redisClient;
+
+  public Cluster getRedisClient() {
+    return redisClient;
+  }
+
   private final long BIZ_TIMEOUT =3000;
 
   public boolean tryLock(String key, String value, long expire, TimeUnit timeUnit) {

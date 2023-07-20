@@ -9,6 +9,7 @@ import com.jdl.basic.api.domain.user.JyUser;
 import com.jdl.basic.api.domain.user.RemoveUserDto;
 import com.jdl.basic.api.enums.UserSatusEnum;
 import com.jdl.basic.api.enums.WorkSiteTypeEnum;
+import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.BeanUtils;
 import com.jdl.basic.common.utils.DateHelper;
@@ -97,11 +98,13 @@ public class UserConsumer {
               dto.setUpdateUserName("系统离职");
               dto.setUpdateTime(new Date());
               userWorkGridService.removeFromGridByUserId(dto);
+              invalidateSiteUserCacheData(condition);
             }
           } else if (UserSatusEnum.ONJOB.getCode().equals(condition.getUserStatus())){
             condition.setCreateTime(now);
             condition.setUpdateTime(now);
             rs = userService.saveUser(condition);
+            invalidateSiteUserCacheData(condition);
           }
           else {
             return;
@@ -113,6 +116,19 @@ public class UserConsumer {
           jimDbLock.releaseLock(userLockKey, uuid);
         }
       }
+    }
+  }
+
+  private void invalidateSiteUserCacheData(JyUser condition) {
+    try {
+      if (ObjectHelper.isNotNull(condition) && ObjectHelper.isNotNull(condition.getSiteCode())){
+        String key =String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, condition.getSiteCode());
+        if (jimDbLock.getRedisClient().exists(key)){
+          jimDbLock.getRedisClient().del(key);
+        }
+      }
+    } catch (Exception e) {
+      log.error("invalidateSiteUserCacheData exception",e);
     }
   }
 
