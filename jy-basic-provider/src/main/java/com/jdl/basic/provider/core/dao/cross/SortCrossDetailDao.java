@@ -41,10 +41,8 @@ public interface SortCrossDetailDao {
     /**
      * 查询未初始化的信息
      * @return
-     * @param queryLimit
-     * @param limit
      */
-    List<SortCrossDetail> queryNotInit(Integer dmsId);
+    List<SortCrossDetail> queryNotInitBySiteCode(Integer dmsId);
 
     /**
      * 通过Id更新数据
@@ -85,4 +83,11 @@ public interface SortCrossDetailDao {
      * @return
      */
     List<TableTrolleyJsfDto> queryTableTrolley(TableTrolleyQuery query);
+
+    /**
+     * 根据条件分页查询没有初始化站点的数据
+     * @param query
+     * @return
+     */
+    List<SortCrossDetail> queryNotInitPage(SortCrossQuery query);
 }
