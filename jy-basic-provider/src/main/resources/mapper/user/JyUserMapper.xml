@@ -364,6 +364,8 @@
         entry_date <![CDATA[ >= ]]> #{entryDate,jdbcType=VARCHAR}
     and
         site_code = #{siteCode, jdbcType=INTEGER}
+    and
+        user_status = 1
   </select>
 
   <select id="queryQuitUserCountByTime" resultType="java.lang.Integer">
@@ -375,6 +377,8 @@
         quit_action_date <![CDATA[ >= ]]> #{quitActionDate,jdbcType=VARCHAR}
     and
         site_code = #{siteCode, jdbcType=INTEGER}
+    and
+        user_status = 2
   </select>
 
   <select id="batchQueryQuitUserByUserId" resultMap="BaseResultMap">
