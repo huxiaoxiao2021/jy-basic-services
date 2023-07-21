@@ -53,7 +53,7 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
                 result.toFail("此站点在基础资料未查到!");
                 return result;
             }
-            if(!(basicDto.getOrgId().equals(dto.getOrgCode()))){
+            if(dto.getOrgCode() != null && !Objects.equals(dto.getOrgCode(), basicDto.getOrgId())){
                 result.toFail("此站点实际所属的大区与实际不一致，请重新选择!");
                 return result;
             }
@@ -108,7 +108,7 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
                 result.toFail("此站点在基础资料未查到!");
                 return result;
             }
-            if(!(basicDto.getOrgId().equals(dto.getOrgCode()))){
+            if(dto.getOrgCode() != null && !Objects.equals(dto.getOrgCode(), basicDto.getOrgId())){
                 result.toFail("此站点实际所属的大区与实际不一致，请重新选择!");
                 return result;
             }
