@@ -3,6 +3,7 @@ package com.jdl.basic.api.domain.workStation;
 import lombok.Setter;
 import lombok.Getter;
 import java.util.Date;
+import java.util.List;
 import java.io.Serializable;
 import com.jdl.basic.api.domain.BasePagerCondition;
 
@@ -83,5 +84,8 @@ public class WorkGridQuery extends BasePagerCondition implements Serializable {
 	* 分页-pageSize
 	*/
 	private Integer pageSize;
-
+	/**
+	 * 作业区列表
+	 */
+	private List<String> areaCodeList;	
 }

@@ -134,4 +134,16 @@ public interface WorkGridService {
 	List<WorkGrid> queryAreaWorkGrid(WorkGridQuery query);
 
 	List<WorkGrid> queryAllGridBySiteCode(WorkGridQuery query);
+	/**
+	 * 查询作业区下的站点列表
+	 * @param workGridQuery
+	 * @return
+	 */
+	List<Integer> querySiteListForManagerScan(WorkGridQuery workGridQuery);
+	/**
+	 * 查询站点+作业区下的网格列表
+	 * @param workGridQuery
+	 * @return
+	 */
+	List<WorkGrid> queryListForManagerSiteScan(WorkGridQuery workGridQuery);
 }
