@@ -301,6 +301,8 @@
     <if test="workGridKey != null and workGridKey != ''">
     and work_grid_key = #{workGridKey}
     </if>
+    and
+        source_type <![CDATA[ <= ]]> #{sourceType}
   </select>
 
   <select id="queryWorkGridScheduleByKey" resultMap="BaseResultMap">

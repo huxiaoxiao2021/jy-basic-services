@@ -59,6 +59,9 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         if (request.getSiteCode() == null) {
             return result.toFail("场地编码不能为空！");
         }
+        if (request.getSourceType() == null) {
+            return result.toFail("查询维度不能为空！");
+        }
         return result.setData(workGridScheduleDao.querySiteScheduleByCondition(request));
     }
 
