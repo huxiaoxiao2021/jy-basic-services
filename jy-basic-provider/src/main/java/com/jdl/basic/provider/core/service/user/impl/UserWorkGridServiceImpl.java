@@ -60,7 +60,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         }
         for(JyUser user : userResult.getData()) {
             if (user.getGridDistributeFlag()) {
-                return result.toFail(String.format("用户【%s】已分配网格！", user.getUserErp()));
+                return result.toFail(String.format("用户【%s】已分配网格！请刷新页面获取最新数据。", user.getUserErp()));
             }
         }
         if (userWorkGridDao.batchInsert(request) > 0) {
