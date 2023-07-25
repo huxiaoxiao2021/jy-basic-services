@@ -3,8 +3,6 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://mysql-cn-north-1-f51a5018ea1d406c.rds.jdcloud.com:3358/jybasic_conf?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&failOverReadOnly=false&allowMultiQueries=true
-    username: testwl
-    password: 4x1eSVxcq0816pytgeyQAh1wUS
     #Spring Boot 默认是不注入这些属性值的，需要自己绑定
     #druid 数据源专有配置
     initialSize: 5
@@ -35,11 +33,6 @@ spring:
         app: JYBasic
         address: jmq-testcluster.jd.local:50088
         enabled: true
-      basic-producer-jmq4:
-        password: FBBB11B7
-        app: JYBasic
-        address: test-nameserver.jmq.jd.local:50088
-        enabled: true
       ####--app consumer 定义--##########################################################
     consumers:
       basic-consumer:
@@ -47,24 +40,30 @@ spring:
         app: JYBasic
         address: jmq-testcluster.jd.local:50088
         enabled: true
-      basic-consumer-jmq4:
-        password: FBBB11B7
-        app: JYBasic
-        address: test-nameserver.jmq.jd.local:50088
-        enabled: true
+
 
 ####--topic 定义--#############################################################
 mq:
   topic:
     #叉车完成
     fork-lift-topic: ky_fork_lift_complete
-
+    collectBoxFlowNotice: collect_box_flow_notice
+    workGridManagerTaskConfigMq: workGridManagerTaskConfigMq
+    
   consumer:
     topic:
       sort_cross_detail: basic_sort_cross_detail
+      wlUserInfo: wlUserInfo
 
+  jmq4producer:
+    password: 809375866c4842f28d7e4eec04da1e41
+    app: JYBasic
+    address: test-nameserver.jmq.jd.local:50088
+    enabled: true
 
-
+  split:
+    uat:
+      switch: false
 
 
 

@@ -32,8 +32,8 @@ public enum WorkerTypeEnum {
     private Integer jobType;
     private String jobName;
 
-    private static HashMap<Integer, String> typeToNameMap = new HashMap<>();
-    private static HashMap<String, Integer> nameToTypeMap = new HashMap<>();
+    private static HashMap<Integer, String> typeToNameMap = new HashMap<Integer, String>();
+    private static HashMap<String, Integer> nameToTypeMap = new HashMap<String, Integer>();
     static{
         for (WorkerTypeEnum value : WorkerTypeEnum.values()) {
             typeToNameMap.put(value.getJobType(), value.getJobName());

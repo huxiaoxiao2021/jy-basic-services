@@ -18,7 +18,14 @@
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
-
+    <!-- 三定网格工序管理jsf服务 -->
+    <jsf:provider id="workAreaJsfServiceServer"
+                  interface="com.jdl.basic.api.service.workStation.WorkAreaJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workAreaJsfService"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
     <!-- 三定网格工序管理jsf服务 -->
     <jsf:provider id="workStationJsfService"
                   interface="com.jdl.basic.api.service.workStation.WorkStationJsfService"
@@ -27,12 +34,51 @@
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
-
+    <!-- 三定网格管理jsf服务 -->
+    <jsf:provider id="workGridJsfServiceServer"
+                  interface="com.jdl.basic.api.service.workStation.WorkGridJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workGridJsfService"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
     <!-- 三定网格工序管理jsf服务 -->
     <jsf:provider id="workStationGridJsfService"
                   interface="com.jdl.basic.api.service.workStation.WorkStationGridJsfService"
                   alias="${jsf.jy_basic.alias}"
                   ref="workStationGridJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!-- 三定网格工序管理jsf服务 -->
+    <jsf:provider id="workGridFlowDirectionJsfServiceServer"
+                  interface="com.jdl.basic.api.service.workStation.WorkGridFlowDirectionJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workGridFlowDirectionJsfService"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!--  任务管理-线上化task-jsf服务  -->
+    <jsf:provider id="workGridManagerTaskJsfServiceServer"
+                  interface="com.jdl.basic.api.service.work.WorkGridManagerTaskJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workGridManagerTaskJsfService"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!--  任务管理-线上化case-jsf服务  -->
+    <jsf:provider id="workGridManagerCaseJsfServiceServer"
+                  interface="com.jdl.basic.api.service.work.WorkGridManagerCaseJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workGridManagerCaseJsfService"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <!--  任务管理-线上化task-config-jsf服务  -->
+    <jsf:provider id="workGridManagerTaskConfigJsfServiceServer"
+                  interface="com.jdl.basic.api.service.work.WorkGridManagerTaskConfigJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workGridManagerTaskConfigJsfService"
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
@@ -215,6 +261,62 @@
       alias="${jsf.jy_basic.alias}"
       ref="vehicleVolumeDicJsfServiceImpl"
       server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+
+    <!-- nc件白名单 -->
+    <jsf:provider id="ncWhiteListJsfService"
+                  interface="com.jdl.basic.api.service.ncWhiteList.NCWhiteListJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="NCWhiteListJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
+    <jsf:provider id="lspBoxFlowDirectionConfTask"
+                  timeout="100000000"
+                  interface="com.jd.lsb.task.handler.Handler"
+                  ref="collectBoxFlowDirectionConfJsfServiceImpl"
+                  alias="${jsf.jy_basic.alias}"
+                  server="jsf">
+    </jsf:provider>
+    <!-- 基础站点接口 -->
+    <jsf:provider id="siteQueryJsfService"
+      interface="com.jdl.basic.api.service.site.SiteQueryService"
+      ref="siteQueryService"
+      alias="${jsf.jy_basic.alias}"
+      server="jsf">
+    </jsf:provider>
+
+    <jsf:provider id="userWorkGridJsfService"
+                  timeout="100000000"
+                  interface="com.jdl.basic.api.service.user.UserWorkGridJsfService"
+                  ref="userWorkGridJsfServiceImpl"
+                  alias="${jsf.jy_basic.alias}"
+                  server="jsf">
+    </jsf:provider>
+
+    <jsf:provider id="userJsfService"
+                  timeout="100000000"
+                  interface="com.jdl.basic.api.service.user.UserJsfService"
+                  ref="userJsfServiceImpl"
+                  alias="${jsf.jy_basic.alias}"
+                  server="jsf">
+    </jsf:provider>
+
+    <jsf:provider id="workGridScheduleJsfService"
+                  timeout="100000000"
+                  interface="com.jdl.basic.api.service.schedule.WorkGridScheduleJsfService"
+                  ref="workGridScheduleJsfServiceImpl"
+                  alias="${jsf.jy_basic.alias}"
+                  server="jsf">
+    </jsf:provider>
+
+    <!-- 车型积分配置jsf服务 -->
+    <jsf:provider id="vehicleIntegralConfigJsfService"
+                  interface="com.jdl.basic.api.service.vehicle.VehicleIntegralConfigJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="vehicleIntegralConfigJsfServiceImpl"
+                  server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
 </beans>

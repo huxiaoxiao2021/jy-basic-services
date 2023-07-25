@@ -134,5 +134,28 @@ public interface WorkStationGridJsfService {
 	Result<WorkStationGrid> queryWorkStationGridBybusinessKeyWithCache(String businessKey);
 
     Result<PageDto<WorkStationGrid>> queryAllWorkGridList(WorkStationGridQuery query);
-
+    /**
+     * 停止数据初始化
+     */
+    void stopInit();
+    /**
+	 * 初始化-所有数据
+	 */
+	void initAllWorkGrid();
+	/**
+	 * 初始化-单条数据
+	 */
+	void initWorkGrid(Long id);
+	/**
+	 * 查询作业区下的场地列表
+	 * @param workStationGridQuery
+	 * @return
+	 */
+	List<Integer> querySiteListForManagerScan(WorkStationGridQuery workStationGridQuery);
+	/**
+	 * 查询场地下作业区下的网格列表
+	 * @param workStationGridQuery
+	 * @return
+	 */
+	List<WorkStationGrid> queryListForManagerSiteScan(WorkStationGridQuery workStationGridQuery);
 }

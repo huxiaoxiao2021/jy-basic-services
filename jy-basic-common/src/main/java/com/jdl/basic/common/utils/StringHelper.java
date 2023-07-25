@@ -1,17 +1,25 @@
 package com.jdl.basic.common.utils;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Sets;
-
-import com.jdl.basic.common.contants.Constants;
-import lombok.extern.slf4j.Slf4j;
-
-
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
+
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.jdl.basic.common.contants.Constants;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class StringHelper {
@@ -24,7 +32,16 @@ public class StringHelper {
 
     public static final int EXCP_AREA = 1;  // 异常作业区类型
     public static final String FLOOR = "楼层"; // 楼层
-
+    public static final String FLOW_SITE_CODE_SPLIT = ";";
+    /**
+     * 分隔符 ,
+     */
+    public static final String COMMON_SPLIT = ",";    
+    /**
+     * day名称分隔符 、
+     */
+    public static final String DAY_NAME__SPLIT = "、"; 
+    
     public static String getRandomString() {
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
@@ -336,7 +353,19 @@ public class StringHelper {
 		Iterable<String> it = Splitter.on(regex).trimResults().omitEmptyStrings().split(str);
 		return Sets.newTreeSet(it);
 	}
-
+    /**
+     * 将字符串分割，返回list类型
+     * @param str
+     * @param regex 分隔符
+     * @return
+     */
+	public static List<String> splitToList(String str, String regex) {
+		if (null == str || str.length() < 1 || regex == null || regex.length() < 1) {
+			return new ArrayList<String>();
+		}
+		Iterable<String> it = Splitter.on(regex).trimResults().omitEmptyStrings().split(str);
+		return Lists.newArrayList(it);
+	}
     /**
      * 将字符串中的指定字符串移除
      *

@@ -3,8 +3,6 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://mysql-cn-north-1-faa4483a25674aac.rds.jdcloud.com:3358/jybasic_conf?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&failOverReadOnly=false&allowMultiQueries=true
-    username: jybasic_conf_rw
-    password: yKxYyjAPdVPDYwEnE3Zheeo5Fc4jGfrn
 
     #Spring Boot 默认是不注入这些属性值的，需要自己绑定
     #druid 数据源专有配置
@@ -36,33 +34,38 @@ spring:
         app: JYBasic
         address: jmq-cluster.jd.local:80
         enabled: true
-      basic-producer-jmq4:
-        password: 599985AD
-        app: JYBasic
-        address: nameserver.jmq.jd.local:80
-        enabled: true
       ####--app consumer 定义--##########################################################
     consumers:
-      basic-consumer:
+      jmq2-consumer:
         password: 599985AD
         app: JYBasic
         address: jmq-cluster.jd.local:80
         enabled: true
-      basic-consumer-jmq4:
-        password: 599985AD
+      jmq4-consumer:
+        password: f0a10912179747fd9b31dd8e32c6009c
         app: JYBasic
         address: nameserver.jmq.jd.local:80
         enabled: true
-
   ####--topic 定义--#############################################################
 mq:
   topic:
     #叉车完成
     fork-lift-topic: ky_fork_lift_complete
+    collectBoxFlowNotice: collect_box_flow_notice
+    workGridManagerTaskConfigMq: workGridManagerTaskConfigMq
 
   consumer:
     topic:
       sort_cross_detail: basic_sort_cross_detail
+      wlUserInfo: wlUserInfo
+  jmq4producer:
+    password: f0a10912179747fd9b31dd8e32c6009c
+    app: JYBasic
+    address: nameserver.jmq.jd.local:80
+    enabled: true
+  split:
+    uat:
+      switch: false
 
 
 
@@ -99,7 +102,6 @@ jsf:
   jy_basic:
     alias: jy-basic-server
     token: anktYmFzaWMtc2VydmVyLXRva2Vu
-
 basic:
   jsf:
     token: 96KYOS24GJ

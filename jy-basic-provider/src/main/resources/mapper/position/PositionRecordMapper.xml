@@ -40,6 +40,12 @@
 		<result column="update_time" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
 		<result column="yn" property="yn" javaType="java.lang.Integer" jdbcType="TINYINT" />
 		<result column="ts" property="ts" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+        <result column="business_line_code" property="businessLineCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="business_line_name" property="businessLineName" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="dock_code" property="dockCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="supplier_code" property="supplierCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="supplier_name" property="supplierName" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="ref_work_grid_key" property="refWorkGridKey" javaType="java.lang.String" jdbcType="VARCHAR" />        		
 	</resultMap>
 
 	<sql id="Base_Column_List" >
@@ -50,7 +56,8 @@
 	<sql id="Base_Detail_Column_List" >
 		g.id,g.ref_station_key,g.org_code,g.org_name,g.site_code,g.site_name,
 		g.floor,g.grid_no,g.grid_code,g.grid_name,g.create_user,g.create_time,g.yn,
-		s.area_code,s.area_name,s.work_code,s.work_name,
+		g.dock_code,g.supplier_code,g.supplier_name,g.ref_work_grid_key,
+		s.area_code,s.area_name,s.work_code,s.work_name,s.business_line_code,s.business_line_name,
 		p.position_code,p.ref_grid_key,p.remark,p.update_user,p.update_time,p.ts
 	</sql>
 

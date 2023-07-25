@@ -257,9 +257,22 @@ public class CacheKeyConstants {
      */
     public static final String CACHE_KEY_WORK_STATION_EDIT = "k_work_station_edit";
     /**
+     * 网格工序操作-key
+     */
+    public static final String CACHE_KEY_WORK_STATION_GRID_EDIT = "k_work_station_grid_edit";
+    /**
      * 网格操作-key
      */
-    public static final String CACHE_KEY_WORK_STATION_GRID_EDIT = "k_work_station_grid_edit"; 
+    public static final String CACHE_KEY_WORK_GRID_EDIT = "k_work_grid_edit";
+    /**
+     * 网格操作-key
+     */
+    public static final String CACHE_KEY_WORK_GRID_EDIT_ONE_FORMAT = "k_work_grid_edit_one:%s";    
+    /**
+     * 网格流向操作
+     */
+    public static final String CACHE_KEY_WORK_GRID_FLOW_EDIT = "k_work_grid_flow_edit";
+    
     /**
      * 网格计划操作-key
      */
@@ -285,4 +298,9 @@ public class CacheKeyConstants {
      * 消费滑道笼车mq锁
      */
     public static final String CACHE_KEY_INSERT_OR_UPDATE_SORT_CROSS = "k_sort_cross_upsert:%s";
+
+    /**
+     * 查询场地下员工缓存key
+     */
+    public static final String CACHE_KEY_SEARCH_SITE_USER = "k_search_site_user:%s";
 }

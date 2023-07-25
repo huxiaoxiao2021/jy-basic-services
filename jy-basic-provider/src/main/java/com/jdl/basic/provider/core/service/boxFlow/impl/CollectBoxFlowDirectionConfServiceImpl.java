@@ -8,18 +8,20 @@ import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConfChangeLog;
+import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowInfo;
+import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowNoticDto;
 import com.jdl.basic.common.contants.Constants;
-import com.jdl.basic.common.utils.JsonHelper;
-import com.jdl.basic.common.utils.Pager;
-import com.jdl.basic.common.utils.Result;
-import com.jdl.basic.common.utils.StringUtils;
+import com.jdl.basic.common.utils.*;
 import com.jdl.basic.provider.config.jdq.JDQ4Producer;
 import com.jdl.basic.provider.core.dao.boxFlow.CollectBoxFlowDirectionConfDao;
+import com.jdl.basic.provider.core.dao.boxFlow.CollectBoxFlowInfoDao;
 import com.jdl.basic.provider.core.service.boxFlow.ICollectBoxFlowDirectionConfService;
+import com.jdl.basic.provider.mq.producer.DefaultJMQProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,16 +31,30 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import static com.jdl.basic.common.enums.CollectBoxFlowInfoOperateTypeEnum.ACTIVATE;
+import static com.jdl.basic.common.enums.CollectBoxFlowInfoOperateTypeEnum.ROLLBACK;
+import static com.jdl.basic.common.enums.CollectBoxFlowInfoStatusEnum.*;
+
 @Slf4j
 @Service
 public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDirectionConfService {
-
+    private static Integer DELETE_COUNT = 2000;
     @Resource
     private CollectBoxFlowDirectionConfDao collectBoxFlowDirectionConfMapper;
 
     @Autowired
     @Qualifier("colletBoxFlowDirectionJDQ4Producer")
     private JDQ4Producer jdq4Producer;
+    
+    @Autowired
+    private CollectBoxFlowInfoDao collectBoxFlowInfoDao;
+
+    @Autowired(required = false)
+    @Qualifier("collectBoxFlowNoticeMQ")
+    private DefaultJMQProducer collectBoxFlowNoticeMQ;
+
+    @Value("${mq.topic.collectBoxFlowNotice:}")
+    private String collectBoxFlowNoticTopic;
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionConfServiceImpl.selectById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
@@ -88,6 +104,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
             select.setTransportType(conf.getTransportType());
             select.setStartSiteId(conf.getStartSiteId());
             select.setEndSiteId(conf.getEndSiteId());
+            select.setVersion(conf.getVersion());
             List<CollectBoxFlowDirectionConf> contains = collectBoxFlowDirectionConfMapper.select(select);
             if (CollectionUtils.isNotEmpty(contains)) {
                 return Result.fail("已存在此目的网点的规则，不能重复添加");
@@ -124,7 +141,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         query.setTransportType(conf.getTransportType());
         query.setFlowType(conf.getFlowType());
         query.setYn(true);
-
+        query.setVersion(conf.getVersion());
         //存在检验
         List<CollectBoxFlowDirectionConf> collectBoxFlowDirectionConfs = collectBoxFlowDirectionConfMapper.select(query);
         if (CollectionUtils.isEmpty(collectBoxFlowDirectionConfs)) {
@@ -232,7 +249,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
             query.setEndOrgId(conf.getEndOrgId());
             query.setEndSiteId(endSiteId);
             query.setTransportType(transportType);
-            
+            query.setVersion(conf.getVersion());
             List<CollectBoxFlowDirectionConf> select = collectBoxFlowDirectionConfMapper.select(query);
             if (CollectionUtils.isNotEmpty(select)) {
                 return updateConfig(conf);
@@ -255,8 +272,147 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         return result;
     }
     @Override
-    public int deleteOldVersion(String version, Integer deleteCount){
-        return collectBoxFlowDirectionConfMapper.deleteOldVersion(version, deleteCount);
+    public int deleteByVersion(String version, Integer deleteCount){
+        return collectBoxFlowDirectionConfMapper.deleteByVersion(version, deleteCount);
+    }
+
+    /**
+     * 切换新版本
+     * 1. 删除历史版本
+     * 2. 当前版本修改成历史版本
+     */
+    @Override
+    @Transactional
+    public void switchNewVersion() throws Exception{
+        log.info("小件集包切换版本，开始执行");
+        Date todayEndTime = DateHelper.transTimeMaxOfDate(new Date());
+        Date todayStartTime = DateHelper.transTimeMinOfDate(new Date());
+        //Date startTime = DateHelper.addDays(todayStartTime, -3);
+        Date endTime = DateHelper.addDays(todayEndTime, -3);
+        CollectBoxFlowInfo unactivated = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, endTime, 
+                UNACTIVATED.getCode());
+        if(unactivated == null){
+            log.info("根据时间查询结束时间:{}未查到待激活版本", 
+                    DateHelper.getDateOfyyMMddHHmmss(endTime));
+            return;
+        }
+        
+        log.info("根据时间查询结束时间:{}未查到待激活版本", 
+                DateHelper.getDateOfyyMMddHHmmss(endTime));
+        //历史版本
+//        CollectBoxFlowInfo history = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null,
+//                HISTORY.getCode());
+//        //删除历史版本
+//        if(history != null){
+//            collectBoxFlowInfoDao.deleteByPrimaryKey(history.getId());
+//            int count = 0;
+//            int sum = 0;
+//            do {
+//                count = deleteByVersion(history.getVersion(), DELETE_COUNT);
+//                sum += count;
+//            }while (count > 0);
+//            log.info("删除历史版本数据version:{},count:{}", history.getVersion(), sum);
+//        }
+        CollectBoxFlowInfo entity = new CollectBoxFlowInfo();;
+        Date updateTime = new Date();
+        //当前版本
+        CollectBoxFlowInfo current = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null,
+                CURRENT.getCode());
+        if(current != null){
+            //throw new Exception("未查到激活的版本");
+            //当前版本改成历史版本
+            
+            entity.setId(current.getId());
+            entity.setStatus(HISTORY.getCode());
+            entity.setOperateType(ACTIVATE.getCode());
+            entity.setUpdateTime(updateTime);
+            collectBoxFlowInfoDao.updateByPrimaryKeySelective(entity);
+        }else {
+            log.error("小件集包规则，定时切换时未查到已激活版本");
+        }
+        
+        //待激活的修改状态
+        entity.setId(unactivated.getId());
+        entity.setStatus(CURRENT.getCode());
+        entity.setOperateType(ACTIVATE.getCode());
+        entity.setUpdateTime(updateTime);
+        collectBoxFlowInfoDao.updateByPrimaryKeySelective(entity);
+        
+        
+    }
+    
+
+    /**
+     * 版本回滚
+     * 
+     */
+    @Override
+    @Transactional
+    public Result<Boolean> rollbackVersion() {
+        Result<Boolean> result = new Result<>();
+        result.toSuccess();
+        //历史版本
+        CollectBoxFlowInfo history = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null,
+                HISTORY.getCode());
+        if(history == null){
+           return result.toFail("无可切换的历史版本，请联系值班研发");
+        }
+
+        CollectBoxFlowInfo current = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null,
+                CURRENT.getCode());
+        if(current == null){
+            return result.toFail("无当前激活版本，请联系值班研发");
+        }
+        
+        Date updateTime = new Date();
+        CollectBoxFlowInfo entity = null;
+        entity = new CollectBoxFlowInfo();
+        entity.setId(current.getId());
+        entity.setStatus(HISTORY.getCode());
+        entity.setOperateType(ROLLBACK.getCode());
+        entity.setUpdateTime(updateTime);
+        collectBoxFlowInfoDao.updateByPrimaryKeySelective(entity);
+        
+        //激活历史版本
+        entity.setId(history.getId());
+        entity.setStatus(CURRENT.getCode());
+        entity.setOperateType(ROLLBACK.getCode());
+        entity.setUpdateTime(updateTime);
+        collectBoxFlowInfoDao.updateByPrimaryKeySelective(entity);
+        
+        //发送通知
+        CollectBoxFlowNoticDto dto = initCollectBoxFlowNoticDto(history.getVersion());
+        try {
+            collectBoxFlowNoticeMQ.send(history.getVersion(), JsonHelper.toJSONString(dto));
+        } catch (Exception ex) {
+            log.error("回滚箱号版本MQ发送通知失败:{}",history.getVersion(), ex);
+        }
+        return result;
+    }
+
+    @Override
+    public List<CollectBoxFlowInfo> selectAllCollectBoxFlowInfo() {
+        return collectBoxFlowInfoDao.selectAll();
+    }
+
+    private CollectBoxFlowNoticDto initCollectBoxFlowNoticDto(String version){
+        CollectBoxFlowNoticDto dto = new CollectBoxFlowNoticDto();
+        dto.setVersion(version);
+        dto.setOperateType(ROLLBACK.getCode());
+        return dto;
+    }
+    @Override
+    public String getCurrentVersion(){
+        CollectBoxFlowInfo collectBoxFlowInfo = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null, CURRENT.getCode());
+        if(collectBoxFlowInfo != null){
+            return collectBoxFlowInfo.getVersion();
+        }
+        return null;
+    }
+
+    @Override
+    public int updateCollectBoxFlowInfo(CollectBoxFlowInfo collectBoxFlowInfo) {
+        return collectBoxFlowInfoDao.updateByPrimaryKeySelective(collectBoxFlowInfo);
     }
 
 }

@@ -27,6 +27,7 @@ public class WorkStationGridJsfServiceTest {
     public void queryByIdTest(){
         Result<WorkStationGrid> workStationGridResult = workStationGridJsfService.queryById(10L);
         System.out.println(JSON.toJSONString(workStationGridResult));
+        workStationGridJsfService.initAllWorkGrid();
     }
 }
 

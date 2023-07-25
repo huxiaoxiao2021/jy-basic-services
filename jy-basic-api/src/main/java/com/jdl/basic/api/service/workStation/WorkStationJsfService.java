@@ -108,7 +108,14 @@ public interface WorkStationJsfService {
 	 * @return
 	 */
 	Result<WorkStation> queryWorkStationBybusinessKeyWithCache(String businessKey);
-
+	/**
+	 * 初始化-所有数据
+	 */
+	void initAllWorkArea();
+	/**
+	 * 初始化-单条数据
+	 */
+	void initWorkArea(Long id);
 	/**
 	 * 根据businessKey查询 网格工种
 	 * @param businessKey

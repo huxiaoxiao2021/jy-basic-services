@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jdl.basic.provider.core.dao.workStation.WorkGridFlowDetailOfflineDao" >
+
+	<resultMap id="WorkGridFlowDetailOffline" type="com.jdl.basic.api.domain.workStation.WorkGridFlowDetailOffline" >
+		<id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+		<result column="ref_work_grid_key" property="refWorkGridKey" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="org_code" property="orgCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="org_name" property="orgName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="province_agency_code" property="provinceAgencyCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="province_agency_name" property="provinceAgencyName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="site_code" property="siteCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="site_name" property="siteName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="flow_province_agency_code" property="flowProvinceAgencyCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="flow_province_agency_name" property="flowProvinceAgencyName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="flow_org_code" property="flowOrgCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="flow_org_name" property="flowOrgName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="flow_site_code" property="flowSiteCode" javaType="java.lang.String" jdbcType="TIMESTAMP" />
+		<result column="flow_site_name" property="flowSiteName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="flow_direction_type" property="flowDirectionType" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="line_type" property="lineType" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result column="ts" property="ts" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result column="dt" property="dt" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="floor" property="floor" javaType="java.lang.Integer" jdbcType="INTEGER" />
+		<result column="grid_no" property="gridNo" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="grid_code" property="gridCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="grid_name" property="gridName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="area_code" property="areaCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="area_name" property="areaName" javaType="java.lang.String" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+		id,
+		province_agency_code,
+		province_agency_name,
+		org_code,
+		org_name,
+		site_code,
+		site_name,
+		flow_org_code,
+		flow_org_name,
+		flow_province_agency_code,
+		flow_province_agency_name,
+		flow_site_code,
+		flow_site_name,
+		flow_direction_type,
+		line_type,
+		floor,
+		grid_no,
+		grid_code,
+		grid_name,
+		area_code,
+		area_name,
+		create_time,
+		ts,
+		ref_work_grid_key
+	</sql>
+	<select id="queryCount" parameterType="com.jdl.basic.api.domain.workStation.WorkGridFlowDetailOfflineQuery" resultType="long">
+		select
+			count(1)
+		from
+		work_grid_flow_detail_offline p
+		<include refid="queryCondition"/>
+	</select>
+	<select id="queryList" parameterType="com.jdl.basic.api.domain.workStation.WorkGridFlowDetailOfflineQuery" resultMap="WorkGridFlowDetailOffline">
+		select
+		<include refid="Base_Column_List"/>
+		from
+		work_grid_flow_detail_offline p
+		<include refid="queryCondition"/>
+		<if test="pageNumber > 0">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	<sql id="queryCondition">
+		<where>
+			1=1
+			<if test="flowDirectionType != null" >
+				and p.flow_direction_type = #{flowDirectionType,jdbcType=VARCHAR}
+			</if>
+			<if test="lineType != null" >
+				and p.line_type = #{lineType,jdbcType=VARCHAR}
+			</if>
+
+			<if test="dt != null and dt != ''" >
+				and p.dt = #{dt,jdbcType=VARCHAR}
+			</if>
+			<if test="refWorkGridKey != null and refWorkGridKey != ''" >
+				and p.ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
+			</if>
+	        <if test="flowSiteCode != null and flowSiteCode != ''" >
+	            and t.flow_site_code = #{flowSiteCode,jdbcType=VARCHAR}
+	        </if> 			
+		</where>
+	</sql>
+    <update id="updateRefWorkGridKeyById" parameterType="com.jdl.basic.api.domain.workStation.WorkGridFlowDetailOffline">
+        update work_grid_flow_detail_offline
+            set 
+               ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

@@ -36,5 +36,8 @@ public class DeleteRequest<T> implements Serializable{
 	 * 删除数据列表
 	 */
 	private List<T> dataList;
-
+	/**
+	 * 操作业务主键
+	 */
+	private String operateBusinessKey;
 }

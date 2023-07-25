@@ -32,6 +32,9 @@
         <dms-java-utils-sdk.version>1.0.0-SNAPSHOT</dms-java-utils-sdk.version>
 <!--        <jd.ump.version>6.2.13-HOTFIX-T1</jd.ump.version>-->
 <!--        <jd.ump-x.version>1.0.2</jd.ump-x.version>-->
+        <jd.jmq.version>2.6.0</jd.jmq.version>
+        <jd.jmq.jspliter.version>1.0.3</jd.jmq.jspliter.version>
+        <jd.lsb.task.api>0.0.6-SNAPSHOT</jd.lsb.task.api>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -202,6 +205,63 @@
 <!--                <version>${jd.ump-x.version}</version>-->
 <!--            </dependency>-->
 
+            <!--jmq-->
+            <dependency>
+                <groupId>com.jd.jmq</groupId>
+                <artifactId>jmq-client-spring</artifactId>
+                <version>${jd.jmq.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-beans</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.jd.jmq</groupId>
+                <artifactId>jmq-client-core</artifactId>
+                <version>${jd.jmq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jd.jmq</groupId>
+                <artifactId>jmq-client-ump</artifactId>
+                <version>${jd.jmq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jd.jspliter</groupId>
+                <artifactId>jspliter-jmq</artifactId>
+                <version>${jd.jmq.jspliter.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-context</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-beans</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-context-support</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-test</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <!-- lsb 任务引擎 -->
+            <dependency>
+                <groupId>com.jd.lsb</groupId>
+                <artifactId>lsb-task-api</artifactId>
+                <version>${jd.lsb.task.api}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.jd</groupId>
+                        <artifactId>jsf</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

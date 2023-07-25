@@ -3,6 +3,7 @@ package com.jdl.basic.common.utils;
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -47,6 +48,20 @@ public class BeanUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static <T> List<T> copy(List sourceList, Class<T> tClass) {
+
+        List<T> list=new ArrayList<T>();
+
+        for (Object source : sourceList) {
+
+            T target=copy(source,tClass);
+
+            list.add(target);
+        }
+
+        return list;
     }
 
     public static <T> T copy(Object source, Class<T> tClass) {
