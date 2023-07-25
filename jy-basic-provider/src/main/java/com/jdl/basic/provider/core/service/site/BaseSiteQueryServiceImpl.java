@@ -543,8 +543,6 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
 
     private List<BasicSiteVO> convert2OwnBasicSiteList(List<BaseSiteSimpleDto> list) {
         return list.stream()
-                // 过滤有效数据
-                .filter(item -> effectiveOperateState().contains(item.getOperateState()))
                 // 转换为分拣内部使用数据
                 .map(this::convertOwnBasicSite)
                 .collect(Collectors.toList());
