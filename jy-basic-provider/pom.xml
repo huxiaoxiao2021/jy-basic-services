@@ -27,7 +27,7 @@
         <dependency>
             <groupId>com.jdl.basic</groupId>
             <artifactId>jy-basic-api</artifactId>
-            <version>1.4.8-wyh-SNAPSHOT</version>
+            <version>1.4.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.jdl.basic</groupId>
