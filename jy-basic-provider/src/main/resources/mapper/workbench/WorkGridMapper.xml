@@ -513,6 +513,8 @@
 		where
 		    yn = 1
 		and
+		    site_code = #{siteCode}
+		and
 			area_code = #{areaCode}
 	</select>
 
