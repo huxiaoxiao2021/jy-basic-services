@@ -1,10 +1,14 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
+import com.jdl.basic.api.domain.workStation.WorkAreaLabel;
+import com.jdl.basic.common.utils.ObjectHelper;
+import com.jdl.basic.provider.core.dao.workStation.WorkAreaLabelDao;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -23,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 作业区信息表--Service接口实现
- * 
+ *
  * @author wuyoude
  * @date 2023年04月25日 00:18:56
  *
@@ -35,6 +39,8 @@ public class WorkAreaServiceImpl implements WorkAreaService {
 	@Autowired
 	@Qualifier("workAreaDao")
 	private WorkAreaDao workAreaDao;
+	@Autowired
+	WorkAreaLabelDao workAreaLabelDao;
 
 	/**
 	 * 插入一条数据
@@ -54,8 +60,28 @@ public class WorkAreaServiceImpl implements WorkAreaService {
 	public Result<Boolean> updateById(WorkArea updateData){
 		Result<Boolean> result = Result.success();
 		result.setData(workAreaDao.updateById(updateData) == 1);
+		if (ObjectHelper.isNotNull(updateData.getAreaCode())){
+			updateLabels(updateData);
+		}
 		return result;
 	 }
+
+	private void updateLabels(WorkArea updateData) {
+		List<WorkAreaLabel> workAreaLabelList =workAreaLabelDao.listLabelByAreaCode(updateData.getAreaCode());
+		if (!CollectionUtils.isEmpty(workAreaLabelList)){
+			workAreaLabelDao.deleteByAreaCode(updateData);
+		}
+		if (!CollectionUtils.isEmpty(updateData.getLabels())){
+			List<WorkAreaLabel> workAreaLabels =assembleworkAreaLabels(updateData);
+			workAreaLabelDao.batchInsert(workAreaLabels);
+		}
+	}
+
+	private List<WorkAreaLabel> assembleworkAreaLabels(WorkArea updateData) {
+		List<WorkAreaLabel> workAreaLabelList =new ArrayList<>();
+		return workAreaLabelList;
+	}
+
 	/**
 	 * 根据id删除数据
 	 * @param deleteData
@@ -128,6 +154,11 @@ public class WorkAreaServiceImpl implements WorkAreaService {
 			return null;
 		}
 		//特殊字段设置
+		List<WorkAreaLabel> workAreaLabelList =workAreaLabelDao.listLabelByAreaCode(data.getAreaCode());
+		if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(workAreaLabelList)){
+			List<Integer> labels = workAreaLabelList.stream().map(workAreaLabel -> workAreaLabel.getLabelCode()).collect(Collectors.toList());
+			data.setLabels(labels);
+		}
 		return data;
 	 }
 	@Override
