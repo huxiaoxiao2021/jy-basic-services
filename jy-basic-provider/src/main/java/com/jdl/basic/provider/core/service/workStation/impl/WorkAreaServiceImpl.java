@@ -4,6 +4,7 @@ import com.jdl.basic.api.domain.workStation.WorkAreaLabel;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.core.dao.workStation.WorkAreaLabelDao;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +80,19 @@ public class WorkAreaServiceImpl implements WorkAreaService {
 
 	private List<WorkAreaLabel> assembleworkAreaLabels(WorkArea updateData) {
 		List<WorkAreaLabel> workAreaLabelList =new ArrayList<>();
+		Date now =new Date();
+		for (Integer label:updateData.getLabels()){
+			WorkAreaLabel workAreaLabel =new WorkAreaLabel();
+			workAreaLabel.setAreaCode(updateData.getAreaCode());
+			workAreaLabel.setLabelCode(label);
+			workAreaLabel.setCreateUser(updateData.getUpdateUser());
+			workAreaLabel.setCreateUserName(updateData.getUpdateUserName());
+			workAreaLabel.setUpdateUser(updateData.getUpdateUser());
+			workAreaLabel.setUpdateUserName(updateData.getUpdateUserName());
+			workAreaLabel.setCreateTime(now);
+			workAreaLabel.setUpdateTime(now);
+			workAreaLabelList.add(workAreaLabel);
+		}
 		return workAreaLabelList;
 	}
 

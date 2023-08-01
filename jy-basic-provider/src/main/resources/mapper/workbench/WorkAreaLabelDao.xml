@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jdl.basic.provider.core.dao.workStation.WorkAreaLabelDao">
   <resultMap id="BaseResultMap" type="com.jdl.basic.api.domain.workStation.WorkAreaLabel">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
-    <result column="label_code" jdbcType="TINYINT" property="labelCode" />
-    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
-    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
-    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
-    <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="yn" jdbcType="TINYINT" property="yn" />
-    <result column="ts" jdbcType="TIMESTAMP" property="ts" />
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="area_code" jdbcType="VARCHAR" property="areaCode"/>
+    <result column="label_code" jdbcType="TINYINT" property="labelCode"/>
+    <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName"/>
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+    <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    <result column="yn" jdbcType="TINYINT" property="yn"/>
+    <result column="ts" jdbcType="TIMESTAMP" property="ts"/>
   </resultMap>
   <sql id="Base_Column_List">
     id, area_code, label_code, create_user, create_user_name, update_user, update_user_name,
@@ -20,23 +21,26 @@
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List" />
+    <include refid="Base_Column_List"/>
     from work_area_label
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from work_area_label
+    delete
+    from work_area_label
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.jdl.basic.api.domain.workStation.WorkAreaLabel">
     insert into work_area_label (id, area_code, label_code,
-      create_user, create_user_name, update_user,
-      update_user_name, create_time, update_time,
-      yn, ts)
+                                 create_user, create_user_name, update_user,
+                                 update_user_name, create_time, update_time,
+                                 yn, ts)
     values (#{id,jdbcType=BIGINT}, #{areaCode,jdbcType=VARCHAR}, #{labelCode,jdbcType=TINYINT},
-      #{createUser,jdbcType=VARCHAR}, #{createUserName,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR},
-      #{updateUserName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
-      #{yn,jdbcType=TINYINT}, #{ts,jdbcType=TIMESTAMP})
+            #{createUser,jdbcType=VARCHAR}, #{createUserName,jdbcType=VARCHAR},
+            #{updateUser,jdbcType=VARCHAR},
+            #{updateUserName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateTime,jdbcType=TIMESTAMP},
+            #{yn,jdbcType=TINYINT}, #{ts,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.jdl.basic.api.domain.workStation.WorkAreaLabel">
     insert into work_area_label
@@ -111,7 +115,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jdl.basic.api.domain.workStation.WorkAreaLabel">
+  <update id="updateByPrimaryKeySelective"
+    parameterType="com.jdl.basic.api.domain.workStation.WorkAreaLabel">
     update work_area_label
     <set>
       <if test="areaCode != null">
@@ -147,38 +152,52 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jdl.basic.api.domain.workStation.WorkAreaLabel">
+  <update id="updateByPrimaryKey"
+    parameterType="com.jdl.basic.api.domain.workStation.WorkAreaLabel">
     update work_area_label
-    set area_code = #{areaCode,jdbcType=VARCHAR},
-      label_code = #{labelCode,jdbcType=TINYINT},
-      create_user = #{createUser,jdbcType=VARCHAR},
-      create_user_name = #{createUserName,jdbcType=VARCHAR},
-      update_user = #{updateUser,jdbcType=VARCHAR},
-      update_user_name = #{updateUserName,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      yn = #{yn,jdbcType=TINYINT},
-      ts = #{ts,jdbcType=TIMESTAMP}
+    set area_code        = #{areaCode,jdbcType=VARCHAR},
+        label_code       = #{labelCode,jdbcType=TINYINT},
+        create_user      = #{createUser,jdbcType=VARCHAR},
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+        update_user      = #{updateUser,jdbcType=VARCHAR},
+        update_user_name = #{updateUserName,jdbcType=VARCHAR},
+        create_time      = #{createTime,jdbcType=TIMESTAMP},
+        update_time      = #{updateTime,jdbcType=TIMESTAMP},
+        yn               = #{yn,jdbcType=TINYINT},
+        ts               = #{ts,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="listLabelByAreaCode">
     SELECT
-    <include refid="Base_Column_List" />
+    <include refid="Base_Column_List"/>
     FROM
-      work_area_label
+    work_area_label
     WHERE
-      area_code =#{areaCode}
-      AND yn = 1
+    area_code =#{areaCode}
+    AND yn = 1
   </select>
 
   <update id="deleteByAreaCode">
     update work_area_label
-    set yn =0,
-        update_time =now(),
-        update_user =#{updateUser},
+    set yn              =0,
+        update_time     =now(),
+        update_user     =#{updateUser},
         update_user_name=#{updateUserName}
-    WHERE
-      area_code =#{areaCode}
+    WHERE area_code = #{areaCode}
       AND yn = 1
   </update>
+
+  <insert id="batchInsert" parameterType="com.jdl.basic.api.domain.workStation.WorkAreaLabel">
+    insert into work_area_label (area_code, label_code,
+    create_user, create_user_name, update_user,
+    update_user_name, create_time, update_time)
+    values
+    <foreach collection="workAreaLabels" item="item" index="index" separator=",">
+      (#{item.areaCode,jdbcType=VARCHAR}, #{item.labelCode,jdbcType=TINYINT},
+      #{item.createUser,jdbcType=VARCHAR}, #{item.createUserName,jdbcType=VARCHAR},
+      #{item.updateUser,jdbcType=VARCHAR},
+      #{item.updateUserName,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
+      #{item.updateTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
 </mapper>
