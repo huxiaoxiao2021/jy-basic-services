@@ -187,12 +187,12 @@
       AND yn = 1
   </update>
 
-  <insert id="batchInsert">
+  <insert id="batchInsert" parameterType="java.util.List">
     insert into work_area_label (area_code, label_code,
     create_user, create_user_name, update_user,
     update_user_name, create_time, update_time)
     values
-    <foreach collection="workAreaLabels" item="item" index="index" separator=",">
+    <foreach collection="list" item="item" index="index" separator=",">
       (#{item.areaCode,jdbcType=VARCHAR}, #{item.labelCode,jdbcType=TINYINT},
       #{item.createUser,jdbcType=VARCHAR}, #{item.createUserName,jdbcType=VARCHAR},
       #{item.updateUser,jdbcType=VARCHAR},
