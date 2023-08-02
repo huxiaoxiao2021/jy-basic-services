@@ -187,7 +187,7 @@
       AND yn = 1
   </update>
 
-  <insert id="batchInsert" parameterType="com.jdl.basic.api.domain.workStation.WorkAreaLabel">
+  <insert id="batchInsert">
     insert into work_area_label (area_code, label_code,
     create_user, create_user_name, update_user,
     update_user_name, create_time, update_time)
