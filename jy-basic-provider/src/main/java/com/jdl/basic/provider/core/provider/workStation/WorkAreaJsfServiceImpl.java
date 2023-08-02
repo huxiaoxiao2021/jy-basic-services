@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.provider.workStation;
 
 
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,7 +17,7 @@ import com.jdl.basic.api.service.workStation.WorkAreaJsfService;
 
 /**
  * 作业区信息表--JsfService接口实现
- * 
+ *
  * @author wuyoude
  * @date 2023年04月25日 00:18:56
  *
@@ -75,4 +76,8 @@ public class WorkAreaJsfServiceImpl implements WorkAreaJsfService {
 		return Result.success(workAreaService.queryByAreaCode(areaCode));
 	}
 
+	@Override
+	public Result<List<WorkArea>> listAreaByLabel(WorkArea workArea) {
+		return Result.success(workAreaService.listAreaByLabel(workArea));
+	}
 }

@@ -255,4 +255,8 @@ public class WorkAreaServiceImpl implements WorkAreaService {
 		return workAreaDao.queryByAreaCodeList(areaCodeList);
 	}
 
+	@Override
+	public List<WorkArea> listAreaByLabel(WorkArea workArea) {
+		return workAreaDao.listAreaByLabel(workArea);
+	}
 }
