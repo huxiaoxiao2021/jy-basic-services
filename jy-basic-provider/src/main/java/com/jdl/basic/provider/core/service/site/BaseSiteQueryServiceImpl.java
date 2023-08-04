@@ -133,8 +133,8 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
             BasicSiteVO basicSiteVO =new BasicSiteVO();
             basicSiteVO.setSiteCode(baseSiteSimpleDto.getSiteCode());
             basicSiteVO.setSiteName(baseSiteSimpleDto.getSiteName());
-            //basicSiteVO.setProvinceAgencyCode(baseSiteSimpleDto.getProvinceAgencyCode());
-            //basicSiteVO.setProvinceAgencyName(baseSiteSimpleDto.getProvinceAgencyName());
+            basicSiteVO.setProvinceAgencyCode(baseSiteSimpleDto.getProvinceAgencyCode());
+            basicSiteVO.setProvinceAgencyName(baseSiteSimpleDto.getProvinceAgencyName());
             return basicSiteVO;
         }).collect(Collectors.toList());
     }
@@ -152,7 +152,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
 
     private BaseSite convertSiteQuery(SiteQueryCondition siteQueryCondition) {
         BaseSite siteQuery = new BaseSite();
-        //siteQuery.setSubTypeList(siteQueryCondition.getSubTypes());
+        siteQuery.setSubTypeList(siteQueryCondition.getSubTypes());
         return siteQuery;
     }
 
