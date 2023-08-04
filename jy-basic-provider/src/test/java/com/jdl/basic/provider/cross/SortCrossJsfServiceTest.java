@@ -53,10 +53,11 @@ public class SortCrossJsfServiceTest {
         siteQueryPager.setPageNo(1);
         siteQueryPager.setPageSize(100);
 
+        List<Integer> subTypes =new ArrayList<>();
+        subTypes.addAll(WorkSiteTypeEnum.DMS_TYPE.getSubTypes());//分拣
+
         SiteQueryCondition siteQueryCondition =new SiteQueryCondition();
-        List<Integer> sub =new ArrayList<>();
-        sub.add(1);
-        siteQueryCondition.setSubTypes(sub);
+        siteQueryCondition.setSubTypes(subTypes);
         siteQueryPager.setSearchVo(siteQueryCondition);
         Result<Pager<BasicSiteVO>> rs =siteQueryService.queryJySiteByConditionFromBasicSite(siteQueryPager);
         log.info("===========rs:{}",JsonHelper.toJSONString(rs));
