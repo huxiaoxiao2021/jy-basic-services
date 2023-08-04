@@ -152,7 +152,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
 
     private BaseSite convertSiteQuery(SiteQueryCondition siteQueryCondition) {
         BaseSite siteQuery = new BaseSite();
-        siteQuery.setSubTypeList(siteQueryCondition.getSubTypes());
+        //siteQuery.setSubTypeList(siteQueryCondition.getSubTypes());
         return siteQuery;
     }
 
