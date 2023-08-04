@@ -277,6 +277,18 @@
 			   yn = 0
 		where id = #{id,jdbcType=BIGINT}
 	</update>
+    <update id="deleteByRefGridKey" parameterType="com.jdl.basic.api.domain.workStation.WorkGridFlowDirection">
+        update work_grid_flow_direction
+            set 
+            <if test="updateUser != null" >
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+               yn = 0
+        where ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
+    </update>	
     <select id="queryByIds" parameterType="com.jdl.basic.api.domain.workStation.DeleteRequest" resultMap="WorkGridFlowDirection">
         select
             <include refid="Base_Column_List"/>

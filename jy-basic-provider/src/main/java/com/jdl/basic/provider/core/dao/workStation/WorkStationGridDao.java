@@ -191,4 +191,10 @@ public interface WorkStationGridDao {
 	 * @return
 	 */	
 	List<WorkStationGrid> queryListForManagerSiteScan(WorkStationGridQuery query);
+	/**
+	 * 查询网格下的数据条数
+	 * @param refGridKey
+	 * @return
+	 */
+	int queryCountByRefGridKey(String refGridKey);
 }

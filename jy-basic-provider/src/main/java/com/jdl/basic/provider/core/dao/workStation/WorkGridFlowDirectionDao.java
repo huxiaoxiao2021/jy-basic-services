@@ -115,4 +115,10 @@ public interface WorkGridFlowDirectionDao {
 	 */
 	List<WorkGridFlowDirectionVo> queryFlowDataForSelect3(WorkGridFlowDirectionQuery query);	
 	long queryFlowDataForSelectCount3(WorkGridFlowDirectionQuery query);
+	/**
+	 * 删除网格下流向数据
+	 * @param deleteData
+	 * @return
+	 */
+	int deleteByRefGridKey(WorkGridFlowDirection deleteData);
 }

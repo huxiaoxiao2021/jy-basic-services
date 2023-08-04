@@ -433,4 +433,8 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		result.setData(workGridFlowDirectionDao.queryCount(query));
 		return result;
 	}
+	@Override
+	public int deleteByRefGridKey(WorkGridFlowDirection deleteData) {
+		return workGridFlowDirectionDao.deleteByRefGridKey(deleteData);
+	}
 }

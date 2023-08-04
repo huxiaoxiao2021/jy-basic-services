@@ -146,4 +146,10 @@ public interface WorkGridService {
 	 * @return
 	 */
 	List<WorkGrid> queryListForManagerSiteScan(WorkGridQuery workGridQuery);
+	/**
+	 * 根据key删除一条记录
+	 * @param workGridKey
+	 * @return
+	 */
+	Result<Boolean> deleteByWorkGridKey(WorkGrid deleteData);
 }
