@@ -1,6 +1,10 @@
 package com.jdl.basic.provider.core.manager.basicSiteQueryWS;
 
+import com.jd.ql.basic.domain.BaseSite;
 import com.jd.ql.basic.dto.BaseSiteInfoDto;
+import com.jd.ql.basic.dto.BaseSiteSimpleDto;
+import com.jd.ql.basic.dto.PageDto;
+import java.util.List;
 
 /**
  * @author liwenji
@@ -15,4 +19,6 @@ public interface IBasicSiteQueryWSManager {
      * @return
      */
     BaseSiteInfoDto getBaseSiteInfoBySiteId(Integer siteCode);
+
+    PageDto<List<BaseSiteSimpleDto>> querySiteByCondition(BaseSite site, PageDto pageDto);
 }

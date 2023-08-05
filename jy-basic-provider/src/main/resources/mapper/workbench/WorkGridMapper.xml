@@ -442,9 +442,15 @@
             <if test="siteType != null" >
                 and t.site_type = #{siteType,jdbcType=INTEGER}
             </if>
-						<if test="businessKey != null and businessKey != ''" >
-							and t.business_key = #{businessKey,jdbcType=VARCHAR}
-						</if>
+            <if test="businessKey != null and businessKey != ''" >
+                and t.business_key = #{businessKey,jdbcType=VARCHAR}
+            </if>
+            <if test="configFlowStatus != null">
+                AND t.config_flow_status = #{configFlowStatus,jdbcType=INTEGER}
+            </if>
+            <if test="gridNo != null and gridNo != '' " >
+                AND t.grid_no = #{gridNo,jdbcType=VARCHAR}
+            </if>
 		</where>
 	</sql>
 
@@ -507,6 +513,8 @@
 		where
 		    yn = 1
 		and
+		    site_code = #{siteCode}
+		and
 			area_code = #{areaCode}
 	</select>
 
@@ -521,4 +529,31 @@
 		and
 			site_code = #{siteCode}
 	</select>
+	
+    <select id="querySiteListForManagerScan" parameterType="com.jdl.basic.api.domain.workStation.WorkGridQuery" resultType="java.lang.Integer">
+        select distinct g.site_code
+        from
+            work_grid g
+        where g.yn = 1 
+          and g.area_code in
+        <foreach collection="areaCodeList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=VARCHAR}
+        </foreach> 
+        order by g.site_code  
+        limit #{offset}, #{limit}
+    </select> 
+    <select id="queryListForManagerSiteScan" parameterType="com.jdl.basic.api.domain.workStation.WorkGridQuery" resultMap="WorkGrid">
+        select 
+            <include refid="Base_Column_List"/>
+        from
+            work_grid g
+        where g.yn = 1 
+          and g.site_code = #{siteCode,jdbcType=INTEGER}
+          and g.area_code in
+        <foreach collection="areaCodeList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        order by id  
+        limit #{offset}, #{limit}
+    </select>	
 </mapper>

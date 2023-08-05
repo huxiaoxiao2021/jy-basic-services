@@ -180,7 +180,7 @@
 
 	<update id="deleteById" parameterType="com.jdl.basic.api.domain.workStation.WorkArea">
 		update work_area
-			set 
+			set
 			<if test="updateUser != null" >
 				update_user = #{updateUser,jdbcType=VARCHAR},
 			</if>
@@ -203,8 +203,8 @@
             <include refid="Base_Column_List"/>
         from
             work_area t
-        where yn = 1 
-          and area_code = #{areaCode,jdbcType=VARCHAR} 
+        where yn = 1
+          and area_code = #{areaCode,jdbcType=VARCHAR}
         limit 1
     </select>
     <select id="queryByAreaCodeList" parameterType="java.util.List" resultMap="WorkArea">
@@ -212,13 +212,13 @@
             <include refid="Base_Column_List"/>
         from
             work_area t
-        where yn = 1 
-          and area_code in 
+        where yn = 1
+          and area_code in
         <foreach collection="list" item="item" open="(" close=")" separator=",">
             #{item,jdbcType=VARCHAR}
         </foreach>
     </select>
-    
+
 	<select id="queryList" resultMap="WorkArea">
 		select
 			<include refid="Base_Column_List"/>
@@ -238,10 +238,22 @@
 
 	<sql id="queryCondition">
 		<where>
-			yn = 1 
+			yn = 1
 	        <if test="areaCode != null and areaCode != ''" >
 	            and area_code = #{areaCode,jdbcType=VARCHAR}
-	        </if>			
+	        </if>
 		</where>
 	</sql>
+	<select id="listAreaByLabel" resultMap="WorkArea">
+		SELECT wa.area_code,wa.area_name
+		FROM
+		     work_area wa
+		         INNER JOIN work_area_label wal ON wal.area_code =wa.area_code
+		WHERE wal.label_code in
+		<foreach collection="labels" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+		  AND wal.yn =1
+	</select>
+
 </mapper>

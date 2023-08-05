@@ -316,13 +316,6 @@
         user_status = 1
     and
         site_code = #{siteCode, jdbcType=INTEGER}
-    <if test="natureList != null and natureList.size() > 0">
-    and nature in
-      <foreach collection="natureList" item="item" separator="," open="(" close=")">
-        #{item}
-      </foreach>
-    </if>
-    limit 10000
   </select>
 
   <select id="queryByUserIds" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -362,20 +355,30 @@
         grid_distribute_flag = 0
   </select>
 
-  <select id="queryDifference" resultMap="BaseResultMap">
+  <select id="queryNewUserCountByTime" resultType="java.lang.Integer">
     select
-        <include refid="Base_Column_List"/>
+        count(*)
     from
         jy_user
     where
-    (
         entry_date <![CDATA[ >= ]]> #{entryDate,jdbcType=VARCHAR}
-    or
-        quit_action_date <![CDATA[ >= ]]> #{quitActionDate,jdbcType=VARCHAR}
-    )
     and
         site_code = #{siteCode, jdbcType=INTEGER}
-    limit 10000
+    and
+        user_status = 1
+  </select>
+
+  <select id="queryQuitUserCountByTime" resultType="java.lang.Integer">
+    select
+        count(*)
+    from
+        jy_user
+    where
+        quit_action_date <![CDATA[ >= ]]> #{quitActionDate,jdbcType=VARCHAR}
+    and
+        site_code = #{siteCode, jdbcType=INTEGER}
+    and
+        user_status = 2
   </select>
 
   <select id="batchQueryQuitUserByUserId" resultMap="BaseResultMap">

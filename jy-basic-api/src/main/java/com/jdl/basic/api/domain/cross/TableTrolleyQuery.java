@@ -3,6 +3,8 @@ package com.jdl.basic.api.domain.cross;
 import com.jdl.basic.api.domain.BasePagerCondition;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author liwenji
  * @date 2022-11-15 17:43
@@ -29,4 +31,9 @@ public class TableTrolleyQuery extends BasePagerCondition {
      * 目的地场地ID
      */
     private Integer siteCode;
+
+    /**
+     * 目的地list(批量查询)
+     */
+    private List<Integer> siteCodeList;
 }

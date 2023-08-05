@@ -40,5 +40,10 @@ public interface SiteQueryService {
     Result<AreaVO> queryAreaVOInfoByCode(String areaCode);
 
 
-
+    /**
+     * 查询拣运场地
+     * @param siteQueryPager
+     * @return
+     */
+    Result<Pager<BasicSiteVO>> queryJySiteByConditionFromBasicSite(Pager<SiteQueryCondition> siteQueryPager);
 }

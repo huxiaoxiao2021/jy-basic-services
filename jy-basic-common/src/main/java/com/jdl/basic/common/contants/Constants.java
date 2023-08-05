@@ -1539,8 +1539,9 @@ public class Constants {
      */
     public static final int OPERATE_TYPE_CANCEL_L = 0;
     public static final int OPERATE_TYPE_CANCEL_Y = 1;
+  public static final int CONSTANT_NUMBER_TEN = 10;
 
-    /**
+  /**
      * 线路类型-默认值0
      */
     public static Integer LINE_TYPE_DEFAULT = 0;

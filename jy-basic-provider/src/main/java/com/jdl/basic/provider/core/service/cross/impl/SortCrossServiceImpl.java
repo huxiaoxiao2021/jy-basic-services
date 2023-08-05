@@ -8,6 +8,7 @@ import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.BeanUtils;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.basic.provider.common.Jimdb.CacheService;
 import com.jdl.basic.provider.core.dao.cross.SortCrossDetailDao;
 import com.jdl.basic.provider.core.service.cross.SortCrossService;
@@ -52,6 +53,16 @@ public class SortCrossServiceImpl implements SortCrossService {
         if(query.getPageNumber() < Constants.YN_YES || query.getPageSize() <= Constants.YN_NO){
             return null;
         }
+        
+        // 如果查询条件中包含站点ID，执行刷站点类型逻辑
+        if (!StringUtils.isEmpty(query.getSiteCode())) {
+            List<SortCrossDetail> details = crossDetailDao.queryNotInitPage(query);
+            if (!CollectionUtils.isEmpty(details)){
+                for (SortCrossDetail detail : details) {
+                    sortCrossService.initSiteType(detail);
+                }
+            }
+        }
         PageDto<SortCrossDetail> pageDto = new PageDto<>();
         query.setLimit(query.getPageSize());
         query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
@@ -65,10 +76,10 @@ public class SortCrossServiceImpl implements SortCrossService {
         }
         return pageDto;
     }
-
+    
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossServiceImpl.updateEnableByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public boolean updateEnableByIds(SortCrossUpdateRequest request) {
+    public boolean updateEnableByIds(SortCrossUpdateRequest  request) {
         if (request == null 
                 || CollectionUtils.isEmpty(request.getIds()) 
                 || request.getEnableFlag() == null
@@ -82,7 +93,7 @@ public class SortCrossServiceImpl implements SortCrossService {
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossServiceImpl.queryNotInit", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public List<SortCrossDetail> queryNotInit(Integer dmsId) {
-        return crossDetailDao.queryNotInit(dmsId);
+        return crossDetailDao.queryNotInitBySiteCode(dmsId);
     }
 
     @Override
@@ -186,5 +197,29 @@ public class SortCrossServiceImpl implements SortCrossService {
             cacheService.del(key);
         }
         return true;
+    }
+
+    @Override
+    public TableTrolleyJsfResp queryCrossCodeTableTrolleyBySiteFlow(TableTrolleyQuery tableTrolleyQuery) {
+        TableTrolleyJsfResp tableTrolley = new TableTrolleyJsfResp();
+        List<TableTrolleyJsfDto> tableTrolleyList = crossDetailDao.queryCrossCodeTableTrolleyBySiteFlow(tableTrolleyQuery);
+        tableTrolley.setTableTrolleyDtoJsfList(tableTrolleyList);
+        return tableTrolley;
+    }
+
+    @Override
+    public TableTrolleyJsfResp queryCrossCodeTableTrolleyBySiteFlowList(TableTrolleyQuery tableTrolleyQuery) {
+        TableTrolleyJsfResp tableTrolley = new TableTrolleyJsfResp();
+        List<TableTrolleyJsfDto> tableTrolleyList = crossDetailDao.queryCrossCodeTableTrolleyBySiteFlowList(tableTrolleyQuery);
+        tableTrolley.setTableTrolleyDtoJsfList(tableTrolleyList);
+        return tableTrolley;
+    }
+
+    @Override
+    public TableTrolleyJsfResp querySiteFlowByCrossCodeTableTrolley(TableTrolleyQuery tableTrolleyQuery) {
+        TableTrolleyJsfResp tableTrolley = new TableTrolleyJsfResp();
+        List<TableTrolleyJsfDto> tableTrolleyList = crossDetailDao.querySiteFlowByCrossCodeTableTrolley(tableTrolleyQuery);
+        tableTrolley.setTableTrolleyDtoJsfList(tableTrolleyList);
+        return tableTrolley;
     }
 }

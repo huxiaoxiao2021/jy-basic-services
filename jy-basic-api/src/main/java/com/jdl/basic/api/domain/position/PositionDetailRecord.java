@@ -99,5 +99,8 @@ public class PositionDetailRecord extends PositionRecord {
 	 */
 	private String supplierName;
 	
-
+	/**
+	 * 关联场地网格key:work_grid
+	 */
+	private String refWorkGridKey;
 }

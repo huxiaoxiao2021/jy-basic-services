@@ -33,7 +33,7 @@ public interface UserJsfService {
      * @param dto
      * @return
      */
-    Result<List<JyUserDto>> queryDifference(JyUserQueryDto dto);
+    Result<UserChangeDto> queryDifference(JyUserQueryDto dto);
 
     /**
      * 根据id批量查询离职员工
