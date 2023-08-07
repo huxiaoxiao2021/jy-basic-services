@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -431,6 +432,20 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	public Result<Long> queryCount(WorkGridFlowDirectionQuery query) {
 		Result<Long> result = Result.success();
 		result.setData(workGridFlowDirectionDao.queryCount(query));
+		return result;
+	}
+
+	/**
+	 * 根据流入code和type查询
+	 *
+	 * @param flowDirectionType
+	 * @param flowSiteCode
+	 * @return
+	 */
+	@Override
+	public Result<List<String>> queryFlowDataForFlowSiteCode(Integer flowDirectionType,Integer flowSiteCode) {
+		Result<List<String>> result = Result.success();
+		result.setData(workGridFlowDirectionDao.queryFlowDataForFlowSiteCode(flowDirectionType,flowSiteCode));
 		return result;
 	}
 }

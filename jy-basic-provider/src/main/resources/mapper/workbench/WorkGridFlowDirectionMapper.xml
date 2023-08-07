@@ -439,8 +439,8 @@
                <include refid="queryFlowDataForSelectConditionOffline"/>
                and o.flow_site_code = t.flow_site_code
             )
-    </select>        
-    <sql id="queryFlowDataForSelectCondition">
+    </select>
+	<sql id="queryFlowDataForSelectCondition">
           where t.yn = 1 
 	        and t.ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
 	        and t.line_type = #{lineType,jdbcType=INTEGER}
@@ -448,7 +448,7 @@
           <if test="flowSiteCode != null and flowSiteCode != ''" >
               and t.flow_site_code = #{flowSiteCode,jdbcType=INTEGER}
           </if>
-    </sql>     
+	</sql>
     <sql id="queryFlowDataForSelectConditionOffline">
         where o.dt = #{dt,jdbcType=VARCHAR}    
 	      and o.ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
@@ -457,5 +457,11 @@
         <if test="flowSiteCode != null and flowSiteCode != ''" >
           and o.flow_site_code = #{flowSiteCode,jdbcType=INTEGER}
          </if>                     
-    </sql> 
+    </sql>
+
+	<select id="queryFlowDataForFlowSiteCode" resultType="java.lang.String">
+		select ref_work_grid_key
+		from work_grid_flow_direction
+		where flow_site_code = #{flowSiteCode,jdbcType=INTEGER}
+	</select>
 </mapper>

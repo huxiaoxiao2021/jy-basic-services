@@ -6,6 +6,7 @@ import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionVo;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 场地网格流向表--Dao接口
@@ -115,4 +116,14 @@ public interface WorkGridFlowDirectionDao {
 	 */
 	List<WorkGridFlowDirectionVo> queryFlowDataForSelect3(WorkGridFlowDirectionQuery query);	
 	long queryFlowDataForSelectCount3(WorkGridFlowDirectionQuery query);
+
+
+	/**
+	 * 根据流入code和type查询
+	 *
+	 * @param flowDirectionType
+	 * @param flowSiteCode
+	 * @return
+	 */
+	List<String> queryFlowDataForFlowSiteCode(@Param("flowDirectionType")Integer flowDirectionType,@Param("flowSiteCode") Integer flowSiteCode);
 }
