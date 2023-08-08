@@ -84,5 +84,38 @@ public class CollectBoxFlowDirectionPushConfDto {
      * 更新时间
      */
     private String updateDate;
+
+    /**
+     * 始发省区编码
+     */
+    private String startProvinceAgencyCode;
+    /**
+     * 始发省区名称
+     */
+    private String startProvinceAgencyName;
+    /**
+     * 始发枢纽编码
+     */
+    private String startAreaHubCode;
+    /**
+     * 始发枢纽名称
+     */
+    private String startAreaHubName;
+    /**
+     * 目的省区编码
+     */
+    private String endProvinceAgencyCode;
+    /**
+     * 目的省区名称
+     */
+    private String endProvinceAgencyName;
+    /**
+     * 目的枢纽编码
+     */
+    private String endAreaHubCode;
+    /**
+     * 目的枢纽名称
+     */
+    private String endAreaHubName;
     
 }

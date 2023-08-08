@@ -83,4 +83,17 @@ public interface EasyFreezeSiteDao {
             , redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
     EasyFreezeSitePO selectOneConfigBysiteCode(@Param("siteCode") Integer siteCode, @Param("useState") Integer useState);
 
+    /**
+     * 刷数-分页查询
+     * @param startId
+     * @return
+     */
+    List<EasyFreezeSitePO> brushQueryAllByPage(Integer startId);
+
+    /**
+     * 刷数-批量更新
+     * @param list
+     * @return
+     */
+    Integer brushUpdateById(List<EasyFreezeSitePO> list);
 }

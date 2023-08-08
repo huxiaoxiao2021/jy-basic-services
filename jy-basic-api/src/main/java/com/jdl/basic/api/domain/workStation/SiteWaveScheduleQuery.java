@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 public class SiteWaveScheduleQuery extends BasePagerCondition {
 
+    private static final long serialVersionUID = 954334359703842447L;
+    
     /**
      * 区域编码
      */
@@ -20,4 +22,13 @@ public class SiteWaveScheduleQuery extends BasePagerCondition {
      * 分页大小
      */
     private Integer pageSize;
+
+    /**
+     * 省区编码
+     */
+    private String provinceAgencyCode;
+    /**
+     * 枢纽编码
+     */
+    private String areaHubCode;
 }

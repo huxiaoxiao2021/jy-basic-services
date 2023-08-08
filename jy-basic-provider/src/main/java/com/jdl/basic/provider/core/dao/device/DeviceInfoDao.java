@@ -4,6 +4,8 @@ import com.jdl.basic.api.domain.device.DeviceInfo;
 import com.jdl.basic.api.dto.device.qo.DeviceInfoQo;
 import com.jdl.basic.provider.core.dao.base.BaseDao;
 
+import java.util.List;
+
 /**
  * Description: <br>
  * Copyright: Copyright (c) 2020<br>
@@ -14,4 +16,17 @@ import com.jdl.basic.provider.core.dao.base.BaseDao;
  */
 public interface DeviceInfoDao extends BaseDao<DeviceInfo, DeviceInfoQo> {
 
+    /**
+     * 刷数-分页查询
+     * @param startId
+     * @return
+     */
+    List<DeviceInfo> brushQueryAllByPage(Integer startId);
+
+    /**
+     * 刷数-批量更新
+     * @param list
+     * @return
+     */
+    Integer brushUpdateById(List<DeviceInfo> list);
 }

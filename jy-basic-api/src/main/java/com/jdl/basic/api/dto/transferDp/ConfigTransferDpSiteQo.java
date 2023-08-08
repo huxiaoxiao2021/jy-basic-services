@@ -47,4 +47,12 @@ public class ConfigTransferDpSiteQo extends BaseQuery implements Serializable {
 
     List<Long> ids;
 
+    /**
+     * 交接省区编码
+     */
+    private String handoverProvinceAgencyCode;
+    /**
+     * 交接枢纽编码
+     */
+    private String handoverAreaHubCode;
 }

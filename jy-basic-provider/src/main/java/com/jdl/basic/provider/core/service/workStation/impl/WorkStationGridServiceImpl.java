@@ -21,13 +21,13 @@ import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringHelper;
 import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationGridDao;
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.machine.WorkStationGridMachineService;
 import com.jdl.basic.provider.core.service.position.PositionRecordService;
 import com.jdl.basic.provider.core.service.workStation.WorkAbnormalGridBindingService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationService;
-import com.jdl.basic.rpc.Rpc.BaseMajorRpc;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
@@ -64,7 +64,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	WorkStationService workStationService;
 
 	@Autowired
-	private BaseMajorRpc baseMajorManager;
+	private BaseMajorManager baseMajorManager;
 	@Autowired
 	private IGenerateObjectId genObjectId;
 
@@ -142,6 +142,8 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(siteType == null) {
 			siteType = WorkSiteTypeEnum.OTHER;
 		}
+		// fill base info
+		fillBaseInfo(workGrid, siteInfo);
 		workGrid.setSiteType(siteType.getCode());
 		workGrid.setSiteTypeName(siteType.getName());
 		Result<WorkGrid> saveResult= workGridService.saveData(workGrid);
@@ -150,6 +152,15 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			return saveResult.getData();
 		}
 		return null;
+	}
+
+	private void fillBaseInfo(WorkGrid workGrid, BaseStaffSiteOrgDto siteInfo) {
+		workGrid.setOrgCode(siteInfo == null ? -1 : siteInfo.getOrgId());
+		workGrid.setOrgName(siteInfo == null ? Constants.EMPTY_FILL : siteInfo.getOrgName());
+		workGrid.setProvinceAgencyCode(siteInfo == null ? Constants.EMPTY_FILL : siteInfo.getProvinceAgencyCode());
+		workGrid.setProvinceAgencyName(siteInfo == null ? Constants.EMPTY_FILL : siteInfo.getProvinceAgencyName());
+		workGrid.setAreaHubCode(siteInfo == null ? Constants.EMPTY_FILL : siteInfo.getAreaCode());
+		workGrid.setAreaHubName(siteInfo == null ? Constants.EMPTY_FILL : siteInfo.getAreaName());
 	}
 
 	private void addMachine(WorkStationGrid insertData) {
@@ -255,6 +266,10 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		}
 		data.setOrgName(orgName);
 		data.setSiteName(siteInfo.getSiteName());
+		data.setProvinceAgencyCode(StringUtils.isEmpty(siteInfo.getProvinceAgencyCode()) ? Constants.EMPTY_FILL: siteInfo.getProvinceAgencyCode());
+		data.setProvinceAgencyName(StringUtils.isEmpty(siteInfo.getProvinceAgencyName()) ? Constants.EMPTY_FILL: siteInfo.getProvinceAgencyName());
+		data.setAreaHubCode(StringUtils.isEmpty(siteInfo.getAreaCode()) ? Constants.EMPTY_FILL: siteInfo.getAreaCode());
+		data.setAreaName(StringUtils.isEmpty(siteInfo.getAreaName()) ? Constants.EMPTY_FILL: siteInfo.getAreaName());
 
 		WorkStation workStationCheckQuery = new WorkStation();
 		workStationCheckQuery.setWorkCode(workCode);

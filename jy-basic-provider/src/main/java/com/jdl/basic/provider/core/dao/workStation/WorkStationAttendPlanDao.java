@@ -1,6 +1,5 @@
 package com.jdl.basic.provider.core.dao.workStation;
 
-import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkStationAttendPlan;
 import com.jdl.basic.api.domain.workStation.WorkStationAttendPlanQuery;
@@ -88,4 +87,18 @@ public interface WorkStationAttendPlanDao {
 	 * @return
 	 */
 	int deleteByIds(DeleteRequest<WorkStationAttendPlan> deleteRequest);
+
+	/**
+	 * 刷数-分页查询
+	 * @param startId
+	 * @return
+	 */
+	List<WorkStationAttendPlan> brushQueryAllByPage(Integer startId);
+
+	/**
+	 * 刷数-批量更新
+	 * @param list
+	 * @return
+	 */
+	Integer brushUpdateById(List<WorkStationAttendPlan> list);
 }

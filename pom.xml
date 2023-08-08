@@ -12,7 +12,6 @@
         <module>jy-basic-api</module>
         <module>jy-basic-common</module>
         <module>jy-basic-provider</module>
-        <module>jy-basic-rpc</module>
     </modules>
 
     <properties>
@@ -35,6 +34,9 @@
         <jd.jmq.version>2.6.0</jd.jmq.version>
         <jd.jmq.jspliter.version>1.0.3</jd.jmq.jspliter.version>
         <jd.lsb.task.api>0.0.6-SNAPSHOT</jd.lsb.task.api>
+        <elasticsearch.transport.version>6.3.2</elasticsearch.transport.version>
+        <ql.basic.version>2.0.15-TEST-SNAPSHOT</ql.basic.version>
+        <laf.config.version>1.1.0</laf.config.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -261,6 +263,27 @@
                         <artifactId>jsf</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <!-- es 6.3.2 -->
+            <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>transport</artifactId>
+                <version>${elasticsearch.transport.version}</version>
+            </dependency>
+
+            <!--青龙基础资料-->
+            <dependency>
+                <groupId>com.jd.ql.basic</groupId>
+                <artifactId>ql-basic-facade</artifactId>
+                <version>${ql.basic.version}</version>
+            </dependency>
+
+            <!-- ducc config -->
+            <dependency>
+                <groupId>com.jd.laf.config</groupId>
+                <artifactId>laf-config-client-jd-springboot-starter</artifactId>
+                <version>${laf.config.version}</version>
+                <type>pom</type>
             </dependency>
         </dependencies>
     </dependencyManagement>

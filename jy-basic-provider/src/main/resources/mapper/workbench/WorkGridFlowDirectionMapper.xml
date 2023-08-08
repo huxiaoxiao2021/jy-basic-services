@@ -11,10 +11,18 @@
 		<result column="site_name" property="siteName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="org_code" property="orgCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
 		<result column="org_name" property="orgName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="province_agency_code" property="provinceAgencyCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="province_agency_name" property="provinceAgencyName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="area_hub_code" property="areaHubCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="area_hub_name" property="areaHubName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="flow_site_code" property="flowSiteCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
 		<result column="flow_site_name" property="flowSiteName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="flow_org_code" property="flowOrgCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
 		<result column="flow_org_name" property="flowOrgName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="flow_province_agency_code" property="flowProvinceAgencyCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="flow_province_agency_name" property="flowProvinceAgencyName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="flow_area_hub_code" property="flowAreaHubCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="flow_area_hub_name" property="flowAreaHubName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="create_user" property="createUser" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="update_user" property="updateUser" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
@@ -31,10 +39,18 @@
         <result column="site_name" property="siteName" javaType="java.lang.String" jdbcType="VARCHAR" />
         <result column="org_code" property="orgCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
         <result column="org_name" property="orgName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="province_agency_code" property="provinceAgencyCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="province_agency_name" property="provinceAgencyName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="area_hub_code" property="areaHubCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="area_hub_name" property="areaHubName" javaType="java.lang.String" jdbcType="VARCHAR" />
         <result column="flow_site_code" property="flowSiteCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
         <result column="flow_site_name" property="flowSiteName" javaType="java.lang.String" jdbcType="VARCHAR" />
         <result column="flow_org_code" property="flowOrgCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
         <result column="flow_org_name" property="flowOrgName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="flow_province_agency_code" property="flowProvinceAgencyCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="flow_province_agency_name" property="flowProvinceAgencyName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="flow_area_hub_code" property="flowAreaHubCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="flow_area_hub_name" property="flowAreaHubName" javaType="java.lang.String" jdbcType="VARCHAR" />
         <result column="create_user" property="createUser" javaType="java.lang.String" jdbcType="VARCHAR" />
         <result column="update_user" property="updateUser" javaType="java.lang.String" jdbcType="VARCHAR" />
         <result column="create_time" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
@@ -46,9 +62,11 @@
         
     </resultMap>
 	<sql id="Base_Column_List" >
-		id,ref_work_grid_key,line_type,flow_direction_type,site_code,site_name,
-		org_code,org_name,flow_site_code,flow_site_name,flow_org_code,
-		flow_org_name,create_user,update_user,create_time,update_time,
+		id,ref_work_grid_key,line_type,flow_direction_type,site_code,site_name,org_code,org_name,
+		province_agency_code,province_agency_name,area_hub_code,area_hub_name,
+		flow_site_code,flow_site_name,flow_org_code,flow_org_name,
+		flow_province_agency_code,flow_province_agency_name,flow_area_hub_code,flow_area_hub_name,
+		create_user,update_user,create_time,update_time,
 		yn,ts
 	</sql>
 	<insert id="insert" parameterType="com.jdl.basic.api.domain.workStation.WorkGridFlowDirection" useGeneratedKeys="true" keyProperty="id">
@@ -79,6 +97,18 @@
 				<if test="orgName != null" >
 					org_name,
 				</if>
+				<if test="provinceAgencyCode != null" >
+					province_agency_code,
+				</if>
+				<if test="provinceAgencyName != null" >
+					province_agency_name,
+				</if>
+				<if test="areaHubCode != null" >
+					area_hub_code,
+				</if>
+				<if test="areaHubName != null" >
+					area_hub_name,
+				</if>
 				<if test="flowSiteCode != null" >
 					flow_site_code,
 				</if>
@@ -90,6 +120,18 @@
 				</if>
 				<if test="flowOrgName != null" >
 					flow_org_name,
+				</if>
+				<if test="flowProvinceAgencyCode != null" >
+					flow_province_agency_code,
+				</if>
+				<if test="flowProvinceAgencyName != null" >
+					flow_province_agency_name,
+				</if>
+				<if test="flowAreaHubCode != null" >
+					flow_area_hub_code,
+				</if>
+				<if test="flowAreaHubName != null" >
+					flow_area_hub_name,
 				</if>
 				<if test="createUser != null" >
 					create_user,
@@ -138,6 +180,18 @@
 				<if test="orgName != null" >
 					#{orgName,jdbcType=VARCHAR},
 				</if>
+				<if test="provinceAgencyCode != null" >
+					#{provinceAgencyCode,jdbcType=VARCHAR},
+				</if>
+				<if test="provinceAgencyName != null" >
+					#{provinceAgencyName,jdbcType=VARCHAR},
+				</if>
+				<if test="areaHubCode != null" >
+					#{areaHubCode,jdbcType=VARCHAR},
+				</if>
+				<if test="areaHubName != null" >
+					#{areaHubName,jdbcType=VARCHAR},
+				</if>
 				<if test="flowSiteCode != null" >
 					#{flowSiteCode,jdbcType=INTEGER},
 				</if>
@@ -149,6 +203,18 @@
 				</if>
 				<if test="flowOrgName != null" >
 					#{flowOrgName,jdbcType=VARCHAR},
+				</if>
+				<if test="flowProvinceAgencyCode != null" >
+					#{flowProvinceAgencyCode,jdbcType=VARCHAR},
+				</if>
+				<if test="flowProvinceAgencyName != null" >
+					#{flowProvinceAgencyName,jdbcType=VARCHAR},
+				</if>
+				<if test="flowAreaHubCode != null" >
+					#{flowAreaHubCode,jdbcType=VARCHAR},
+				</if>
+				<if test="flowAreaHubName != null" >
+					#{flowAreaHubName,jdbcType=VARCHAR},
 				</if>
 				<if test="createUser != null" >
 					#{createUser,jdbcType=VARCHAR},
@@ -181,10 +247,12 @@
 		        site_name,
 		        org_code,
 		        org_name,
+				province_agency_code,province_agency_name,area_hub_code,area_hub_name,
 		        flow_site_code,
 		        flow_site_name,
 		        flow_org_code,
 		        flow_org_name,
+				flow_province_agency_code,flow_province_agency_name,flow_area_hub_code,flow_area_hub_name,
 		        create_user,
 		        create_time
             )
@@ -198,10 +266,12 @@
                 #{item.siteName, jdbcType=VARCHAR},
                 #{item.orgCode, jdbcType=INTEGER},
                 #{item.orgName, jdbcType=VARCHAR},
+				#{item.provinceAgencyCode, jdbcType=VARCHAR},#{item.provinceAgencyName, jdbcType=VARCHAR},#{item.areaHubCode, jdbcType=VARCHAR},#{item.areaHubName, jdbcType=VARCHAR},
                 #{item.flowSiteCode, jdbcType=INTEGER},
                 #{item.flowSiteName, jdbcType=VARCHAR},
                 #{item.flowOrgCode, jdbcType=INTEGER},
                 #{item.flowOrgName, jdbcType=VARCHAR},
+				#{item.flowProvinceAgencyCode, jdbcType=VARCHAR},#{item.flowProvinceAgencyName, jdbcType=VARCHAR},#{item.flowAreaHubCode, jdbcType=VARCHAR},#{item.flowAreaHubName, jdbcType=VARCHAR},
                 #{item.createUser,jdbcType=VARCHAR},
                 #{item.createTime,jdbcType=TIMESTAMP}
             )
@@ -231,6 +301,18 @@
 				<if test="orgName != null" >
 					org_name = #{orgName,jdbcType=VARCHAR},
 				</if>
+				<if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
+					province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR},
+				</if>
+				<if test="provinceAgencyName != null and provinceAgencyName != ''" >
+					province_agency_name = #{provinceAgencyName,jdbcType=VARCHAR},
+				</if>
+				<if test="areaHubCode != null and areaHubCode != ''" >
+					area_hub_code = #{areaHubCode,jdbcType=VARCHAR},
+				</if>
+				<if test="areaHubName != null and areaHubName != ''" >
+					area_hub_name = #{areaHubName,jdbcType=VARCHAR},
+				</if>
 				<if test="flowSiteCode != null" >
 					flow_site_code = #{flowSiteCode,jdbcType=INTEGER},
 				</if>
@@ -242,6 +324,18 @@
 				</if>
 				<if test="flowOrgName != null" >
 					flow_org_name = #{flowOrgName,jdbcType=VARCHAR},
+				</if>
+				<if test="flowProvinceAgencyCode != null and flowProvinceAgencyCode != ''" >
+					flow_province_agency_code = #{flowProvinceAgencyCode,jdbcType=VARCHAR},
+				</if>
+				<if test="flowProvinceAgencyName != null and flowProvinceAgencyName != ''" >
+					flow_province_agency_name = #{flowProvinceAgencyName,jdbcType=VARCHAR},
+				</if>
+				<if test="flowAreaHubCode != null and flowAreaHubCode != ''" >
+					flow_area_hub_code = #{flowAreaHubCode,jdbcType=VARCHAR},
+				</if>
+				<if test="flowAreaHubName != null and flowAreaHubName != ''" >
+					flow_area_hub_name = #{flowAreaHubName,jdbcType=VARCHAR},
 				</if>
 				<if test="createUser != null" >
 					create_user = #{createUser,jdbcType=VARCHAR},
@@ -370,7 +464,9 @@
     </select> 
     <!-- 选择流向-查询路由推荐未配置的流向 --> 
     <select id="queryFlowDataForSelect1" resultMap="WorkGridFlowDirectionVo">
-        select ref_work_grid_key,flow_site_code,flow_site_name,flow_org_code,flow_org_name,0 as config_flow_status,1 as flow_site_use_status 
+        select ref_work_grid_key,flow_site_code,flow_site_name,flow_org_code,flow_org_name,
+				flowProvinceAgencyCode,flowProvinceAgencyName,flowAreaHubCode,flowAreaHubName,
+               0 as config_flow_status,1 as flow_site_use_status 
           from work_grid_flow_detail_offline o 
            <include refid="queryFlowDataForSelectConditionOffline"/> 
             and not exists(
@@ -394,7 +490,9 @@
     </select>
     <!-- 选择流向-查询路由未推荐已配置的流向 --> 
     <select id="queryFlowDataForSelect2" resultMap="WorkGridFlowDirectionVo">
-        select ref_work_grid_key,flow_site_code,flow_site_name,flow_org_code,flow_org_name,1 as config_flow_status,0 as flow_site_use_status 
+        select ref_work_grid_key,flow_site_code,flow_site_name,flow_org_code,flow_org_name,
+				flowProvinceAgencyCode,flowProvinceAgencyName,flowAreaHubCode,flowAreaHubName,
+               1 as config_flow_status,0 as flow_site_use_status 
            from work_grid_flow_direction t 
            <include refid="queryFlowDataForSelectCondition"/>
 	           and not exists(
@@ -418,7 +516,9 @@
     </select>
     <!-- !选择流向-查询路由推荐已配置的流向 --> 
     <select id="queryFlowDataForSelect3" resultMap="WorkGridFlowDirectionVo">
-        select ref_work_grid_key,flow_site_code,flow_site_name,flow_org_code,flow_org_name,1 as config_flow_status,1 as flow_site_use_status 
+        select ref_work_grid_key,flow_site_code,flow_site_name,flow_org_code,flow_org_name,
+				flowProvinceAgencyCode,flowProvinceAgencyName,flowAreaHubCode,flowAreaHubName,
+               1 as config_flow_status,1 as flow_site_use_status 
            from work_grid_flow_direction t 
            <include refid="queryFlowDataForSelectCondition"/>
 	           and exists(
@@ -457,5 +557,52 @@
         <if test="flowSiteCode != null and flowSiteCode != ''" >
           and o.flow_site_code = #{flowSiteCode,jdbcType=INTEGER}
          </if>                     
-    </sql> 
+    </sql>
+
+	<!-- 刷数sql start -->
+	<select id="brushQueryAllByPage" parameterType="java.lang.Integer" resultMap="WorkGridFlowDirection">
+		select
+			id,site_code,flow_site_code
+		from
+			work_grid_flow_direction
+		where yn = 1
+		  and id > #{id,jdbcType=BIGINT}
+		order by id
+			limit 100
+	</select>
+	<update id="brushUpdateById" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"  separator=";">
+			UPDATE work_grid_flow_direction
+			<set>
+				<if test="item.provinceAgencyCode != null and item.provinceAgencyCode != ''" >
+					province_agency_code = #{item.provinceAgencyCode,jdbcType=VARCHAR},
+				</if>
+				<if test="item.provinceAgencyName != null and item.provinceAgencyName != ''" >
+					province_agency_name = #{item.provinceAgencyName,jdbcType=VARCHAR},
+				</if>
+				<if test="item.areaHubCode != null and item.areaHubCode != ''" >
+					area_hub_code = #{item.areaHubCode,jdbcType=VARCHAR},
+				</if>
+				<if test="item.areaHubName != null and item.areaHubName != ''" >
+					area_hub_name = #{item.areaHubName,jdbcType=VARCHAR},
+				</if>
+				<if test="item.flowProvinceAgencyCode != null and item.flowProvinceAgencyCode != ''" >
+					flow_province_agency_code = #{item.flowProvinceAgencyCode,jdbcType=VARCHAR},
+				</if>
+				<if test="item.flowProvinceAgencyName != null and item.flowProvinceAgencyName != ''" >
+					flow_province_agency_name = #{item.flowProvinceAgencyName,jdbcType=VARCHAR},
+				</if>
+				<if test="item.flowAreaHubCode != null and item.flowAreaHubCode != ''" >
+					flow_area_hub_code = #{item.flowAreaHubCode,jdbcType=VARCHAR},
+				</if>
+				<if test="item.flowAreaHubName != null and item.flowAreaHubName != ''" >
+					flow_area_hub_name = #{item.flowAreaHubName,jdbcType=VARCHAR},
+				</if>
+				update_time = now()
+			</set>
+			WHERE yn = 1
+			AND id = #{item.id}
+		</foreach>
+	</update>
+	<!-- 刷数sql end -->
 </mapper>
