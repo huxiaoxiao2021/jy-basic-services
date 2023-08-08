@@ -21,6 +21,11 @@ public class ProvinceAgencyVO implements Serializable {
      */
     private String provinceAgencyName;
 
+    /**
+     * 是否包含枢纽
+     */
+    private boolean hasAreaFlag;
+
     public String getProvinceAgencyCode() {
         return provinceAgencyCode;
     }
@@ -35,5 +40,13 @@ public class ProvinceAgencyVO implements Serializable {
 
     public void setProvinceAgencyName(String provinceAgencyName) {
         this.provinceAgencyName = provinceAgencyName;
+    }
+
+    public boolean getHasAreaFlag() {
+        return hasAreaFlag;
+    }
+
+    public void setHasAreaFlag(boolean hasAreaFlag) {
+        this.hasAreaFlag = hasAreaFlag;
     }
 }

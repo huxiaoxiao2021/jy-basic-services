@@ -11,7 +11,7 @@
 
     <groupId>com.jdl.basic</groupId>
     <artifactId>jy-basic-common</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.5.0-SNAPSHOT</version>
     <name>jy-basic-common</name>
     <description>基础信息服务common</description>
 

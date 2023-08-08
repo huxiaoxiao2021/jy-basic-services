@@ -27,5 +27,4 @@ public class SortCrossQuery extends BasePagerCondition {
     private String siteCode;
 
     private Integer pageSize;
-    
 }

@@ -108,5 +108,36 @@ public class WorkGridFlowDirection implements Serializable {
 	 */
 	private Date ts;
 
-
+	/**
+	 * 省区编码
+	 */
+	private String provinceAgencyCode;
+	/**
+	 * 省区名称
+	 */
+	private String provinceAgencyName;
+	/**
+	 * 枢纽编码
+	 */
+	private String areaHubCode;
+	/**
+	 * 枢纽名称
+	 */
+	private String areaHubName;
+	/**
+	 * 流入或流出-省区编码
+	 */
+	private String flowProvinceAgencyCode;
+	/**
+	 * 流入或流出-省区名称
+	 */
+	private String flowProvinceAgencyName;
+	/**
+	 * 流入或流出-枢纽编码
+	 */
+	private String flowAreaHubCode;
+	/**
+	 * 流入或流出-枢纽名称
+	 */
+	private String flowAreaHubName;
 }

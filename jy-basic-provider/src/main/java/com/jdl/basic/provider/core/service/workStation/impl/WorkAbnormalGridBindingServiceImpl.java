@@ -298,6 +298,10 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
             }
             workStationFloorGridVo.setAreaName(data.getAreaName());
             workStationFloorGridVo.setAreaCode(data.getAreaCode());
+            workStationFloorGridVo.setProvinceAgencyCode(data.getProvinceAgencyCode());
+            workStationFloorGridVo.setProvinceAgencyName(data.getProvinceAgencyName());
+            workStationFloorGridVo.setAreaHubCode(data.getAreaHubCode());
+            workStationFloorGridVo.setAreaHubName(data.getAreaHubName());
             WorkStationBinding query = new WorkStationBinding();
             query.setSiteCode(data.getSiteCode());
             query.setExcpFloor(data.getFloor());

@@ -16,7 +16,7 @@ public class SiteQueryCondition implements Serializable {
     /**
      * 站点编号
      */
-    private List<Integer> siteCodes;
+    private Integer siteCode;
 
     /**
      * 站点名称
@@ -33,12 +33,7 @@ public class SiteQueryCondition implements Serializable {
      * 站点名称拼音码
      */
     private String siteNamePym;
-
-    /**
-     * 所属分拣中心ID
-     */
-    private List<Integer> dmsIds;
-
+    
     /**
      * 站点类型
      */
@@ -58,8 +53,8 @@ public class SiteQueryCondition implements Serializable {
     /**
      * 机构ID
      */
-    private List<Integer> orgIds;
-
+    private Integer orgId;
+    
     /**
      * 省区编码
      */
@@ -69,48 +64,31 @@ public class SiteQueryCondition implements Serializable {
      * 枢纽编码
      */
     private String areaCode;
+
+    /**
+     * 省id
+     */
+    private Integer provinceId;
+    /**
+     * 市id
+     */
+    private Integer cityId;
+    /**
+     * 县id
+     */
+    private Integer countryId;
     
-    /**
-     * 省份ID
-     */
-    private List<Integer> provinceIds;
-
-    /**
-     * 城市ID
-     */
-    private List<Integer> cityIds;
-
-    /**
-     * 县Id
-     */
-    private List<Integer> countryIds;
-
-    /**
-     * 乡Id
-     */
-    private List<Integer> countrySideIds;
-
-    /**
-     * 片区
-     */
-    private List<String> areaCodes;
-
-    /**
-     * 分区
-     */
-    private List<String> partitionCodes;
-
     /**
      * 搜索字符串
      */
     private String searchStr;
 
-    public List<Integer> getSiteCodes() {
-        return siteCodes;
+    public Integer getSiteCode() {
+        return siteCode;
     }
 
-    public void setSiteCodes(List<Integer> siteCodes) {
-        this.siteCodes = siteCodes;
+    public void setSiteCode(Integer siteCode) {
+        this.siteCode = siteCode;
     }
 
     public String getSiteName() {
@@ -137,14 +115,6 @@ public class SiteQueryCondition implements Serializable {
         this.siteNamePym = siteNamePym;
     }
 
-    public List<Integer> getDmsIds() {
-        return dmsIds;
-    }
-
-    public void setDmsIds(List<Integer> dmsIds) {
-        this.dmsIds = dmsIds;
-    }
-
     public List<Integer> getSiteTypes() {
         return siteTypes;
     }
@@ -169,12 +139,12 @@ public class SiteQueryCondition implements Serializable {
         this.address = address;
     }
 
-    public List<Integer> getOrgIds() {
-        return orgIds;
+    public Integer getOrgId() {
+        return orgId;
     }
 
-    public void setOrgIds(List<Integer> orgIds) {
-        this.orgIds = orgIds;
+    public void setOrgId(Integer orgId) {
+        this.orgId = orgId;
     }
 
     public String getProvinceAgencyCode() {
@@ -193,52 +163,28 @@ public class SiteQueryCondition implements Serializable {
         this.areaCode = areaCode;
     }
 
-    public List<Integer> getProvinceIds() {
-        return provinceIds;
+    public Integer getProvinceId() {
+        return provinceId;
     }
 
-    public void setProvinceIds(List<Integer> provinceIds) {
-        this.provinceIds = provinceIds;
+    public void setProvinceId(Integer provinceId) {
+        this.provinceId = provinceId;
     }
 
-    public List<Integer> getCityIds() {
-        return cityIds;
+    public Integer getCityId() {
+        return cityId;
     }
 
-    public void setCityIds(List<Integer> cityIds) {
-        this.cityIds = cityIds;
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
     }
 
-    public List<Integer> getCountryIds() {
-        return countryIds;
+    public Integer getCountryId() {
+        return countryId;
     }
 
-    public void setCountryIds(List<Integer> countryIds) {
-        this.countryIds = countryIds;
-    }
-
-    public List<Integer> getCountrySideIds() {
-        return countrySideIds;
-    }
-
-    public void setCountrySideIds(List<Integer> countrySideIds) {
-        this.countrySideIds = countrySideIds;
-    }
-
-    public List<String> getAreaCodes() {
-        return areaCodes;
-    }
-
-    public void setAreaCodes(List<String> areaCodes) {
-        this.areaCodes = areaCodes;
-    }
-
-    public List<String> getPartitionCodes() {
-        return partitionCodes;
-    }
-
-    public void setPartitionCodes(List<String> partitionCodes) {
-        this.partitionCodes = partitionCodes;
+    public void setCountryId(Integer countryId) {
+        this.countryId = countryId;
     }
 
     public String getSearchStr() {

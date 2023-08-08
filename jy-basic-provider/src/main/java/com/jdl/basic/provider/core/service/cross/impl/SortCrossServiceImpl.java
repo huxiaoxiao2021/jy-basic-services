@@ -44,7 +44,7 @@ public class SortCrossServiceImpl implements SortCrossService {
     @Resource
     @Qualifier("JimdbCacheService")
     private CacheService cacheService;
-    
+
     private static final String INSERT_EVENT = "INSERT";
     
     @Override

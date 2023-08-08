@@ -7,10 +7,18 @@
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="start_org_id" jdbcType="INTEGER" property="startOrgId"/>
         <result column="start_org_name" jdbcType="VARCHAR" property="startOrgName"/>
+        <result column="start_province_agency_code" property="startProvinceAgencyCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="start_province_agency_name" property="startProvinceAgencyName" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="start_area_hub_code" property="startAreaHubCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="start_area_hub_name" property="startAreaHubName" javaType="java.lang.String" jdbcType="VARCHAR" />
         <result column="start_site_id" jdbcType="INTEGER" property="startSiteId"/>
         <result column="start_site_name" jdbcType="VARCHAR" property="startSiteName"/>
         <result column="end_org_id" jdbcType="INTEGER" property="endOrgId"/>
         <result column="end_org_name" jdbcType="VARCHAR" property="endOrgName"/>
+        <result column="end_province_agency_code" property="endProvinceAgencyCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="end_province_agency_name" property="endProvinceAgencyName" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="end_area_hub_code" property="endAreaHubCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="end_area_hub_name" property="endAreaHubName" javaType="java.lang.String" jdbcType="VARCHAR" />
         <result column="end_site_id" jdbcType="INTEGER" property="endSiteId"/>
         <result column="end_site_name" jdbcType="VARCHAR" property="endSiteName"/>
         <result column="box_receive_id" jdbcType="INTEGER" property="boxReceiveId"/>
@@ -30,7 +38,10 @@
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
-        id, start_org_id, start_org_name, start_site_id, start_site_name, end_org_id, end_org_name,
+        id, start_org_id, start_org_name,
+        start_province_agency_code,start_province_agency_name,start_area_hub_code,start_area_hub_name,
+        end_province_agency_code,end_province_agency_name,end_area_hub_code,end_area_hub_name,
+        start_site_id, start_site_name, end_org_id, end_org_name,
         end_site_id, end_site_name, box_receive_id, box_receive_name, box_pkg_name, transport_type,
         flow_type, create_user_erp, update_user_erp, create_time, update_time, ts, yn, collect_claim, if_change_since_last_update,version
     </sql>
@@ -52,6 +63,8 @@
         <!--@mbg.generated-->
         insert into collect_box_flow_direction_conf (start_org_id, start_org_name, start_site_id,
                                                      start_site_name, end_org_id, end_org_name,
+                                                     start_province_agency_code,start_province_agency_name,start_area_hub_code,start_area_hub_name,
+                                                     end_province_agency_code,end_province_agency_name,end_area_hub_code,end_area_hub_name,
                                                      end_site_id, end_site_name, box_receive_id,
                                                      box_receive_name, box_pkg_name, transport_type,
                                                      flow_type, create_user_erp, update_user_erp,
@@ -59,6 +72,8 @@
                                                      yn,collect_claim,if_change_since_last_update)
         values (#{startOrgId,jdbcType=INTEGER}, #{startOrgName,jdbcType=VARCHAR}, #{startSiteId,jdbcType=INTEGER},
                 #{startSiteName,jdbcType=VARCHAR}, #{endOrgId,jdbcType=INTEGER}, #{endOrgName,jdbcType=VARCHAR},
+                #{startProvinceAgencyCode,jdbcType=VARCHAR},#{startProvinceAgencyName,jdbcType=VARCHAR},#{startAreaHubCode,jdbcType=VARCHAR},#{startAreaHubName,jdbcType=VARCHAR},
+                #{endProvinceAgencyCode,jdbcType=VARCHAR},#{endProvinceAgencyName,jdbcType=VARCHAR},#{endAreaHubCode,jdbcType=VARCHAR},#{endAreaHubName,jdbcType=VARCHAR},
                 #{endSiteId,jdbcType=INTEGER}, #{endSiteName,jdbcType=VARCHAR}, #{boxReceiveId,jdbcType=INTEGER},
                 #{boxReceiveName,jdbcType=VARCHAR}, #{boxPkgName,jdbcType=VARCHAR}, #{transportType,jdbcType=INTEGER},
                 #{flowType,jdbcType=INTEGER}, #{createUserErp,jdbcType=VARCHAR}, #{updateUserErp,jdbcType=VARCHAR},
@@ -76,6 +91,18 @@
             <if test="startOrgName != null">
                 start_org_name,
             </if>
+            <if test="startProvinceAgencyCode != null">
+                start_province_agency_code,
+            </if>
+            <if test="startProvinceAgencyName != null">
+                start_province_agency_name,
+            </if>
+            <if test="startAreaHubCode != null">
+                start_area_hub_code,
+            </if>
+            <if test="startAreaHubName != null">
+                start_area_hub_name,
+            </if>
             <if test="startSiteId != null">
                 start_site_id,
             </if>
@@ -87,6 +114,18 @@
             </if>
             <if test="endOrgName != null">
                 end_org_name,
+            </if>
+            <if test="endProvinceAgencyCode != null">
+                end_province_agency_code,
+            </if>
+            <if test="endProvinceAgencyName != null">
+                end_province_agency_name,
+            </if>
+            <if test="endAreaHubCode != null">
+                end_area_hub_code,
+            </if>
+            <if test="endAreaHubName != null">
+                end_area_hub_name,
             </if>
             <if test="endSiteId != null">
                 end_site_id,
@@ -144,6 +183,18 @@
             <if test="startOrgName != null">
                 #{startOrgName,jdbcType=VARCHAR},
             </if>
+            <if test="startProvinceAgencyCode != null">
+                #{startProvinceAgencyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="startProvinceAgencyName != null">
+                #{startProvinceAgencyName,jdbcType=VARCHAR},
+            </if>
+            <if test="startAreaHubCode != null">
+                #{startAreaHubCode,jdbcType=VARCHAR},
+            </if>
+            <if test="startAreaHubName != null">
+                #{startAreaHubName,jdbcType=VARCHAR},
+            </if>
             <if test="startSiteId != null">
                 #{startSiteId,jdbcType=INTEGER},
             </if>
@@ -155,6 +206,18 @@
             </if>
             <if test="endOrgName != null">
                 #{endOrgName,jdbcType=VARCHAR},
+            </if>
+            <if test="endProvinceAgencyCode != null">
+                #{endProvinceAgencyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="endProvinceAgencyName != null">
+                #{endProvinceAgencyName,jdbcType=VARCHAR},
+            </if>
+            <if test="endAreaHubCode != null">
+                #{endAreaHubCode,jdbcType=VARCHAR},
+            </if>
+            <if test="endAreaHubName != null">
+                #{endAreaHubName,jdbcType=VARCHAR},
             </if>
             <if test="endSiteId != null">
                 #{endSiteId,jdbcType=INTEGER},
@@ -217,6 +280,18 @@
             <if test="startOrgName != null">
                 start_org_name = #{startOrgName,jdbcType=VARCHAR},
             </if>
+            <if test="startProvinceAgencyCode != null">
+                start_province_agency_code = #{startProvinceAgencyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="startProvinceAgencyName != null">
+                start_province_agency_name = #{startProvinceAgencyName,jdbcType=VARCHAR},
+            </if>
+            <if test="startAreaHubCode != null">
+                start_area_hub_code = #{startAreaHubCode,jdbcType=VARCHAR},
+            </if>
+            <if test="startAreaHubName != null">
+                start_area_hub_name = #{startAreaHubName,jdbcType=VARCHAR},
+            </if>
             <if test="startSiteId != null">
                 start_site_id = #{startSiteId,jdbcType=INTEGER},
             </if>
@@ -228,6 +303,18 @@
             </if>
             <if test="endOrgName != null">
                 end_org_name = #{endOrgName,jdbcType=VARCHAR},
+            </if>
+            <if test="endProvinceAgencyCode != null">
+                end_province_agency_code = #{endProvinceAgencyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="endProvinceAgencyName != null">
+                end_province_agency_name = #{endProvinceAgencyName,jdbcType=VARCHAR},
+            </if>
+            <if test="endAreaHubCode != null">
+                end_area_hub_code = #{endAreaHubCode,jdbcType=VARCHAR},
+            </if>
+            <if test="endAreaHubName != null">
+                end_area_hub_name = #{endAreaHubName,jdbcType=VARCHAR},
             </if>
             <if test="endSiteId != null">
                 end_site_id = #{endSiteId,jdbcType=INTEGER},
@@ -285,10 +372,18 @@
         update collect_box_flow_direction_conf
         set start_org_id     = #{startOrgId,jdbcType=INTEGER},
             start_org_name   = #{startOrgName,jdbcType=VARCHAR},
+            start_province_agency_code = #{startProvinceAgencyCode,jdbcType=VARCHAR},
+            start_province_agency_name = #{startProvinceAgencyName,jdbcType=VARCHAR},
+            start_area_hub_code = #{startAreaHubCode,jdbcType=VARCHAR},
+            start_area_hub_name = #{startAreaHubName,jdbcType=VARCHAR},
             start_site_id    = #{startSiteId,jdbcType=INTEGER},
             start_site_name  = #{startSiteName,jdbcType=VARCHAR},
             end_org_id       = #{endOrgId,jdbcType=INTEGER},
             end_org_name     = #{endOrgName,jdbcType=VARCHAR},
+            end_province_agency_code = #{endProvinceAgencyCode,jdbcType=VARCHAR},
+            end_province_agency_name = #{endProvinceAgencyName,jdbcType=VARCHAR},
+            end_area_hub_code = #{endAreaHubCode,jdbcType=VARCHAR},
+            end_area_hub_name = #{endAreaHubName,jdbcType=VARCHAR},
             end_site_id      = #{endSiteId,jdbcType=INTEGER},
             end_site_name    = #{endSiteName,jdbcType=VARCHAR},
             box_receive_id   = #{boxReceiveId,jdbcType=INTEGER},
@@ -316,8 +411,20 @@
         <if test="startOrgId != null">
             and start_org_id = #{startOrgId,jdbcType=INTEGER}
         </if>
+        <if test="startProvinceAgencyCode != null">
+            and start_province_agency_code = #{startProvinceAgencyCode,jdbcType=VARCHAR}
+        </if>
+        <if test="startAreaHubCode != null">
+            and start_area_hub_code = #{startAreaHubCode,jdbcType=VARCHAR}
+        </if>
         <if test="endOrgId != null">
             and end_org_id = #{endOrgId,jdbcType=VARCHAR}
+        </if>
+        <if test="endProvinceAgencyCode != null">
+            and end_province_agency_code = #{endProvinceAgencyCode,jdbcType=VARCHAR}
+        </if>
+        <if test="endAreaHubCode != null">
+            and end_area_hub_code = #{endAreaHubCode,jdbcType=VARCHAR}
         </if>
         <if test="startSiteId != null">
             and start_site_id = #{startSiteId,jdbcType=INTEGER}
@@ -367,8 +474,20 @@
         <if test="startOrgId != null">
             and start_org_id = #{startOrgId,jdbcType=INTEGER}
         </if>
+        <if test="startProvinceAgencyCode != null">
+            and start_province_agency_code = #{startProvinceAgencyCode,jdbcType=VARCHAR}
+        </if>
+        <if test="startAreaHubCode != null">
+            and start_area_hub_code = #{startAreaHubCode,jdbcType=VARCHAR}
+        </if>
         <if test="endOrgId != null">
             and end_org_id = #{endOrgId,jdbcType=VARCHAR}
+        </if>
+        <if test="endProvinceAgencyCode != null">
+            and end_province_agency_code = #{endProvinceAgencyCode,jdbcType=VARCHAR}
+        </if>
+        <if test="endAreaHubCode != null">
+            and end_area_hub_code = #{endAreaHubCode,jdbcType=VARCHAR}
         </if>
         <if test="startSiteId != null">
             and start_site_id = #{startSiteId,jdbcType=INTEGER}
@@ -445,8 +564,20 @@
         <if test="conf.startOrgId != null">
             and start_org_id = #{conf.startOrgId,jdbcType=INTEGER}
         </if>
+        <if test="conf.startProvinceAgencyCode != null">
+            and start_province_agency_code = #{conf.startProvinceAgencyCode,jdbcType=VARCHAR}
+        </if>
+        <if test="conf.startAreaHubCode != null">
+            and start_area_hub_code = #{conf.startAreaHubCode,jdbcType=VARCHAR}
+        </if>
         <if test="conf.endOrgId != null">
             and end_org_id = #{conf.endOrgId,jdbcType=VARCHAR}
+        </if>
+        <if test="conf.endProvinceAgencyCode != null">
+            and end_province_agency_code = #{conf.endProvinceAgencyCode,jdbcType=VARCHAR}
+        </if>
+        <if test="conf.endAreaHubCode != null">
+            and end_area_hub_code = #{conf.endAreaHubCode,jdbcType=VARCHAR}
         </if>
         <if test="conf.startSiteId != null">
             and start_site_id = #{conf.startSiteId,jdbcType=INTEGER}
@@ -505,8 +636,20 @@
         <if test="startOrgId != null">
             and start_org_id = #{startOrgId,jdbcType=INTEGER}
         </if>
+        <if test="startProvinceAgencyCode != null">
+            and start_province_agency_code = #{startProvinceAgencyCode,jdbcType=VARCHAR}
+        </if>
+        <if test="startAreaHubCode != null">
+            and start_area_hub_code = #{startAreaHubCode,jdbcType=VARCHAR}
+        </if>
         <if test="endOrgId != null">
             and end_org_id = #{endOrgId,jdbcType=VARCHAR}
+        </if>
+        <if test="startProvinceAgencyCode != null">
+            and start_province_agency_code = #{startProvinceAgencyCode,jdbcType=VARCHAR}
+        </if>
+        <if test="startAreaHubCode != null">
+            and start_area_hub_code = #{startAreaHubCode,jdbcType=VARCHAR}
         </if>
         <if test="startSiteId != null">
             and start_site_id = #{startSiteId,jdbcType=INTEGER}
@@ -557,4 +700,51 @@
         delete from collect_box_flow_direction_conf 
         where version = #{version,jdbcType=VARCHAR} limit  #{deleteCount,jdbcType=INTEGER}
     </delete>
+
+    <!-- 刷数sql start -->
+    <select id="brushQueryAllByPage" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+            id,start_site_id,end_site_id
+        from
+            collect_box_flow_direction_conf
+        where yn = 1
+          and id > #{id,jdbcType=BIGINT}
+        order by id
+            limit 100
+    </select>
+    <update id="brushUpdateById" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index"  separator=";">
+            UPDATE collect_box_flow_direction_conf
+            <set>
+                <if test="item.startProvinceAgencyCode != null and item.startProvinceAgencyCode != ''" >
+                    start_province_agency_code = #{item.startProvinceAgencyCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.startProvinceAgencyName != null and item.startProvinceAgencyName != ''" >
+                    start_province_agency_name = #{item.startProvinceAgencyName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.startAreaHubCode != null and item.startAreaHubCode != ''" >
+                    start_area_hub_code = #{item.startAreaHubCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.startAreaHubName != null and item.startAreaHubName != ''" >
+                    start_area_hub_name = #{item.startAreaHubName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.endProvinceAgencyCode != null and item.endProvinceAgencyCode != ''" >
+                    end_province_agency_code = #{item.endProvinceAgencyCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.endProvinceAgencyName != null and item.endProvinceAgencyName != ''" >
+                    end_province_agency_name = #{item.endProvinceAgencyName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.endAreaHubCode != null and item.endAreaHubCode != ''" >
+                    end_area_hub_code = #{item.endAreaHubCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.endAreaHubName != null and item.endAreaHubName != ''" >
+                    end_area_hub_name = #{item.endAreaHubName,jdbcType=VARCHAR},
+                </if>
+                update_time = now()
+            </set>
+            WHERE yn = 1
+            AND id = #{item.id}
+        </foreach>
+    </update>
+    <!-- 刷数sql end -->
 </mapper>

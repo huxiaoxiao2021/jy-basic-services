@@ -103,4 +103,21 @@ public class PositionDetailRecord extends PositionRecord {
 	 * 关联场地网格key:work_grid
 	 */
 	private String refWorkGridKey;
+
+    /**
+     * 省区编码
+     */
+    private String provinceAgencyCode;
+    /**
+     * 省区名称
+     */
+    private String provinceAgencyName;
+    /**
+     * 枢纽编码
+     */
+    private String areaHubCode;
+    /**
+     * 枢纽名称
+     */
+    private String areaHubName;
 }

@@ -170,8 +170,8 @@ public interface WorkStationGridDao {
 	 * @param businessKey
 	 * @return
 	 */
-	@Cache(key = "WorkStationGridDao.queryWorkStationGridBybusinessKeyWithCache@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
-			,redisEnable = true, redisExpiredTime = 5 * 60 * 1000)
+	@Cache(key = "WorkStationGridDao.queryWorkStationGridBybusinessKeyWithCache@args0", memoryEnable = false,
+			redisEnable = true, redisExpiredTime = 5 * 60 * 1000)
 	WorkStationGrid queryWorkStationGridBybusinessKeyWithCache(String businessKey);
 	/**
 	 * 查询场地网格工序列表
@@ -191,4 +191,18 @@ public interface WorkStationGridDao {
 	 * @return
 	 */	
 	List<WorkStationGrid> queryListForManagerSiteScan(WorkStationGridQuery query);
+
+	/**
+	 * 刷数-分页查询
+	 * @param startId
+	 * @return
+	 */
+	List<WorkStationGrid> brushQueryAllByPage(Integer startId);
+
+	/**
+	 * 刷数-批量更新
+	 * @param list
+	 * @return
+	 */
+	Integer brushUpdateById(List<WorkStationGrid> list);
 }

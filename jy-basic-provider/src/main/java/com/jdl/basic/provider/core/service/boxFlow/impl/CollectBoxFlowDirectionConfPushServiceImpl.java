@@ -106,12 +106,20 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
                 BaseStaffSiteOrgDto baseSiteBySiteId = basicPrimaryWS.getBaseSiteBySiteId(dto.getStartSiteId());
                 if (baseSiteBySiteId != null) {
                     dto.setStartOrgId(baseSiteBySiteId.getOrgId());
+                    dto.setStartProvinceAgencyCode(baseSiteBySiteId.getProvinceAgencyCode());
+                    dto.setStartProvinceAgencyName(baseSiteBySiteId.getProvinceAgencyName());
+                    dto.setStartAreaHubCode(baseSiteBySiteId.getAreaCode());
+                    dto.setStartAreaHubName(baseSiteBySiteId.getAreaName());
                 }
             }
             if (dto.getEndOrgId() == null) {
                 BaseStaffSiteOrgDto baseSiteBySiteId = basicPrimaryWS.getBaseSiteBySiteId(dto.getEndSiteId());
                 if (baseSiteBySiteId != null) {
                     dto.setEndOrgId(baseSiteBySiteId.getOrgId());
+                    dto.setEndProvinceAgencyCode(baseSiteBySiteId.getProvinceAgencyCode());
+                    dto.setEndProvinceAgencyName(baseSiteBySiteId.getProvinceAgencyName());
+                    dto.setEndAreaHubCode(baseSiteBySiteId.getAreaCode());
+                    dto.setEndAreaHubName(baseSiteBySiteId.getAreaName());
                 }
             }
             //删除老版本数据

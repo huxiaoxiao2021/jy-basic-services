@@ -36,4 +36,17 @@ public interface CollectBoxFlowDirectionConfDao {
     
     int deleteByVersion(@Param("version") String version, @Param("deleteCount") Integer deleteCount);
 
+    /**
+     * 刷数-分页查询
+     * @param startId
+     * @return
+     */
+    List<CollectBoxFlowDirectionConf> brushQueryAllByPage(Integer startId);
+
+    /**
+     * 刷数-批量更新
+     * @param list
+     * @return
+     */
+    Integer brushUpdateById(List<CollectBoxFlowDirectionConf> list);
 }

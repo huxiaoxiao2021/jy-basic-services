@@ -66,4 +66,12 @@ public class PositionQuery extends BasePagerCondition {
      */
     private List<String> refStationKeyList;
 
+    /**
+     * 省区编码
+     */
+    private String provinceAgencyCode;
+    /**
+     * 枢纽编码
+     */
+    private String areaHubCode;
 }
