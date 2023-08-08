@@ -14,6 +14,7 @@ import com.jd.ump.profiler.proxy.Profiler;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowInfo;
 import com.jdl.basic.api.domain.boxFlow.dto.*;
+import com.jdl.basic.common.enums.BoxFlowRouteErrorTypeEnum;
 import com.jdl.basic.common.enums.CollectBoxFlowInfoStatusEnum;
 import com.jdl.basic.common.enums.CollectClaimEnum;
 import com.jdl.basic.common.utils.JsonHelper;
@@ -68,10 +69,12 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
     Cluster cluster;
     @Value("${collect.box.check.route.notice.erp.cache.day:2}")
     private Long noticeErpCacheDay;
+    
+    @Value("${collect.box.check.route.notice.msg.prefix:集包规则路由错误，可能会到导致错分，请到分拣工作台-[集包规则配置]修改：}")
+    private String noticeMsgPrefix;
 
-    @Value("${collect.box.check.route.notice.msg:集包规则路由错误，可能会到导致错分，请到分拣工作台-[集包规则配置]修改：始发分拣:{0},目的地分拣:{1},建包流向:{2} 路由错误信息:[{3}]}")
-    private String noticeMsg;
-
+    @Value("${collect.box.check.route.notice.msg.detail:始发分拣:{0},目的地分拣:{1},建包流向:{2} 路由错误信息:[{3}]}")
+    private String noticeMsgDetail;
     @Autowired(required = false)
     @Qualifier("collectBoxFlowNoticeMQ")
     private DefaultJMQProducer collectBoxFlowNoticeMQ;
@@ -272,6 +275,7 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
         }
         Long id = 1L;
         List<CollectBoxFlowDirectionConf> confs = null;
+        List<CollectBoxRouteCheckDto> collectBoxRouteCheckDtos = new ArrayList<>();
         do{
             try {
                 Thread.sleep(sleepMillisecond);
@@ -328,50 +332,70 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
                         modifyRouteErrorType(conf.getRouteErrorType(), 0, conf);
                         continue;
                     }
-                    if(boxFlowResult.getProblemType() != null){
+                    if(boxFlowResult.getProblemType() != null 
+                            && !boxFlowResult.getProblemType().equals(BoxFlowRouteErrorTypeEnum.OD_MANY_ROUTE.getCode())){
                         String errorMsg = MessageFormat.format("离线校验路由规则路由错误：始发分拣:{0},目的地分拣:{1},建包流向:{2} 路由错误:[{3}],conf.id:{4}",
                                 startSiteName, endSiteName, boxReceiveName, boxFlowResult.getProblemTypeDesc(), conf.getId());
                         log.error(errorMsg);
                         modifyRouteErrorType(conf.getRouteErrorType(), boxFlowResult.getProblemType(), conf);
-                        routeErrorNotice(startSiteId, startSiteName, endSiteId, endSiteName, boxReceiveId, boxReceiveName, boxFlowResult.getProblemTypeDesc());
+                        collectBoxRouteCheckDtos.add(initCollectBoxRouteCheckDto(startSiteId, startSiteName, endSiteId,
+                                endSiteName, boxReceiveId, boxReceiveName, boxFlowResult.getProblemTypeDesc()));
                         continue;
                     }
                     modifyRouteErrorType(conf.getRouteErrorType(), 0, conf);
                 }
             }
         }while (CollectionUtils.isNotEmpty(confs));
+        //路由错误通知
+        routeErrorNotice(collectBoxRouteCheckDtos);
         
     }
     
+    private CollectBoxRouteCheckDto initCollectBoxRouteCheckDto(Integer startSiteId, String startSiteName,
+                                                                Integer endSiteId, String endSiteName,
+                                                                Integer boxReceiveId, String boxReceiveName, 
+                                                                String problemTypeDesc){
+        CollectBoxRouteCheckDto dto = new CollectBoxRouteCheckDto(startSiteId, startSiteName, endSiteId, endSiteName,
+                boxReceiveId, boxReceiveName, problemTypeDesc);
+        return dto;
+    }
     private void modifyRouteErrorType(Integer oldType , Integer newType, CollectBoxFlowDirectionConf conf){
         if(ObjectUtils.notEqual(oldType, newType)){
             conf.setRouteErrorType(newType);
             collectBoxFlowDirectionConfMapper.updateByPrimaryKey(conf);
         }
     }
-    
-    private void routeErrorNotice(Integer startSiteId, String startSiteName, Integer endSiteId, String endSiteName, 
-                                  Integer boxReceiveId, String boxReceiveName, String problemTypeDesc){
-        String erps = cluster.get(CHECK_ROUTE_NOTIC_ERP_CACHE_PREFIX + startSiteId);
-        if(StringUtils.isBlank(erps)){
-            log.error("离线校验路由错误erps为空 无法发送咚咚消息，默认校验通过，请求参数：startSiteId:{}," +
-                            "startSiteName:{},endSiteId:{},endSiteName:{}，boxReceiveId:{},boxReceiveName:{},problemTypeDesc:{}", 
-                    startSiteId, startSiteName, endSiteId, endSiteName, boxReceiveId, boxReceiveName, problemTypeDesc);
+    private void routeErrorNotice(List<CollectBoxRouteCheckDto> collectBoxRouteCheckDtos){
+        if(CollectionUtils.isEmpty(collectBoxRouteCheckDtos)){
             return;
         }
-        String message = MessageFormat.format(noticeMsg,
-                startSiteName, endSiteName, boxReceiveName, problemTypeDesc);
-        CollectBoxFlowNoticDto dto = new CollectBoxFlowNoticDto();
-        dto.setReceiveErps(erps);
-        dto.setOperateType(ROUTER_WARNING.getCode());
-        dto.setMessage(message);
-
-        try {
-            collectBoxFlowNoticeMQ.send(startSiteId + "|" + endSiteId + "|" + boxReceiveId, JsonHelper.toJSONString(dto));
-        } catch (Exception ex) {
-            log.error("箱号规则路由校验，MQ发送通知失败:{}",startSiteId + "|" + endSiteId + "|" + boxReceiveId, ex);
+        Map<Integer, List<CollectBoxRouteCheckDto>> startSiteIdToDtos = collectBoxRouteCheckDtos.stream()
+                .collect(Collectors.groupingBy(CollectBoxRouteCheckDto::getStartSiteId));
+        Set<Integer> startSiteIdSet = startSiteIdToDtos.keySet();
+        for(Integer startSiteId : startSiteIdSet){
+            List<CollectBoxRouteCheckDto> dtos = startSiteIdToDtos.get(startSiteId);
+            if(CollectionUtils.isEmpty(dtos)){
+                continue;
+            }
+            StringBuilder msgb = new StringBuilder(noticeMsgPrefix);
+            for(CollectBoxRouteCheckDto dto : dtos){
+                msgb.append(MessageFormat.format(noticeMsgDetail,
+                        dto.getStartSiteName(), dto.getEndSiteName(), dto.getBoxReceiveName(), dto.getProblemTypeDesc()));
+            }
+            String erps = cluster.get(CHECK_ROUTE_NOTIC_ERP_CACHE_PREFIX + startSiteId);
+            CollectBoxFlowNoticDto dto = new CollectBoxFlowNoticDto();
+            dto.setReceiveErps(erps);
+            dto.setOperateType(ROUTER_WARNING.getCode());
+            dto.setMessage(msgb.toString());
+            try {
+//                collectBoxFlowNoticeMQ.send(startSiteId.toString(), JsonHelper.toJSONString(dto));
+                log.info("箱号规则路由校验，MQ发送通知businessId:{}, message.body:{}", startSiteId.toString(), JsonHelper.toJSONString(dto));
+            } catch (Exception ex) {
+                log.error("箱号规则路由校验，MQ发送通知失败:{}",startSiteId, ex);
+            }
         }
     }
+    
     
     private void setNoticeErpCache(String createErp, String updateErp, Integer createSiteCode){
         if((StringUtils.isBlank(createErp) || BDP_PUSH_ERP.equals(createErp) || BDP_PUSH_ERP2.equals(createErp)) 
