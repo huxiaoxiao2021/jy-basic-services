@@ -284,9 +284,9 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 			return result.toFail("流向场地ID为空！");
 		
 		}
-		BaseStaffSiteOrgDto currentSiteInfo = baseMajorManager.getBaseSiteBySiteId(flowData.getSiteCode());
+		BaseStaffSiteOrgDto currentSiteInfo = baseMajorManager.getBaseSiteBySiteId(workGridData.getSiteCode());
 		if(currentSiteInfo == null){
-			return result.toFail("场地编码无效！【"+flowData.getSiteCode()+"】");
+			return result.toFail("场地编码无效！【"+workGridData.getSiteCode()+"】");
 		}
 		BaseStaffSiteOrgDto flowSiteInfo = baseMajorManager.getBaseSiteBySiteId(flowData.getFlowSiteCode());
 		if(flowSiteInfo == null) {
