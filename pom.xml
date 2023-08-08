@@ -35,7 +35,7 @@
         <jd.jmq.jspliter.version>1.0.3</jd.jmq.jspliter.version>
         <jd.lsb.task.api>0.0.6-SNAPSHOT</jd.lsb.task.api>
         <elasticsearch.transport.version>6.3.2</elasticsearch.transport.version>
-        <ql.basic.version>2.0.15-TEST-SNAPSHOT</ql.basic.version>
+        <ql.basic.version>2.0.15-online-SNAPSHOT</ql.basic.version>
         <laf.config.version>1.1.0</laf.config.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
