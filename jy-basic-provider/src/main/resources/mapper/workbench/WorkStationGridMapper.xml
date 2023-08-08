@@ -638,7 +638,6 @@
 		from
 		work_station_grid g
 		where
-		g.yn = 1 and
 		g.business_key = #{businessKey,jdbcType=VARCHAR}
 		order by g.ts desc limit 1
 
