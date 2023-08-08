@@ -734,7 +734,6 @@
         </foreach> 
         limit #{offset}, #{limit}
     </select>
-    </select>
 	
 	<!-- 刷数sql start -->
 	<select id="brushQueryAllByPage" parameterType="java.lang.Integer" resultMap="WorkStationGrid">

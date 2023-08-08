@@ -279,13 +279,6 @@
                   alias="${jsf.jy_basic.alias}"
                   server="jsf">
     </jsf:provider>
-    <!-- 基础站点接口 -->
-    <jsf:provider id="siteQueryJsfService"
-      interface="com.jdl.basic.api.service.site.SiteQueryService"
-      ref="siteQueryService"
-      alias="${jsf.jy_basic.alias}"
-      server="jsf">
-    </jsf:provider>
 
     <jsf:provider id="userWorkGridJsfService"
                   timeout="100000000"

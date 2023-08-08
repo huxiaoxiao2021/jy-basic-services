@@ -2,7 +2,7 @@ package com.jdl.basic.provider.core.provider.workStation;
 
 
 import com.jdl.basic.common.utils.ObjectHelper;
-import com.jdl.basic.rpc.exception.JYBasicRpcException;
+import com.jdl.basic.provider.JYBasicRpcException;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
