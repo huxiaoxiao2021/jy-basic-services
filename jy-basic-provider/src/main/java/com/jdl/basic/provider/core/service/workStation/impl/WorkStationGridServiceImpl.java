@@ -19,6 +19,7 @@ import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringHelper;
+import com.jdl.basic.provider.common.Jimdb.CacheService;
 import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationGridDao;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
@@ -38,6 +39,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.*;
 
@@ -77,6 +79,10 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	@Autowired
 	@Qualifier("workGridService")
 	WorkGridService workGridService;
+
+	@Resource
+	@Qualifier("JimdbCacheService")
+	private CacheService cacheService;
 	
 	private static boolean initDataFlag = false;
 	/**
@@ -317,11 +323,20 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		workStationGridDao.deleteById(updateData);
 		updateData.setId(null);
 		result.setData(workStationGridDao.insert(updateData) == 1);
+
+		// 清除网格工序缓存
+		invalidateWorkStationGridCache(oldData.getBusinessKey());
+
 		// 更新关联自动化设备
 		deleteMachineByRefGridKey(updateData);
 		addMachine(updateData);
 		return result;
-	 }
+	}
+
+	private void invalidateWorkStationGridCache(String businessKey) {
+		String cacheKey = "WorkStationGridDao.queryWorkStationGridBybusinessKeyWithCache" + businessKey;
+		cacheService.del(cacheKey);
+	}
 
 	private void deleteMachineByRefGridKey(WorkStationGrid updateData) {
 		// 删除关联设备
@@ -345,6 +360,9 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			throw new RuntimeException("根据id:" + deleteData.getId() + "未查询到数据!");
 		}
 		result.setData(workStationGridDao.deleteById(deleteData) == 1);
+
+		// 清除网格工序缓存
+		invalidateWorkStationGridCache(queryResult.getData().getBusinessKey());
 
 		// 同步删除异常网格绑定数据
 		deleteWorkAbnormalGridBinding(queryResult.getData(),deleteData);
