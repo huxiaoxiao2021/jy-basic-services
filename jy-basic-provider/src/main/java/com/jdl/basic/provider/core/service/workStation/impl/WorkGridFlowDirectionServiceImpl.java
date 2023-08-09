@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
@@ -64,6 +65,7 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	 * @param insertData
 	 * @return
 	 */
+	@Transactional
 	public Result<Boolean> insert(WorkGridFlowDirection insertData){
 		Result<Boolean> result = Result.success(); 
 		if(insertData == null) {
@@ -187,6 +189,7 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	public List<WorkGridFlowDirection> queryListForWorkGridVo(WorkGridFlowDirectionQuery query) {
 		return workGridFlowDirectionDao.queryListForWorkGridVo(query);
 	}
+	@Transactional
 	@Override
 	public Result<Boolean> deleteByIds(DeleteRequest<WorkGridFlowDirection> deleteRequest) {
 		Result<Boolean> result = Result.success();
@@ -207,6 +210,7 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		result.setData(workGridFlowDirectionDao.deleteByIds(deleteRequest) > 0);
 		return result;
 	}
+	@Transactional
 	@Override
 	public Result<Boolean> importDatas(List<WorkGridFlowDirection> flowList) {
 		Result<Boolean> result = Result.success(); 
@@ -322,6 +326,7 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		}
 		return null;
 	}
+	@Transactional
 	@Override
 	public int batchInsert(List<WorkGridFlowDirection> flowList) {
 		if(CollectionUtils.isEmpty(flowList)) {
@@ -433,6 +438,7 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		result.setData(workGridFlowDirectionDao.queryCount(query));
 		return result;
 	}
+	@Transactional
 	@Override
 	public int deleteByRefGridKey(WorkGridFlowDirection deleteData) {
 		return workGridFlowDirectionDao.deleteByRefGridKey(deleteData);

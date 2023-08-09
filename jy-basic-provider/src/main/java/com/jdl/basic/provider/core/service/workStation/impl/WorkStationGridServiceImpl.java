@@ -603,6 +603,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	}
 	@Override
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.deleteByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	@Transactional
 	public Result<Boolean> deleteByIds(DeleteRequest<WorkStationGrid> deleteRequest) {
 		Result<Boolean> result = Result.success();
 		if(deleteRequest == null

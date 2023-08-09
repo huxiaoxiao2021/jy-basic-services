@@ -107,6 +107,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 	 * @param insertData
 	 * @return
 	 */
+	@Transactional
 	public Result<Boolean> insert(WorkGrid insertData){
 		Result<Boolean> result = Result.success();
 		insertData.setBusinessKey(generalBusinessKey());
@@ -118,6 +119,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 	 * @param updateData
 	 * @return
 	 */
+	@Transactional
 	public Result<Boolean> updateById(WorkGrid updateData){
 		Result<Boolean> result = Result.success();
 		result.setData(workGridDao.updateById(updateData) == 1);
@@ -128,6 +130,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 	 * @param deleteData
 	 * @return
 	 */
+	@Transactional
 	public Result<Boolean> deleteById(WorkGrid deleteData){
 		Result<Boolean> result = Result.success();
 		if(deleteData == null
@@ -137,6 +140,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		WorkGrid oldData = workGridDao.queryById(deleteData.getId());
 		return checkAndDeleteData(deleteData,oldData);
 	 }
+	@Transactional
 	@Override
 	public Result<Boolean> deleteByWorkGridKey(WorkGrid deleteData) {
 		Result<Boolean> result = Result.success();
@@ -377,6 +381,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		}
 		return flowInfo;
 	}
+	@Transactional
 	@Override
 	public Result<WorkGrid> saveData(WorkGrid workGrid) {
 		Result<WorkGrid> result = Result.success();
@@ -432,6 +437,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		result.setData(voDataList);
 		return result;
 	}
+	@Transactional
 	@Override
 	public Result<Boolean> deleteByIds(DeleteRequest<WorkGrid> deleteRequest) {
 		Result<Boolean> result = Result.success();
