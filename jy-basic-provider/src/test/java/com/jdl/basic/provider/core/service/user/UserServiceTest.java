@@ -1,10 +1,14 @@
 package com.jdl.basic.provider.core.service.user;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.JyUser;
 import com.jdl.basic.api.domain.user.JyUserBatchRequest;
 import com.jdl.basic.api.domain.user.JyUserQueryDto;
 import com.jdl.basic.api.domain.user.UserChangeDto;
+import com.jdl.basic.common.contants.CacheKeyConstants;
+import com.jdl.basic.provider.config.cache.CacheService;
 import com.jdl.basic.provider.core.service.user.model.JyUserQueryCondition;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.ApplicationLaunch;
@@ -16,10 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @RunWith(SpringRunner.class)
@@ -28,6 +29,24 @@ public class UserServiceTest {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    CacheService jimdbCacheService;
+
+    @Test
+    public void getCacheUser() {
+        String key = String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, 910);
+        String json = jimdbCacheService.get(key);
+        log.info(json);
+        Map<Long, JyUser> idToUserMap = JSON.parseObject(json, new TypeReference<HashMap<Long, JyUser>>(){});
+        log.info("result {}", idToUserMap);
+    }
+
+    @Test
+    public void delCache() {
+        String key = String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, 910);
+        jimdbCacheService.del(key);
+    }
 
     @Test
     public void queryDifference() {

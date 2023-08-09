@@ -9,20 +9,24 @@ import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.api.enums.JyJobTypeEnum;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.contants.Constants;
-import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.config.cache.CacheService;
 import com.jdl.basic.provider.core.dao.user.JyUserDao;
 import com.jdl.basic.provider.core.service.user.UserService;
 import com.jdl.basic.provider.core.service.user.model.JyUserQueryCondition;
+import com.jdl.basic.rpc.exception.JYBasicRpcException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,7 +41,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public JyUser queryUserInfo(JyUser condition) {
     if (ObjectHelper.isEmpty(condition.getUserErp())) {
-//      throw new JYBasicRpcException("查询参数错误：erp为空！");
+      throw new JYBasicRpcException("查询参数错误：erp为空！");
     }
     return jyUserDao.queryUserInfo(condition);
   }
@@ -59,15 +63,16 @@ public class UserServiceImpl implements UserService {
     if (siteCode == null) {
       return result.toFail("场地编码不能为空！");
     }
-    List<JyUser> jyUsers;
-    if (jimdbCacheService.exists(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode))) {
-      String json = jimdbCacheService.get(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode));
-      jyUsers = JSON.parseObject(json, new TypeReference<ArrayList<JyUser>>(){});
+    Map<Long, JyUser> idToUserMap;
+    String json = jimdbCacheService.get(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode));
+    if (StringUtils.isNotEmpty(json)) {
+      idToUserMap = JSON.parseObject(json, new TypeReference<HashMap<Long, JyUser>>(){});
     } else {
-      jyUsers = jyUserDao.searchUserBySiteCode(siteCode);
-      jimdbCacheService.setEx(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode), jyUsers, 24L, TimeUnit.HOURS);
+      List<JyUser> jyUsers = jyUserDao.searchUserBySiteCode(siteCode);
+      idToUserMap = jyUsers.stream().collect(Collectors.toMap(JyUser::getId, item -> item));
+      jimdbCacheService.setEx(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode), idToUserMap, 30L, TimeUnit.MINUTES);
     }
-    result.setData(jyUsers);
+    result.setData(new ArrayList<>(idToUserMap.values()));
     return result;
   }
 
@@ -97,7 +102,26 @@ public class UserServiceImpl implements UserService {
     if (request.getGridDistributeFlag() == null) {
       return result.toFail("用户网格分配状态不能为空！");
     }
-    return result.setData(jyUserDao.batchUpdateByUserIds(request) > 0);
+    if (request.getSiteCode() == null) {
+      return result.toFail("更新用户场地编码不能为空！");
+    }
+    Boolean bool = jyUserDao.batchUpdateByUserIds(request) > 0;
+    Integer siteCode = request.getSiteCode();
+    // 更新JimDb中的缓存数据
+    if (bool) {
+      String json = jimdbCacheService.get(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode));
+      if (StringUtils.isNotEmpty(json)) {
+        Map<Long, JyUser> idToUserMap = JSON.parseObject(json, new TypeReference<HashMap<Long, JyUser>>(){});
+        for (JyUser user: request.getUsers()) {
+          JyUser jyUser = idToUserMap.get(user.getId());
+          if (jyUser != null) {
+            jyUser.setGridDistributeFlag(user.getGridDistributeFlag());
+          }
+        }
+        jimdbCacheService.setEx(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode), idToUserMap, 30L, TimeUnit.MINUTES);
+      }
+    }
+    return result.setData(bool);
   }
 
   @Override

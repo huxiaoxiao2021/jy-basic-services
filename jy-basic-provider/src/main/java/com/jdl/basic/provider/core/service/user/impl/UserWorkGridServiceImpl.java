@@ -44,11 +44,11 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
     }
 
     @Override
-    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.batchInsert", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     @Transactional
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.batchInsert", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> batchInsert(UserWorkGridBatchRequest request) {
         Result<Boolean> result = Result.success();
-        if (request.getUserWorkGrids() == null) {
+        if (CollectionUtils.isEmpty(request.getUserWorkGrids())) {
             return result.toFail("插入记录不能为空！");
         }
         List<JyUser> users = getUsers(request.getUserWorkGrids());
@@ -110,6 +110,43 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         } else {
             result.toFail("删除记录失败！");
         }
+        return result;
+    }
+    @Override
+    @Transactional
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.batchUpdate", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<Boolean> batchUpdateUserWorkGrid(UserWorkGridBatchUpdateRequest request) {
+        Result<Boolean> result = Result.success();
+
+        if (request.getSiteCode() == null) {
+            return result.toFail("场地编码不能为空！");
+        }
+
+        if (CollectionUtils.isNotEmpty(request.getDeleteUserWorkGrids())) {
+            UserWorkGridBatchRequest deleteRequest = new UserWorkGridBatchRequest();
+            deleteRequest.setUserWorkGrids(request.getDeleteUserWorkGrids());
+            deleteRequest.setUpdateTime(request.getUpdateTime());
+            deleteRequest.setUpdateUserErp(request.getUpdateUserErp());
+            deleteRequest.setUpdateUserName(request.getUpdateUserName());
+            deleteRequest.setSiteCode(request.getSiteCode());
+            Result<Boolean> deleteResult = batchDelete(deleteRequest);
+            if (deleteResult.isFail()) {
+                log.warn("batchUpdate 删除网格人员分配失败！{}", deleteResult.getMessage());
+                throw new RuntimeException("插入记录失败！" + deleteResult.getMessage());
+            }
+        }
+
+        if (CollectionUtils.isNotEmpty(request.getAddUserWorkGrids())) {
+            UserWorkGridBatchRequest addRequest = new UserWorkGridBatchRequest();
+            addRequest.setSiteCode(request.getSiteCode());
+            addRequest.setUserWorkGrids(request.getAddUserWorkGrids());
+            Result<Boolean> insertResult = batchInsert(addRequest);
+            if (insertResult.isFail()) {
+                log.warn("batchUpdate 插入网格人员分配失败！{}", insertResult.getMessage());
+                throw new RuntimeException("插入记录失败！" + insertResult.getMessage());
+            }
+        }
+
         return result;
     }
 
