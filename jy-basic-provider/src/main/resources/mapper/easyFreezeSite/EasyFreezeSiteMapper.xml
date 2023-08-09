@@ -113,7 +113,7 @@
             #{item.cityName,jdbcType=VARCHAR},
             #{item.orgCode,jdbcType=INTEGER},
             #{item.orgName,jdbcType=VARCHAR},
-            #{provinceAgencyCode,jdbcType=VARCHAR},#{provinceAgencyName,jdbcType=VARCHAR},#{areaHubCode,jdbcType=VARCHAR},#{areaHubName,jdbcType=VARCHAR},
+            #{item.provinceAgencyCode,jdbcType=VARCHAR},#{item.provinceAgencyName,jdbcType=VARCHAR},#{item.areaHubCode,jdbcType=VARCHAR},#{item.areaHubName,jdbcType=VARCHAR},
             #{item.remindStartTime,jdbcType=TIMESTAMP},
             #{item.remindEndTime,jdbcType=TIMESTAMP},
             #{item.useState,jdbcType=TINYINT},
