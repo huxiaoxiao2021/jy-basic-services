@@ -169,8 +169,23 @@ public class WorkStationAttendPlan implements Serializable {
 	/**
 	 * 班次名称
 	 */
-	private String waveName;	
+	private String waveName;
 
-
+	/**
+	 * 省区编码
+	 */
+	private String provinceAgencyCode;
+	/**
+	 * 省区名称
+	 */
+	private String provinceAgencyName;
+	/**
+	 * 枢纽编码
+	 */
+	private String areaHubCode;
+	/**
+	 * 枢纽名称
+	 */
+	private String areaHubName;
 
 }

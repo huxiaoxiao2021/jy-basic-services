@@ -140,4 +140,20 @@ public class WorkGridFlowDetailOffline implements Serializable {
 	 */
 	private Date ts;
 
+	/**
+	 * 枢纽编码
+	 */
+	private String areaHubCode;
+	/**
+	 * 枢纽名称
+	 */
+	private String areaHubName;
+	/**
+	 * 流入或流出-枢纽编码
+	 */
+	private String flowAreaHubCode;
+	/**
+	 * 流入或流出-枢纽名称
+	 */
+	private String flowAreaHubName;
 }

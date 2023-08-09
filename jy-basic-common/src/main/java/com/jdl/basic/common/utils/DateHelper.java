@@ -17,6 +17,8 @@ public class DateHelper {
     public final static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     
     public final static String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
+    
+    public final static String DATE_FORMAT_TIME_HH_mm = "HH:mm";
 
     /**
      * 一分钟的毫秒数
@@ -79,6 +81,15 @@ public class DateHelper {
     }
 
     /**
+     * 获取年月日 HH:mm
+     * @return
+     */
+    public static String getDateOfHH_mm(Date date){
+        DateFormat format = new SimpleDateFormat(DATE_FORMAT_TIME_HH_mm);
+
+        return format.format(date);
+    }
+    /**
      * 获取年月日 yyMMdd
      * @return
      */
@@ -87,7 +98,6 @@ public class DateHelper {
 
         return format.format(date);
     }
-
 
     public static String getWeekOfDate(Date date) {
         String[] weekDays = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};

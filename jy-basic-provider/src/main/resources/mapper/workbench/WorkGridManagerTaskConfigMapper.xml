@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jdl.basic.provider.core.dao.work.WorkGridManagerTaskConfigDao" >
+
+	<resultMap id="WorkGridManagerTaskConfig" type="com.jdl.basic.api.domain.work.WorkGridManagerTaskConfig" >
+		<id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+		<result column="task_config_code" property="taskConfigCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="task_config_name" property="taskConfigName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="task_code" property="taskCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="handler_user_position_code" property="handlerUserPositionCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="handler_user_position_name" property="handlerUserPositionName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="frequency_type" property="frequencyType" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="frequency_days" property="frequencyDays" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="frequency_hour" property="frequencyHour" javaType="java.lang.Integer" jdbcType="INTEGER" />
+		<result column="frequency_minute" property="frequencyMinute" javaType="java.lang.Integer" jdbcType="INTEGER" />
+		<result column="finish_type" property="finishType" javaType="java.lang.Integer" jdbcType="INTEGER" />
+		<result column="per_grid_num" property="perGridNum" javaType="java.lang.Integer" jdbcType="INTEGER" />
+		<result column="grid_turn_type" property="gridTurnType" javaType="java.lang.Integer" jdbcType="INTEGER" />
+		<result column="create_user" property="createUser" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="create_user_name" property="createUserName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="update_user" property="updateUser" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="update_user_name" property="updateUserName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result column="yn" property="yn" javaType="java.lang.Integer" jdbcType="TINYINT" />
+		<result column="ts" property="ts" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+		id,task_config_code,task_config_name,task_code,handler_user_position_code,handler_user_position_name,
+		frequency_type,frequency_days,frequency_hour,frequency_minute,finish_type,
+		per_grid_num,grid_turn_type,create_user,create_user_name,update_user,
+		update_user_name,create_time,update_time,yn,ts
+	</sql>
+
+	<insert id="insert" parameterType="com.jdl.basic.api.domain.work.WorkGridManagerTaskConfig" useGeneratedKeys="true" keyProperty="id">
+		insert into work_grid_manager_task_config
+			(
+			<trim suffixOverrides=",">
+				<if test="id != null" >
+					id,
+				</if>
+				<if test="taskConfigCode != null" >
+					task_config_code,
+				</if>
+				<if test="taskConfigName != null" >
+					task_config_name,
+				</if>
+				<if test="taskCode != null" >
+					task_code,
+				</if>
+				<if test="handlerUserPositionCode != null" >
+					handler_user_position_code,
+				</if>
+				<if test="handlerUserPositionName != null" >
+					handler_user_position_name,
+				</if>
+				<if test="frequencyType != null" >
+					frequency_type,
+				</if>
+				<if test="frequencyDays != null" >
+					frequency_days,
+				</if>
+				<if test="frequencyHour != null" >
+					frequency_hour,
+				</if>
+				<if test="frequencyMinute != null" >
+					frequency_minute,
+				</if>
+				<if test="finishType != null" >
+					finish_type,
+				</if>
+				<if test="perGridNum != null" >
+					per_grid_num,
+				</if>
+				<if test="gridTurnType != null" >
+					grid_turn_type,
+				</if>
+				<if test="createUser != null" >
+					create_user,
+				</if>
+				<if test="createUserName != null" >
+					create_user_name,
+				</if>
+				<if test="updateUser != null" >
+					update_user,
+				</if>
+				<if test="updateUserName != null" >
+					update_user_name,
+				</if>
+				<if test="createTime != null" >
+					create_time,
+				</if>
+				<if test="updateTime != null" >
+					update_time,
+				</if>
+				<if test="yn != null" >
+					yn,
+				</if>
+				<if test="ts != null" >
+					ts,
+				</if>
+			</trim>
+			)
+			values
+			(
+			<trim suffixOverrides=",">
+				<if test="id != null" >
+					#{id,jdbcType=BIGINT},
+				</if>
+				<if test="taskConfigCode != null" >
+					#{taskConfigCode,jdbcType=VARCHAR},
+				</if>
+				<if test="taskConfigName != null" >
+					#{taskConfigName,jdbcType=VARCHAR},
+				</if>
+				<if test="taskCode != null" >
+					#{taskCode,jdbcType=VARCHAR},
+				</if>
+				<if test="handlerUserPositionCode != null" >
+					#{handlerUserPositionCode,jdbcType=VARCHAR},
+				</if>
+				<if test="handlerUserPositionName != null" >
+					#{handlerUserPositionName,jdbcType=VARCHAR},
+				</if>
+				<if test="frequencyType != null" >
+					#{frequencyType,jdbcType=VARCHAR},
+				</if>
+				<if test="frequencyDays != null" >
+					#{frequencyDays,jdbcType=VARCHAR},
+				</if>
+				<if test="frequencyHour != null" >
+					#{frequencyHour,jdbcType=INTEGER},
+				</if>
+				<if test="frequencyMinute != null" >
+					#{frequencyMinute,jdbcType=INTEGER},
+				</if>
+				<if test="finishType != null" >
+					#{finishType,jdbcType=INTEGER},
+				</if>
+				<if test="perGridNum != null" >
+					#{perGridNum,jdbcType=INTEGER},
+				</if>
+				<if test="gridTurnType != null" >
+					#{gridTurnType,jdbcType=INTEGER},
+				</if>
+				<if test="createUser != null" >
+					#{createUser,jdbcType=VARCHAR},
+				</if>
+				<if test="createUserName != null" >
+					#{createUserName,jdbcType=VARCHAR},
+				</if>
+				<if test="updateUser != null" >
+					#{updateUser,jdbcType=VARCHAR},
+				</if>
+				<if test="updateUserName != null" >
+					#{updateUserName,jdbcType=VARCHAR},
+				</if>
+				<if test="createTime != null" >
+					#{createTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="updateTime != null" >
+					#{updateTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="yn != null" >
+					#{yn,jdbcType=TINYINT},
+				</if>
+				<if test="ts != null" >
+					#{ts,jdbcType=TIMESTAMP},
+				</if>
+			</trim>
+			)
+	</insert>
+
+	<update id="updateById" parameterType="com.jdl.basic.api.domain.work.WorkGridManagerTaskConfig">
+		update work_grid_manager_task_config
+			<set>
+				<if test="taskConfigCode != null" >
+					task_config_code = #{taskConfigCode,jdbcType=VARCHAR},
+				</if>
+				<if test="taskConfigName != null" >
+					task_config_name = #{taskConfigName,jdbcType=VARCHAR},
+				</if>
+				<if test="taskCode != null" >
+					task_code = #{taskCode,jdbcType=VARCHAR},
+				</if>
+				<if test="handlerUserPositionCode != null" >
+					handler_user_position_code = #{handlerUserPositionCode,jdbcType=VARCHAR},
+				</if>
+				<if test="handlerUserPositionName != null" >
+					handler_user_position_name = #{handlerUserPositionName,jdbcType=VARCHAR},
+				</if>
+				<if test="frequencyType != null" >
+					frequency_type = #{frequencyType,jdbcType=VARCHAR},
+				</if>
+				<if test="frequencyDays != null" >
+					frequency_days = #{frequencyDays,jdbcType=VARCHAR},
+				</if>
+				<if test="frequencyHour != null" >
+					frequency_hour = #{frequencyHour,jdbcType=INTEGER},
+				</if>
+				<if test="frequencyMinute != null" >
+					frequency_minute = #{frequencyMinute,jdbcType=INTEGER},
+				</if>
+				<if test="finishType != null" >
+					finish_type = #{finishType,jdbcType=INTEGER},
+				</if>
+				<if test="perGridNum != null" >
+					per_grid_num = #{perGridNum,jdbcType=INTEGER},
+				</if>
+				<if test="gridTurnType != null" >
+					grid_turn_type = #{gridTurnType,jdbcType=INTEGER},
+				</if>
+				<if test="createUser != null" >
+					create_user = #{createUser,jdbcType=VARCHAR},
+				</if>
+				<if test="createUserName != null" >
+					create_user_name = #{createUserName,jdbcType=VARCHAR},
+				</if>
+				<if test="updateUser != null" >
+					update_user = #{updateUser,jdbcType=VARCHAR},
+				</if>
+				<if test="updateUserName != null" >
+					update_user_name = #{updateUserName,jdbcType=VARCHAR},
+				</if>
+				<if test="createTime != null" >
+					create_time = #{createTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="updateTime != null" >
+					update_time = #{updateTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="yn != null" >
+					yn = #{yn,jdbcType=TINYINT},
+				</if>
+				<if test="ts != null" >
+					ts = #{ts,jdbcType=TIMESTAMP},
+				</if>
+			</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<update id="deleteById" parameterType="com.jdl.basic.api.domain.work.WorkGridManagerTaskConfig">
+		update work_grid_manager_task_config
+			set 
+			<if test="updateUser != null" >
+				update_user = #{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			   yn = 0
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+    <select id="queryByTaskConfigCode" parameterType="java.lang.String" resultMap="WorkGridManagerTaskConfig">
+        select
+            <include refid="Base_Column_List"/>
+        from
+            work_grid_manager_task_config t
+        where yn = 1 and task_config_code = #{taskConfigCode,jdbcType=VARCHAR}
+            limit 1
+    </select>
+	<select id="queryById" parameterType="java.lang.Long" resultMap="WorkGridManagerTaskConfig">
+		select
+			<include refid="Base_Column_List"/>
+		from
+			work_grid_manager_task_config t
+		where yn = 1 and id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="queryList" resultMap="WorkGridManagerTaskConfig">
+		select
+			<include refid="Base_Column_List"/>
+		from
+			work_grid_manager_task_config t
+		<include refid="queryCondition"/>
+		limit #{offset}, #{limit}
+	</select>
+
+	<select id="queryCount" resultType="long">
+		select
+			count(1)
+		from
+			work_grid_manager_task_config t
+		<include refid="queryCondition"/>
+	</select>
+
+	<sql id="queryCondition">
+		<where>
+			yn = 1 
+        <if test="taskCode != null and taskCode != ''" >
+          and task_code = #{taskCode,jdbcType=VARCHAR}
+         </if>			
+		</where>
+	</sql>
+</mapper>

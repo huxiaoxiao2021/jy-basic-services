@@ -5,6 +5,10 @@
       <id column="id" jdbcType="BIGINT" property="id" />
       <result column="org_code" jdbcType="INTEGER" property="orgCode" />
       <result column="org_name" jdbcType="VARCHAR" property="orgName" />
+        <result column="province_agency_code" property="provinceAgencyCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="province_agency_name" property="provinceAgencyName" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="area_hub_code" property="areaHubCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result column="area_hub_name" property="areaHubName" javaType="java.lang.String" jdbcType="VARCHAR" />  
       <result column="site_code" jdbcType="INTEGER" property="siteCode" />
       <result column="site_name" jdbcType="VARCHAR" property="siteName" />
       <result column="business_line_code" jdbcType="VARCHAR" property="businessLineCode" />
@@ -25,7 +29,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-      id, org_code, org_name, site_code, site_name, business_line_code, business_line_name,
+      id, org_code, org_name, province_agency_code,province_agency_name,area_hub_code,area_hub_name, 
+      site_code, site_name, business_line_code, business_line_name,
       wave_code, wave_period, start_time, end_time, create_user, create_user_name, create_time,
       update_user, update_user_name, update_time, version_num, yn, ts
     </sql>
@@ -35,6 +40,12 @@
             s.yn = 1
             <if test="orgCode != null">
                 and org_code = #{orgCode, jdbcType=INTEGER}
+            </if>
+            <if test="provinceAgencyCode != null and provinceAgencyCode != ''">
+                and province_agency_code = #{provinceAgencyCode, jdbcType=VARCHAR}
+            </if>
+            <if test="areaHubCode != null and areaHubCode != ''">
+                and area_hub_code = #{areaHubCode, jdbcType=VARCHAR}
             </if>
             <if test="siteCode != null">
                 and site_code = #{siteCode, jdbcType=INTEGER}
@@ -47,6 +58,7 @@
         (
             org_code,
             org_name,
+            province_agency_code,province_agency_name,area_hub_code,area_hub_name,
             site_code,
             site_name,
             business_line_code,
@@ -68,6 +80,7 @@
         (
             #{item.orgCode,jdbcType=INTEGER},
             #{item.orgName,jdbcType=VARCHAR},
+            #{item.provinceAgencyCode,jdbcType=VARCHAR},#{item.provinceAgencyName,jdbcType=VARCHAR},#{item.areaHubCode,jdbcType=VARCHAR},#{item.areaHubName,jdbcType=VARCHAR},
             #{item.siteCode,jdbcType=INTEGER},
             #{item.siteName,jdbcType=VARCHAR},
             #{item.businessLineCode,jdbcType=VARCHAR},
@@ -94,10 +107,8 @@
             site_wave_schedule s
         where
             s.yn = 1 and
-            s.org_code = #{orgCode, jdbcType=INTEGER} and
             s.site_code = #{siteCode, jdbcType=INTEGER}
         group by
-            s.org_code,
             s.site_code
     </select>
 
@@ -111,7 +122,6 @@
             s.update_time = #{updateTime, jdbcType=VARCHAR}
         where
             s.yn = 1 and
-            s.org_code = #{orgCode, jdbcType=INTEGER} and
             s.site_code = #{siteCode, jdbcType=INTEGER}
     </update>
 
@@ -121,7 +131,7 @@
         from
             site_wave_schedule s
         <include refid="queryCondition"/>
-        group by s.org_code, s.site_code
+        group by s.site_code
     </select>
 
     <select id="queryPageList" parameterType="com.jdl.basic.api.domain.workStation.SiteWaveScheduleQuery" resultMap="BaseResultMap">
@@ -131,12 +141,11 @@
             site_wave_schedule s
         <include refid="queryCondition"/>
         group by
-            s.org_code, s.site_code
+            s.site_code
         <if test="pageNumber > 0">
             limit #{offset}, #{limit}
         </if>
     </select>
-
     <select id="queryPageDetail" parameterType="com.jdl.basic.api.domain.workStation.SiteWaveSchedule" resultMap="BaseResultMap">
         select
             <include refid="Base_Column_List"/>
@@ -144,8 +153,42 @@
             site_wave_schedule s
         where
             s.yn = 1 and
-            s.org_code = #{orgCode, jdbcType=INTEGER} and
             s.site_code = #{siteCode, jdbcType=INTEGER}
     </select>
 
+    <!-- 刷数sql start -->
+    <select id="brushQueryAllByPage" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+            id,site_code
+        from
+            site_wave_schedule
+        where yn = 1
+          and id > #{id,jdbcType=BIGINT}
+        order by id
+            limit 100
+    </select>
+    <update id="brushUpdateById" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index"  separator=";">
+            UPDATE site_wave_schedule
+            <set>
+                <if test="item.provinceAgencyCode != null and item.provinceAgencyCode != ''" >
+                    province_agency_code = #{item.provinceAgencyCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.provinceAgencyName != null and item.provinceAgencyName != ''" >
+                    province_agency_name = #{item.provinceAgencyName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.areaHubCode != null and item.areaHubCode != ''" >
+                    area_hub_code = #{item.areaHubCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.areaHubName != null and item.areaHubName != ''" >
+                    area_hub_name = #{item.areaHubName,jdbcType=VARCHAR},
+                </if>
+                update_time = now()
+            </set>
+            WHERE yn = 1
+            AND id = #{item.id}
+        </foreach>
+    </update>
+    <!-- 刷数sql end -->
+    
 </mapper>

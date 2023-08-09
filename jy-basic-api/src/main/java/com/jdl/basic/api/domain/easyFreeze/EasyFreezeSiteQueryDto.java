@@ -42,6 +42,15 @@ public class EasyFreezeSiteQueryDto implements Serializable {
 
     private Integer offset = 0;
 
+    /**
+     * 省区编码
+     */
+    private String provinceAgencyCode;
+    /**
+     * 枢纽编码
+     */
+    private String areaHubCode;
+
     public Integer getOffset() {
         return offset;
     }

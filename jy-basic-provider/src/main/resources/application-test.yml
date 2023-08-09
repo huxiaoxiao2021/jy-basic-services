@@ -3,8 +3,6 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://mysql-cn-north-1-f51a5018ea1d406c.rds.jdcloud.com:3358/jybasic_conf?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&failOverReadOnly=false&allowMultiQueries=true
-    username: testwl
-    password: 4x1eSVxcq0816pytgeyQAh1wUS
     #Spring Boot 默认是不注入这些属性值的，需要自己绑定
     #druid 数据源专有配置
     initialSize: 5
@@ -50,11 +48,14 @@ mq:
     #叉车完成
     fork-lift-topic: ky_fork_lift_complete
     collectBoxFlowNotice: collect_box_flow_notice
-
+    workGridManagerTaskConfigMq: workGridManagerTaskConfigMq
+    
   consumer:
     topic:
       sort_cross_detail: basic_sort_cross_detail
       wlUserInfo: wlUserInfo
+      site_change: basic_base_site_change
+      wmsSite_Change: basic_ps_storeinfo
 
   jmq4producer:
     password: 809375866c4842f28d7e4eec04da1e41
@@ -120,3 +121,31 @@ site:
   siteType: 4
   subType: 4
   thirdType: 1
+
+## es config
+es:
+  basic:
+    cluster:
+      name: erdtools_newes
+      ip: nodes-es-avty5e0cy9-0.jvessel-open-hb.jdcloud.com:9300,nodes-es-avty5e0cy9-1.jvessel-open-hb.jdcloud.com:9300,nodes-es-avty5e0cy9-2.jvessel-open-hb.jdcloud.com:9300
+      port: 9300
+      user: qltest_es
+      password: "#Qltest_newes"
+      sleep:
+        times: 5000
+    ## 索引
+    basicSite:
+      queryIndexAlias: jy_basic_site
+      type: jy_basic_site
+      
+## ducc 配置(不同应用请设置不同的application)
+laf:
+  config:
+    manager:
+      application: jy-basic-services
+      resources[0]:
+        name: ducc
+        uri: ucc://jdos_jy-basic-services:bfe898e2fb1f48719d85e2fd141c03f2@test.ducc.jd.local/v1/namespace/jy_basic_services/config/default/profiles/test?longPolling=60000&neces
+      parameters[0]:
+        name: autoListener
+        value: true

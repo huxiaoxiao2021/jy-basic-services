@@ -7,7 +7,7 @@ import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.ApplicationLaunch;
-import com.jdl.basic.provider.core.manager.basicSiteQueryWS.IBasicSiteQueryWSManager;
+import com.jdl.basic.provider.core.manager.IBasicSiteQueryWSManager;
 import com.jdl.basic.provider.core.service.cross.SortCrossService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

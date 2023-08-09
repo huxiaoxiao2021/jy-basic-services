@@ -172,4 +172,16 @@ public interface WorkStationGridService {
 	 * @return
 	 */
 	List<WorkStationGrid> queryListForWorkGridVo(WorkStationGridQuery query);
+	/**
+	 * 查询作业区下的站点列表
+	 * @param workStationGridQuery
+	 * @return
+	 */
+	List<Integer> querySiteListForManagerScan(WorkStationGridQuery workStationGridQuery);
+	/**
+	 * 查询场地、作业区下的网格列表
+	 * @param workStationGridQuery
+	 * @return
+	 */	
+	List<WorkStationGrid> queryListForManagerSiteScan(WorkStationGridQuery workStationGridQuery);
 }

@@ -9,10 +9,14 @@
 		<result column="org_name" property="orgName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="province_agency_code" property="provinceAgencyCode" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="province_agency_name" property="provinceAgencyName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="area_hub_code" property="areaHubCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="area_hub_name" property="areaHubName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="site_code" property="siteCode" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="site_name" property="siteName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="flow_province_agency_code" property="flowProvinceAgencyCode" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="flow_province_agency_name" property="flowProvinceAgencyName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="flow_area_hub_code" property="flowAreaHubCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="flow_area_hub_name" property="flowAreaHubName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="flow_org_code" property="flowOrgCode" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="flow_org_name" property="flowOrgName" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result column="flow_site_code" property="flowSiteCode" javaType="java.lang.String" jdbcType="TIMESTAMP" />
@@ -34,6 +38,7 @@
 		id,
 		province_agency_code,
 		province_agency_name,
+		area_hub_code,area_hub_name,
 		org_code,
 		org_name,
 		site_code,
@@ -42,6 +47,7 @@
 		flow_org_name,
 		flow_province_agency_code,
 		flow_province_agency_name,
+		flow_area_hub_code,flow_area_hub_name,
 		flow_site_code,
 		flow_site_name,
 		flow_direction_type,
@@ -100,4 +106,48 @@
                ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
         where id = #{id,jdbcType=BIGINT}
     </update>
+
+	<!-- 刷数sql start -->
+	<select id="brushQueryAllByPage" parameterType="java.lang.Integer" resultMap="WorkGridFlowDetailOffline">
+		select
+			id,site_code,flow_site_code
+		from
+			work_grid_flow_detail_offline
+		where id > #{id,jdbcType=BIGINT}
+		order by id
+			limit 100
+	</select>
+	<update id="brushUpdateById" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"  separator=";">
+			UPDATE work_grid_flow_detail_offline
+			<set>
+				<if test="item.provinceAgencyCode != null and item.provinceAgencyCode != ''" >
+					province_agency_code = #{item.provinceAgencyCode,jdbcType=VARCHAR},
+				</if>
+				<if test="item.provinceAgencyName != null and item.provinceAgencyName != ''" >
+					province_agency_name = #{item.provinceAgencyName,jdbcType=VARCHAR},
+				</if>
+				<if test="item.areaHubCode != null and item.areaHubCode != ''" >
+					area_hub_code = #{item.areaHubCode,jdbcType=VARCHAR},
+				</if>
+				<if test="item.areaHubName != null and item.areaHubName != ''" >
+					area_hub_name = #{item.areaHubName,jdbcType=VARCHAR},
+				</if>
+				<if test="item.flowProvinceAgencyCode != null and item.flowProvinceAgencyCode != ''" >
+					flow_province_agency_code = #{item.flowProvinceAgencyCode,jdbcType=VARCHAR},
+				</if>
+				<if test="item.flowProvinceAgencyName != null and item.flowProvinceAgencyName != ''" >
+					flow_province_agency_name = #{item.flowProvinceAgencyName,jdbcType=VARCHAR},
+				</if>
+				<if test="item.flowAreaHubCode != null and item.flowAreaHubCode != ''" >
+					flow_area_hub_code = #{item.flowAreaHubCode,jdbcType=VARCHAR},
+				</if>
+				<if test="item.flowAreaHubName != null and item.flowAreaHubName != ''" >
+					flow_area_hub_name = #{item.flowAreaHubName,jdbcType=VARCHAR},
+				</if>
+			</set>
+			WHERE id = #{item.id}
+		</foreach>
+	</update>
+	<!-- 刷数sql end -->
 </mapper>

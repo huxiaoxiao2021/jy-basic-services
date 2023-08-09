@@ -70,5 +70,11 @@ public interface WorkAreaService {
 	 * @param areaCode
 	 * @return
 	 */	
-	Map<String,WorkArea> queryByAreaCodeListToMap(List<String> areaCodeList);	
+	Map<String,WorkArea> queryByAreaCodeListToMap(List<String> areaCodeList);
+	/**
+	 * 根据areaCode列表查询
+	 * @param areaCode
+	 * @return
+	 */	
+	List<WorkArea> queryListByAreaCodeList(List<String> areaCodeList);
 }

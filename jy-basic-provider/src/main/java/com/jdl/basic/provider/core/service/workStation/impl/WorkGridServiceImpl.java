@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.springframework.beans.BeanUtils;
@@ -49,7 +50,6 @@ import com.jdl.basic.provider.core.service.workStation.WorkAreaService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDirectionService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
-import com.jdl.basic.rpc.Rpc.BaseMajorRpc;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -78,14 +78,21 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Autowired
 	private WorkStationGridMachineService machineService;
 	@Autowired
-	private BaseMajorRpc baseMajorManager;
-
+	private BaseMajorManager baseMajorManager;	
+	
 	@Autowired
 	@Qualifier("workAreaService")
 	private WorkAreaService workAreaService;
-
+	/**
+	 * 导入总数据限制
+	 */
 	@Value("${beans.workGridService.importDatasLimit:100}")
 	private int importDatasLimit;
+	/**
+	 * 导入流向数限制
+	 */
+	@Value("${beans.workGridService.importDatasPerFlowLimit:100}")
+	private int importDatasPerFlowLimit;
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -330,6 +337,10 @@ public class WorkGridServiceImpl implements WorkGridService {
 			updateData.setUpdateUser(workGrid.getUpdateUser());
 			updateData.setUpdateUserName(workGrid.getUpdateUserName());
 			updateData.setUpdateTime(workGrid.getUpdateTime());
+			updateData.setProvinceAgencyCode(workGrid.getProvinceAgencyCode());
+			updateData.setProvinceAgencyName(workGrid.getProvinceAgencyName());
+			updateData.setAreaHubCode(workGrid.getAreaHubCode());
+			updateData.setAreaHubName(workGrid.getAreaHubName());
 			this.updateById(updateData);
 			result.setData(workGridDao.queryById(oldData.getId()));
 		}else {
@@ -540,8 +551,12 @@ public class WorkGridServiceImpl implements WorkGridService {
 		}
 		Map<Integer,List<WorkGridFlowDirection>> flowDataMap = new HashMap<>();
 		data.setFlowDataMap(flowDataMap);
+		Date createTime = new Date();
 		for(GridFlowLineTypeEnum lineType : flowSiteCodes.keySet()) {
 			List<String> siteCodeStrList = flowSiteCodes.get(lineType);
+			if(siteCodeStrList.size() > importDatasLimit) {
+				return result.toFail(lineType.getName()+"流向站点不能超过！【"+importDatasPerFlowLimit+"】个");
+			}
 			List<WorkGridFlowDirection> flowDataList = new ArrayList<>();
 			for(String siteCodeStr : siteCodeStrList) {
 				Integer siteCodeInt = null;
@@ -553,13 +568,21 @@ public class WorkGridServiceImpl implements WorkGridService {
 				if(siteInfo == null) {
 					return result.toFail(lineType.getName()+"流向ID中站点无效！【"+siteCodeStr+"】");
 				}
+				if(siteCodeInt.equals(workGridData.getSiteCode())) {
+					return result.toFail(lineType.getName()+"流向ID不能是网格的站点！【"+siteCodeStr+"】");
+				}
 				WorkGridFlowDirection flowData = new WorkGridFlowDirection();
 				flowData.setRefWorkGridKey(workGridData.getBusinessKey());
 				flowData.setSiteCode(workGridData.getSiteCode());
 				flowData.setSiteName(workGridData.getSiteName());
 				flowData.setOrgCode(workGridData.getOrgCode());
 				flowData.setOrgName(workGridData.getOrgName());
+				flowData.setProvinceAgencyCode(workGridData.getProvinceAgencyCode());
+				flowData.setProvinceAgencyName(workGridData.getProvinceAgencyName());
+				flowData.setAreaHubCode(workGridData.getAreaHubCode());
+				flowData.setAreaHubName(workGridData.getAreaHubName());
 				flowData.setCreateUser(data.getConfigFlowUser());
+				flowData.setCreateTime(createTime);
 				flowData.setLineType(lineType.getCode());
 				flowData.setFlowSiteCode(siteCodeInt);
 				flowData.setFlowOrgCode(siteInfo.getOrgId());
@@ -569,6 +592,10 @@ public class WorkGridServiceImpl implements WorkGridService {
 				}
 				flowData.setFlowOrgName(orgName);
 				flowData.setFlowSiteName(siteInfo.getSiteName());
+				flowData.setFlowProvinceAgencyCode(siteInfo.getProvinceAgencyCode());
+				flowData.setFlowProvinceAgencyName(siteInfo.getProvinceAgencyName());
+				flowData.setFlowAreaHubCode(siteInfo.getAreaCode());
+				flowData.setFlowAreaHubName(siteInfo.getAreaName());
 				flowData.setFlowDirectionType(workArea.getFlowDirectionType());
 				flowDataList.add(flowData);
 			}
@@ -623,5 +650,38 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Override
 	public WorkGrid queryByWorkGridKey(String workGridKey) {
 		return workGridDao.queryByWorkGridKey(workGridKey);
+	}
+	@Override
+	public List<Integer> querySiteListForManagerScan(WorkGridQuery query) {
+		if(CollectionUtils.isEmpty(query.getAreaCodeList())) {
+			return new ArrayList<>();
+		}
+		if(query.getPageSize() == null
+				|| query.getPageSize() <= 0) {
+			query.setPageSize(DmsConstants.PAGE_SIZE_DEFAULT);
+		}
+		query.setOffset(0);
+		query.setLimit(query.getPageSize());
+		if(query.getPageNumber() > 0) {
+			query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
+		}
+		return workGridDao.querySiteListForManagerScan(query);
+	}
+	@Override
+	public List<WorkGrid> queryListForManagerSiteScan(WorkGridQuery query) {
+		if(query.getSiteCode() == null 
+				|| CollectionUtils.isEmpty(query.getAreaCodeList())) {
+			return new ArrayList<>();
+		}
+		if(query.getPageSize() == null
+				|| query.getPageSize() <= 0) {
+			query.setPageSize(DmsConstants.PAGE_SIZE_DEFAULT);
+		}
+		query.setOffset(0);
+		query.setLimit(query.getPageSize());
+		if(query.getPageNumber() > 0) {
+			query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
+		}		
+		return workGridDao.queryListForManagerSiteScan(query);
 	}
 }

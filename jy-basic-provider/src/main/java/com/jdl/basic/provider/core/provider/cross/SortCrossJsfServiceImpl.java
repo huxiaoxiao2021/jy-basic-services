@@ -8,7 +8,7 @@ import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringUtils;
-import com.jdl.basic.provider.core.manager.basicSiteQueryWS.IBasicSiteQueryWSManager;
+import com.jdl.basic.provider.core.manager.IBasicSiteQueryWSManager;
 import com.jdl.basic.provider.core.service.cross.SortCrossService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -224,6 +224,91 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public Result<TableTrolleyJsfResp> queryCrossCodeTableTrolleyBySiteFlow(TableTrolleyQuery request) {
+        Result<TableTrolleyJsfResp> result = new Result<>();
+        result.toSuccess();
+        if(Objects.isNull(request)) {
+            result.toFail("参数为空");
+            return result;
+        }
+        if(Objects.isNull(request.getDmsId())) {
+            result.toFail("参数DmsId缺失");
+            return result;
+        }
+        if(Objects.isNull(request.getSiteCode())) {
+            result.toFail("参数SiteCode缺失");
+            return result;
+        }
+        try{
+            result.setData(sortCrossService.queryCrossCodeTableTrolleyBySiteFlow(request));
+            return result;
+        }catch (Exception e) {
+            log.error("根据场地流向获取滑道笼车号服务失败，参数={}，errMsg={}", JsonHelper.toJSONString(request), e.getMessage(), e);
+            result.toError("根据场地流向获取滑道笼车号服务失败");
+            return result;
+        }
+    }
+
+
+    @Override
+    public Result<TableTrolleyJsfResp> queryCrossCodeTableTrolleyBySiteFlowList(TableTrolleyQuery request) {
+        Result<TableTrolleyJsfResp> result = new Result<>();
+        result.toSuccess();
+        if(Objects.isNull(request)) {
+            result.toFail("参数为空");
+            return result;
+        }
+        if(Objects.isNull(request.getDmsId())) {
+            result.toFail("参数DmsId缺失");
+            return result;
+        }
+        if(CollectionUtils.isEmpty(request.getSiteCodeList())) {
+            result.toFail("参数SiteCodeList缺失");
+            return result;
+        }
+        try{
+            result.setData(sortCrossService.queryCrossCodeTableTrolleyBySiteFlowList(request));
+            return result;
+        }catch (Exception e) {
+            log.error("根据场地流向批量获取滑道笼车号服务失败，参数={}，errMsg={}", JsonHelper.toJSONString(request), e.getMessage(), e);
+            result.toError("根据场地流向批量获取滑道笼车号服务失败");
+            return result;
+        }
+    }
+
+
+
+    @Override
+    public Result<TableTrolleyJsfResp> querySiteFlowByCrossCodeTableTrolley(TableTrolleyQuery request) {
+        Result<TableTrolleyJsfResp> result = new Result<>();
+        result.toSuccess();
+        if(Objects.isNull(request)) {
+            result.toFail("参数为空");
+            return result;
+        }
+        if(Objects.isNull(request.getCrossCode())) {
+            result.toFail("参数CrossCode缺失");
+            return result;
+        }
+        if(Objects.isNull(request.getTabletrolleyCode())) {
+            result.toFail("参数TabletrolleyCode缺失");
+            return result;
+        }
+        if(Objects.isNull(request.getDmsId())) {
+            result.toFail("参数DmsId缺失");
+            return result;
+        }
+        try{
+            result.setData(sortCrossService.querySiteFlowByCrossCodeTableTrolley(request));
+            return result;
+        }catch (Exception e) {
+            log.error("根据滑道笼车号查询场地流向服务失败，参数={}，errMsg={}", JsonHelper.toJSONString(request), e.getMessage(), e);
+            result.toError("根据滑道笼车号查询场地流向服务失败");
+            return result;
+        }
     }
 
 }

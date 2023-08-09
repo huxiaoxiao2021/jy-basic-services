@@ -1,7 +1,5 @@
 package com.jdl.basic.provider.mq.consumer;
 
-import static com.jdl.basic.common.contants.Constants.LOCK_EXPIRE;
-
 import com.jd.jmq.common.message.Message;
 import com.jd.joyqueue.client.springboot2.annotation.JmqListener;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
@@ -11,27 +9,26 @@ import com.jdl.basic.api.enums.UserSatusEnum;
 import com.jdl.basic.api.enums.WorkSiteTypeEnum;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.contants.Constants;
-import com.jdl.basic.common.utils.BeanUtils;
 import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.common.utils.StringUtils;
+import com.jdl.basic.provider.JYBasicRpcException;
 import com.jdl.basic.provider.config.lock.JimDbLock;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
-import com.jdl.basic.provider.core.service.cross.SortCrossService;
 import com.jdl.basic.provider.core.service.user.UserService;
 import com.jdl.basic.provider.core.service.user.UserWorkGridService;
-import com.jdl.basic.provider.dto.SortCrossModifyDto;
 import com.jdl.basic.provider.dto.UserInfoBusinessDTO;
-import com.jdl.basic.rpc.exception.JYBasicRpcException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
+import static com.jdl.basic.common.contants.Constants.LOCK_EXPIRE;
 
 
 @Component

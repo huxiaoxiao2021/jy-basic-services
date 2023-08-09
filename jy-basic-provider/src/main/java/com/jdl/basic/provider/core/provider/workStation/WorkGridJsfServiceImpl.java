@@ -2,7 +2,7 @@ package com.jdl.basic.provider.core.provider.workStation;
 
 
 import com.jdl.basic.common.utils.ObjectHelper;
-import com.jdl.basic.rpc.exception.JYBasicRpcException;
+import com.jdl.basic.provider.JYBasicRpcException;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -216,5 +216,13 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 		if (ObjectHelper.isEmpty(query.getGridNo())){
 			throw new JYBasicRpcException("参数错误：gridNo为空！");
 		}
+	}
+	@Override
+	public List<Integer> querySiteListForManagerScan(WorkGridQuery workGridQuery) {
+		return workGridService.querySiteListForManagerScan(workGridQuery);
+	}
+	@Override
+	public List<WorkGrid> queryListForManagerSiteScan(WorkGridQuery workGridQuery) {
+		return workGridService.queryListForManagerSiteScan(workGridQuery);
 	}
 }
