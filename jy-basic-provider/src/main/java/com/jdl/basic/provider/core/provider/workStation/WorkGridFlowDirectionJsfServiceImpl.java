@@ -241,16 +241,4 @@ public class WorkGridFlowDirectionJsfServiceImpl implements WorkGridFlowDirectio
 		}while(initDataFlag && !CollectionUtils.isEmpty(dataList));	
 		initDataFlag = false;
 	}
-
-	/**
-	 * 根据流入code和type查询
-	 *
-	 * @param flowDirectionType
-	 * @param flowSiteCode
-	 * @return
-	 */
-	@Override
-	public Result<List<String>> queryFlowDataForFlowSiteCode(Integer flowDirectionType,Integer flowSiteCode) {
-		return workGridFlowDirectionService.queryFlowDataForFlowSiteCode(flowDirectionType,flowSiteCode);
-	}
 }

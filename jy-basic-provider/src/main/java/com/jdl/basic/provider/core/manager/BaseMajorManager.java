@@ -13,4 +13,6 @@ public interface BaseMajorManager {
     public BaseStaffSiteOrgDto getBaseSiteBySiteId(Integer paramInteger);
 
     BaseStaffSiteOrgDto getBaseStaffByErp(String erp);
+
+    public abstract BaseStaffSiteOrgDto getBaseSiteByDmsCode(String siteCode);
 }

@@ -804,4 +804,19 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		}
 		return workStationGridDao.queryListForManagerSiteScan(query);
 	}
+
+	/**
+	 * 获取月台号
+	 *
+	 * @param siteCode
+	 * @param refWorkKeyList
+	 * @param refWorkGridKeyList
+	 */
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.getDockCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	@Cache(key = "WorkStationGridServiceImpl.getDockCode@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+			,redisEnable = true, redisExpiredTime = 5 * 60 * 1000)
+	public List<WorkStationGrid> getDockCode(Integer siteCode, List<String> refWorkKeyList, List<String> refWorkGridKeyList) {
+		return workStationGridDao.getDockCode(siteCode,refWorkKeyList,refWorkGridKeyList);
+	}
 }

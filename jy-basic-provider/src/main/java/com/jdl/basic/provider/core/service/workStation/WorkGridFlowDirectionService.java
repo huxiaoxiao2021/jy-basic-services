@@ -89,12 +89,12 @@ public interface WorkGridFlowDirectionService {
 	Result<List<WorkGridFlowDirection>> queryListForExport(WorkGridFlowDirectionQuery query);
 	Result<Long> queryCount(WorkGridFlowDirectionQuery query);
 
+
 	/**
-	 * 根据流入code和type查询
+	 * 查询流向-根据传入的流向
 	 *
-	 * @param flowDirectionType
-	 * @param flowSiteCode
+	 * @param query
 	 * @return
 	 */
-	Result<List<String>> queryFlowDataForFlowSiteCode(Integer flowDirectionType,Integer flowSiteCode);
+	List<String> queryRefWorkGridKeyByFlowDirection(WorkGridFlowDirectionQuery query);
 }

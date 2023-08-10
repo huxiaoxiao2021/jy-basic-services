@@ -73,12 +73,4 @@ public interface WorkGridFlowDirectionJsfService {
 	
 	void stopInit();
 	void initWorkGridFlowOffline();
-	/**
-	 * 根据流入code和type查询
-	 *
-	 * @param flowDirectionType
-	 * @param flowSiteCode
-	 * @return
-	 */
-	Result<List<String>> queryFlowDataForFlowSiteCode(Integer flowDirectionType,Integer flowSiteCode);
 }

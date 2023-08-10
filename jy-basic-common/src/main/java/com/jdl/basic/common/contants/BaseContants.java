@@ -150,6 +150,7 @@ public class BaseContants {
 	public static final int TRADER_MOLD_POP = 1001;//商家类别pop商家
 	
 	public static final String SITE_CODE_SEQ = "站点Code序列";
+	public static final int NUMBER_ONE = 1;
 
 	
 }

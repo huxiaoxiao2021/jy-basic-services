@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
+import com.jdl.basic.common.contants.Constants;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.ibatis.annotations.Param;
@@ -436,16 +440,17 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	}
 
 	/**
-	 * 根据流入code和type查询
+	 * 查询流向-根据传入的流向
 	 *
-	 * @param flowDirectionType
-	 * @param flowSiteCode
+	 * @param query
 	 * @return
 	 */
 	@Override
-	public Result<List<String>> queryFlowDataForFlowSiteCode(Integer flowDirectionType,Integer flowSiteCode) {
-		Result<List<String>> result = Result.success();
-		result.setData(workGridFlowDirectionDao.queryFlowDataForFlowSiteCode(flowDirectionType,flowSiteCode));
-		return result;
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridFlowDirectionServiceImpl.queryRefWorkGridKeyByFlowDirection", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	@Cache(key = "WorkGridFlowDirectionServiceImpl.queryRefWorkGridKeyByFlowDirection", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+			,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
+	public List<String> queryRefWorkGridKeyByFlowDirection(WorkGridFlowDirectionQuery query) {
+		return workGridFlowDirectionDao.queryRefWorkGridKeyByFlowDirection(query);
 	}
+
 }

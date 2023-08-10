@@ -7,6 +7,7 @@ import com.jdl.basic.api.domain.workStation.WorkStationGrid;
 import com.jdl.basic.api.domain.workStation.WorkStationGridCountVo;
 import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
 import com.jdl.basic.api.domain.workStation.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -191,4 +192,15 @@ public interface WorkStationGridDao {
 	 * @return
 	 */	
 	List<WorkStationGrid> queryListForManagerSiteScan(WorkStationGridQuery query);
+
+	/**
+	 * 获取月台号
+	 *
+	 * @param siteCode
+	 * @param refWorkKeyList
+	 * @param refWorkGridKeyList
+	 */
+	List<WorkStationGrid> getDockCode(@Param("siteCode") Integer siteCode,
+							 @Param("refWorkKeyList") List<String> refWorkKeyList,
+							 @Param("refWorkGridKeyList") List<String> refWorkGridKeyList);
 }

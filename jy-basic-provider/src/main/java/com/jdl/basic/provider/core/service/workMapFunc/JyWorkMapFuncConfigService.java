@@ -71,4 +71,10 @@ public interface JyWorkMapFuncConfigService {
      */
     List<JyWorkMapFuncConfigEntity> queryByFuncCode(JyWorkMapFuncConfigEntity query);
 
+    /**
+     * 根据funcCodeList查询
+     * @param functionList
+     * @return
+     */
+    List<String> queryByFuncCodeList(List<String> functionList);
 }

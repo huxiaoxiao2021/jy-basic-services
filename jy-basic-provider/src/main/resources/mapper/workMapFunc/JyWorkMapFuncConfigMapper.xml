@@ -149,4 +149,11 @@
     <select id="queryFuncCodeMap" resultMap="jyWorkMapFuncConfigMap">
         select func_code,ref_work_key from jy_work_map_func_config where yn = 1 limit 10000
     </select>
+    <select id="queryByFuncCodeList" resultType="java.lang.String">
+        select ref_work_key from jy_work_map_func_config where yn = 1
+        and func_code in
+        <foreach collection="functionList" item="item" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
 </mapper>

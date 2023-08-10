@@ -30,4 +30,11 @@ public interface JyWorkMapFuncConfigDao {
     List<JyWorkMapFuncConfigEntity> queryByCondition(JyWorkMapFuncConfigEntity entity);
 
     List<JyWorkMapFuncConfigEntity> queryFuncCodeMap();
+
+    /**
+     * 根据funcCodeList查询
+     * @param functionList
+     * @return
+     */
+    List<String> queryByFuncCodeList(List<String> functionList);
 }

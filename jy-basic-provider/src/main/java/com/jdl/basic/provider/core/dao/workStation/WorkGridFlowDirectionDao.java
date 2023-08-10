@@ -117,13 +117,12 @@ public interface WorkGridFlowDirectionDao {
 	List<WorkGridFlowDirectionVo> queryFlowDataForSelect3(WorkGridFlowDirectionQuery query);	
 	long queryFlowDataForSelectCount3(WorkGridFlowDirectionQuery query);
 
-
 	/**
-	 * 根据流入code和type查询
+	 * 查询流向-根据传入的流向
 	 *
-	 * @param flowDirectionType
-	 * @param flowSiteCode
+	 * @param query
 	 * @return
 	 */
-	List<String> queryFlowDataForFlowSiteCode(@Param("flowDirectionType")Integer flowDirectionType,@Param("flowSiteCode") Integer flowSiteCode);
+	List<String> queryRefWorkGridKeyByFlowDirection(WorkGridFlowDirectionQuery query);
+
 }

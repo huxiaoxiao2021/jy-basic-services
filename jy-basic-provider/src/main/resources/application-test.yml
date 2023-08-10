@@ -119,3 +119,11 @@ site:
   siteType: 4
   subType: 4
   thirdType: 1
+
+#flowDirectionFunction 配置
+flowDirectionFunction.1:
+  functions: {1,[SEND_CAR_POSITION]}}
+flowDirectionFunction.2:
+  functions: {2,[UNSEAL_CAR_POSITION,UNLOAD_CAR_POSITION]}}
+
+

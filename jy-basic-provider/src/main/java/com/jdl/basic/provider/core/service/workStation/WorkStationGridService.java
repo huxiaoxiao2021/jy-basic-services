@@ -184,4 +184,15 @@ public interface WorkStationGridService {
 	 * @return
 	 */	
 	List<WorkStationGrid> queryListForManagerSiteScan(WorkStationGridQuery workStationGridQuery);
+
+	/**
+	 * 获取月台号
+	 *
+	 * @param siteCode
+	 * @param refWorkKeyList
+	 * @param refWorkGridKeyList
+	 */
+	List<WorkStationGrid> getDockCode(Integer siteCode,List<String> refWorkKeyList, List<String> refWorkGridKeyList);
+
+
 }
