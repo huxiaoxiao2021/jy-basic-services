@@ -51,7 +51,7 @@ public class WorkGridBusinessJsfServiceImpl implements WorkGridBusinessJsfServic
         //获取流向的查询条件
         WorkGridFlowDirectionQuery workGridFlowDirectionQuery = getWorkGridFlowDirectionQuery(dockCodeAndPhoneQuery);
         //2、根据传入的流向：发货地ID、目的地ID去work_grid_flow_direction  场地网格流向表 获取 ref_work_grid_key
-        List<String> refWorkGridKey = getRefWorkGridKey(dockCodeAndPhoneQuery, workGridFlowDirectionQuery);
+        List<String> refWorkGridKey = getRefWorkGridKey(workGridFlowDirectionQuery);
         //3、根据ref_work_key去work_station 网格工序信息表中查询business_key
         //4、根据场地编码、business_key、ref_work_grid_key去work_station_grid 场地网格工序信息表查询 获取到月台号 和 business_key
         //3、4合并获取月台号
@@ -86,10 +86,10 @@ public class WorkGridBusinessJsfServiceImpl implements WorkGridBusinessJsfServic
     /**
      * 根据传入的流向：发货地ID和目的地ID去work_grid_flow_direction  场地网格流向表 获取 ref_work_grid_key
      *
-     * @param dockCodeAndPhoneQuery
+     * @param workGridFlowDirectionQuery
      * @return
      */
-    private List<String> getRefWorkGridKey(DockCodeAndPhoneQuery dockCodeAndPhoneQuery, WorkGridFlowDirectionQuery workGridFlowDirectionQuery) {
+    private List<String> getRefWorkGridKey(WorkGridFlowDirectionQuery workGridFlowDirectionQuery) {
         return workGridFlowDirectionService.queryRefWorkGridKeyByFlowDirection(workGridFlowDirectionQuery);
     }
 

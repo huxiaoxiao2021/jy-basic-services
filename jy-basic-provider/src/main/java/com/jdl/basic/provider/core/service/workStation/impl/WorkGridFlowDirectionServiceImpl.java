@@ -12,7 +12,6 @@ import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.common.contants.Constants;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +21,6 @@ import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.enums.ConfigFlowStatusEnum;
 import com.jdl.basic.api.enums.FlowSiteUseStatusEnum;
-import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.enums.AreaEnum;
 import com.jdl.basic.common.utils.DateHelper;
@@ -33,15 +31,6 @@ import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDirectionService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 场地网格流向表--Service接口实现
@@ -462,5 +451,19 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		Result<Long> result = Result.success();
 		result.setData(workGridFlowDirectionDao.queryCount(query));
 		return result;
+	}
+
+	/**
+	 * 查询流向-根据传入的流向
+	 *
+	 * @param query
+	 * @return
+	 */
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridFlowDirectionServiceImpl.queryRefWorkGridKeyByFlowDirection", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	@Cache(key = "WorkGridFlowDirectionServiceImpl.queryRefWorkGridKeyByFlowDirection@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+			,redisEnable = true, redisExpiredTime = 5 * 60 * 1000)
+	public List<String> queryRefWorkGridKeyByFlowDirection(WorkGridFlowDirectionQuery query) {
+		return workGridFlowDirectionDao.queryRefWorkGridKeyByFlowDirection(query);
 	}
 }
