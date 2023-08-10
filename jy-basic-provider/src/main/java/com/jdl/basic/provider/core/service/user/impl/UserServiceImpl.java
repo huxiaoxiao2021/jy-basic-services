@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
       jyUsers = JSON.parseObject(json, new TypeReference<ArrayList<JyUser>>(){});
     } else {
       jyUsers = jyUserDao.searchUserBySiteCode(siteCode);
-      jimdbCacheService.setEx(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode), jyUsers, 24L, TimeUnit.HOURS);
+      jimdbCacheService.setEx(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode), jyUsers, 30L, TimeUnit.MINUTES);
     }
     result.setData(jyUsers);
     return result;

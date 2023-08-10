@@ -90,6 +90,23 @@ public class ConfigTransferDpSite implements Serializable{
      * 数据库时间  db_column: ts
      */
     private Date ts;
+
+    /**
+     * 交接省区编码
+     */
+    private String handoverProvinceAgencyCode;
+    /**
+     * 交接省区名称
+     */
+    private String handoverProvinceAgencyName;
+    /**
+     * 交接枢纽编码
+     */
+    private String handoverAreaHubCode;
+    /**
+     * 交接枢纽名称
+     */
+    private String handoverAreaHubName;
     //columns END
 
     public ConfigTransferDpSite(){

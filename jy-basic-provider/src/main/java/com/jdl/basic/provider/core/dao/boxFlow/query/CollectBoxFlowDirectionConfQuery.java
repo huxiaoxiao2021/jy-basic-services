@@ -128,5 +128,20 @@ public class CollectBoxFlowDirectionConfQuery {
     
     private String version;
 
-
+    /**
+     * 省区编码
+     */
+    private String startProvinceAgencyCode;
+    /**
+     * 枢纽编码
+     */
+    private String startAreaHubCode;
+    /**
+     * 省区编码
+     */
+    private String endProvinceAgencyCode;
+    /**
+     * 枢纽编码
+     */
+    private String endAreaHubCode;
 }

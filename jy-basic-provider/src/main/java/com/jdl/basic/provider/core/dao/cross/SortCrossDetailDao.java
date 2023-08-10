@@ -107,4 +107,17 @@ public interface SortCrossDetailDao {
      * @return
      */
     List<TableTrolleyJsfDto> queryCrossCodeTableTrolleyBySiteFlowList(TableTrolleyQuery tableTrolleyQuery);
+
+    /**
+     * 刷数-分页查询
+     * @param startId
+     * @return
+     */
+    List<SortCrossDetail> brushQueryAllByPage(Integer startId);
+    /**
+     * 刷数-批量更新
+     * @param list
+     * @return
+     */
+    Integer brushUpdateById(List<SortCrossDetail> list);
 }

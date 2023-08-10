@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.springframework.beans.BeanUtils;
@@ -49,7 +50,6 @@ import com.jdl.basic.provider.core.service.workStation.WorkAreaService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDirectionService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
-import com.jdl.basic.rpc.Rpc.BaseMajorRpc;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -78,8 +78,8 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Autowired
 	private WorkStationGridMachineService machineService;
 	@Autowired
-	private BaseMajorRpc baseMajorManager;
-
+	private BaseMajorManager baseMajorManager;	
+	
 	@Autowired
 	@Qualifier("workAreaService")
 	private WorkAreaService workAreaService;
@@ -337,6 +337,10 @@ public class WorkGridServiceImpl implements WorkGridService {
 			updateData.setUpdateUser(workGrid.getUpdateUser());
 			updateData.setUpdateUserName(workGrid.getUpdateUserName());
 			updateData.setUpdateTime(workGrid.getUpdateTime());
+			updateData.setProvinceAgencyCode(workGrid.getProvinceAgencyCode());
+			updateData.setProvinceAgencyName(workGrid.getProvinceAgencyName());
+			updateData.setAreaHubCode(workGrid.getAreaHubCode());
+			updateData.setAreaHubName(workGrid.getAreaHubName());
 			this.updateById(updateData);
 			result.setData(workGridDao.queryById(oldData.getId()));
 		}else {
@@ -573,6 +577,10 @@ public class WorkGridServiceImpl implements WorkGridService {
 				flowData.setSiteName(workGridData.getSiteName());
 				flowData.setOrgCode(workGridData.getOrgCode());
 				flowData.setOrgName(workGridData.getOrgName());
+				flowData.setProvinceAgencyCode(workGridData.getProvinceAgencyCode());
+				flowData.setProvinceAgencyName(workGridData.getProvinceAgencyName());
+				flowData.setAreaHubCode(workGridData.getAreaHubCode());
+				flowData.setAreaHubName(workGridData.getAreaHubName());
 				flowData.setCreateUser(data.getConfigFlowUser());
 				flowData.setCreateTime(createTime);
 				flowData.setLineType(lineType.getCode());
@@ -584,6 +592,10 @@ public class WorkGridServiceImpl implements WorkGridService {
 				}
 				flowData.setFlowOrgName(orgName);
 				flowData.setFlowSiteName(siteInfo.getSiteName());
+				flowData.setFlowProvinceAgencyCode(siteInfo.getProvinceAgencyCode());
+				flowData.setFlowProvinceAgencyName(siteInfo.getProvinceAgencyName());
+				flowData.setFlowAreaHubCode(siteInfo.getAreaCode());
+				flowData.setFlowAreaHubName(siteInfo.getAreaName());
 				flowData.setFlowDirectionType(workArea.getFlowDirectionType());
 				flowDataList.add(flowData);
 			}

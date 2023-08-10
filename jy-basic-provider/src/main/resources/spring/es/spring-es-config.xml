@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="basicESClient" class="com.jdl.basic.provider.config.es.TransportClientFactoryBean">
+        <property name="clusterName" value="${es.basic.cluster.name}"/>
+        <property name="ips" value="${es.basic.cluster.ip}"/>
+        <property name="port" value="${es.basic.cluster.port}"/>
+        <property name="clusterUser" value="${es.basic.cluster.user}"/>
+        <property name="clusterPassword" value="${es.basic.cluster.password}"/>
+    </bean>
+
+</beans>

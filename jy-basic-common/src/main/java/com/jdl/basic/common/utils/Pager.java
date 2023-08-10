@@ -1,7 +1,5 @@
 package com.jdl.basic.common.utils;
 
-import lombok.Data;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -11,7 +9,6 @@ import java.util.List;
  * @author: hujiping
  * @date: 2020/3/25 15:49
  */
-@Data
 public class Pager<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,4 +36,52 @@ public class Pager<T> implements Serializable {
      */
     private List<T> data;
 
+    public Pager() {
+    }
+    
+    public Pager(Integer pageNo, Integer pageSize, Long total) {
+        this.pageNo = pageNo;
+        this.pageSize = pageSize;
+        this.total = total;
+    }
+
+    public Integer getPageNo() {
+        return pageNo;
+    }
+
+    public void setPageNo(Integer pageNo) {
+        this.pageNo = pageNo;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public Long getTotal() {
+        return total;
+    }
+
+    public void setTotal(Long total) {
+        this.total = total;
+    }
+
+    public T getSearchVo() {
+        return searchVo;
+    }
+
+    public void setSearchVo(T searchVo) {
+        this.searchVo = searchVo;
+    }
+
+    public List<T> getData() {
+        return data;
+    }
+
+    public void setData(List<T> data) {
+        this.data = data;
+    }
 }

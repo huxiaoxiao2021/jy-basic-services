@@ -153,7 +153,7 @@
         </foreach>
     </select>
 
-  <select id="removeFromGridByUserId">
+  <update id="removeFromGridByUserId">
     update
     user_work_grid
     set
@@ -163,5 +163,5 @@
     update_user_name = #{updateUserName, jdbcType=VARCHAR}
     where user_id = #{userId}
     and yn = 1
-  </select>
+  </update>
 </mapper>

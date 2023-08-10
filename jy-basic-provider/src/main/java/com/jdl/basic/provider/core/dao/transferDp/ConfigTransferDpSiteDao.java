@@ -1,9 +1,11 @@
 package com.jdl.basic.provider.core.dao.transferDp;
 
-import com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteUpdateDto;
-import com.jdl.basic.provider.core.dao.base.BaseDao;
 import com.jdl.basic.api.domain.transferDp.ConfigTransferDpSite;
 import com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteQo;
+import com.jdl.basic.api.dto.transferDp.ConfigTransferDpSiteUpdateDto;
+import com.jdl.basic.provider.core.dao.base.BaseDao;
+
+import java.util.List;
 
 /**
  * Description: <br>
@@ -30,4 +32,17 @@ public interface ConfigTransferDpSiteDao extends BaseDao<ConfigTransferDpSite, C
      */
     long batchDeleteByPrimaryKeys(ConfigTransferDpSiteUpdateDto configTransferDpSiteUpdateDto);
 
+    /**
+     * 刷数-分页查询
+     * @param startId
+     * @return
+     */
+    List<ConfigTransferDpSite> brushQueryAllByPage(Integer startId);
+
+    /**
+     * 刷数-批量更新
+     * @param list
+     * @return
+     */
+    Integer brushUpdateById(List<ConfigTransferDpSite> list);
 }

@@ -19,25 +19,29 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkGrid;
-import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
-import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
-import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionVo;
-import com.jdl.basic.api.domain.workStation.WorkGridQuery;
+import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.enums.ConfigFlowStatusEnum;
 import com.jdl.basic.api.enums.FlowSiteUseStatusEnum;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.enums.AreaEnum;
 import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.workStation.WorkGridFlowDirectionDao;
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDirectionService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
-import com.jdl.basic.rpc.Rpc.BaseMajorRpc;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 场地网格流向表--Service接口实现
@@ -59,7 +63,7 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	private WorkGridService workGridService;
 	
 	@Autowired
-	private BaseMajorRpc baseMajorManager;
+	private BaseMajorManager baseMajorManager;
 	
 	@Value("${beans.workGridFlowDirectionService.importDatasLimit:100}")
 	private int importDatasLimit;
@@ -293,29 +297,50 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	 */
 	private Result<Boolean> checkAndFillNewData(WorkGridFlowDirection flowData,WorkGrid workGridData){
 		Result<Boolean> result = Result.success();
-		Integer siteCode = flowData.getFlowSiteCode();
-		if(siteCode == null) {
+		Integer flowSiteCode = flowData.getFlowSiteCode();
+		if(flowSiteCode == null) {
 			return result.toFail("流向场地ID为空！");
+
 		}
-		BaseStaffSiteOrgDto siteInfo = baseMajorManager.getBaseSiteBySiteId(flowData.getFlowSiteCode());
-		if(siteInfo == null) {
+		BaseStaffSiteOrgDto currentSiteInfo = baseMajorManager.getBaseSiteBySiteId(workGridData.getSiteCode());
+		if(currentSiteInfo == null){
+			return result.toFail("场地编码无效！【"+workGridData.getSiteCode()+"】");
+		}
+		BaseStaffSiteOrgDto flowSiteInfo = baseMajorManager.getBaseSiteBySiteId(flowData.getFlowSiteCode());
+		if(flowSiteInfo == null) {
 			return result.toFail("流向ID中站点无效！【"+flowData.getFlowSiteCode()+"】");
 		}
-		if(siteCode.equals(workGridData.getSiteCode())) {
-			return result.toFail("流向场地ID不能是网格场地ID【"+siteCode+"】");
+		if(flowSiteCode.equals(workGridData.getSiteCode())) {
+			return result.toFail("流向场地ID不能是网格场地ID【"+flowSiteCode+"】");
 		}
-		flowData.setSiteCode(workGridData.getSiteCode());
-		flowData.setSiteName(workGridData.getSiteName());
-		flowData.setOrgCode(workGridData.getOrgCode());
-		flowData.setOrgName(workGridData.getOrgName());
-		flowData.setFlowOrgCode(siteInfo.getOrgId());
-		String orgName = AreaEnum.getAreaNameByCode(siteInfo.getOrgId());
-		if(orgName == null) {
-			orgName = siteInfo.getOrgName();
-		}
-		flowData.setFlowOrgName(orgName);
-		flowData.setFlowSiteName(siteInfo.getSiteName());
+		// fill base info
+		fillBaseInfo(flowData, currentSiteInfo, flowSiteInfo);
+
 		return result;
+	}
+
+	private void fillBaseInfo(WorkGridFlowDirection flowData, BaseStaffSiteOrgDto currentSiteInfo, BaseStaffSiteOrgDto flowSiteInfo) {
+		flowData.setSiteCode(currentSiteInfo.getSiteCode());
+		flowData.setSiteName(currentSiteInfo.getSiteName());
+		flowData.setOrgCode(currentSiteInfo.getOrgId());
+		flowData.setOrgName(currentSiteInfo.getOrgName());
+		flowData.setProvinceAgencyCode(currentSiteInfo.getProvinceAgencyCode());
+		flowData.setProvinceAgencyName(currentSiteInfo.getProvinceAgencyName());
+		flowData.setAreaHubCode(currentSiteInfo.getAreaCode());
+		flowData.setAreaHubName(currentSiteInfo.getAreaName());
+
+		flowData.setFlowSiteCode(flowSiteInfo.getSiteCode());
+		flowData.setFlowSiteName(flowSiteInfo.getSiteName());
+		flowData.setFlowOrgCode(flowSiteInfo.getOrgId());
+		String flowOrgName = AreaEnum.getAreaNameByCode(flowSiteInfo.getOrgId());
+		if(flowOrgName == null) {
+			flowOrgName = flowSiteInfo.getOrgName();
+		}
+		flowData.setFlowOrgName(flowOrgName);
+		flowData.setFlowProvinceAgencyCode(flowSiteInfo.getProvinceAgencyCode());
+		flowData.setFlowProvinceAgencyName(flowSiteInfo.getProvinceAgencyName());
+		flowData.setFlowAreaHubCode(flowSiteInfo.getAreaCode());
+		flowData.setFlowAreaHubName(flowSiteInfo.getAreaName());
 	}
 
 	private String getUniqueKeysStr(WorkGridFlowDirection data) {
@@ -438,19 +463,4 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		result.setData(workGridFlowDirectionDao.queryCount(query));
 		return result;
 	}
-
-	/**
-	 * 查询流向-根据传入的流向
-	 *
-	 * @param query
-	 * @return
-	 */
-	@Override
-	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridFlowDirectionServiceImpl.queryRefWorkGridKeyByFlowDirection", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-	@Cache(key = "WorkGridFlowDirectionServiceImpl.queryRefWorkGridKeyByFlowDirection", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
-			,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
-	public List<String> queryRefWorkGridKeyByFlowDirection(WorkGridFlowDirectionQuery query) {
-		return workGridFlowDirectionDao.queryRefWorkGridKeyByFlowDirection(query);
-	}
-
 }

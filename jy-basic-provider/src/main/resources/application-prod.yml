@@ -58,6 +58,8 @@ mq:
     topic:
       sort_cross_detail: basic_sort_cross_detail
       wlUserInfo: wlUserInfo
+      site_change: basic_base_site_change
+      wmsSite_Change: basic_ps_storeinfo
   jmq4producer:
     password: f0a10912179747fd9b31dd8e32c6009c
     app: JYBasic
@@ -121,3 +123,30 @@ site:
   subType: 4
   thirdType: 1
 
+## es config
+es:
+  basic:
+    cluster:
+      name: erdtools_newes
+      ip: nodes-es-avty5e0cy9-0.jvessel-open-hb.jdcloud.com:9300,nodes-es-avty5e0cy9-1.jvessel-open-hb.jdcloud.com:9300,nodes-es-avty5e0cy9-2.jvessel-open-hb.jdcloud.com:9300
+      port: 9300
+      user: qltest_es
+      password: "#Qltest_newes"
+      sleep:
+        times: 5000
+    ## 索引
+    basicSite:
+      queryIndexAlias: jy_basic_site
+      type: jy_basic_site
+      
+## ducc 配置(不同应用请设置不同的application)
+laf:
+  config:
+    manager:
+      application: jy-basic-services
+      resources[0]:
+        name: ducc
+        uri: ucc://jdos_jy-basic-services:f1fc8b8197ea487d966c1da35b3835ad@ducc.jd.local/v1/namespace/jy_basic_services/config/default/profiles/prod?longPolling=60000&necessary=true
+      parameters[0]:
+        name: autoListener
+        value: true

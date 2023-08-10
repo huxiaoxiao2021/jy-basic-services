@@ -2,7 +2,6 @@ package com.jdl.basic.provider.core.provider.easyFreeze;
 
 import com.alibaba.fastjson.JSON;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
-import com.jd.ql.basic.ws.BasicSiteQueryWS;
 import com.jdl.basic.api.domain.LoginUser;
 import com.jdl.basic.api.domain.easyFreeze.EasyFreezeSiteDto;
 import com.jdl.basic.api.domain.easyFreeze.EasyFreezeSiteQueryDto;
@@ -10,8 +9,8 @@ import com.jdl.basic.api.service.easyFreeze.EasyFreezeSiteJsfService;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.easyFreezeSite.EasyFreezeSiteService;
-import com.jdl.basic.rpc.Rpc.BaseMajorRpc;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @Author: chenyaguo@jd.com
@@ -35,7 +33,7 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
     private EasyFreezeSiteService easyFreezeSiteService;
 
     @Autowired
-    private BaseMajorRpc baseMajorRpc;
+    private BaseMajorManager baseMajorManager;
 
     @Override
     public Result<Boolean> insert(EasyFreezeSiteDto dto, LoginUser loginUser) {
@@ -49,29 +47,38 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
                 result.toFail("入参不能为空!");
                 return result;
             }
-            BaseStaffSiteOrgDto basicDto = baseMajorRpc.getBaseSiteBySiteId(dto.getSiteCode());
+            BaseStaffSiteOrgDto basicDto = baseMajorManager.getBaseSiteBySiteId(dto.getSiteCode());
             log.info("{}--基础资料basicDto--{}",dto.getSiteCode(),basicDto);
             if(basicDto == null){
                 result.toFail("此站点在基础资料未查到!");
                 return result;
             }
-            if(!(basicDto.getOrgId().equals(dto.getOrgCode()))){
+            if(dto.getOrgCode() != null && !Objects.equals(dto.getOrgCode(), basicDto.getOrgId())){
                 result.toFail("此站点实际所属的大区与实际不一致，请重新选择!");
                 return result;
             }
-            dto.setCityName(basicDto.getCityName());
-            if(basicDto.getSubType() != null){
-                dto.setSiteType(basicDto.getSubType().equals(Constants.B2B_SITE_TYPE)? "转运":"分拣");;
-            }else {
-                dto.setSiteType("分拣");
-            }
-
+            // init basic info
+            fillBasicInfo(dto, basicDto);
+            
             return easyFreezeSiteService.insert(dto, loginUser);
         } catch (Exception e) {
             log.error("添加易冻品场地配置异常-{}", e.getMessage(), e);
             result.toError("添加易冻品场地配置异常!");
         }
         return result;
+    }
+
+    private void fillBasicInfo(EasyFreezeSiteDto dto, BaseStaffSiteOrgDto basicDto) {
+        dto.setCityName(basicDto.getCityName());
+        if(basicDto.getSubType() != null){
+            dto.setSiteType(basicDto.getSubType().equals(Constants.B2B_SITE_TYPE)? "转运":"分拣");;
+        }else {
+            dto.setSiteType("分拣");
+        }
+        dto.setProvinceAgencyCode(StringUtils.isEmpty(basicDto.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : basicDto.getProvinceAgencyCode());
+        dto.setProvinceAgencyName(StringUtils.isEmpty(basicDto.getProvinceAgencyName()) ? Constants.EMPTY_FILL : basicDto.getProvinceAgencyName());
+        dto.setAreaHubCode(StringUtils.isEmpty(basicDto.getAreaCode()) ? Constants.EMPTY_FILL : basicDto.getAreaCode());
+        dto.setAreaHubName(StringUtils.isEmpty(basicDto.getAreaName()) ? Constants.EMPTY_FILL : basicDto.getAreaName());
     }
 
     @Override
@@ -96,15 +103,17 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
                 result.toFail("入参不能为空!");
                 return result;
             }
-            BaseStaffSiteOrgDto basicDto = baseMajorRpc.getBaseSiteBySiteId(dto.getSiteCode());
+            BaseStaffSiteOrgDto basicDto = baseMajorManager.getBaseSiteBySiteId(dto.getSiteCode());
             if(basicDto == null){
                 result.toFail("此站点在基础资料未查到!");
                 return result;
             }
-            if(!(basicDto.getOrgId().equals(dto.getOrgCode()))){
+            if(dto.getOrgCode() != null && !Objects.equals(dto.getOrgCode(), basicDto.getOrgId())){
                 result.toFail("此站点实际所属的大区与实际不一致，请重新选择!");
                 return result;
             }
+            // init basic info
+            fillBasicInfo(dto, basicDto);
             return easyFreezeSiteService.updateByPrimaryKeySelective(dto, loginUser);
         } catch (Exception e) {
             log.error("更新易冻品场地配置异常-{}", e.getMessage(), e);
@@ -152,11 +161,15 @@ public class EasyFreezeSiteJsfServiceImpl implements EasyFreezeSiteJsfService {
                     result.toFail("导入数据值不能为空! 请检查后重新导入!");
                     return result;
                 }
-                BaseStaffSiteOrgDto basicDto = baseMajorRpc.getBaseSiteBySiteId(dtoList.get(i).getSiteCode());
+                BaseStaffSiteOrgDto basicDto = baseMajorManager.getBaseSiteBySiteId(dtoList.get(i).getSiteCode());
                 if(basicDto == null){
                     result.toFail("无此站点{ "+dtoList.get(i).getSiteCode()+" }信息! 请检查后重新导入!");
                     return result;
                 }
+                dtoList.get(i).setProvinceAgencyCode(StringUtils.isEmpty(basicDto.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : basicDto.getProvinceAgencyCode());
+                dtoList.get(i).setProvinceAgencyName(StringUtils.isEmpty(basicDto.getProvinceAgencyName()) ? Constants.EMPTY_FILL : basicDto.getProvinceAgencyName());
+                dtoList.get(i).setAreaHubCode(StringUtils.isEmpty(basicDto.getAreaCode()) ? Constants.EMPTY_FILL : basicDto.getAreaCode());
+                dtoList.get(i).setAreaHubName(StringUtils.isEmpty(basicDto.getAreaName()) ? Constants.EMPTY_FILL : basicDto.getAreaName());
 
             }
             return easyFreezeSiteService.importEasyFreezeSiteList(dtoList,loginUser);

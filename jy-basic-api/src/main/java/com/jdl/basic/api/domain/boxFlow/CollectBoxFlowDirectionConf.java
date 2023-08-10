@@ -141,6 +141,37 @@ public class CollectBoxFlowDirectionConf {
      * 版本
      */
     private String version;
-    
-    
+
+    /**
+     * 省区编码
+     */
+    private String startProvinceAgencyCode;
+    /**
+     * 省区名称
+     */
+    private String startProvinceAgencyName;
+    /**
+     * 枢纽编码
+     */
+    private String startAreaHubCode;
+    /**
+     * 枢纽名称
+     */
+    private String startAreaHubName;
+    /**
+     * 省区编码
+     */
+    private String endProvinceAgencyCode;
+    /**
+     * 省区名称
+     */
+    private String endProvinceAgencyName;
+    /**
+     * 枢纽编码
+     */
+    private String endAreaHubCode;
+    /**
+     * 枢纽名称
+     */
+    private String endAreaHubName;
 }
