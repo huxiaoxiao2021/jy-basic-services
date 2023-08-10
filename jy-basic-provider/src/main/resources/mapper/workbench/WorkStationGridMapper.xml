@@ -773,14 +773,18 @@
 		business_key,dock_code,owner_user_erp
 		from work_station_grid
 		where site_code = #{siteCode}
-		and ref_station_key in
-		<foreach collection="refWorkKeyList" item="item" open="(" close=")" separator=",">
-			#{item,jdbcType=VARCHAR}
-		</foreach>
-		and ref_work_grid_key in
-		<foreach collection="refWorkGridKeyList" item="item" open="(" close=")" separator=",">
-			#{item,jdbcType=VARCHAR}
-		</foreach>
+		<if test="refWorkKeyList != null and refWorkGridKeyList.size>0">
+			and ref_station_key in
+			<foreach collection="refWorkKeyList" item="item" open="(" close=")" separator=",">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="refWorkGridKeyList != null and refWorkGridKeyList.size>0">
+			and ref_work_grid_key in
+			<foreach collection="refWorkGridKeyList" item="item" open="(" close=")" separator=",">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
 		limit 5
 	</select>
 </mapper>

@@ -13,7 +13,7 @@ import java.util.Map;
  */
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "flowDirectionFunction")
+@ConfigurationProperties("fdf")
 public class FlowDirectionFunctionConfiguration implements Serializable {
 
     private static final long serialVersionUID = 6449426939149112137L;

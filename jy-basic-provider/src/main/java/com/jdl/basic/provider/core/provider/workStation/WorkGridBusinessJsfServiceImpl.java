@@ -11,8 +11,10 @@ import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDirectionServ
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.dto.FlowDirectionFunctionConfiguration;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,9 +43,11 @@ public class WorkGridBusinessJsfServiceImpl implements WorkGridBusinessJsfServic
     private BaseMajorManager baseMajorManager;
 
     @Autowired
-    @Qualifier("baseMajorManager")
+    @Qualifier("workStationGridService")
     private WorkStationGridService workStationGridService;
 
+    @Autowired
+    private FlowDirectionFunctionConfiguration flowDirectionFunction;
     @Override
     public List<WorkStationGrid> queryDockCodeByFlowDirection(DockCodeAndPhoneQuery dockCodeAndPhoneQuery) {
         //1、根据传入的类型去jy_work_map_func_config 拣运APP功能和工序映射表中查询出ref_work_key
@@ -68,6 +72,9 @@ public class WorkGridBusinessJsfServiceImpl implements WorkGridBusinessJsfServic
      */
     private List<String> getRefWorkKey(DockCodeAndPhoneQuery dockCodeAndPhoneQuery) {
         List<String> functionList = getFunctionByFlowDirection(dockCodeAndPhoneQuery);
+        if (CollectionUtils.isEmpty(functionList)) {
+            return null;
+        }
         return jyWorkMapFuncConfigService.queryByFuncCodeList(functionList);
     }
 
@@ -78,9 +85,7 @@ public class WorkGridBusinessJsfServiceImpl implements WorkGridBusinessJsfServic
      * @return
      */
     private List<String> getFunctionByFlowDirection(DockCodeAndPhoneQuery dockCodeAndPhoneQuery) {
-        FlowDirectionFunctionConfiguration flowDirectionFunction = new FlowDirectionFunctionConfiguration();
-        List<String> functionList = flowDirectionFunction.getFunctionByFlowDirection(dockCodeAndPhoneQuery.getFlowDirectionType());
-        return functionList;
+        return flowDirectionFunction.getFunctionByFlowDirection(dockCodeAndPhoneQuery.getFlowDirectionType());
     }
 
     /**
