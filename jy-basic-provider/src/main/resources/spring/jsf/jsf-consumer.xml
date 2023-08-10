@@ -40,4 +40,12 @@
                   lazy="${jsf.consumer.lazy}" timeout="${basic.jsf.timeout}" retries="${jsf.retries}">
         <jsf:parameter key="token" value="${basic.jsf.token}" hide="true" />
     </jsf:consumer>
+
+    <jsf:consumer id="operateLogService"
+                  interface="com.jd.dms.comp.api.log.OperateLogService"
+                  alias="${jsf.operateLog.alias}"
+                  timeout="${jsf.timeout}"
+                  retries="${jsf.retries}"
+                  lazy="${jsf.consumer.lazy}">
+    </jsf:consumer>
 </beans>

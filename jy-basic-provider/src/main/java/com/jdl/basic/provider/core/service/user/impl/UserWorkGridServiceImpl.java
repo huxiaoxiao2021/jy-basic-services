@@ -6,11 +6,13 @@ import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.provider.core.dao.user.UserWorkGridDao;
+import com.jdl.basic.provider.core.manager.OperateLogManager;
 import com.jdl.basic.provider.core.service.user.UserService;
 import com.jdl.basic.provider.core.service.user.UserWorkGridService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,9 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private OperateLogManager operateLogManager;
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.batchQueryUserWorkGridByGridKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
@@ -121,6 +126,14 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         if (request.getSiteCode() == null) {
             return result.toFail("场地编码不能为空！");
         }
+        if (StringUtils.isEmpty(request.getUpdateUserErp())) {
+            return result.toFail("updateUserErp不能为空！");
+        }
+        if (StringUtils.isEmpty(request.getUpdateUserName())) {
+            return result.toFail("updateUserName不能为空！");
+        }
+
+        UserWorkGridService currentProxy = (UserWorkGridService) AopContext.currentProxy();
 
         if (CollectionUtils.isNotEmpty(request.getDeleteUserWorkGrids())) {
             UserWorkGridBatchRequest deleteRequest = new UserWorkGridBatchRequest();
@@ -129,7 +142,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             deleteRequest.setUpdateUserErp(request.getUpdateUserErp());
             deleteRequest.setUpdateUserName(request.getUpdateUserName());
             deleteRequest.setSiteCode(request.getSiteCode());
-            Result<Boolean> deleteResult = batchDelete(deleteRequest);
+            Result<Boolean> deleteResult = currentProxy.batchDelete(deleteRequest);
             if (deleteResult.isFail()) {
                 log.warn("batchUpdate 删除网格人员分配失败！{}", deleteResult.getMessage());
                 throw new RuntimeException("插入记录失败！" + deleteResult.getMessage());
@@ -140,7 +153,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             UserWorkGridBatchRequest addRequest = new UserWorkGridBatchRequest();
             addRequest.setSiteCode(request.getSiteCode());
             addRequest.setUserWorkGrids(request.getAddUserWorkGrids());
-            Result<Boolean> insertResult = batchInsert(addRequest);
+            Result<Boolean> insertResult = currentProxy.batchInsert(addRequest);
             if (insertResult.isFail()) {
                 log.warn("batchUpdate 插入网格人员分配失败！{}", insertResult.getMessage());
                 throw new RuntimeException("插入记录失败！" + insertResult.getMessage());

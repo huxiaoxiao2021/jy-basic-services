@@ -2,10 +2,7 @@ package com.jdl.basic.provider.core.service.user;
 
 
 import com.jd.dms.java.utils.sdk.base.Result;
-import com.jdl.basic.api.domain.user.JyUser;
-import com.jdl.basic.api.domain.user.UserWorkGrid;
-import com.jdl.basic.api.domain.user.UserWorkGridBatchRequest;
-import com.jdl.basic.api.domain.user.UserWorkGridRequest;
+import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.ApplicationLaunch;
 import lombok.extern.slf4j.Slf4j;
@@ -101,6 +98,55 @@ public class UserWorkGridServiceTest {
         request.setUserWorkGrids(list);
 
         userWorkGridService.batchDelete(request);
+    }
+
+    @Test
+    public void batchUpdate() {
+        List<UserWorkGrid> list = new ArrayList<>();
+
+        UserWorkGrid userWorkGrid1 = new UserWorkGrid();
+        userWorkGrid1.setWorkGridKey("CDWG00000022111");
+        userWorkGrid1.setNature("1");
+        userWorkGrid1.setUserId(20L);
+        userWorkGrid1.setCreateUserErp("wuyoude");
+        userWorkGrid1.setCreateUserName("吴有德");
+        userWorkGrid1.setCreateTime(new Date());
+        userWorkGrid1.setUpdateUserErp("wuyoude");
+        userWorkGrid1.setUpdateUserName("吴有德");
+        userWorkGrid1.setUpdateTime(new Date());
+
+        UserWorkGrid userWorkGrid2 = new UserWorkGrid();
+        userWorkGrid2.setWorkGridKey("CDWG00000022111");
+        userWorkGrid2.setNature("2");
+        userWorkGrid2.setUserId(2L);
+        userWorkGrid2.setCreateUserErp("wuyoude");
+        userWorkGrid2.setCreateUserName("吴有德");
+        userWorkGrid2.setCreateTime(new Date());
+        userWorkGrid2.setUpdateUserErp("wuyoude");
+        userWorkGrid2.setUpdateUserName("吴有德");
+        userWorkGrid2.setUpdateTime(new Date());
+
+        list.add(userWorkGrid1);
+        list.add(userWorkGrid2);
+
+        List<UserWorkGrid> list2 = new ArrayList<>();
+
+        UserWorkGrid userWorkGrid3 = new UserWorkGrid();
+        userWorkGrid3.setWorkGridKey("CDWG00000019007");
+        userWorkGrid3.setNature("1");
+        userWorkGrid3.setUserId(2L);
+        userWorkGrid3.setCreateUserErp("wuyoude");
+        userWorkGrid3.setCreateUserName("吴有德");
+        userWorkGrid3.setCreateTime(new Date());
+        userWorkGrid3.setUpdateUserErp("wuyoude");
+        userWorkGrid3.setUpdateUserName("吴有德");
+        userWorkGrid3.setUpdateTime(new Date());
+        list2.add(userWorkGrid3);
+
+        UserWorkGridBatchUpdateRequest request = new UserWorkGridBatchUpdateRequest();
+        request.setDeleteUserWorkGrids(list);
+        request.setAddUserWorkGrids(list2);
+        userWorkGridService.batchUpdateUserWorkGrid(request);
     }
 
     @Test

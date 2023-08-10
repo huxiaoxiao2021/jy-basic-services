@@ -9,10 +9,7 @@ import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
+import org.springframework.context.annotation.*;
 
 /**
  * @ProjectName：JY-MSP
@@ -37,6 +34,7 @@ import org.springframework.context.annotation.PropertySources;
         "classpath:spring/spring-context.xml"
 })
 @ImportAutoConfiguration(value = SpringBootConfiguration.class)
+@EnableAspectJAutoProxy(exposeProxy = true)
 @Slf4j
 public class ApplicationLaunch extends SpringBootServletInitializer {
 

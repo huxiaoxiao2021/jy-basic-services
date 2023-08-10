@@ -14,7 +14,7 @@ import com.jdl.basic.provider.config.cache.CacheService;
 import com.jdl.basic.provider.core.dao.user.JyUserDao;
 import com.jdl.basic.provider.core.service.user.UserService;
 import com.jdl.basic.provider.core.service.user.model.JyUserQueryCondition;
-import com.jdl.basic.rpc.exception.JYBasicRpcException;
+//import com.jdl.basic.rpc.exception.JYBasicRpcException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public JyUser queryUserInfo(JyUser condition) {
     if (ObjectHelper.isEmpty(condition.getUserErp())) {
-      throw new JYBasicRpcException("查询参数错误：erp为空！");
+//      throw new JYBasicRpcException("查询参数错误：erp为空！");
     }
     return jyUserDao.queryUserInfo(condition);
   }

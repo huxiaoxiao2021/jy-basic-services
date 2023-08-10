@@ -10,6 +10,7 @@ import com.jdl.basic.provider.core.service.schedule.WorkGridScheduleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,17 +46,28 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         if (request.getUpdateTime() == null) {
             return result.toFail("修改时间不能为空！");
         }
-        return result.setData(workGridScheduleDao.batchDeleteByWorkGridKey(request));
+        Boolean deleteResult = workGridScheduleDao.batchDeleteByWorkGridKey(request);
+        if (!deleteResult) {
+            log.warn("WorkGridScheduleServiceImpl batchDeleteByWorkGridKey 执行失败！");
+            throw new RuntimeException("班次时间插入失败！");
+        }
+        return result.setData(deleteResult);
     }
 
     @Override
+    @Transactional
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridScheduleServiceImpl.batchInsert", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> batchInsert(WorkGridScheduleBatchRequest request) {
         Result<Boolean> result = Result.success();
         if (CollectionUtils.isEmpty(request.getWorkGridSchedules())) {
-            return result.toFail("插入记录不能为空！");
+            return result.toFail("班次时间插入记录不能为空！");
         }
-        return result.setData(workGridScheduleDao.batchInsert(request));
+        Boolean insertResult = workGridScheduleDao.batchInsert(request);
+        if (!insertResult) {
+            log.warn("WorkGridScheduleServiceImpl batchInsert 执行失败！");
+            throw new RuntimeException("班次时间插入失败！");
+        }
+        return result.setData(insertResult);
     }
 
     @Override
@@ -64,13 +76,23 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
     public Result<Boolean> batchUpdateWorkGridSchedule(WorkGridScheduleBatchUpdateRequest request) {
         Result<Boolean> result = Result.success();
 
+        if (StringUtils.isEmpty(request.getUpdateUserErp())) {
+            return result.toFail("updateUserErp不能为空！");
+        }
+        if (StringUtils.isEmpty(request.getUpdateUserName())) {
+            return result.toFail("updateUserName不能为空！");
+        }
+
+        // 获取当前代理对象
+        WorkGridScheduleService currentProxy = (WorkGridScheduleService) AopContext.currentProxy();
+
         if (CollectionUtils.isNotEmpty(request.getDeleteWorkGridSchedule())) {
             WorkGridScheduleBatchRequest deleteRequest = new WorkGridScheduleBatchRequest();
             deleteRequest.setWorkGridSchedules(request.getDeleteWorkGridSchedule());
             deleteRequest.setUpdateUserName(request.getUpdateUserName());
             deleteRequest.setUpdateUserErp(request.getUpdateUserErp());
             deleteRequest.setUpdateTime(request.getUpdateTime());
-            Result<Boolean> deleteResult = batchDeleteByWorkGridKey(deleteRequest);
+            Result<Boolean> deleteResult = currentProxy.batchDeleteByWorkGridKey(deleteRequest);
             if (deleteResult.isFail()) {
                 log.warn("batchUpdateWorkGridSchedule 批量删除失败！" + deleteResult.getMessage());
                 throw new RuntimeException(deleteResult.getMessage());
@@ -80,7 +102,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         if (CollectionUtils.isNotEmpty(request.getAddWorkGridSchedule())) {
             WorkGridScheduleBatchRequest insertRequest = new WorkGridScheduleBatchRequest();
             insertRequest.setWorkGridSchedules(request.getAddWorkGridSchedule());
-            Result<Boolean> insertResult = batchDeleteByWorkGridKey(insertRequest);
+            Result<Boolean> insertResult = currentProxy.batchDeleteByWorkGridKey(insertRequest);
             if (insertResult.isFail()) {
                 log.warn("batchUpdateWorkGridSchedule 批量插入失败！" + insertResult.getMessage());
                 throw new RuntimeException(insertResult.getMessage());
