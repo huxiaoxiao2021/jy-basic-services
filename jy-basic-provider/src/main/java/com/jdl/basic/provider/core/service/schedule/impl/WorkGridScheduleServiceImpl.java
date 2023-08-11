@@ -121,6 +121,9 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
             WorkGridScheduleBatchRequest insertRequest = new WorkGridScheduleBatchRequest();
             insertRequest.setWorkGridSchedules(request.getAddWorkGridSchedule());
             Result<Boolean> insertResult = currentProxy.batchDeleteByWorkGridKey(insertRequest);
+            insertRequest.setUpdateUserName(request.getUpdateUserName());
+            insertRequest.setUpdateUserErp(request.getUpdateUserErp());
+            insertRequest.setUpdateTime(request.getUpdateTime());
             if (insertResult.isFail()) {
                 log.warn("batchUpdateWorkGridSchedule 批量插入失败！" + insertResult.getMessage());
                 throw new RuntimeException(insertResult.getMessage());
