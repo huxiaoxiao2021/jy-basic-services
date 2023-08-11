@@ -1,11 +1,19 @@
 package com.jdl.basic.provider.core.service.schedule.impl;
 
+import com.jd.dms.comp.api.log.dto.OperateLogData;
+import com.jd.dms.comp.base.ApiRequest;
+import com.jd.dms.comp.base.ApiResult;
+import com.jd.dms.comp.enums.EventLogEnum;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.schedule.*;
+import com.jdl.basic.api.domain.user.UserWorkGrid;
+import com.jdl.basic.api.domain.user.UserWorkGridBatchUpdateRequest;
+import com.jdl.basic.api.domain.user.UserWorkGridDto;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.provider.core.dao.schedule.WorkGridScheduleDao;
+import com.jdl.basic.provider.core.manager.OperateLogManager;
 import com.jdl.basic.provider.core.service.schedule.WorkGridScheduleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -15,7 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -23,6 +34,10 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
 
     @Autowired
     private WorkGridScheduleDao workGridScheduleDao;
+
+    @Autowired
+    private OperateLogManager operateLogManager;
+
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridScheduleServiceImpl.batchQueryByWorkGridKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<List<WorkGridSchedule>> batchQueryByWorkGridKey(WorkGridScheduleBatchRequest request) {
@@ -108,7 +123,36 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
                 throw new RuntimeException(insertResult.getMessage());
             }
         }
+        ApiResult apiResult = operateLogManager.saveOperateLog(getOperateLog(request));
+        if (apiResult.checkFail()) {
+            log.warn("操作记录保存失败！message {}", apiResult.getMessage());
+        }
         return result;
+    }
+
+    private ApiRequest<OperateLogData> getOperateLog(WorkGridScheduleBatchUpdateRequest updateRequest) {
+        ApiRequest<OperateLogData> request = new ApiRequest<>();
+        OperateLogData opLog = new OperateLogData();
+        request.setData(opLog);
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(updateRequest.getUpdateUserErp()).append("(").append(updateRequest.getUpdateUserName()).append(")");
+        if (CollectionUtils.isNotEmpty(updateRequest.getAddWorkGridSchedule())) {
+            sb.append(" 修改班次时间为 ");
+            for (WorkGridSchedule schedule : updateRequest.getAddWorkGridSchedule()) {
+                sb.append(schedule.getScheduleName()).append("(").append(schedule.getStartTime())
+                        .append(Constants.SEPARATOR_HYPHEN).append(schedule.getEndTime()).append(")").append("、");
+            }
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        opLog.setEventType(EventLogEnum.SCHEDULE.getCode());
+        opLog.setEventContent(sb.toString());
+        opLog.setUserErp(updateRequest.getUpdateUserErp());
+        opLog.setUserErp(updateRequest.getUpdateUserName());
+        opLog.setCreateTime(new Date());
+
+        opLog.setEventKey(updateRequest.getWorkGridKey());
+        return request;
     }
 
     @Override

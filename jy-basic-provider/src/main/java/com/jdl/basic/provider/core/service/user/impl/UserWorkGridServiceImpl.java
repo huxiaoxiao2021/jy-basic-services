@@ -1,10 +1,15 @@
 package com.jdl.basic.provider.core.service.user.impl;
 
+import com.jd.dms.comp.api.log.dto.OperateLogData;
+import com.jd.dms.comp.base.ApiRequest;
+import com.jd.dms.comp.base.ApiResult;
+import com.jd.dms.comp.enums.EventLogEnum;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.common.utils.BeanUtils;
 import com.jdl.basic.provider.core.dao.user.UserWorkGridDao;
 import com.jdl.basic.provider.core.manager.OperateLogManager;
 import com.jdl.basic.provider.core.service.user.UserService;
@@ -17,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
@@ -137,7 +143,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
 
         if (CollectionUtils.isNotEmpty(request.getDeleteUserWorkGrids())) {
             UserWorkGridBatchRequest deleteRequest = new UserWorkGridBatchRequest();
-            deleteRequest.setUserWorkGrids(request.getDeleteUserWorkGrids());
+            deleteRequest.setUserWorkGrids(BeanUtils.copy(request.getDeleteUserWorkGrids(), UserWorkGrid.class));
             deleteRequest.setUpdateTime(request.getUpdateTime());
             deleteRequest.setUpdateUserErp(request.getUpdateUserErp());
             deleteRequest.setUpdateUserName(request.getUpdateUserName());
@@ -152,7 +158,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         if (CollectionUtils.isNotEmpty(request.getAddUserWorkGrids())) {
             UserWorkGridBatchRequest addRequest = new UserWorkGridBatchRequest();
             addRequest.setSiteCode(request.getSiteCode());
-            addRequest.setUserWorkGrids(request.getAddUserWorkGrids());
+            addRequest.setUserWorkGrids(BeanUtils.copy(request.getAddUserWorkGrids(), UserWorkGrid.class));
             Result<Boolean> insertResult = currentProxy.batchInsert(addRequest);
             if (insertResult.isFail()) {
                 log.warn("batchUpdate 插入网格人员分配失败！{}", insertResult.getMessage());
@@ -160,7 +166,41 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             }
         }
 
+        ApiResult apiResult = operateLogManager.saveOperateLog(getOperateLog(request));
+        if (apiResult.checkFail()) {
+            log.warn("操作记录保存失败！message {}", apiResult.getMessage());
+        }
         return result;
+    }
+
+    private ApiRequest<OperateLogData> getOperateLog(UserWorkGridBatchUpdateRequest updateRequest) {
+        ApiRequest<OperateLogData> request = new ApiRequest<>();
+        OperateLogData opLog = new OperateLogData();
+        request.setData(opLog);
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(updateRequest.getUpdateUserErp()).append("(").append(updateRequest.getUpdateUserName()).append(")");
+        if (CollectionUtils.isNotEmpty(updateRequest.getAddUserWorkGrids())) {
+            sb.append(" 添加 ");
+            for (UserWorkGridDto dto : updateRequest.getAddUserWorkGrids()) {
+                sb.append(dto.getUserName()).append("(").append(dto.getUserErp()).append(")").append("、");
+            }
+        }
+        if (CollectionUtils.isNotEmpty(updateRequest.getDeleteUserWorkGrids())) {
+            sb.append(" 删除 ");
+            for (UserWorkGridDto dto : updateRequest.getDeleteUserWorkGrids()) {
+                sb.append(dto.getUserName()).append("(").append(dto.getUserErp()).append(")").append("、");
+            }
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        opLog.setEventType(EventLogEnum.USER_ATTRIBUTE_GRID.getCode());
+        opLog.setEventContent(sb.toString());
+        opLog.setUserErp(updateRequest.getUpdateUserErp());
+        opLog.setUserErp(updateRequest.getUpdateUserName());
+        opLog.setCreateTime(new Date());
+
+        opLog.setEventKey(updateRequest.getWorkGridKey());
+        return request;
     }
 
     @Override

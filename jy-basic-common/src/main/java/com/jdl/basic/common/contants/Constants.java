@@ -67,4 +67,7 @@ public class Constants {
      */
     public static final Integer USER_SIGN_CHECK_DAYS= -7;
 
+    public static final String SEPARATOR_HYPHEN = "-";
+
+
 }
