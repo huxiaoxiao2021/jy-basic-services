@@ -120,7 +120,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         if (CollectionUtils.isNotEmpty(request.getAddWorkGridSchedule())) {
             WorkGridScheduleBatchRequest insertRequest = new WorkGridScheduleBatchRequest();
             insertRequest.setWorkGridSchedules(request.getAddWorkGridSchedule());
-            Result<Boolean> insertResult = currentProxy.batchDeleteByWorkGridKey(insertRequest);
+            Result<Boolean> insertResult = currentProxy.batchInsert(insertRequest);
             insertRequest.setUpdateUserName(request.getUpdateUserName());
             insertRequest.setUpdateUserErp(request.getUpdateUserErp());
             insertRequest.setUpdateTime(request.getUpdateTime());
