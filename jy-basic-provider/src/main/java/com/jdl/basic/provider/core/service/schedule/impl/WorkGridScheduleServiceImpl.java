@@ -97,6 +97,9 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         if (StringUtils.isEmpty(request.getUpdateUserName())) {
             return result.toFail("updateUserName不能为空！");
         }
+        if (request.getUpdateTime() == null) {
+            return result.toFail("修改时间不能为空！");
+        }
 
         // 获取当前代理对象
         WorkGridScheduleService currentProxy = (WorkGridScheduleService) AopContext.currentProxy();
