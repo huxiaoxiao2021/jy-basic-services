@@ -22,7 +22,7 @@ import java.util.List;
  * @date 2023年08月10日 15:51:56
  */
 @Slf4j
-@Service("workGridBusinessJsfServiceImpl")
+@Service("workGridBusinessJsfService")
 public class WorkGridBusinessJsfServiceImpl implements WorkGridBusinessJsfService {
 
     @Autowired
