@@ -45,13 +45,8 @@ public class WorkGridBusinessJsfServiceImpl implements WorkGridBusinessJsfServic
         if (ObjectHelper.isEmpty(endBaseSiteByDmsCode)) {
             return result.toFail("目的地ID有误");
         }
-        Result<List<String>> listResult = workGridBusinessService.queryDockCodeByFlowDirection(dockCodeAndPhoneQuery.getFlowDirectionType(), startBaseSiteByDmsCode.getSiteCode(), endBaseSiteByDmsCode.getSiteCode());
-        if (!listResult.isSuccess()) {
-            result.setCode(listResult.getCode());
-            result.setMessage(listResult.getMessage());
-            return result;
-        }
-        result.setData(listResult.getData());
+        List<String> dockCodeList = workGridBusinessService.queryDockCodeByFlowDirection(dockCodeAndPhoneQuery.getFlowDirectionType(), startBaseSiteByDmsCode.getSiteCode(), endBaseSiteByDmsCode.getSiteCode());
+        result.setData(dockCodeList);
         return result;
     }
 
@@ -70,13 +65,8 @@ public class WorkGridBusinessJsfServiceImpl implements WorkGridBusinessJsfServic
         if (ObjectHelper.isEmpty(dockCodeAndPhoneQuery.getDockCode())) {
             return result.toFail("月台号为空");
         }
-        Result<List<WorkStationGrid>> listResult = workGridBusinessService.queryPhoneByDockCodeForTms(dockCodeAndPhoneQuery.getFlowDirectionType(), startBaseSiteByDmsCode.getSiteCode(), endBaseSiteByDmsCode.getSiteCode(), dockCodeAndPhoneQuery.getDockCode());
-        if (!listResult.isSuccess()) {
-            result.setCode(listResult.getCode());
-            result.setMessage(listResult.getMessage());
-            return result;
-        }
-        result.setData(listResult.getData());
+        List<WorkStationGrid> workStationGridList = workGridBusinessService.queryPhoneByDockCodeForTms(dockCodeAndPhoneQuery.getFlowDirectionType(), startBaseSiteByDmsCode.getSiteCode(), endBaseSiteByDmsCode.getSiteCode(), dockCodeAndPhoneQuery.getDockCode());
+        result.setData(workStationGridList);
         return result;
     }
 }

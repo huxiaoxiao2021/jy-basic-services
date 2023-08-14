@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface WorkGridBusinessService {
 
-    Result<List<String>> queryDockCodeByFlowDirection(Integer flowDirectionType,Integer startSiteID,Integer endSiteID);
+    List<String> queryDockCodeByFlowDirection(Integer flowDirectionType,Integer startSiteID,Integer endSiteID);
 
-    Result<List<WorkStationGrid>> queryPhoneByDockCodeForTms(Integer flowDirectionType,Integer startSiteID,Integer endSiteID,Integer dockCode);
+    List<WorkStationGrid> queryPhoneByDockCodeForTms(Integer flowDirectionType,Integer startSiteID,Integer endSiteID,Integer dockCode);
 }
