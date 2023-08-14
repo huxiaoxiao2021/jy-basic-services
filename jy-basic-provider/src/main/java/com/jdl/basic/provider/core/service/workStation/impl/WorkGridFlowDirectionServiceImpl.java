@@ -1,26 +1,14 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
-import com.jdl.basic.common.contants.Constants;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.enums.ConfigFlowStatusEnum;
 import com.jdl.basic.api.enums.FlowSiteUseStatusEnum;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.enums.AreaEnum;
 import com.jdl.basic.common.utils.DateHelper;
@@ -31,6 +19,16 @@ import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDirectionService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 场地网格流向表--Service接口实现
@@ -62,6 +60,7 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	 * @param insertData
 	 * @return
 	 */
+	@Transactional
 	public Result<Boolean> insert(WorkGridFlowDirection insertData){
 		Result<Boolean> result = Result.success(); 
 		if(insertData == null) {
@@ -185,6 +184,7 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	public List<WorkGridFlowDirection> queryListForWorkGridVo(WorkGridFlowDirectionQuery query) {
 		return workGridFlowDirectionDao.queryListForWorkGridVo(query);
 	}
+	@Transactional
 	@Override
 	public Result<Boolean> deleteByIds(DeleteRequest<WorkGridFlowDirection> deleteRequest) {
 		Result<Boolean> result = Result.success();
@@ -205,6 +205,7 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		result.setData(workGridFlowDirectionDao.deleteByIds(deleteRequest) > 0);
 		return result;
 	}
+	@Transactional
 	@Override
 	public Result<Boolean> importDatas(List<WorkGridFlowDirection> flowList) {
 		Result<Boolean> result = Result.success(); 
@@ -289,7 +290,7 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		Integer flowSiteCode = flowData.getFlowSiteCode();
 		if(flowSiteCode == null) {
 			return result.toFail("流向场地ID为空！");
-
+		
 		}
 		BaseStaffSiteOrgDto currentSiteInfo = baseMajorManager.getBaseSiteBySiteId(workGridData.getSiteCode());
 		if(currentSiteInfo == null){
@@ -304,7 +305,7 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		}
 		// fill base info
 		fillBaseInfo(flowData, currentSiteInfo, flowSiteInfo);
-
+		
 		return result;
 	}
 
@@ -341,6 +342,7 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		}
 		return null;
 	}
+	@Transactional
 	@Override
 	public int batchInsert(List<WorkGridFlowDirection> flowList) {
 		if(CollectionUtils.isEmpty(flowList)) {
@@ -451,6 +453,11 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		Result<Long> result = Result.success();
 		result.setData(workGridFlowDirectionDao.queryCount(query));
 		return result;
+	}
+	@Transactional
+	@Override
+	public int deleteByRefGridKey(WorkGridFlowDirection deleteData) {
+		return workGridFlowDirectionDao.deleteByRefGridKey(deleteData);
 	}
 
 	/**

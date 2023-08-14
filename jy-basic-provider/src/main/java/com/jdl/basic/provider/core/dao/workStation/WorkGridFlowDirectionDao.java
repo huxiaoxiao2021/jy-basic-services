@@ -130,6 +130,12 @@ public interface WorkGridFlowDirectionDao {
 	 * @return
 	 */
 	Integer brushUpdateById(List<WorkGridFlowDirection> list);
+	/**
+	 * 删除网格下流向数据
+	 * @param deleteData
+	 * @return
+	 */
+	int deleteByRefGridKey(WorkGridFlowDirection deleteData);
 
 	/**
 	 * 查询流向-根据传入的流向

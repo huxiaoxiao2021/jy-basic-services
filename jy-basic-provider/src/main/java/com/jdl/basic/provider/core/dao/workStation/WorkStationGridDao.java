@@ -205,6 +205,12 @@ public interface WorkStationGridDao {
 	 * @return
 	 */
 	Integer brushUpdateById(List<WorkStationGrid> list);
+	/**
+	 * 查询网格下的数据条数
+	 * @param refGridKey
+	 * @return
+	 */
+	int queryCountByRefGridKey(String refGridKey);
 
 	/**
 	 * 获取月台号

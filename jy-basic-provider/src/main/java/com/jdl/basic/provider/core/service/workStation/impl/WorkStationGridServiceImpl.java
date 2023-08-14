@@ -369,7 +369,13 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 
 		// 同步删除绑定自动化设备
 		deleteMachineByRefGridKey(deleteData);
-
+		//删除对应的网格数据
+		WorkGrid deleteGrid = new WorkGrid();
+		deleteGrid.setBusinessKey(queryResult.getData().getRefWorkGridKey());
+		deleteGrid.setUpdateUser(deleteData.getUpdateUser());
+		deleteGrid.setUpdateUserName(deleteData.getUpdateUserName());
+		deleteGrid.setUpdateTime(deleteData.getUpdateTime());
+		workGridService.deleteByWorkGridKey(deleteGrid);
 		// 同步删除岗位记录
 		String businessKey = queryResult.getData().getBusinessKey();
 		PositionRecord positionRecord = new PositionRecord();
@@ -628,9 +634,9 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	public boolean hasGridData(String stationKey) {
 		return workStationGridDao.queryCountByRefStationKey(stationKey) > 0;
 	}
-
 	@Override
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.deleteByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	@Transactional
 	public Result<Boolean> deleteByIds(DeleteRequest<WorkStationGrid> deleteRequest) {
 		Result<Boolean> result = Result.success();
 		if(deleteRequest == null
@@ -648,6 +654,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			}
 		}
 		result.setData(workStationGridDao.deleteByIds(deleteRequest) > 0);
+		List<String> refGridKeyList = new ArrayList<>();
 		for(WorkStationGrid oldData : oldDataList) {
 			// 同步删除岗位记录
 			String businessKey = oldData.getBusinessKey();
@@ -658,6 +665,16 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			if(Objects.equals(deletePositionResult.getData(), false)){
 				throw new RuntimeException("根据businessKey:" + businessKey + "删除岗位数据失败!");
 			}
+			refGridKeyList.add(oldData.getRefWorkGridKey());
+		}
+		//删除对应的网格数据
+		for(String workGridKey : refGridKeyList) {
+			WorkGrid deleteGrid = new WorkGrid();
+			deleteGrid.setBusinessKey(workGridKey);
+			deleteGrid.setUpdateUser(deleteRequest.getOperateUserCode());
+			deleteGrid.setUpdateUserName(deleteRequest.getOperateUserName());
+			deleteGrid.setUpdateTime(deleteRequest.getOperateTime());
+			workGridService.deleteByWorkGridKey(deleteGrid);
 		}
 		return result;
 	}
@@ -836,6 +853,11 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
 		}
 		return workStationGridDao.queryListForManagerSiteScan(query);
+	}
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryCountByRefGridKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public int queryCountByRefGridKey(String refGridKey) {
+		return workStationGridDao.queryCountByRefGridKey(refGridKey);
 	}
 
 	/**
