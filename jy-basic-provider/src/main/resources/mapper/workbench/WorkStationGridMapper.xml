@@ -768,23 +768,36 @@
 		</foreach>
 	</update>
 	<!-- 刷数sql end -->
-	<select id="getDockCode" resultMap="WorkStationGrid">
-		select
-		business_key,dock_code,owner_user_erp
-		from work_station_grid
-		where site_code = #{siteCode}
-		<if test="refWorkKeyList != null and refWorkGridKeyList.size>0">
-			and ref_station_key in
-			<foreach collection="refWorkKeyList" item="item" open="(" close=")" separator=",">
-				#{item,jdbcType=VARCHAR}
-			</foreach>
-		</if>
-		<if test="refWorkGridKeyList != null and refWorkGridKeyList.size>0">
-			and ref_work_grid_key in
-			<foreach collection="refWorkGridKeyList" item="item" open="(" close=")" separator=",">
-				#{item,jdbcType=VARCHAR}
-			</foreach>
-		</if>
-		limit 5
-	</select>
+    <select id="queryDockCodeByFlowDirection" resultType="java.lang.String">
+        select
+        distinct dock_code
+        from work_station_grid
+        where site_code = #{siteCode,jdbcType=INTEGER}
+        and ref_station_key in
+        <foreach collection="refWorkKeyList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        and ref_work_grid_key in
+        <foreach collection="refWorkGridKeyList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        limit #{offset}, #{limit}
+    </select>
+    <select id="queryPhoneByDockCodeForTms" resultType="com.jdl.basic.api.domain.workStation.WorkStationGrid">
+        select
+        dock_code,business_key,owner_user_erp
+        from work_station_grid
+        where site_code = #{siteCode,jdbcType=INTEGER}
+        and ref_station_key in
+        <foreach collection="refWorkKeyList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        and ref_work_grid_key in
+        <foreach collection="refWorkGridKeyList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        and dock_code = #{dockCode,jdbcType=INTEGER}
+        limit #{offset}, #{limit}
+    </select>
+
 </mapper>

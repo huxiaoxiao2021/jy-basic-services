@@ -328,5 +328,13 @@
                   alias="${jsf.jy_basic.alias}"
                   server="jsf">
     </jsf:provider>
+
+    <!--  推送运输月台号和联系人  -->
+    <jsf:provider id="jsfWorkGridBusinessJsfService"
+                  interface="com.jdl.basic.provider.core.provider.workStation.WorkGridBusinessJsfService"
+                  ref="WorkGridBusinessJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  server="jsf">
+    </jsf:provider>
 </beans>
 

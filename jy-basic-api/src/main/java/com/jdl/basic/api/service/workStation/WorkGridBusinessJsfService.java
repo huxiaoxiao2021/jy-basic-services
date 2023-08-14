@@ -1,6 +1,7 @@
 package com.jdl.basic.api.service.workStation;
 
 
+import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.workStation.DockCodeAndPhoneQuery;
 import com.jdl.basic.api.domain.workStation.WorkStationGrid;
 
@@ -16,5 +17,7 @@ import java.util.List;
 public interface WorkGridBusinessJsfService {
 
 
-    List<WorkStationGrid> queryDockCodeByFlowDirection(DockCodeAndPhoneQuery dockCodeAndPhoneQuery);
+    Result<List<String>> queryDockCodeByFlowDirection(DockCodeAndPhoneQuery dockCodeAndPhoneQuery);
+
+    Result<List<WorkStationGrid>> queryPhoneByDockCodeForTms(DockCodeAndPhoneQuery dockCodeAndPhoneQuery);
 }

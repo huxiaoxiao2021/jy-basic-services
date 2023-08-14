@@ -841,15 +841,20 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	/**
 	 * 获取月台号
 	 *
-	 * @param siteCode
-	 * @param refWorkKeyList
-	 * @param refWorkGridKeyList
+	 * @param workGridFlowDirectionQuery
 	 */
 	@Override
-	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.getDockCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-	@Cache(key = "WorkStationGridServiceImpl.getDockCode@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
-			,redisEnable = true, redisExpiredTime = 5 * 60 * 1000)
-	public List<WorkStationGrid> getDockCode(Integer siteCode, List<String> refWorkKeyList, List<String> refWorkGridKeyList) {
-		return workStationGridDao.getDockCode(siteCode,refWorkKeyList,refWorkGridKeyList);
+	public List<String> queryDockCodeByFlowDirection(WorkGridFlowDirectionQuery workGridFlowDirectionQuery) {
+		return workStationGridDao.queryDockCodeByFlowDirection(workGridFlowDirectionQuery);
+	}
+
+	/**
+	 * 获取网格信息
+	 *
+	 * @param workGridFlowDirectionQuery
+	 */
+	@Override
+	public List<WorkStationGrid> queryPhoneByDockCodeForTms(WorkGridFlowDirectionQuery workGridFlowDirectionQuery) {
+		return workStationGridDao.queryPhoneByDockCodeForTms(workGridFlowDirectionQuery);
 	}
 }

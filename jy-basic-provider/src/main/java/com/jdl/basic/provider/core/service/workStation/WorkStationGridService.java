@@ -1,10 +1,7 @@
 package com.jdl.basic.provider.core.service.workStation;
 
 
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkStationGrid;
-import com.jdl.basic.api.domain.workStation.WorkStationGridCountVo;
-import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
+import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 
@@ -188,11 +185,14 @@ public interface WorkStationGridService {
 	/**
 	 * 获取月台号
 	 *
-	 * @param siteCode
-	 * @param refWorkKeyList
-	 * @param refWorkGridKeyList
+	 * @param workGridFlowDirectionQuery
 	 */
-	List<WorkStationGrid> getDockCode(Integer siteCode,List<String> refWorkKeyList, List<String> refWorkGridKeyList);
+	List<String> queryDockCodeByFlowDirection(WorkGridFlowDirectionQuery workGridFlowDirectionQuery);
 
-
+	/**
+	 * 获取网格信息
+	 *
+	 * @param workGridFlowDirectionQuery
+	 */
+	List<WorkStationGrid> queryPhoneByDockCodeForTms(WorkGridFlowDirectionQuery workGridFlowDirectionQuery);
 }

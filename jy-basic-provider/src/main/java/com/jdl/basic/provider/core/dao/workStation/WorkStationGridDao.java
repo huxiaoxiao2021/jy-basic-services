@@ -7,7 +7,6 @@ import com.jdl.basic.api.domain.workStation.WorkStationGrid;
 import com.jdl.basic.api.domain.workStation.WorkStationGridCountVo;
 import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
 import com.jdl.basic.api.domain.workStation.*;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -210,11 +209,14 @@ public interface WorkStationGridDao {
 	/**
 	 * 获取月台号
 	 *
-	 * @param siteCode
-	 * @param refWorkKeyList
-	 * @param refWorkGridKeyList
+	 * @param workGridFlowDirectionQuery
 	 */
-	List<WorkStationGrid> getDockCode(@Param("siteCode") Integer siteCode,
-							 @Param("refWorkKeyList") List<String> refWorkKeyList,
-							 @Param("refWorkGridKeyList") List<String> refWorkGridKeyList);
+	List<String> queryDockCodeByFlowDirection(WorkGridFlowDirectionQuery workGridFlowDirectionQuery);
+
+	/**
+	 * 获取网格信息
+	 *
+	 * @param workGridFlowDirectionQuery
+	 */
+	List<WorkStationGrid> queryPhoneByDockCodeForTms(WorkGridFlowDirectionQuery workGridFlowDirectionQuery);
 }
