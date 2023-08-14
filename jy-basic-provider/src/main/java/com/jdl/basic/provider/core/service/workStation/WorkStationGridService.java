@@ -184,4 +184,10 @@ public interface WorkStationGridService {
 	 * @return
 	 */	
 	List<WorkStationGrid> queryListForManagerSiteScan(WorkStationGridQuery workStationGridQuery);
+	/**
+	 * 
+	 * @param refGridKey
+	 * @return
+	 */
+	int queryCountByRefGridKey(String refGridKey);
 }

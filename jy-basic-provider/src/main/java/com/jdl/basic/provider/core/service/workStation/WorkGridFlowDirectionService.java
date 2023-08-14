@@ -6,7 +6,6 @@ import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionVo;
-import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 
@@ -88,4 +87,10 @@ public interface WorkGridFlowDirectionService {
 	
 	Result<List<WorkGridFlowDirection>> queryListForExport(WorkGridFlowDirectionQuery query);
 	Result<Long> queryCount(WorkGridFlowDirectionQuery query);
+	/**
+	 * 删除网格下的所有流向数据
+	 * @param deleteData
+	 * @return
+	 */
+	int deleteByRefGridKey(WorkGridFlowDirection deleteData);
 }

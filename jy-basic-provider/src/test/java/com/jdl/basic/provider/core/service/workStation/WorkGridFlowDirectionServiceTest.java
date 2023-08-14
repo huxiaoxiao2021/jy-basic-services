@@ -1,24 +1,25 @@
 package com.jdl.basic.provider.core.service.workStation;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import java.util.Date;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import com.jdl.basic.provider.ApplicationLaunch;
-import com.jdl.basic.utils.EntityUtil;
-import com.jdl.basic.common.utils.JsonHelper;
 
-
-import com.jdl.basic.common.utils.Result;
-import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
+import com.jdl.basic.common.utils.JsonHelper;
+import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.provider.ApplicationLaunch;
+import com.jdl.basic.utils.EntityUtil;
 
 /**
  * 场地网格流向表--Service测试用例
@@ -61,6 +62,12 @@ public class WorkGridFlowDirectionServiceTest {
         
         Result<WorkGridFlowDirection> queryByIdYn0 = workGridFlowDirectionService.queryById(updateData.getId());
         Assert.assertTrue(queryByIdYn0 != null && queryByIdYn0.getData() == null);
+        
+        WorkGridFlowDirection deleteData = new WorkGridFlowDirection();
+        deleteData.setRefWorkGridKey(updateData.getRefWorkGridKey());
+        deleteData.setUpdateTime(new Date());
+        deleteData.setUpdateUser("updateUser");
+        workGridFlowDirectionService.deleteByRefGridKey(deleteData);
     }
 
 }
