@@ -1,10 +1,7 @@
 package com.jdl.basic.provider.core.service.workStation;
 
 
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkStationGrid;
-import com.jdl.basic.api.domain.workStation.WorkStationGridCountVo;
-import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
+import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 
