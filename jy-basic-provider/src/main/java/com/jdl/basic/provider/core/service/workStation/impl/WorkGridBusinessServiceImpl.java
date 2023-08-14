@@ -74,14 +74,13 @@ public class WorkGridBusinessServiceImpl implements WorkGridBusinessService {
      * @return
      */
     private WorkGridFlowDirectionQuery getWorkStation(Integer flowDirectionType, Integer startSiteID, Integer endSiteID) {
-        Result<WorkGridFlowDirectionQuery> result = new Result<>();
         //1、根据传入的类型去jy_work_map_func_config 拣运APP功能和工序映射表中查询出ref_work_key
         List<String> refWorkKeyList = getRefWorkKey(flowDirectionType);
         //获取流向的查询条件
         WorkGridFlowDirectionQuery workGridFlowDirectionQuery = getWorkGridFlowDirectionQuery(flowDirectionType, startSiteID, endSiteID);
         //2、根据传入的流向：发货地ID、目的地ID去work_grid_flow_direction  场地网格流向表 获取 ref_work_grid_key
         List<String> refWorkGridKey = workGridFlowDirectionService.queryRefWorkGridKeyByFlowDirection(workGridFlowDirectionQuery);
-        if (checkParam(workGridFlowDirectionQuery)) {
+        if (checkParam(workGridFlowDirectionQuery,refWorkKeyList,refWorkGridKey)) {
             return null;
         }
         workGridFlowDirectionQuery.setRefWorkGridKeyList(refWorkGridKey);
@@ -155,14 +154,14 @@ public class WorkGridBusinessServiceImpl implements WorkGridBusinessService {
      * @param workGridFlowDirectionQuery
      * @return
      */
-    private Boolean checkParam(WorkGridFlowDirectionQuery workGridFlowDirectionQuery) {
+    private Boolean checkParam(WorkGridFlowDirectionQuery workGridFlowDirectionQuery,List<String> refWorkGridKey,List<String> refWorkGridKeyList) {
         if (ObjectHelper.isEmpty(workGridFlowDirectionQuery.getSiteCode())) {
             return true;
         }
-        if (CollectionUtils.isEmpty(workGridFlowDirectionQuery.getRefWorkKeyList())) {
+        if (CollectionUtils.isEmpty(refWorkGridKey)) {
             return true;
         }
-        if (CollectionUtils.isEmpty(workGridFlowDirectionQuery.getRefWorkGridKeyList())) {
+        if (CollectionUtils.isEmpty(refWorkGridKeyList)) {
             return true;
         }
         return false;
