@@ -63,6 +63,9 @@ public class WorkGridBusinessServiceImpl implements WorkGridBusinessService {
         //3、根据ref_work_key去work_station 网格工序信息表中查询business_key
         //4、根据场地编码、business_key、ref_work_grid_key去work_station_grid 场地网格工序信息表查询 获取到月台号 和 business_key
         //3、4合并获取月台号
+        if (ObjectHelper.isEmpty(workGridFlowDirectionQuery)) {
+            return null;
+        }
         return workStationGridService.queryDockCodeByFlowDirection(workGridFlowDirectionQuery);
     }
 
