@@ -98,6 +98,9 @@ public class WorkGridBusinessServiceImpl implements WorkGridBusinessService {
     public List<WorkStationGrid> queryPhoneByDockCodeForTms(Integer flowDirectionType, Integer startSiteID, Integer endSiteID, String dockCode) {
         //获取网格信息
         WorkGridFlowDirectionQuery workGridFlowDirectionQuery = getWorkStation(flowDirectionType, startSiteID, endSiteID);
+        if (ObjectHelper.isEmpty(workGridFlowDirectionQuery)) {
+            return null;
+        }
         workGridFlowDirectionQuery.setDockCode(dockCode);
         return workStationGridService.queryPhoneByDockCodeForTms(workGridFlowDirectionQuery);
     }
@@ -140,12 +143,13 @@ public class WorkGridBusinessServiceImpl implements WorkGridBusinessService {
         WorkGridFlowDirectionQuery workGridFlowDirectionQuery = new WorkGridFlowDirectionQuery();
 
         workGridFlowDirectionQuery.setFlowDirectionType(flowDirectionType);
+        //flowDirectionType 发货 2  对应 出场 ；卸货 1 对应 进场
         if (flowDirectionType.equals(BaseContants.NUMBER_ONE)) {
-            workGridFlowDirectionQuery.setSiteCode(startSiteID);
-            workGridFlowDirectionQuery.setFlowSiteCode(endSiteID);
-        } else {
             workGridFlowDirectionQuery.setSiteCode(endSiteID);
             workGridFlowDirectionQuery.setFlowSiteCode(startSiteID);
+        } else {
+            workGridFlowDirectionQuery.setSiteCode(startSiteID);
+            workGridFlowDirectionQuery.setFlowSiteCode(endSiteID);
         }
         return workGridFlowDirectionQuery;
     }
