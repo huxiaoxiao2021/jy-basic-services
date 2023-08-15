@@ -21,22 +21,22 @@ public interface OrgSwitchProvinceBrushJsfService {
     /**
      * work_grid_flow_direction 表刷数省区字段
      */
-    void workGridFlowDirectionBrush();
+    void workGridFlowDirectionBrush(Integer startId);
 
     /**
      * work_grid_flow_detail_offline 表刷数省区字段
      */
-    void workGridFlowDetailOfflineBrush();
+    void workGridFlowDetailOfflineBrush(Integer startId);
 
     /**
      * site_wave_schedule 表刷数省区字段
      */
-    void siteWaveScheduleBrush();
+    void siteWaveScheduleBrush(Integer startId);
 
     /**
      * site_attend_plan 表刷数省区字段
      */
-    void siteAttendPlanBrush();
+    void siteAttendPlanBrush(Integer startId);
 
     /**
      * collect_box_flow_direction_conf 表刷数省区字段
