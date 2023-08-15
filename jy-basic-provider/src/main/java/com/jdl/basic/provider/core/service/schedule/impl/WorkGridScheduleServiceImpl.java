@@ -127,7 +127,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
                 throw new RuntimeException(insertResult.getMessage());
             }
         }
-        ApiResult apiResult = operateLogManager.saveOperateLog(getOperateLog(request));
+        ApiResult apiResult = operateLogManager.batchSaveOperateLog(getOperateLog(request));
         if (apiResult.checkFail()) {
             log.warn("操作记录保存失败！message {}", apiResult.getMessage());
         }

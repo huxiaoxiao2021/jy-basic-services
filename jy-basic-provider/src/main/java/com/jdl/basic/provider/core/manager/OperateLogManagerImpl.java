@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 public class OperateLogManagerImpl implements OperateLogManager{
@@ -24,6 +26,11 @@ public class OperateLogManagerImpl implements OperateLogManager{
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".OperateLogManagerImpl.saveOperateLog", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public ApiResult saveOperateLog(ApiRequest<OperateLogData> request) {
         return operateLogService.saveOperateLog(request);
+    }
+
+    @Override
+    public ApiResult batchSaveOperateLog(ApiRequest<List<OperateLogData>> request) {
+        return operateLogService.batchSaveOperateLog(request);
     }
 
     @Override
