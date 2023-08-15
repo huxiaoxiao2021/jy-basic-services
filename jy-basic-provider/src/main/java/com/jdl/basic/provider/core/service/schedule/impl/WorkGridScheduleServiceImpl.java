@@ -23,9 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -136,39 +134,69 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         return result;
     }
 
-    private ApiRequest<OperateLogData> getOperateLog(WorkGridScheduleBatchUpdateRequest updateRequest) {
-        ApiRequest<OperateLogData> request = new ApiRequest<>();
-        OperateLogData opLog = new OperateLogData();
-        request.setData(opLog);
-        StringBuilder sb = new StringBuilder();
+    private ApiRequest<List<OperateLogData>> getOperateLog(WorkGridScheduleBatchUpdateRequest updateRequest) {
+        ApiRequest<List<OperateLogData>> request = new ApiRequest<>();
+        List<OperateLogData> opLogList = new ArrayList<>();
+        request.setData(opLogList);
 
-        sb.append(updateRequest.getUpdateUserErp())
-                .append(Constants.LEFT_PARENTHESIS)
-                .append(updateRequest.getUpdateUserName())
-                .append(Constants.RIGHT_PARENTHESIS);
-        if (CollectionUtils.isNotEmpty(updateRequest.getAddWorkGridSchedule())) {
-            sb.append(" 修改班次时间为 ");
-            for (WorkGridSchedule schedule : updateRequest.getAddWorkGridSchedule()) {
-                sb.append(schedule.getScheduleName())
+        Date now = new Date();
+        String userErp = updateRequest.getUpdateUserErp();
+        String userName = updateRequest.getUpdateUserName();
+
+        List<WorkGridSchedule> addList = updateRequest.getAddWorkGridSchedule();
+        if (CollectionUtils.isNotEmpty(addList)) {
+            Map<String, List<WorkGridSchedule>> gridToTimeListMap = addList
+                    .stream().collect(Collectors.groupingBy(WorkGridSchedule::getWorkGridKey));
+            for (Map.Entry<String, List<WorkGridSchedule>> entry : gridToTimeListMap.entrySet()) {
+                StringBuilder sb = new StringBuilder();
+
+                sb.append(userErp)
                         .append(Constants.LEFT_PARENTHESIS)
-                        .append(schedule.getStartTime())
-                        .append(Constants.SEPARATOR_HYPHEN)
-                        .append(schedule.getEndTime())
-                        .append(Constants.RIGHT_PARENTHESIS)
-                        .append(Constants.CHINESE_COMMA);
-            }
-        } else {
-            sb.append(" 清空了班次时间 ").append(Constants.CHINESE_COMMA);
-        }
-        sb.deleteCharAt(sb.length() - 1);
-        opLog.setEventType(EventLogEnum.SCHEDULE.getCode());
-        opLog.setEventContent(sb.toString());
-        opLog.setUserErp(updateRequest.getUpdateUserErp());
-        opLog.setUserErp(updateRequest.getUpdateUserName());
-        opLog.setCreateTime(new Date());
+                        .append(userName)
+                        .append(Constants.RIGHT_PARENTHESIS);
+                sb.append(" 修改班次时间为 ");
+                for (WorkGridSchedule schedule : entry.getValue()) {
+                    sb.append(schedule.getScheduleName())
+                            .append(Constants.LEFT_PARENTHESIS)
+                            .append(schedule.getStartTime())
+                            .append(Constants.SEPARATOR_HYPHEN)
+                            .append(schedule.getEndTime())
+                            .append(Constants.RIGHT_PARENTHESIS)
+                            .append(Constants.CHINESE_COMMA);
+                }
+                sb.deleteCharAt(sb.length() - 1);
 
-        opLog.setEventKey(updateRequest.getWorkGridKey());
+                opLogList.add(buildOperateLogData(EventLogEnum.SCHEDULE.getCode(), entry.getKey(), sb.toString(), userErp, userName, now));
+            }
+
+
+        } else {
+            List<WorkGridSchedule> deleteList = updateRequest.getDeleteWorkGridSchedule();
+            Map<String, List<WorkGridSchedule>> gridToTimeListMap = deleteList
+                    .stream().collect(Collectors.groupingBy(WorkGridSchedule::getWorkGridKey));
+            for (Map.Entry<String, List<WorkGridSchedule>> entry : gridToTimeListMap.entrySet()) {
+
+                String content = updateRequest.getUpdateUserErp() +
+                        Constants.LEFT_PARENTHESIS +
+                        updateRequest.getUpdateUserName() +
+                        Constants.RIGHT_PARENTHESIS +
+                        " 清空了班次时间 ";
+                opLogList.add(buildOperateLogData(EventLogEnum.SCHEDULE.getCode(), entry.getKey(), content, userErp, userName, now));
+            }
+        }
+
         return request;
+    }
+
+    private OperateLogData buildOperateLogData(Integer eventType, String eventKey, String content, String userErp, String userName, Date createTime) {
+        OperateLogData opLog = new OperateLogData();
+        opLog.setEventType(eventType);
+        opLog.setEventKey(eventKey);
+        opLog.setEventContent(content);
+        opLog.setUserErp(userErp);
+        opLog.setUserName(userName);
+        opLog.setCreateTime(createTime);
+        return opLog;
     }
 
     @Override
