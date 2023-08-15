@@ -31,7 +31,7 @@
         <dms-java-utils-sdk.version>1.0.0-SNAPSHOT</dms-java-utils-sdk.version>
 <!--        <jd.ump.version>6.2.13-HOTFIX-T1</jd.ump.version>-->
 <!--        <jd.ump-x.version>1.0.2</jd.ump-x.version>-->
-        <jd.jmq.version>2.6.0</jd.jmq.version>
+        <jd.jmq.version>20221231</jd.jmq.version>
         <jd.jmq.jspliter.version>1.0.3</jd.jmq.jspliter.version>
         <jd.lsb.task.api>0.0.6-SNAPSHOT</jd.lsb.task.api>
         <elasticsearch.transport.version>6.3.2</elasticsearch.transport.version>
