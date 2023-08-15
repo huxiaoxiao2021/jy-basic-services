@@ -803,7 +803,7 @@
         <foreach collection="refWorkGridKeyList" item="item" open="(" close=")" separator=",">
             #{item,jdbcType=VARCHAR}
         </foreach>
-        and dock_code = #{dockCode,jdbcType=INTEGER}
+        and dock_code = #{dockCode,jdbcType=VARCHAR}
         limit #{offset}, #{limit}
     </select>
 

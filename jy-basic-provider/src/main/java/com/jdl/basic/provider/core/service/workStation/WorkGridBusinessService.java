@@ -17,5 +17,5 @@ public interface WorkGridBusinessService {
 
     List<String> queryDockCodeByFlowDirection(Integer flowDirectionType,Integer startSiteID,Integer endSiteID);
 
-    List<WorkStationGrid> queryPhoneByDockCodeForTms(Integer flowDirectionType,Integer startSiteID,Integer endSiteID,Integer dockCode);
+    List<WorkStationGrid> queryPhoneByDockCodeForTms(Integer flowDirectionType,Integer startSiteID,Integer endSiteID,String dockCode);
 }

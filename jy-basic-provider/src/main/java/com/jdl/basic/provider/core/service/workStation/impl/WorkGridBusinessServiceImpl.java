@@ -1,6 +1,5 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
-import com.jd.dms.java.utils.sdk.base.Result;
 import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
@@ -96,7 +95,7 @@ public class WorkGridBusinessServiceImpl implements WorkGridBusinessService {
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridBusinessServiceImpl.queryPhoneByDockCode", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
     @Cache(key = "WorkGridBusinessServiceImpl.queryByDockCode@args0@args1@args2@args3", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
             , redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
-    public List<WorkStationGrid> queryPhoneByDockCodeForTms(Integer flowDirectionType, Integer startSiteID, Integer endSiteID, Integer dockCode) {
+    public List<WorkStationGrid> queryPhoneByDockCodeForTms(Integer flowDirectionType, Integer startSiteID, Integer endSiteID, String dockCode) {
         //获取网格信息
         WorkGridFlowDirectionQuery workGridFlowDirectionQuery = getWorkStation(flowDirectionType, startSiteID, endSiteID);
         workGridFlowDirectionQuery.setDockCode(dockCode);

@@ -103,6 +103,6 @@ public class WorkGridFlowDirectionQuery extends BasePagerCondition implements Se
 	/**
 	 * 月台号
 	 */
-	private Integer dockCode;
+	private String dockCode;
 
 }
