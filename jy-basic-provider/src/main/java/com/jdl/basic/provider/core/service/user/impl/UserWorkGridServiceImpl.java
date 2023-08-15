@@ -65,15 +65,6 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         List<JyUser> users = getUsers(request.getUserWorkGrids());
         JyUserBatchRequest batchRequest = new JyUserBatchRequest();
         batchRequest.setUsers(users);
-        Result<List<JyUser>> userResult = userService.queryByUserIds(batchRequest);
-        if (userResult.isFail()) {
-            return result.toFail(userResult.getMessage());
-        }
-        for(JyUser user : userResult.getData()) {
-            if (user.getGridDistributeFlag()) {
-                return result.toFail(String.format("用户【%s】已分配网格！请刷新页面获取最新数据。", user.getUserErp()));
-            }
-        }
         if (userWorkGridDao.batchInsert(request) > 0) {
             result.setData(Boolean.TRUE);
             batchRequest.setGridDistributeFlag(JyUserDistributeStatusEnum.DISTRIBUTED.getFlag());
@@ -98,19 +89,6 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
     public Result<Boolean> batchDelete(UserWorkGridBatchRequest request) {
         Result<Boolean> result = Result.success();
 
-        if (request.getUserWorkGrids() == null) {
-            return result.toFail("删除记录不能为空！");
-        }
-        if (request.getUpdateTime() == null) {
-            return result.toFail("修改时间不能为空！");
-        }
-        if(StringUtils.isEmpty(request.getUpdateUserErp())) {
-            return result.toFail("修改人erp不能为空！");
-        }
-        if (StringUtils.isEmpty(request.getUpdateUserName())) {
-            return result.toFail("修改人姓名不能为空！");
-        }
-
         List<JyUser> users = getUsers(request.getUserWorkGrids());
         JyUserBatchRequest batchRequest = new JyUserBatchRequest();
         batchRequest.setUsers(users);
@@ -128,23 +106,17 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
     @Transactional
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.batchUpdate", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> batchUpdateUserWorkGrid(UserWorkGridBatchUpdateRequest request) {
-        Result<Boolean> result = Result.success();
-
-        if (request.getSiteCode() == null) {
-            return result.toFail("场地编码不能为空！");
-        }
-        if (StringUtils.isEmpty(request.getUpdateUserErp())) {
-            return result.toFail("updateUserErp不能为空！");
-        }
-        if (StringUtils.isEmpty(request.getUpdateUserName())) {
-            return result.toFail("updateUserName不能为空！");
+        Result<Boolean> result = batchUpdateParamsCheck(request);
+        if (result.isFail()) {
+            return result;
         }
 
         UserWorkGridService currentProxy = (UserWorkGridService) AopContext.currentProxy();
 
-        if (CollectionUtils.isNotEmpty(request.getDeleteUserWorkGrids())) {
+        List<UserWorkGridDto> deleteList = request.getDeleteUserWorkGrids();
+        if (CollectionUtils.isNotEmpty(deleteList)) {
             UserWorkGridBatchRequest deleteRequest = new UserWorkGridBatchRequest();
-            deleteRequest.setUserWorkGrids(BeanUtils.copy(request.getDeleteUserWorkGrids(), UserWorkGrid.class));
+            deleteRequest.setUserWorkGrids(BeanUtils.copy(deleteList, UserWorkGrid.class));
             deleteRequest.setUpdateTime(request.getUpdateTime());
             deleteRequest.setUpdateUserErp(request.getUpdateUserErp());
             deleteRequest.setUpdateUserName(request.getUpdateUserName());
@@ -156,10 +128,11 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             }
         }
 
-        if (CollectionUtils.isNotEmpty(request.getAddUserWorkGrids())) {
+        List<UserWorkGridDto> addList = request.getAddUserWorkGrids();
+        if (CollectionUtils.isNotEmpty(addList)) {
             UserWorkGridBatchRequest addRequest = new UserWorkGridBatchRequest();
             addRequest.setSiteCode(request.getSiteCode());
-            addRequest.setUserWorkGrids(BeanUtils.copy(request.getAddUserWorkGrids(), UserWorkGrid.class));
+            addRequest.setUserWorkGrids(BeanUtils.copy(addList, UserWorkGrid.class));
             Result<Boolean> insertResult = currentProxy.batchInsert(addRequest);
             if (insertResult.isFail()) {
                 log.warn("batchUpdate 插入网格人员分配失败！{}", insertResult.getMessage());
@@ -170,6 +143,47 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         ApiResult apiResult = operateLogManager.saveOperateLog(getOperateLog(request));
         if (apiResult.checkFail()) {
             log.warn("操作记录保存失败！message {}", apiResult.getMessage());
+        }
+        return result;
+    }
+
+    private Result<Boolean> batchUpdateParamsCheck(UserWorkGridBatchUpdateRequest request) {
+        Result<Boolean> result = Result.success();
+        if (request.getSiteCode() == null) {
+            return result.toFail("场地编码不能为空！");
+        }
+
+        List<UserWorkGridDto> deleteList = request.getDeleteUserWorkGrids();
+        if (CollectionUtils.isNotEmpty(deleteList)) {
+            if (request.getUpdateTime() == null) {
+                return result.toFail("修改时间不能为空！");
+            }
+            if(StringUtils.isEmpty(request.getUpdateUserErp())) {
+                return result.toFail("修改人erp不能为空！");
+            }
+            if (StringUtils.isEmpty(request.getUpdateUserName())) {
+                return result.toFail("修改人姓名不能为空！");
+            }
+        }
+
+        List<UserWorkGridDto> addList = request.getAddUserWorkGrids();
+        if (CollectionUtils.isNotEmpty(addList)) {
+            List<JyUser> users = addList.stream().map(item -> {
+                JyUser user = new JyUser();
+                user.setId(item.getUserId());
+                return user;
+            }).collect(Collectors.toList());
+            JyUserBatchRequest batchRequest = new JyUserBatchRequest();
+            batchRequest.setUsers(users);
+            Result<List<JyUser>> userResult = userService.queryByUserIds(batchRequest);
+            if (userResult.isFail()) {
+                return result.toFail(userResult.getMessage());
+            }
+            for(JyUser user : userResult.getData()) {
+                if (user.getGridDistributeFlag()) {
+                    return result.toFail(String.format("用户【%s】已分配网格！请刷新页面获取最新数据。", user.getUserErp()));
+                }
+            }
         }
         return result;
     }
