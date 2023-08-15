@@ -93,6 +93,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
     }
 
     @Override
+    @Transactional
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.batchDelete", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> batchDelete(UserWorkGridBatchRequest request) {
         Result<Boolean> result = Result.success();
@@ -151,7 +152,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             Result<Boolean> deleteResult = currentProxy.batchDelete(deleteRequest);
             if (deleteResult.isFail()) {
                 log.warn("batchUpdate 删除网格人员分配失败！{}", deleteResult.getMessage());
-                throw new RuntimeException("插入记录失败！" + deleteResult.getMessage());
+                return result.toFail(deleteResult.getMessage());
             }
         }
 
@@ -162,7 +163,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             Result<Boolean> insertResult = currentProxy.batchInsert(addRequest);
             if (insertResult.isFail()) {
                 log.warn("batchUpdate 插入网格人员分配失败！{}", insertResult.getMessage());
-                throw new RuntimeException("插入记录失败！" + insertResult.getMessage());
+                return result.toFail(insertResult.getMessage());
             }
         }
 
