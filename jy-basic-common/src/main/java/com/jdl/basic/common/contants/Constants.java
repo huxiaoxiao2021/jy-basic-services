@@ -1,5 +1,8 @@
 package com.jdl.basic.common.contants;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Constants {
 
     public static final String SEPARATOR_COMMA = ",";
@@ -52,7 +55,6 @@ public class Constants {
      */
     public static final int OPERATE_TYPE_CANCEL_L = 0;
     public static final int OPERATE_TYPE_CANCEL_Y = 1;
-  public static final int CONSTANT_NUMBER_TEN = 10;
 
   /**
      * 线路类型-默认值0
