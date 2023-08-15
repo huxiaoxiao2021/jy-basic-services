@@ -50,14 +50,14 @@ mq:
     collectBoxFlowNotice: collect_box_flow_notice
     workGridManagerTaskConfigMq: workGridManagerTaskConfigMq
     workGridModifyMq: workGridModifyMq
-    
+
   consumer:
     topic:
       sort_cross_detail: basic_sort_cross_detail
       wlUserInfo: wlUserInfo
       site_change: basic_base_site_change
       wmsSite_Change: basic_ps_storeinfo
-      
+
   jmq4producer:
     password: 809375866c4842f28d7e4eec04da1e41
     app: JYBasic
@@ -164,7 +164,7 @@ laf:
 fdf:
   functionMap:
     1:
-      - "SEND_CAR_POSITION"
-    2:
       - "UNSEAL_CAR_POSITION"
       - "UNLOAD_CAR_POSITION"
+    2:
+      - "SEND_CAR_POSITION"
