@@ -142,13 +142,23 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         request.setData(opLog);
         StringBuilder sb = new StringBuilder();
 
-        sb.append(updateRequest.getUpdateUserErp()).append("(").append(updateRequest.getUpdateUserName()).append(")");
+        sb.append(updateRequest.getUpdateUserErp())
+                .append(Constants.LEFT_PARENTHESIS)
+                .append(updateRequest.getUpdateUserName())
+                .append(Constants.RIGHT_PARENTHESIS);
         if (CollectionUtils.isNotEmpty(updateRequest.getAddWorkGridSchedule())) {
             sb.append(" 修改班次时间为 ");
             for (WorkGridSchedule schedule : updateRequest.getAddWorkGridSchedule()) {
-                sb.append(schedule.getScheduleName()).append("(").append(schedule.getStartTime())
-                        .append(Constants.SEPARATOR_HYPHEN).append(schedule.getEndTime()).append(")").append("、");
+                sb.append(schedule.getScheduleName())
+                        .append(Constants.LEFT_PARENTHESIS)
+                        .append(schedule.getStartTime())
+                        .append(Constants.SEPARATOR_HYPHEN)
+                        .append(schedule.getEndTime())
+                        .append(Constants.RIGHT_PARENTHESIS)
+                        .append(Constants.CHINESE_COMMA);
             }
+        } else {
+            sb.append(" 清空了班次时间 ").append(Constants.CHINESE_COMMA);
         }
         sb.deleteCharAt(sb.length() - 1);
         opLog.setEventType(EventLogEnum.SCHEDULE.getCode());
