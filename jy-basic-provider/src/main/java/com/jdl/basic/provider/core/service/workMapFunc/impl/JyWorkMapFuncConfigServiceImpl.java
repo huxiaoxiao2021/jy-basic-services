@@ -113,9 +113,6 @@ public class JyWorkMapFuncConfigServiceImpl implements JyWorkMapFuncConfigServic
      * @return
      */
     @Override
-    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyWorkMapFuncConfigServiceImpl.queryByFuncCodeList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    @Cache(key = "JyWorkMapFuncConfigServiceImpl.queryByFuncCodeList", memoryEnable = true, memoryExpiredTime = 60 * 1000,
-            redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
     public List<String> queryByFuncCodeList(List<String> functionList) {
         return jyWorkMapFuncConfigDao.queryByFuncCodeList(functionList);
     }

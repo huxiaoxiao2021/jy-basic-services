@@ -57,6 +57,10 @@ public class WorkGridBusinessServiceImpl implements WorkGridBusinessService {
     @Cache(key = "WorkGridBusinessServiceImpl.queryDockCodeByFlowDirection@args0:@args1:@args2", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
             , redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
     public List<String> queryDockCodeByFlowDirection(Integer flowDirectionType, Integer startSiteID, Integer endSiteID) {
+        //校验入参
+        if (checkIntoParam(flowDirectionType,startSiteID,endSiteID)) {
+            return null;
+        }
         //获取网格信息
         WorkGridFlowDirectionQuery workGridFlowDirectionQuery = getWorkStation(flowDirectionType, startSiteID, endSiteID);
         //3、根据ref_work_key去work_station 网格工序信息表中查询business_key
@@ -93,9 +97,13 @@ public class WorkGridBusinessServiceImpl implements WorkGridBusinessService {
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridBusinessServiceImpl.queryPhoneByDockCode", jAppName = Constants.UMP_APP_NAME, mState = {JProEnum.TP, JProEnum.FunctionError})
-    @Cache(key = "WorkGridBusinessServiceImpl.queryByDockCode@args0@args1@args2@args3", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+    @Cache(key = "WorkGridBusinessServiceImpl.queryByDockCode@args0:@args1:@args2:@args3", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
             , redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
     public List<WorkStationGrid> queryPhoneByDockCodeForTms(Integer flowDirectionType, Integer startSiteID, Integer endSiteID, String dockCode) {
+        //校验入参
+        if (checkIntoParam(flowDirectionType,startSiteID,endSiteID)) {
+            return null;
+        }
         //获取网格信息
         WorkGridFlowDirectionQuery workGridFlowDirectionQuery = getWorkStation(flowDirectionType, startSiteID, endSiteID);
         if (ObjectHelper.isEmpty(workGridFlowDirectionQuery)) {
@@ -151,6 +159,7 @@ public class WorkGridBusinessServiceImpl implements WorkGridBusinessService {
             workGridFlowDirectionQuery.setSiteCode(startSiteID);
             workGridFlowDirectionQuery.setFlowSiteCode(endSiteID);
         }
+        workGridFlowDirectionQuery.setPageSize(100);
         return workGridFlowDirectionQuery;
     }
 
@@ -168,6 +177,27 @@ public class WorkGridBusinessServiceImpl implements WorkGridBusinessService {
             return true;
         }
         if (CollectionUtils.isEmpty(refWorkGridKeyList)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 参数校验
+     *
+     * @param flowDirectionType
+     * @param startSiteID
+     * @param endSiteID
+     * @return
+     */
+    private Boolean checkIntoParam(Integer flowDirectionType, Integer startSiteID, Integer endSiteID) {
+        if (ObjectHelper.isEmpty(flowDirectionType)) {
+            return true;
+        }
+        if (ObjectHelper.isEmpty(startSiteID)) {
+            return true;
+        }
+        if (ObjectHelper.isEmpty(endSiteID)) {
             return true;
         }
         return false;

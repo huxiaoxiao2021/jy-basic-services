@@ -467,9 +467,6 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	 * @return
 	 */
 	@Override
-	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridFlowDirectionServiceImpl.queryRefWorkGridKeyByFlowDirection", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-	@Cache(key = "WorkGridFlowDirectionServiceImpl.queryRefWorkGridKeyByFlowDirection@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
-			,redisEnable = true, redisExpiredTime = 5 * 60 * 1000)
 	public List<String> queryRefWorkGridKeyByFlowDirection(WorkGridFlowDirectionQuery query) {
 		return workGridFlowDirectionDao.queryRefWorkGridKeyByFlowDirection(query);
 	}
