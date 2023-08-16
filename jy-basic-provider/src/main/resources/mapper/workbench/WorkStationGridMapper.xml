@@ -790,7 +790,7 @@
         </foreach>
         limit #{offset}, #{limit}
     </select>
-    <select id="queryPhoneByDockCodeForTms" resultType="com.jdl.basic.api.domain.workStation.WorkStationGrid">
+    <select id="queryPhoneByDockCodeForTms" resultMap="WorkStationGrid">
         select
         dock_code,business_key,owner_user_erp
         from work_station_grid
