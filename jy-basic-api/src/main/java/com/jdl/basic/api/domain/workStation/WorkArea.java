@@ -1,5 +1,6 @@
 package com.jdl.basic.api.domain.workStation;
 
+import java.util.List;
 import lombok.Setter;
 import lombok.Getter;
 import java.util.Date;
@@ -7,7 +8,7 @@ import java.io.Serializable;
 
 /**
  * 作业区信息表-实体类
- * 
+ *
  * @author wuyoude
  * @date 2023年04月25日 00:18:56
  *
@@ -17,7 +18,7 @@ import java.io.Serializable;
 public class WorkArea implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * 主键ID
 	 */
@@ -92,6 +93,11 @@ public class WorkArea implements Serializable {
 	 * 数据库时间
 	 */
 	private Date ts;
+
+	/**
+	 * 作业区标签
+	 */
+	private List<Integer> labels;
 
 
 }

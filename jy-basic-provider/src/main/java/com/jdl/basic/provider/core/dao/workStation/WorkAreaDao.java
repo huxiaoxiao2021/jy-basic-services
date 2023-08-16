@@ -6,7 +6,7 @@ import com.jdl.basic.api.domain.workStation.WorkAreaQuery;
 
 /**
  * 作业区信息表--Dao接口
- * 
+ *
  * @author wuyoude
  * @date 2023年04月25日 00:18:56
  *
@@ -53,7 +53,7 @@ public interface WorkAreaDao {
 	 * 根据areaCode查询
 	 * @param areaCode
 	 * @return
-	 */	
+	 */
 	WorkArea queryByAreaCode(String areaCode);
 	/**
 	 * 根据areaCode列表查询
@@ -62,4 +62,5 @@ public interface WorkAreaDao {
 	 */
 	List<WorkArea> queryByAreaCodeList(List<String> areaCodeList);
 
+  List<WorkArea> listAreaByLabel(WorkArea workArea);
 }

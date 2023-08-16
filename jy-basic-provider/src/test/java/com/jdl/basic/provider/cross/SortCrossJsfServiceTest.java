@@ -2,13 +2,19 @@ package com.jdl.basic.provider.cross;
 
 import com.jd.ql.basic.dto.BaseSiteInfoDto;
 import com.jdl.basic.api.domain.cross.*;
+import com.jdl.basic.api.dto.site.BasicSiteVO;
+import com.jdl.basic.api.dto.site.SiteQueryCondition;
+import com.jdl.basic.api.enums.WorkSiteTypeEnum;
 import com.jdl.basic.api.service.cross.SortCrossJsfService;
+import com.jdl.basic.api.service.site.SiteQueryService;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Pager;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.ApplicationLaunch;
 import com.jdl.basic.provider.core.manager.IBasicSiteQueryWSManager;
 import com.jdl.basic.provider.core.service.cross.SortCrossService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,26 +32,37 @@ import java.util.List;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ApplicationLaunch.class)
+@Slf4j
 public class SortCrossJsfServiceTest {
-    
+
     @Autowired
     private SortCrossJsfService sortCrossJsfService;
-    
+
     @Autowired
     SortCrossService sortCrossService;
 
     @Autowired
     private IBasicSiteQueryWSManager basicSiteQueryWSManager;
-    
+
+    @Autowired
+    SiteQueryService siteQueryService;
+
     @Test
     public void queryPageTest() {
-        SortCrossQuery query = new SortCrossQuery();
-        query.setPageSize(10);
-        query.setPageNumber(1);
-        Result<PageDto<SortCrossDetail>> result = sortCrossJsfService.queryPage(query);
-        System.out.println(JsonHelper.toJSONString(result));
+        Pager<SiteQueryCondition> siteQueryPager = new Pager<>();
+        siteQueryPager.setPageNo(1);
+        siteQueryPager.setPageSize(100);
+
+        List<Integer> subTypes =new ArrayList<>();
+        subTypes.addAll(WorkSiteTypeEnum.DMS_TYPE.getSubTypes());//分拣
+
+        SiteQueryCondition siteQueryCondition =new SiteQueryCondition();
+        siteQueryCondition.setSubTypes(subTypes);
+        siteQueryPager.setSearchVo(siteQueryCondition);
+        Result<Pager<BasicSiteVO>> rs =siteQueryService.queryJySiteByConditionFromBasicSite(siteQueryPager);
+        log.info("===========rs:{}",JsonHelper.toJSONString(rs));
     }
-    
+
     @Test
     public void updateEnableByIdsTest() {
         SortCrossUpdateRequest request = new SortCrossUpdateRequest();
@@ -54,20 +71,20 @@ public class SortCrossJsfServiceTest {
         request.setIds(ids);
         Result<Boolean> result = sortCrossJsfService.updateEnableByIds(request);
     }
-    
+
     @Test
     public void queryNotInitTest() {
         List<SortCrossDetail> details = sortCrossService.queryNotInit(910);
         System.out.println("总数：" + details.size());
         System.out.println(JsonHelper.toJSONString(details));
     }
-    
+
     @Test
     public void getBaseSiteInfoBySiteIdTest() {
         BaseSiteInfoDto baseSiteInfo= basicSiteQueryWSManager.getBaseSiteInfoBySiteId(11282);
         System.out.println(JsonHelper.toJSONString(baseSiteInfo));
     }
-    
+
     @Test
     public void updateByIdTest() {
         SortCrossDetail sortCrossDetail = new SortCrossDetail();
@@ -77,12 +94,12 @@ public class SortCrossJsfServiceTest {
         sortCrossDetail.setThirdType(2);
         sortCrossService.initSiteTypeById(sortCrossDetail);
     }
-    
+
     @Test
     public void initSortCrossTest() {
         System.out.println(sortCrossJsfService.initSortCross(910));
     }
-    
+
     @Test
     public void queryCrossDataByDmsCodeTest() {
         CrossPageQuery query = new CrossPageQuery();
@@ -92,7 +109,7 @@ public class SortCrossJsfServiceTest {
         Result<CrossDataJsfResp> result = sortCrossJsfService.queryCrossDataByDmsCode(query);
         System.out.println(JsonHelper.toJSONString(result));
     }
-    
+
     @Test
     public void queryTableTrolleyListByCrossCodeTest() {
         TableTrolleyQuery query = new TableTrolleyQuery();
@@ -112,7 +129,7 @@ public class SortCrossJsfServiceTest {
         Result<TableTrolleyJsfResp> result = sortCrossJsfService.queryTableTrolleyListByDmsId(query);
         System.out.println(JsonHelper.toJSONString(result));
     }
-    
+
     @Test
     public void queryCTTByStartEndSiteCodeTest() {
         TableTrolleyQuery query = new TableTrolleyQuery();

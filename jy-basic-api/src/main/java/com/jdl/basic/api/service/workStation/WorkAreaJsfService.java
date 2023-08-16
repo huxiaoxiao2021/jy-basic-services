@@ -4,10 +4,11 @@ import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.api.domain.workStation.WorkArea;
 import com.jdl.basic.api.domain.workStation.WorkAreaQuery;
+import java.util.List;
 
 /**
  * 作业区信息表--JsfService接口
- * 
+ *
  * @author wuyoude
  * @date 2023年04月25日 00:18:56
  *
@@ -46,4 +47,6 @@ public interface WorkAreaJsfService {
 	Result<PageDto<WorkArea>> queryPageList(WorkAreaQuery query);
 
 	Result<WorkArea> queryByAreaCode(String areaCode);
+
+	Result<List<WorkArea>> listAreaByLabel(WorkArea workArea);
 }

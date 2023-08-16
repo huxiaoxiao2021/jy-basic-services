@@ -15,9 +15,9 @@ import java.util.Date;
 public class DateHelper {
 
     public final static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    
+
     public final static String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
-    
+
     public final static String DATE_FORMAT_TIME_HH_mm = "HH:mm";
 
     /**
@@ -128,7 +128,7 @@ public class DateHelper {
             return null;
         }
     }
-    
+
     public static Date transTimeMinOfDate(Date date){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -153,6 +153,20 @@ public class DateHelper {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.DATE, days);
+        return calendar.getTime();
+    }
+
+    public static Date addMinutes(Date date , int mins){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE, mins);
+        return calendar.getTime();
+    }
+
+    public static Date addSeconds(Date date , int seconds){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.SECOND, seconds);
         return calendar.getTime();
     }
     /**

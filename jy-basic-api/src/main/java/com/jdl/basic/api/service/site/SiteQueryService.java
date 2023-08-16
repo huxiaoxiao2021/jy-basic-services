@@ -55,4 +55,10 @@ public interface SiteQueryService {
      * @time 2022-10-12 14:06:56 周三
      */
     Result<Pager<BasicSiteVO>> querySitePageByConditionFromBasicSite(Pager<SiteQueryCondition> siteQueryPager);
+    /**
+     * 查询拣运场地
+     * @param siteQueryPager
+     * @return
+     */
+    Result<Pager<BasicSiteVO>> queryJySiteByConditionFromBasicSite(Pager<SiteQueryCondition> siteQueryPager);
 }

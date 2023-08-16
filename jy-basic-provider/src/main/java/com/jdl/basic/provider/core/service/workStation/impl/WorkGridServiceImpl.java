@@ -29,6 +29,7 @@ import com.jdl.basic.api.domain.workStation.WorkGrid;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridImport;
+import com.jdl.basic.api.domain.workStation.WorkGridModifyMqData;
 import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridVo;
 import com.jdl.basic.api.domain.workStation.WorkGridVo.FlowInfoItem;
@@ -36,10 +37,12 @@ import com.jdl.basic.api.domain.workStation.WorkGridVo.WorkDataInfo;
 import com.jdl.basic.api.domain.workStation.WorkStationGrid;
 import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
 import com.jdl.basic.api.enums.ConfigFlowStatusEnum;
+import com.jdl.basic.api.enums.EditTypeEnum;
 import com.jdl.basic.api.enums.GridFlowLineTypeEnum;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.enums.AreaEnum;
 import com.jdl.basic.common.utils.CheckHelper;
+import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringHelper;
@@ -50,6 +53,7 @@ import com.jdl.basic.provider.core.service.workStation.WorkAreaService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDirectionService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
+import com.jdl.basic.provider.mq.producer.DefaultJMQProducer;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -93,11 +97,17 @@ public class WorkGridServiceImpl implements WorkGridService {
 	 */
 	@Value("${beans.workGridService.importDatasPerFlowLimit:100}")
 	private int importDatasPerFlowLimit;
+	
+	@Autowired
+	@Qualifier("workGridModifyMq")
+	DefaultJMQProducer workGridModifyMq;
+	
 	/**
 	 * 插入一条数据
 	 * @param insertData
 	 * @return
 	 */
+	@Transactional
 	public Result<Boolean> insert(WorkGrid insertData){
 		Result<Boolean> result = Result.success();
 		insertData.setBusinessKey(generalBusinessKey());
@@ -109,6 +119,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 	 * @param updateData
 	 * @return
 	 */
+	@Transactional
 	public Result<Boolean> updateById(WorkGrid updateData){
 		Result<Boolean> result = Result.success();
 		result.setData(workGridDao.updateById(updateData) == 1);
@@ -119,11 +130,67 @@ public class WorkGridServiceImpl implements WorkGridService {
 	 * @param deleteData
 	 * @return
 	 */
+	@Transactional
 	public Result<Boolean> deleteById(WorkGrid deleteData){
 		Result<Boolean> result = Result.success();
-		result.setData(workGridDao.deleteById(deleteData) == 1);
-		return result;
+		if(deleteData == null
+				|| deleteData.getId() == null) {
+			return result.toFail("删除数据及id不能为空！");
+		}
+		WorkGrid oldData = workGridDao.queryById(deleteData.getId());
+		return checkAndDeleteData(deleteData,oldData);
 	 }
+	@Transactional
+	@Override
+	public Result<Boolean> deleteByWorkGridKey(WorkGrid deleteData) {
+		Result<Boolean> result = Result.success();
+		if(deleteData == null
+				|| StringUtils.isBlank(deleteData.getBusinessKey())) {
+			return result.toFail("删除数据及businessKey不能为空！");
+		}
+		WorkGrid oldData = workGridDao.queryByWorkGridKey(deleteData.getBusinessKey());
+		return checkAndDeleteData(deleteData,oldData);
+	}
+	/**
+	 * 执行校验及删除操作
+	 * @param deleteData
+	 * @param oldData
+	 * @return
+	 */
+	private Result<Boolean> checkAndDeleteData(WorkGrid deleteData, WorkGrid oldData) {
+		Result<Boolean> result = Result.success();
+		if(oldData == null) {
+			return result.toFail("删除的网格数据不存在！");
+		}
+		
+		//校验网格工序数据
+		int stationGridCount = this.workStationGridService.queryCountByRefGridKey(oldData.getBusinessKey());
+		if(stationGridCount > 0) {
+			return result.toFail("操作失败！网格下存在"+stationGridCount+"个未删除的网格工序，不可删除！");
+		}
+		deleteData(deleteData,oldData);
+		return result;
+	}
+	private void deleteData(WorkGrid deleteData, WorkGrid oldData) {
+		String refWorkGridKey = oldData.getBusinessKey();
+		deleteData.setId(oldData.getId());
+		//删除网格
+		workGridDao.deleteById(deleteData);
+		
+		WorkGridFlowDirection deleteGridFlow = new WorkGridFlowDirection();
+		deleteGridFlow.setRefWorkGridKey(refWorkGridKey);
+		deleteGridFlow.setUpdateUser(deleteData.getUpdateUser());
+		deleteGridFlow.setUpdateTime(deleteData.getUpdateTime());
+		this.workGridFlowDirectionService.deleteByRefGridKey(deleteGridFlow);
+		//发送网格删除mq
+		WorkGridModifyMqData mqData = new WorkGridModifyMqData();
+		mqData.setGridData(oldData);
+		mqData.setEditType(EditTypeEnum.DELETE.getCode());
+		mqData.setOperateTime(deleteData.getUpdateTime());
+		mqData.setOperateUserCode(deleteData.getUpdateUser());
+		mqData.setOperateUserName(deleteData.getUpdateUserName());
+		workGridModifyMq.sendOnFailPersistent(refWorkGridKey, JsonHelper.toJSONString(mqData));
+	}
 	@Override
 	public Result<WorkGrid> queryById(Long id) {
 		Result<WorkGrid> result = Result.success();
@@ -314,6 +381,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		}
 		return flowInfo;
 	}
+	@Transactional
 	@Override
 	public Result<WorkGrid> saveData(WorkGrid workGrid) {
 		Result<WorkGrid> result = Result.success();
@@ -373,6 +441,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		result.setData(voDataList);
 		return result;
 	}
+	@Transactional
 	@Override
 	public Result<Boolean> deleteByIds(DeleteRequest<WorkGrid> deleteRequest) {
 		Result<Boolean> result = Result.success();
@@ -389,8 +458,21 @@ public class WorkGridServiceImpl implements WorkGridService {
 			if(!ObjectUtils.equals(oldData.getSiteCode(), deleteRequest.getOperateSiteCode())) {
 				return result.toFail("网格【"+oldData.getGridName()+ "】非本人所在场地数据，无法删除！");
 			}
+			//校验网格是否存在网格工序
+			//校验网格工序数据
+			int stationGridCount = this.workStationGridService.queryCountByRefGridKey(oldData.getBusinessKey());
+			if(stationGridCount > 0) {
+				return result.toFail("操作失败！网格【"+oldData.getGridName()+"】存在"+stationGridCount+"个未删除的网格工序，不可删除！");
+			}
 		}
-		result.setData(workGridDao.deleteByIds(deleteRequest) > 0);
+		
+		for(WorkGrid oldData : oldDataList) {
+			WorkGrid deleteGrid = new WorkGrid();
+			deleteGrid.setUpdateUser(deleteRequest.getOperateUserCode());
+			deleteGrid.setUpdateUserName(deleteRequest.getOperateUserName());
+			deleteGrid.setUpdateTime(deleteRequest.getOperateTime());
+			this.deleteData(deleteGrid, oldData);
+		}
 		return result;
 	}
 	@Transactional
