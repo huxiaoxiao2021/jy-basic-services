@@ -102,9 +102,9 @@ public class UserWorkGridServiceTest {
 
     @Test
     public void batchUpdate() {
-        List<UserWorkGrid> list = new ArrayList<>();
+        List<UserWorkGridDto> list = new ArrayList<>();
 
-        UserWorkGrid userWorkGrid1 = new UserWorkGrid();
+        UserWorkGridDto userWorkGrid1 = new UserWorkGridDto();
         userWorkGrid1.setWorkGridKey("CDWG00000022111");
         userWorkGrid1.setNature("1");
         userWorkGrid1.setUserId(20L);
@@ -115,7 +115,7 @@ public class UserWorkGridServiceTest {
         userWorkGrid1.setUpdateUserName("吴有德");
         userWorkGrid1.setUpdateTime(new Date());
 
-        UserWorkGrid userWorkGrid2 = new UserWorkGrid();
+        UserWorkGridDto userWorkGrid2 = new UserWorkGridDto();
         userWorkGrid2.setWorkGridKey("CDWG00000022111");
         userWorkGrid2.setNature("2");
         userWorkGrid2.setUserId(2L);
@@ -129,9 +129,9 @@ public class UserWorkGridServiceTest {
         list.add(userWorkGrid1);
         list.add(userWorkGrid2);
 
-        List<UserWorkGrid> list2 = new ArrayList<>();
+        List<UserWorkGridDto> list2 = new ArrayList<>();
 
-        UserWorkGrid userWorkGrid3 = new UserWorkGrid();
+        UserWorkGridDto userWorkGrid3 = new UserWorkGridDto();
         userWorkGrid3.setWorkGridKey("CDWG00000019007");
         userWorkGrid3.setNature("1");
         userWorkGrid3.setUserId(2L);

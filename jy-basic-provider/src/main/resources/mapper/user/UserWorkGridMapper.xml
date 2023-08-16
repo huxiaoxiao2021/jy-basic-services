@@ -54,7 +54,7 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
 
-  <select id="queryByWorkGridKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="queryByWorkGridKey" resultMap="BaseResultMap">
     select
         <include refid="Base_Column_List"/>
     from

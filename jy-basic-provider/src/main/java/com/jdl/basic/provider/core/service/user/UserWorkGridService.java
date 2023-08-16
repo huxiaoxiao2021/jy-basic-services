@@ -8,6 +8,11 @@ import java.util.List;
 public interface UserWorkGridService {
 
     /**
+     * 根据网格主键查询网格分配记录
+     */
+    List<UserWorkGrid> queryByWorkGridByGridKey(UserWorkGridRequest request);
+
+    /**
      * 根据网格主键批量查询网格分配记录
      * @param request
      * @return

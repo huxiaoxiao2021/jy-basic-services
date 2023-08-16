@@ -57,7 +57,8 @@ mq:
       wlUserInfo: wlUserInfo
       site_change: basic_base_site_change
       wmsSite_Change: basic_ps_storeinfo
-      
+      workGridModifyMq: workGridModifyMq
+
   jmq4producer:
     password: 809375866c4842f28d7e4eec04da1e41
     app: JYBasic
