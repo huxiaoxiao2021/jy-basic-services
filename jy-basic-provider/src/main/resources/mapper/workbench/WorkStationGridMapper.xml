@@ -779,7 +779,8 @@
         select
         distinct dock_code
         from work_station_grid
-        where site_code = #{siteCode,jdbcType=INTEGER}
+        where yn = 1
+		and site_code = #{siteCode,jdbcType=INTEGER}
         and ref_station_key in
         <foreach collection="refWorkKeyList" item="item" open="(" close=")" separator=",">
             #{item,jdbcType=VARCHAR}
@@ -794,7 +795,8 @@
         select
         dock_code,business_key,owner_user_erp
         from work_station_grid
-        where site_code = #{siteCode,jdbcType=INTEGER}
+        where yn = 1
+		and site_code = #{siteCode,jdbcType=INTEGER}
         and ref_station_key in
         <foreach collection="refWorkKeyList" item="item" open="(" close=")" separator=",">
             #{item,jdbcType=VARCHAR}
