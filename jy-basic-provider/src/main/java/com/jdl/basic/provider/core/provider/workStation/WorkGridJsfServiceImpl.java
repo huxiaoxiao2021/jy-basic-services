@@ -225,4 +225,9 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	public List<WorkGrid> queryListForManagerSiteScan(WorkGridQuery workGridQuery) {
 		return workGridService.queryListForManagerSiteScan(workGridQuery);
 	}
+
+	@Override
+	public Result<WorkGrid> queryByBusinessKeys(WorkGrid workGrid) {
+		return workGridService.queryByBusinessKeys(workGrid);
+	}
 }

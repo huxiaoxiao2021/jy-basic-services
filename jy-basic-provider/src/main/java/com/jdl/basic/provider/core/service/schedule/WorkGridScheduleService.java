@@ -21,4 +21,6 @@ public interface WorkGridScheduleService {
     WorkGridSchedule queryWorkGridScheduleByKey(WorkGridScheduleRequest request);
 
     List<WorkGridSchedule> listWorkGridScheduleByKeys(BatchWorkGridScheduleQueryDto dto);
+
+    WorkGridSchedule queryWorkGridScheduleByName(WorkGridScheduleRequest request);
 }

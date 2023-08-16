@@ -33,7 +33,12 @@ public class UserJsfServiceImpl implements UserJsfService {
         return convertToResult(userService.queryByUserIds(request));
     }
 
-    @Override
+  @Override
+  public Result<JyUserDto> queryByUserErp(JyUserQueryDto jyUserQueryDto) {
+    return Result.success(userService.queryByUserErp(jyUserQueryDto));
+  }
+
+  @Override
     public Result<Integer> queryUndistributedCountBySiteCode(JyUserQueryDto dto) {
         return userService.queryUndistributedCountBySiteCode(dto);
     }

@@ -21,6 +21,8 @@ public interface UserJsfService {
      */
     Result<List<JyUserDto>> queryByUserIds(JyUserBatchRequest request);
 
+
+    Result<JyUserDto> queryByUserErp(JyUserQueryDto jyUserQueryDto);
     /**
      * 查询场地下未分配员工数量
      * @param dto

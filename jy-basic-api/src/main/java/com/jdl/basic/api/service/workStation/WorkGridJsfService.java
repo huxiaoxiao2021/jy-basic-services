@@ -142,4 +142,6 @@ public interface WorkGridJsfService {
 	 * @return
 	 */
 	List<WorkGrid> queryListForManagerSiteScan(WorkGridQuery workGridQuery);
+
+	Result<WorkGrid> queryByBusinessKeys(WorkGrid workGrid);
 }

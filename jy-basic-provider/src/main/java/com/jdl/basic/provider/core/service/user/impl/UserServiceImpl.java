@@ -9,6 +9,7 @@ import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.api.enums.JyJobTypeEnum;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.common.utils.BeanUtils;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.config.cache.CacheService;
@@ -172,6 +173,15 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
       return result.toFail("工种不能为空！");
     }
     return result.setData(jyUserDao.queryNatureUndistributedUsers(condition));
+  }
+
+  @Override
+  public JyUserDto queryByUserErp(JyUserQueryDto jyUserQueryDto) {
+    JyUser jyUser =jyUserDao.queryByUserErp(jyUserQueryDto);
+    if (ObjectHelper.isNotNull(jyUser)){
+      return BeanUtils.copy(jyUser,JyUserDto.class);
+    }
+    return null;
   }
 
   private JyUserQueryCondition convertQuery(JyUserQueryDto dto) {

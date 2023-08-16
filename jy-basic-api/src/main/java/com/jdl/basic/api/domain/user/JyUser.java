@@ -49,6 +49,16 @@ public class JyUser {
 
     private Integer siteType;
 
+    private String workGridKey;
+
+    public String getWorkGridKey() {
+        return workGridKey;
+    }
+
+    public void setWorkGridKey(String workGridKey) {
+        this.workGridKey = workGridKey;
+    }
+
     public Integer getSiteCode() {
         return siteCode;
     }

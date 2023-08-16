@@ -83,4 +83,5 @@ public interface UserService {
    */
   Result<List<JyUser>> queryNatureUndistributedUsers(JyUserQueryDto dto);
 
+  JyUserDto queryByUserErp(JyUserQueryDto jyUserQueryDto);
 }
