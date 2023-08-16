@@ -155,9 +155,9 @@ laf:
 fdf:
   functionMap:
     1:
-      - "SEND_CAR_POSITION"
-    2:
       - "UNSEAL_CAR_POSITION"
       - "UNLOAD_CAR_POSITION"
+    2:
+      - "SEND_CAR_POSITION"
 
 
