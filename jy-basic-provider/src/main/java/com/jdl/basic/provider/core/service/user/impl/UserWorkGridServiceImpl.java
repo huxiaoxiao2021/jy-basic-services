@@ -96,8 +96,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         batchRequest.setGridDistributeFlag(JyUserDistributeStatusEnum.UNDISTRIBUTED.getFlag());
         // 移出网格 将人员分配状态修改未分配
         if (userWorkGridDao.batchDelete(request) > 0) {
-            log.info("修改标位 {}", JsonHelper.toJSONString(userService.batchUpdateByUserIds(batchRequest)));
-            ;
+            userService.batchUpdateByUserIds(batchRequest);
             result.setData(Boolean.TRUE);
         } else {
             log.warn("batchDelete 删除记录失败 入参{}", JsonHelper.toJSONString(request));

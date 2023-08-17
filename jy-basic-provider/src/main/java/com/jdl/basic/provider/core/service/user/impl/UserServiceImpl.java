@@ -106,7 +106,6 @@ public class UserServiceImpl implements UserService {
     Boolean bool = jyUserDao.batchUpdateByUserIds(request) > 0;
     Integer siteCode = request.getSiteCode();
     Map<String, String> map = jimdbCacheService.hGetAll(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode));
-    log.info("before map {}", JsonHelper.toJSONString(map));
     // 更新JimDb中的缓存数据
     if (bool) {
       String[] fieldKeys = request.getUsers().stream().map(item -> String.valueOf(item.getId())).toArray(String[]::new);
@@ -123,7 +122,6 @@ public class UserServiceImpl implements UserService {
         jimdbCacheService.hMSetEx(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode), idToUserMap, 30L, TimeUnit.MINUTES);
       }
     }
-    map = jimdbCacheService.hGetAll(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode));
     return result.setData(bool);
   }
 
