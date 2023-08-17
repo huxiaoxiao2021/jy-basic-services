@@ -34,7 +34,6 @@ import org.springframework.context.annotation.*;
         "classpath:spring/spring-context.xml"
 })
 @ImportAutoConfiguration(value = SpringBootConfiguration.class)
-@EnableAspectJAutoProxy(exposeProxy = true)
 @Slf4j
 public class ApplicationLaunch extends SpringBootServletInitializer {
 

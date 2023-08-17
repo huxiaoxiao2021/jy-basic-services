@@ -2,24 +2,25 @@ package com.jdl.basic.provider.mq.consumer;
 
 import com.jd.jmq.common.message.Message;
 import com.jd.joyqueue.client.springboot2.annotation.JmqListener;
+import com.jdl.basic.api.domain.schedule.WorkGridSchedule;
+import com.jdl.basic.api.domain.schedule.WorkGridScheduleBatchRequest;
 import com.jdl.basic.api.domain.user.UserWorkGrid;
 import com.jdl.basic.api.domain.user.UserWorkGridBatchUpdateRequest;
-import com.jdl.basic.api.domain.user.UserWorkGridDto;
 import com.jdl.basic.api.domain.user.UserWorkGridRequest;
 import com.jdl.basic.api.domain.workStation.WorkGridModifyMqData;
 import com.jdl.basic.api.enums.EditTypeEnum;
 import com.jdl.basic.common.utils.JsonHelper;
+import com.jdl.basic.provider.core.service.schedule.WorkGridScheduleService;
 import com.jdl.basic.provider.core.service.user.UserService;
 import com.jdl.basic.provider.core.service.user.UserWorkGridService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 消费删除网格消息
@@ -33,6 +34,8 @@ public class WorkGridModifyConsumer {
     UserService userService;
     @Autowired
     UserWorkGridService userWorkGridService;
+    @Autowired
+    WorkGridScheduleService workGridScheduleService;
 
     @JmqListener(id = "jmq4-consumer", topics = {"${mq.consumer.topic.workGridModifyMq}"})
     public void onMessage(List<Message> messages) {
@@ -58,17 +61,22 @@ public class WorkGridModifyConsumer {
                 request.setWorkGridKey(workGridKey);
                 List<UserWorkGrid> userWorkGrids = userWorkGridService.queryByWorkGridByGridKey(request);
                 if (CollectionUtils.isNotEmpty(userWorkGrids)) {
-                    List<UserWorkGridDto> deleteUserWorkGridDto = userWorkGrids.stream().map(item -> {
-                        UserWorkGridDto dto = new UserWorkGridDto();
-                        BeanUtils.copyProperties(item, dto);
-                        return dto;
-                    }).collect(Collectors.toList());
+                    // 更新网格分配关系
                     UserWorkGridBatchUpdateRequest batchRequest = new UserWorkGridBatchUpdateRequest();
-                    batchRequest.setDeleteUserWorkGrids(deleteUserWorkGridDto);
+                    batchRequest.setDeleteUserWorkGrids(userWorkGrids);
                     batchRequest.setUpdateTime(mq.getOperateTime());
                     batchRequest.setUpdateUserErp(mq.getOperateUserCode());
                     batchRequest.setUpdateUserErp(mq.getOperateUserName());
                     userWorkGridService.batchUpdateUserWorkGrid(batchRequest);
+
+                    // 删除被删网格对应的班次时间
+                    WorkGridScheduleBatchRequest deleteRequest = new WorkGridScheduleBatchRequest();
+                    List<WorkGridSchedule> schedules = new ArrayList<>();
+                    WorkGridSchedule schedule = new WorkGridSchedule();
+                    schedule.setWorkGridKey(workGridKey);
+                    schedules.add(schedule);
+                    deleteRequest.setWorkGridSchedules(schedules);
+                    workGridScheduleService.batchDeleteByWorkGridKey(deleteRequest);
                 }
             }
         }

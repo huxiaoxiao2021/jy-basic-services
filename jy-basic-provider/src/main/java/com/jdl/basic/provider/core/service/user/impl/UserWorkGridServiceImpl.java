@@ -1,9 +1,5 @@
 package com.jdl.basic.provider.core.service.user.impl;
 
-import com.jd.dms.comp.api.log.dto.OperateLogData;
-import com.jd.dms.comp.base.ApiRequest;
-import com.jd.dms.comp.base.ApiResult;
-import com.jd.dms.comp.enums.EventLogEnum;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
@@ -11,19 +7,16 @@ import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.core.dao.user.UserWorkGridDao;
-import com.jdl.basic.provider.core.manager.OperateLogManager;
 import com.jdl.basic.provider.core.service.user.UserService;
 import com.jdl.basic.provider.core.service.user.UserWorkGridService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,9 +30,6 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private OperateLogManager operateLogManager;
 
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.queryByWorkGridByGridKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
@@ -122,50 +112,31 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             return result;
         }
 
-        UserWorkGridService currentProxy = (UserWorkGridService) AopContext.currentProxy();
-
-        List<UserWorkGridDto> deleteList = request.getDeleteUserWorkGrids();
+        List<UserWorkGrid> deleteList = request.getDeleteUserWorkGrids();
         if (CollectionUtils.isNotEmpty(deleteList)) {
             UserWorkGridBatchRequest deleteRequest = new UserWorkGridBatchRequest();
-            List<UserWorkGrid> userWorkGrids = deleteList.stream().map(item -> {
-                UserWorkGrid userWorkGrid = new UserWorkGrid();
-                    BeanUtils.copyProperties(item, userWorkGrid);
-                    return userWorkGrid;
-                }
-            ).collect(Collectors.toList());
-            deleteRequest.setUserWorkGrids(userWorkGrids);
+            deleteRequest.setUserWorkGrids(deleteList);
             deleteRequest.setUpdateTime(request.getUpdateTime());
             deleteRequest.setUpdateUserErp(request.getUpdateUserErp());
             deleteRequest.setUpdateUserName(request.getUpdateUserName());
             deleteRequest.setSiteCode(request.getSiteCode());
-            Result<Boolean> deleteResult = currentProxy.batchDelete(deleteRequest);
+            Result<Boolean> deleteResult = batchDelete(deleteRequest);
             if (deleteResult.isFail()) {
                 log.warn("batchUpdate 删除网格人员分配失败！删除入参:{}", JsonHelper.toJSONString(deleteRequest));
                 return result.toFail(deleteResult.getMessage());
             }
         }
 
-        List<UserWorkGridDto> addList = request.getAddUserWorkGrids();
+        List<UserWorkGrid> addList = request.getAddUserWorkGrids();
         if (CollectionUtils.isNotEmpty(addList)) {
             UserWorkGridBatchRequest addRequest = new UserWorkGridBatchRequest();
             addRequest.setSiteCode(request.getSiteCode());
-            List<UserWorkGrid> userWorkGrids = addList.stream().map(item -> {
-                        UserWorkGrid userWorkGrid = new UserWorkGrid();
-                        BeanUtils.copyProperties(item, userWorkGrid);
-                        return userWorkGrid;
-                    }
-            ).collect(Collectors.toList());
-            addRequest.setUserWorkGrids(userWorkGrids);
-            Result<Boolean> insertResult = currentProxy.batchInsert(addRequest);
+            addRequest.setUserWorkGrids(addList);
+            Result<Boolean> insertResult = batchInsert(addRequest);
             if (insertResult.isFail()) {
                 log.warn("batchUpdate 插入网格人员分配失败！{}", JsonHelper.toJSONString(addRequest));
                 return result.toFail(insertResult.getMessage());
             }
-        }
-
-        ApiResult apiResult = operateLogManager.saveOperateLog(getOperateLog(request));
-        if (apiResult.checkFail()) {
-            log.warn("操作记录保存失败！message {}", apiResult.getMessage());
         }
         return result.setData(Boolean.TRUE);
     }
@@ -176,7 +147,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             return result.toFail("场地编码不能为空！");
         }
 
-        List<UserWorkGridDto> deleteList = request.getDeleteUserWorkGrids();
+        List<UserWorkGrid> deleteList = request.getDeleteUserWorkGrids();
         if (CollectionUtils.isNotEmpty(deleteList)) {
             if (request.getUpdateTime() == null) {
                 return result.toFail("修改时间不能为空！");
@@ -189,7 +160,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             }
         }
 
-        List<UserWorkGridDto> addList = request.getAddUserWorkGrids();
+        List<UserWorkGrid> addList = request.getAddUserWorkGrids();
         if (CollectionUtils.isNotEmpty(addList)) {
             List<JyUser> users = addList.stream().map(item -> {
                 JyUser user = new JyUser();
@@ -209,36 +180,6 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             }
         }
         return result;
-    }
-
-    private ApiRequest<OperateLogData> getOperateLog(UserWorkGridBatchUpdateRequest updateRequest) {
-        ApiRequest<OperateLogData> request = new ApiRequest<>();
-        OperateLogData opLog = new OperateLogData();
-        request.setData(opLog);
-        StringBuilder sb = new StringBuilder();
-
-        sb.append(updateRequest.getUpdateUserErp()).append("(").append(updateRequest.getUpdateUserName()).append(")");
-        if (CollectionUtils.isNotEmpty(updateRequest.getAddUserWorkGrids())) {
-            sb.append(" 添加 ");
-            for (UserWorkGridDto dto : updateRequest.getAddUserWorkGrids()) {
-                sb.append(dto.getUserName()).append("(").append(dto.getUserErp()).append(")").append("、");
-            }
-        }
-        if (CollectionUtils.isNotEmpty(updateRequest.getDeleteUserWorkGrids())) {
-            sb.append(" 删除 ");
-            for (UserWorkGridDto dto : updateRequest.getDeleteUserWorkGrids()) {
-                sb.append(dto.getUserName()).append("(").append(dto.getUserErp()).append(")").append("、");
-            }
-        }
-        sb.deleteCharAt(sb.length() - 1);
-        opLog.setEventType(EventLogEnum.USER_ATTRIBUTE_GRID.getCode());
-        opLog.setEventContent(sb.toString());
-        opLog.setUserErp(updateRequest.getUpdateUserErp());
-        opLog.setUserErp(updateRequest.getUpdateUserName());
-        opLog.setCreateTime(new Date());
-
-        opLog.setEventKey(updateRequest.getWorkGridKey());
-        return request;
     }
 
     @Override

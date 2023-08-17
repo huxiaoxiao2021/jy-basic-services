@@ -11,7 +11,7 @@ public class UserWorkGridBatchUpdateRequest extends UserWorkGridRequest implemen
 
     private Integer siteCode;
 
-    private List<UserWorkGridDto> addUserWorkGrids;
+    private List<UserWorkGrid> addUserWorkGrids;
 
-    private List<UserWorkGridDto> deleteUserWorkGrids;
+    private List<UserWorkGrid> deleteUserWorkGrids;
 }

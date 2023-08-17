@@ -14,7 +14,6 @@ import com.jdl.basic.provider.config.cache.CacheService;
 import com.jdl.basic.provider.core.dao.user.JyUserDao;
 import com.jdl.basic.provider.core.service.user.UserService;
 import com.jdl.basic.provider.core.service.user.model.JyUserQueryCondition;
-//import com.jdl.basic.rpc.exception.JYBasicRpcException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -63,16 +62,17 @@ public class UserServiceImpl implements UserService {
     if (siteCode == null) {
       return result.toFail("场地编码不能为空！");
     }
-    Map<Long, JyUser> idToUserMap;
-    String json = jimdbCacheService.get(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode));
-    if (StringUtils.isNotEmpty(json)) {
-      idToUserMap = JSON.parseObject(json, new TypeReference<HashMap<Long, JyUser>>(){});
+    List<JyUser> jyUsers;
+    Map<String, String> jsonMap = jimdbCacheService.hGetAll(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode));
+    if (jsonMap != null && !jsonMap.isEmpty()) {
+      jyUsers = jsonMap.values().stream().map(item -> JSON.parseObject(item, JyUser.class)).collect(Collectors.toList());
     } else {
-      List<JyUser> jyUsers = jyUserDao.searchUserBySiteCode(siteCode);
-      idToUserMap = jyUsers.stream().collect(Collectors.toMap(JyUser::getId, item -> item));
-      jimdbCacheService.setEx(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode), idToUserMap, 30L, TimeUnit.MINUTES);
+      jyUsers = jyUserDao.searchUserBySiteCode(siteCode);
+      Map<String, JyUser> idToUserMap;
+      idToUserMap = jyUsers.stream().collect(Collectors.toMap((item) -> item.getId().toString(), item -> item));
+      jimdbCacheService.hMSetEx(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode), idToUserMap, 30L, TimeUnit.MINUTES);
     }
-    result.setData(new ArrayList<>(idToUserMap.values()));
+    result.setData(jyUsers);
     return result;
   }
 
@@ -109,16 +109,17 @@ public class UserServiceImpl implements UserService {
     Integer siteCode = request.getSiteCode();
     // 更新JimDb中的缓存数据
     if (bool) {
-      String json = jimdbCacheService.get(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode));
-      if (StringUtils.isNotEmpty(json)) {
-        Map<Long, JyUser> idToUserMap = JSON.parseObject(json, new TypeReference<HashMap<Long, JyUser>>(){});
+      List<String> json = jimdbCacheService.hMGet(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode));
+      if (CollectionUtils.isNotEmpty(json)) {
+        Map<String, JyUser> idToUserMap = json.stream().map(item -> JSON.parseObject(item, JyUser.class))
+                .collect(Collectors.toMap(item -> String.valueOf(item.getId()), item -> item));
         for (JyUser user: request.getUsers()) {
-          JyUser jyUser = idToUserMap.get(user.getId());
+          JyUser jyUser = idToUserMap.get(String.valueOf(user.getId()));
           if (jyUser != null) {
             jyUser.setGridDistributeFlag(user.getGridDistributeFlag());
           }
         }
-        jimdbCacheService.setEx(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode), idToUserMap, 30L, TimeUnit.MINUTES);
+        jimdbCacheService.hMSetEx(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode), idToUserMap, 30L, TimeUnit.MINUTES);
       }
     }
     return result.setData(bool);

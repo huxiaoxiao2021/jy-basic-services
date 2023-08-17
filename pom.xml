@@ -286,12 +286,6 @@
                 <version>${laf.config.version}</version>
                 <type>pom</type>
             </dependency>
-
-            <dependency>
-                <groupId>com.jd.dms.comp</groupId>
-                <artifactId>dms-component-sdk</artifactId>
-                <version>${dms-component-sdk.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
