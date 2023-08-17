@@ -92,10 +92,12 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         List<JyUser> users = getUsers(request.getUserWorkGrids());
         JyUserBatchRequest batchRequest = new JyUserBatchRequest();
         batchRequest.setUsers(users);
+        batchRequest.setSiteCode(request.getSiteCode());
         batchRequest.setGridDistributeFlag(JyUserDistributeStatusEnum.UNDISTRIBUTED.getFlag());
         // 移出网格 将人员分配状态修改未分配
         if (userWorkGridDao.batchDelete(request) > 0) {
-            userService.batchUpdateByUserIds(batchRequest);
+            log.info("修改标位 {}", JsonHelper.toJSONString(userService.batchUpdateByUserIds(batchRequest)));
+            ;
             result.setData(Boolean.TRUE);
         } else {
             log.warn("batchDelete 删除记录失败 入参{}", JsonHelper.toJSONString(request));
@@ -126,6 +128,8 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
                 return result.toFail(deleteResult.getMessage());
             }
         }
+
+        int a = 1/0;
 
         List<UserWorkGrid> addList = request.getAddUserWorkGrids();
         if (CollectionUtils.isNotEmpty(addList)) {

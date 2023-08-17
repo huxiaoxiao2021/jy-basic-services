@@ -104,8 +104,6 @@ jsf:
   jy_basic:
     alias: jy-basic-server-uat
     token: anktYmFzaWMtc2VydmVyLXRva2Vu
-  operateLog:
-    alias: operate-log-uat
 
 basic:
   jsf:

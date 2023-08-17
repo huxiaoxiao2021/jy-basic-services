@@ -120,6 +120,12 @@ public interface CacheService {
 
 	<T> boolean hMSetEx(String key, Map<String, T> val, long exTime,TimeUnit exTimeUnit);
 
+	/**
+	 * 根据key获取不到值时会返回一个包含空指针的list
+	 * @param key
+	 * @param fields
+	 * @return
+	 */
 	List<String> hMGet(String key, String... fields);
 
 

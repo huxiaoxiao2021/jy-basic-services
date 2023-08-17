@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.jd.jim.cli.Cluster;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.config.cache.CacheService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.codehaus.jackson.type.JavaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

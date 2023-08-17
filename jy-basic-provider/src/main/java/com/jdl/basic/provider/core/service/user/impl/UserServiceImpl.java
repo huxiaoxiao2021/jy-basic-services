@@ -9,6 +9,7 @@ import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.api.enums.JyJobTypeEnum;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.config.cache.CacheService;
 import com.jdl.basic.provider.core.dao.user.JyUserDao;
@@ -20,10 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -107,11 +105,14 @@ public class UserServiceImpl implements UserService {
     }
     Boolean bool = jyUserDao.batchUpdateByUserIds(request) > 0;
     Integer siteCode = request.getSiteCode();
+    Map<String, String> map = jimdbCacheService.hGetAll(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode));
+    log.info("before map {}", JsonHelper.toJSONString(map));
     // 更新JimDb中的缓存数据
     if (bool) {
-      List<String> json = jimdbCacheService.hMGet(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode));
+      String[] fieldKeys = request.getUsers().stream().map(item -> String.valueOf(item.getId())).toArray(String[]::new);
+      List<String> json = jimdbCacheService.hMGet(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode), fieldKeys);
       if (CollectionUtils.isNotEmpty(json)) {
-        Map<String, JyUser> idToUserMap = json.stream().map(item -> JSON.parseObject(item, JyUser.class))
+        Map<String, JyUser> idToUserMap = json.stream().filter(Objects::nonNull).map(item -> JSON.parseObject(item, JyUser.class))
                 .collect(Collectors.toMap(item -> String.valueOf(item.getId()), item -> item));
         for (JyUser user: request.getUsers()) {
           JyUser jyUser = idToUserMap.get(String.valueOf(user.getId()));
@@ -122,6 +123,7 @@ public class UserServiceImpl implements UserService {
         jimdbCacheService.hMSetEx(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode), idToUserMap, 30L, TimeUnit.MINUTES);
       }
     }
+    map = jimdbCacheService.hGetAll(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode));
     return result.setData(bool);
   }
 

@@ -102,9 +102,9 @@ public class UserWorkGridServiceTest {
 
     @Test
     public void batchUpdate() {
-        List<UserWorkGridDto> list = new ArrayList<>();
+        List<UserWorkGrid> list = new ArrayList<>();
 
-        UserWorkGridDto userWorkGrid1 = new UserWorkGridDto();
+        UserWorkGrid userWorkGrid1 = new UserWorkGrid();
         userWorkGrid1.setWorkGridKey("CDWG00000022111");
         userWorkGrid1.setNature("1");
         userWorkGrid1.setUserId(20L);
@@ -115,7 +115,7 @@ public class UserWorkGridServiceTest {
         userWorkGrid1.setUpdateUserName("吴有德");
         userWorkGrid1.setUpdateTime(new Date());
 
-        UserWorkGridDto userWorkGrid2 = new UserWorkGridDto();
+        UserWorkGrid userWorkGrid2 = new UserWorkGrid();
         userWorkGrid2.setWorkGridKey("CDWG00000022111");
         userWorkGrid2.setNature("2");
         userWorkGrid2.setUserId(2L);
@@ -129,9 +129,9 @@ public class UserWorkGridServiceTest {
         list.add(userWorkGrid1);
         list.add(userWorkGrid2);
 
-        List<UserWorkGridDto> list2 = new ArrayList<>();
+        List<UserWorkGrid> list2 = new ArrayList<>();
 
-        UserWorkGridDto userWorkGrid3 = new UserWorkGridDto();
+        UserWorkGrid userWorkGrid3 = new UserWorkGrid();
         userWorkGrid3.setWorkGridKey("CDWG00000019007");
         userWorkGrid3.setNature("1");
         userWorkGrid3.setUserId(2L);
@@ -183,5 +183,24 @@ public class UserWorkGridServiceTest {
         Result<List<UserWorkGrid>> result = userWorkGridService.batchQueryDeletedUserWorkGrid(request);
 
         log.info("getWorkGridDistributedStaff response {}", JsonHelper.toJSONString(result));
+    }
+
+    @Test
+    public void batchUpdateUserWorkGrid() {
+        UserWorkGridBatchUpdateRequest request = new UserWorkGridBatchUpdateRequest();
+
+        List<UserWorkGrid> userWorkGrids = new ArrayList<>();
+        UserWorkGrid userWorkGrid = new UserWorkGrid();
+        userWorkGrid.setWorkGridKey("CDWG00000028001");
+        userWorkGrid.setUserId(127L);
+        userWorkGrids.add(userWorkGrid);
+
+        request.setWorkGridKey("CDWG00000028001");
+        request.setSiteCode(910);
+        request.setDeleteUserWorkGrids(userWorkGrids);
+        request.setUpdateUserErp("wuyoude");
+        request.setUpdateUserName("wuyoude");
+        request.setUpdateTime(new Date());
+        userWorkGridService.batchUpdateUserWorkGrid(request);
     }
 }

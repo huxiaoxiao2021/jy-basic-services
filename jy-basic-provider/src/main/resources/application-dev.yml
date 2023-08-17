@@ -80,7 +80,7 @@ mybatis:
 
 ## 云redis配置
 jimdb:
-  url: "redis://:erdTest123@redis-nwdwv9zb0ij7-proxy-nlb.jvessel-open-hb.jdcloud.com:6379/0"
+  url: "redis://:Kktest123456@redis-wjcq8oxg0xjx-proxy-nlb.jvessel-open-hb.jdcloud.com/0"
   cfg:
     timeout: 2000
     newTimeout: 1000
@@ -114,8 +114,6 @@ jsf:
   jy_basic:
     alias: jy-basic-server-dev
     token: jy-basic-server-token
-  operateLog:
-    alias: operate-log-test
 
 basic:
   jsf:
