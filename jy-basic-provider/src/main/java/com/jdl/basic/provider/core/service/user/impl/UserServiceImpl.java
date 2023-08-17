@@ -7,6 +7,7 @@ import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.api.enums.JyJobTypeEnum;
+import com.jdl.basic.api.enums.UserJobTypeEnum;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.BeanUtils;
@@ -179,7 +180,12 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
   public JyUserDto queryByUserErp(JyUserQueryDto jyUserQueryDto) {
     JyUser jyUser =jyUserDao.queryByUserErp(jyUserQueryDto);
     if (ObjectHelper.isNotNull(jyUser)){
-      return BeanUtils.copy(jyUser,JyUserDto.class);
+      JyUserDto jyUserDto = BeanUtils.copy(jyUser,JyUserDto.class);
+      UserJobTypeEnum userJobTypeEnum = UserJobTypeEnum.getJyJobEnumByNature(jyUser.getNature());
+      if (userJobTypeEnum != null) {
+        jyUserDto.setNature(String.valueOf(userJobTypeEnum.getJyJobTypeCode()));
+      }
+      return jyUserDto;
     }
     return null;
   }
