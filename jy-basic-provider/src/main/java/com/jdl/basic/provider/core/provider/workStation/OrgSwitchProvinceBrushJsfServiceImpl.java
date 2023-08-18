@@ -214,6 +214,7 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
         int updatedCount = 0; // 更新数量
         int loopCount = 0; // 循环次数
         while (loopCount < 1000) {
+            loopCount ++;
             List<WorkGridFlowDetailOffline> singleList = workGridFlowDetailOfflineDao.brushQueryAllByPage(offsetId);
             if(CollectionUtils.isEmpty(singleList)){
                 break;
