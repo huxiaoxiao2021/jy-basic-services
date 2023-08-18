@@ -101,7 +101,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
                 throw new RuntimeException(insertResult.getMessage());
             }
         }
-        return result;
+        return result.setData(Boolean.TRUE);
     }
 
     private WorkGridScheduleBatchRequest buildScheduleBatchRequest(WorkGridScheduleBatchUpdateRequest inputRequest, List<WorkGridSchedule> workGridSchedules) {
