@@ -35,10 +35,15 @@ spring:
         enabled: true
       ####--app consumer 定义--##########################################################
     consumers:
-      basic-consumer:
-        password: FBBB11B7
-        app: JYBasic
+      jmq2-consumer:
+        password: 25F7EDCD
+        app: JYFLAT
         address: jmq-testcluster.jd.local:50088
+        enabled: true
+      jmq4-consumer:
+        password: b4873597748c42799e0069f9815f20b2
+        app: JYFLAT
+        address: test-nameserver.jmq.jd.local:50088
         enabled: true
 
 
