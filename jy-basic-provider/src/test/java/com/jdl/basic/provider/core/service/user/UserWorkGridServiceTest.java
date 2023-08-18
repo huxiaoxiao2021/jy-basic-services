@@ -5,6 +5,7 @@ import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.ApplicationLaunch;
+import com.jdl.basic.provider.config.cache.CacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
@@ -13,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @RunWith(SpringRunner.class)
@@ -24,6 +23,9 @@ public class UserWorkGridServiceTest {
 
     @Autowired
     private UserWorkGridService userWorkGridService;
+
+    @Autowired
+    CacheService jimdbCacheService;
 
     @Test
     public void  batchQueryUserWorkGridByGridKey() {
@@ -202,5 +204,20 @@ public class UserWorkGridServiceTest {
         request.setUpdateUserName("wuyoude");
         request.setUpdateTime(new Date());
         userWorkGridService.batchUpdateUserWorkGrid(request);
+    }
+
+    @Test
+    public void hMSet() {
+        Map<String, String> map = new HashMap<>();
+        map.put("1", "3");
+        map.put("3", "4");
+        jimdbCacheService.hMSet("123456789", map);
+        log.info("get all {}",JsonHelper.toJSONString(jimdbCacheService.hGetAll("123456789")));
+    }
+
+    @Test
+    public void hMGet() {
+        String[] fieldKey = new String[]{"153"};
+        log.info("get all {}",JsonHelper.toJSONString(jimdbCacheService.hMGet("k_search_site_users:910", fieldKey)));
     }
 }

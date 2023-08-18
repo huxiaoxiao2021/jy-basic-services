@@ -63,8 +63,10 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             return result.toFail("插入记录不能为空！");
         }
         List<JyUser> users = getUsers(request.getUserWorkGrids());
+        users.forEach(item -> item.setGridDistributeFlag(JyUserDistributeStatusEnum.DISTRIBUTED.getFlag()));
         JyUserBatchRequest batchRequest = new JyUserBatchRequest();
         batchRequest.setUsers(users);
+        batchRequest.setSiteCode(request.getSiteCode());
         if (userWorkGridDao.batchInsert(request) > 0) {
             result.setData(Boolean.TRUE);
             batchRequest.setGridDistributeFlag(JyUserDistributeStatusEnum.DISTRIBUTED.getFlag());
@@ -90,6 +92,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         Result<Boolean> result = Result.success();
 
         List<JyUser> users = getUsers(request.getUserWorkGrids());
+        users.forEach(item -> item.setGridDistributeFlag(JyUserDistributeStatusEnum.UNDISTRIBUTED.getFlag()));
         JyUserBatchRequest batchRequest = new JyUserBatchRequest();
         batchRequest.setUsers(users);
         batchRequest.setSiteCode(request.getSiteCode());
@@ -127,8 +130,6 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
                 return result.toFail(deleteResult.getMessage());
             }
         }
-
-        int a = 1/0;
 
         List<UserWorkGrid> addList = request.getAddUserWorkGrids();
         if (CollectionUtils.isNotEmpty(addList)) {
