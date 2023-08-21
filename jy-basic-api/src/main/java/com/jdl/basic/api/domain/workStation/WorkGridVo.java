@@ -60,7 +60,7 @@ public class WorkGridVo extends WorkGrid {
 		private static final long serialVersionUID = -2582917155048441477L;
 		
 		private List<WorkStationGrid> workStationGridList;
-		private Integer workStationGridNum;
+		private Integer workStationGridNum = 0;
 		/**
 		 * 自动化设备列表
 		 */
@@ -68,7 +68,7 @@ public class WorkGridVo extends WorkGrid {
 		/**
 		 * 编制人数
 		 */
-		private Integer standardNum;
+		private Integer standardNum = 0;
 
 		/**
 		 * 负责人erp
