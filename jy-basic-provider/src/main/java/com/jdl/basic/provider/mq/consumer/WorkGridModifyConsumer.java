@@ -37,6 +37,8 @@ public class WorkGridModifyConsumer {
     @Autowired
     WorkGridScheduleService workGridScheduleService;
 
+    private static final String DELETE_WORK_GRID_RELEASE_RESOURCE = "删除网格释放资源";
+
     @JmqListener(id = "jmq4-consumer", topics = {"${mq.consumer.topic.workGridModifyMq}"})
     public void onMessage(List<Message> messages) {
         for (Message message : messages) {
@@ -65,8 +67,8 @@ public class WorkGridModifyConsumer {
                     UserWorkGridBatchUpdateRequest batchRequest = new UserWorkGridBatchUpdateRequest();
                     batchRequest.setDeleteUserWorkGrids(userWorkGrids);
                     batchRequest.setUpdateTime(mq.getOperateTime());
-                    batchRequest.setUpdateUserErp(mq.getOperateUserCode());
-                    batchRequest.setUpdateUserErp(mq.getOperateUserName());
+                    batchRequest.setUpdateUserErp(DELETE_WORK_GRID_RELEASE_RESOURCE);
+                    batchRequest.setUpdateUserErp(DELETE_WORK_GRID_RELEASE_RESOURCE);
                     userWorkGridService.batchUpdateUserWorkGrid(batchRequest);
 
                     // 删除被删网格对应的班次时间
@@ -76,6 +78,8 @@ public class WorkGridModifyConsumer {
                     schedule.setWorkGridKey(workGridKey);
                     schedules.add(schedule);
                     deleteRequest.setWorkGridSchedules(schedules);
+                    deleteRequest.setUpdateUserErp(DELETE_WORK_GRID_RELEASE_RESOURCE);
+                    deleteRequest.setUpdateUserName(DELETE_WORK_GRID_RELEASE_RESOURCE);
                     workGridScheduleService.batchDeleteByWorkGridKey(deleteRequest);
                 }
             }
