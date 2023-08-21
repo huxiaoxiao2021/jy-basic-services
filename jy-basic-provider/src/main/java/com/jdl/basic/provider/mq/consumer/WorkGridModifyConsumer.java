@@ -71,7 +71,7 @@ public class WorkGridModifyConsumer {
                     batchRequest.setDeleteUserWorkGrids(userWorkGrids);
                     batchRequest.setUpdateTime(mq.getOperateTime());
                     batchRequest.setUpdateUserErp(DELETE_WORK_GRID_RELEASE_RESOURCE);
-                    batchRequest.setUpdateUserErp(DELETE_WORK_GRID_RELEASE_RESOURCE);
+                    batchRequest.setUpdateUserName(DELETE_WORK_GRID_RELEASE_RESOURCE);
                     batchRequest.setSiteCode(siteCode);
                     userWorkGridService.batchUpdateUserWorkGrid(batchRequest);
 
