@@ -7,6 +7,7 @@ import com.jdl.basic.api.domain.schedule.WorkGridScheduleBatchRequest;
 import com.jdl.basic.api.domain.user.UserWorkGrid;
 import com.jdl.basic.api.domain.user.UserWorkGridBatchUpdateRequest;
 import com.jdl.basic.api.domain.user.UserWorkGridRequest;
+import com.jdl.basic.api.domain.workStation.WorkGrid;
 import com.jdl.basic.api.domain.workStation.WorkGridModifyMqData;
 import com.jdl.basic.api.enums.EditTypeEnum;
 import com.jdl.basic.common.utils.JsonHelper;
@@ -57,8 +58,10 @@ public class WorkGridModifyConsumer {
                 log.warn("消费网格变更 缺少网格信息 {}", text);
                 return;
             }
+            WorkGrid workGrid = mq.getGridData();
             if (EditTypeEnum.DELETE.getCode().equals(mq.getEditType())) {
-                String workGridKey = mq.getGridData().getBusinessKey();
+                String workGridKey = workGrid.getBusinessKey();
+                Integer siteCode = workGrid.getSiteCode();
                 UserWorkGridRequest request = new UserWorkGridRequest();
                 request.setWorkGridKey(workGridKey);
                 List<UserWorkGrid> userWorkGrids = userWorkGridService.queryByWorkGridByGridKey(request);
@@ -69,6 +72,7 @@ public class WorkGridModifyConsumer {
                     batchRequest.setUpdateTime(mq.getOperateTime());
                     batchRequest.setUpdateUserErp(DELETE_WORK_GRID_RELEASE_RESOURCE);
                     batchRequest.setUpdateUserErp(DELETE_WORK_GRID_RELEASE_RESOURCE);
+                    batchRequest.setSiteCode(siteCode);
                     userWorkGridService.batchUpdateUserWorkGrid(batchRequest);
 
                     // 删除被删网格对应的班次时间
@@ -78,8 +82,10 @@ public class WorkGridModifyConsumer {
                     schedule.setWorkGridKey(workGridKey);
                     schedules.add(schedule);
                     deleteRequest.setWorkGridSchedules(schedules);
+                    deleteRequest.setSiteCode(siteCode);
                     deleteRequest.setUpdateUserErp(DELETE_WORK_GRID_RELEASE_RESOURCE);
                     deleteRequest.setUpdateUserName(DELETE_WORK_GRID_RELEASE_RESOURCE);
+                    deleteRequest.setUpdateTime(mq.getOperateTime());
                     workGridScheduleService.batchDeleteByWorkGridKey(deleteRequest);
                 }
             }
