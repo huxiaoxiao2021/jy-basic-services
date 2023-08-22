@@ -211,4 +211,11 @@ public interface WorkStationGridDao {
 	 * @return
 	 */
 	int queryCountByRefGridKey(String refGridKey);
+
+	/**
+	 * 根据场地ID获取网格信息
+	 * @param siteCodes
+	 * @return
+	 */
+    List<WorkStationGrid> getGridInfoBySiteCodes(List<String> siteCodes);
 }

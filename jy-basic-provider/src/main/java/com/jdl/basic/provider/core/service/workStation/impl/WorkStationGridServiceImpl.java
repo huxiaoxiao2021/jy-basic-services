@@ -858,5 +858,20 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryCountByRefGridKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public int queryCountByRefGridKey(String refGridKey) {
 		return workStationGridDao.queryCountByRefGridKey(refGridKey);
-	}	
+	}
+
+	/**
+	 * 根据场地ID获取网格信息
+	 * @param siteCodes
+	 * @return
+	 */
+	@Override
+	public List<WorkStationGrid> getGridInfoBySiteCodes(List<String> siteCodes) {
+		List<WorkStationGrid> result = new ArrayList<>();
+		if (CollectionUtils.isEmpty(siteCodes)){
+			return result;
+		}
+
+		return workStationGridDao.getGridInfoBySiteCodes(siteCodes);
+	}
 }
