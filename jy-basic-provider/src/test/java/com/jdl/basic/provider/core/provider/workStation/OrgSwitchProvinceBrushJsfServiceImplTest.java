@@ -44,7 +44,7 @@ public class OrgSwitchProvinceBrushJsfServiceImplTest {
     @Test
     public void workGridFlowDetailOfflineBrush() {
 
-        orgSwitchProvinceBrushJsfService.workGridFlowDetailOfflineBrush(1);
+        orgSwitchProvinceBrushJsfService.workGridFlowDetailOfflineBrush(1,10);
     }
     
     @Test

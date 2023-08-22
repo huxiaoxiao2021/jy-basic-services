@@ -26,7 +26,7 @@ public interface OrgSwitchProvinceBrushJsfService {
     /**
      * work_grid_flow_detail_offline 表刷数省区字段
      */
-    void workGridFlowDetailOfflineBrush(Integer startId);
+    void workGridFlowDetailOfflineBrush(Integer startId, Integer endId);
 
     /**
      * site_wave_schedule 表刷数省区字段

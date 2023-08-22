@@ -208,16 +208,23 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
     }
 
     @Override
-    public void workGridFlowDetailOfflineBrush(Integer startId) {
+    public void workGridFlowDetailOfflineBrush(Integer startId, Integer endId) {
         // 起始id
         int offsetId = startId;
         int updatedCount = 0; // 更新数量
         int loopCount = 0; // 循环次数
-        while (loopCount < 1000) {
+        while (offsetId < endId || loopCount < 10000) {
             loopCount ++;
+            if(loopCount % 100 == 0){
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    log.error("休眠异常!");
+                }
+            }
             List<WorkGridFlowDetailOffline> singleList = workGridFlowDetailOfflineDao.brushQueryAllByPage(offsetId);
             if(CollectionUtils.isEmpty(singleList)){
-                break;
+                continue;
             }
             List<WorkGridFlowDetailOffline> list = Lists.newArrayList();
             for (WorkGridFlowDetailOffline item : singleList) {
@@ -254,7 +261,6 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
             Integer singleCount = workGridFlowDetailOfflineDao.brushUpdateById(list);
             updatedCount += singleCount;
 
-            loopCount ++;
         }
         if(log.isInfoEnabled()){
             log.info("work_grid_flow_direction 表省区刷数:{}", updatedCount);
