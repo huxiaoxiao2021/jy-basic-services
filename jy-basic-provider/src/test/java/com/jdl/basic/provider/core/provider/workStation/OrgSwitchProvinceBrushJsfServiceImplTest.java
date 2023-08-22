@@ -38,25 +38,25 @@ public class OrgSwitchProvinceBrushJsfServiceImplTest {
     @Test
     public void workGridFlowDirectionBrush() {
 
-        orgSwitchProvinceBrushJsfService.workGridFlowDirectionBrush();
+        orgSwitchProvinceBrushJsfService.workGridFlowDirectionBrush(1);
     }
     
     @Test
     public void workGridFlowDetailOfflineBrush() {
 
-        orgSwitchProvinceBrushJsfService.workGridFlowDetailOfflineBrush();
+        orgSwitchProvinceBrushJsfService.workGridFlowDetailOfflineBrush(1,10);
     }
     
     @Test
     public void siteWaveScheduleBrush() {
 
-        orgSwitchProvinceBrushJsfService.siteWaveScheduleBrush();
+        orgSwitchProvinceBrushJsfService.siteWaveScheduleBrush(1);
     }
 
     @Test
     public void siteAttendPlanBrush() {
 
-        orgSwitchProvinceBrushJsfService.siteAttendPlanBrush();
+        orgSwitchProvinceBrushJsfService.siteAttendPlanBrush(1);
     }
 
     @Test

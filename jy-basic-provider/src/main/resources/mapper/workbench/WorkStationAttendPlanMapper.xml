@@ -441,6 +441,7 @@
 		from
 			work_station_attend_plan
 		where yn = 1
+		  and province_agency_code = ''
 		  and id > #{id,jdbcType=BIGINT}
 		order by id
 			limit 100
