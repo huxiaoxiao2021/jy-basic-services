@@ -213,16 +213,16 @@
                 <if test="item.orgName != null">
                     org_name = #{item.orgName,jdbcType=VARCHAR},
                 </if>
-                <if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
+                <if test="item.provinceAgencyCode != null and item.provinceAgencyCode != ''" >
                     province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR},
                 </if>
-                <if test="provinceAgencyName != null and provinceAgencyName != ''" >
+                <if test="item.provinceAgencyName != null and item.provinceAgencyName != ''" >
                     province_agency_name = #{provinceAgencyName,jdbcType=VARCHAR},
                 </if>
-                <if test="areaHubCode != null and areaHubCode != ''" >
+                <if test="item.areaHubCode != null and item.areaHubCode != ''" >
                     area_hub_code = #{areaHubCode,jdbcType=VARCHAR},
                 </if>
-                <if test="areaHubName != null and areaHubName != ''" >
+                <if test="item.areaHubName != null and item.areaHubName != ''" >
                     area_hub_name = #{areaHubName,jdbcType=VARCHAR},
                 </if>
                 <if test="item.remindStartTime != null">
