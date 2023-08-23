@@ -375,33 +375,4 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 	public List<WorkStationGrid> queryListForManagerSiteScan(WorkStationGridQuery workStationGridQuery) {
 		return workStationGridService.queryListForManagerSiteScan(workStationGridQuery);
 	}
-
-	/**
-	 * 根据场地id查询网格信息
-	 * @param siteCodes
-	 * @return
-	 */
-	@Override
-	public Result<List<WorkStationGrid>> getGridInfoBySiteCodes(List<String> siteCodes) {
-		if(log.isInfoEnabled()){
-			log.info("getGridInfoBySiteCodes 入参-{}", JSON.toJSONString(siteCodes));
-		}
-		Result<List<WorkStationGrid>> result = Result.success();
-		try{
-			if (CollectionUtils.isEmpty(siteCodes)){
-				result = Result.fail("场地参数不能为空！");
-				return result;
-			}
-			if (siteCodes.size() > 50){
-				result = Result.fail("场地数不能超过50个！");
-				return result;
-			}
-			List<WorkStationGrid> datas = workStationGridService.getGridInfoBySiteCodes(siteCodes);
-			result.setData(datas);
-		}catch (Exception e){
-			log.warn("getGridInfoBySiteCodes has error.",e);
-			result = Result.fail("系统异常，请联系分拣小秘");
-		}
-		return result;
-	}
 }
