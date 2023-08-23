@@ -651,7 +651,7 @@
 		where yn = 1
 		and site_code in
 		<foreach collection="siteCodes" item="item" open="(" close=")" separator=",">
-			#{item.id,jdbcType=BIGINT}
+			#{item}
 		</foreach>
 	</select>
 </mapper>
