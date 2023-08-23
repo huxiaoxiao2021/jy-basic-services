@@ -643,7 +643,7 @@
 	</update>
 	<!-- 刷数sql end -->
 
-	<select id="getGridInfoBySiteCodes" resultType="com.jdl.basic.api.domain.workStation.WorkGrid">
+	<select id="getGridInfoBySiteCodes" resultMap="WorkGrid">
 		select
 		<include refid="Base_Column_List"/>
 		from
