@@ -3,6 +3,7 @@ package com.jdl.basic.provider.core.dao.workStation;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
 import com.jdl.basic.api.domain.workStation.WorkGridQuery;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -110,5 +111,5 @@ public interface WorkGridDao {
 	 * @param siteCodes
 	 * @return
 	 */
-    List<WorkGrid> getGridInfoBySiteCodes(List<String> siteCodes);
+    List<WorkGrid> getGridInfoBySiteCodes(@Param("siteCodes") List<String> siteCodes);
 }
