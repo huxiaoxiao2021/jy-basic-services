@@ -64,6 +64,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         Boolean insertResult = workGridScheduleDao.batchInsert(request);
         if (!insertResult) {
             log.warn("WorkGridScheduleServiceImpl batchInsert 执行失败！");
+            throw new RuntimeException("批量插入记录失败！");
         }
         return result.setData(insertResult);
     }
@@ -89,7 +90,6 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
             Result<Boolean> deleteResult = batchDeleteByWorkGridKey(deleteRequest);
             if (deleteResult.isFail()) {
                 log.warn("batchUpdateWorkGridSchedule 批量删除失败！" + deleteResult.getMessage());
-                throw new RuntimeException(deleteResult.getMessage());
             }
         }
 
