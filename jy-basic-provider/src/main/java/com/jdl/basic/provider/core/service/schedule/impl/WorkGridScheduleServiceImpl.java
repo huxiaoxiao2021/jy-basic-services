@@ -89,6 +89,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
             Result<Boolean> deleteResult = batchDeleteByWorkGridKey(deleteRequest);
             if (deleteResult.isFail()) {
                 log.warn("batchUpdateWorkGridSchedule 批量删除失败！" + deleteResult.getMessage());
+                throw new RuntimeException(deleteResult.getMessage());
             }
         }
 
@@ -97,6 +98,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
             Result<Boolean> insertResult = batchInsert(insertRequest);
             if (insertResult.isFail()) {
                 log.warn("batchUpdateWorkGridSchedule 批量插入失败！" + insertResult.getMessage());
+                throw new RuntimeException(insertResult.getMessage());
             }
         }
         return result.setData(Boolean.TRUE);
