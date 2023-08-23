@@ -244,4 +244,15 @@ public class Constants {
      */
     public static final Integer USER_SIGN_CHECK_DAYS= -7;
 
+    public static final String SEPARATOR_HYPHEN = "-";
+
+    public static final String LEFT_PARENTHESIS = "(";
+
+    public static final String RIGHT_PARENTHESIS = ")";
+
+    /**
+     * 中文顿号
+     */
+    public static final String CHINESE_COMMA = "、";
+
 }

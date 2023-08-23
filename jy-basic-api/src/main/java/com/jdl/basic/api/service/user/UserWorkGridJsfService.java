@@ -13,6 +13,8 @@ public interface UserWorkGridJsfService {
 
     Result<Boolean> batchDelete(UserWorkGridBatchRequest request);
 
+    Result<Boolean> batchUpdateUserWorkGrid(UserWorkGridBatchUpdateRequest request);
+
     Result<List<UserWorkGrid>> queryByUserIds(UserWorkGridBatchRequest request);
 
     Result<List<JyUserDto>> getWorkGridDistributedStaff(UserWorkGridRequest request);
