@@ -860,18 +860,5 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		return workStationGridDao.queryCountByRefGridKey(refGridKey);
 	}
 
-	/**
-	 * 根据场地ID获取网格信息
-	 * @param siteCodes
-	 * @return
-	 */
-	@Override
-	public List<WorkStationGrid> getGridInfoBySiteCodes(List<String> siteCodes) {
-		List<WorkStationGrid> result = new ArrayList<>();
-		if (CollectionUtils.isEmpty(siteCodes)){
-			return result;
-		}
 
-		return workStationGridDao.getGridInfoBySiteCodes(siteCodes);
-	}
 }

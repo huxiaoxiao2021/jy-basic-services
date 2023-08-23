@@ -105,4 +105,10 @@ public interface WorkGridDao {
 	 */
 	Integer brushUpdateById(List<WorkGrid> list);
 
+	/**
+	 * 根据场地查询网格信息
+	 * @param siteCodes
+	 * @return
+	 */
+    List<WorkGrid> getGridInfoBySiteCodes(List<String> siteCodes);
 }

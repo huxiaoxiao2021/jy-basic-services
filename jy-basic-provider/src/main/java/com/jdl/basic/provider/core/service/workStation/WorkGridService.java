@@ -152,4 +152,11 @@ public interface WorkGridService {
 	 * @return
 	 */
 	Result<Boolean> deleteByWorkGridKey(WorkGrid deleteData);
+
+	/**
+	 * 根据场地获取网格信息
+	 * @param siteCodes
+	 * @return
+	 */
+	List<WorkGrid> getGridInfoBySiteCodes(List<String> siteCodes);
 }

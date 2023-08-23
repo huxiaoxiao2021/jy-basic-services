@@ -225,4 +225,14 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	public List<WorkGrid> queryListForManagerSiteScan(WorkGridQuery workGridQuery) {
 		return workGridService.queryListForManagerSiteScan(workGridQuery);
 	}
+
+	/**
+	 * 根据场地ID获取网格信息
+	 * @param siteCodes
+	 * @return
+	 */
+	@Override
+	public List<WorkGrid> getGridInfoBySiteCodes(List<String> siteCodes) {
+		return workGridService.getGridInfoBySiteCodes(siteCodes);
+	}
 }

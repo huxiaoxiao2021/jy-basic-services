@@ -3,11 +3,7 @@ package com.jdl.basic.api.service.workStation;
 import java.util.List;
 
 import com.jdl.basic.api.domain.user.UserWorkGrid;
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkGrid;
-import com.jdl.basic.api.domain.workStation.WorkGridImport;
-import com.jdl.basic.api.domain.workStation.WorkGridQuery;
-import com.jdl.basic.api.domain.workStation.WorkGridVo;
+import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 
@@ -142,4 +138,11 @@ public interface WorkGridJsfService {
 	 * @return
 	 */
 	List<WorkGrid> queryListForManagerSiteScan(WorkGridQuery workGridQuery);
+
+	/**
+	 * 根据场地ID获取网格信息
+	 * @param siteCodes
+	 * @return
+	 */
+	public List<WorkGrid> getGridInfoBySiteCodes(List<String> siteCodes);
 }

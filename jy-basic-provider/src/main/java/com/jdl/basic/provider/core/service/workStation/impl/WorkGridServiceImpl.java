@@ -766,4 +766,15 @@ public class WorkGridServiceImpl implements WorkGridService {
 		}		
 		return workGridDao.queryListForManagerSiteScan(query);
 	}
+
+	/**
+	 * 根据场地获取网格信息
+	 *
+	 * @param siteCodes
+	 * @return
+	 */
+	@Override
+	public List<WorkGrid> getGridInfoBySiteCodes(List<String> siteCodes) {
+		return workGridDao.getGridInfoBySiteCodes(siteCodes);
+	}
 }

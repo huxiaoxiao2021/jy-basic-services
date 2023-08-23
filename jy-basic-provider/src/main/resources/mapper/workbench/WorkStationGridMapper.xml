@@ -776,16 +776,5 @@
 		</foreach>
 	</update>
 	<!-- 刷数sql end -->
-	<select id="getGridInfoBySiteCodes" resultType="com.jdl.basic.api.domain.workStation.WorkStationGrid">
-		select
-		<include refid="Base_Column_List"/>
-		from
-		work_station_grid g
-		where yn = 1
-		and	site_code in
-		<foreach collection="siteCodes" item="item" open="(" close=")" separator=",">
-			#{item,jdbcType=VARCHAR}
-		</foreach>
-	</select>
 
 </mapper>
