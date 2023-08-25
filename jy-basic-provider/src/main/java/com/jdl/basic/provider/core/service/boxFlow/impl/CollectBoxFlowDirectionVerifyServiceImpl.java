@@ -361,8 +361,10 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
     }
     private void modifyRouteErrorType(Integer oldType , Integer newType, CollectBoxFlowDirectionConf conf){
         if(ObjectUtils.notEqual(oldType, newType)){
-            conf.setRouteErrorType(newType);
-            collectBoxFlowDirectionConfMapper.updateByPrimaryKey(conf);
+            CollectBoxFlowDirectionConf param = new CollectBoxFlowDirectionConf();
+            param.setId(conf.getId());
+            param.setRouteErrorType(newType);
+            collectBoxFlowDirectionConfMapper.updateByPrimaryKeySelective(param);
         }
     }
     private void routeErrorNotice(List<CollectBoxRouteCheckDto> collectBoxRouteCheckDtos){
