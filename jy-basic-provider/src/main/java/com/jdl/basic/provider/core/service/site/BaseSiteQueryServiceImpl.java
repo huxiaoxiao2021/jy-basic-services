@@ -257,6 +257,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         basicSiteVO.setProvinceId(item.getProvinceId());
         basicSiteVO.setProvinceName(item.getProvinceName());
         basicSiteVO.setCityId(item.getCityId());
+        basicSiteVO.setCityName(item.getCityName());
         basicSiteVO.setSiteCode(item.getSiteCode());
         basicSiteVO.setDmsSiteCode(item.getDmsCode());
         basicSiteVO.setSiteName(item.getSiteName());
@@ -274,6 +275,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         basicSiteVO.setProvinceId(item.getProvinceId());
         basicSiteVO.setProvinceName(item.getProvinceName());
         basicSiteVO.setCityId(item.getCityId());
+        basicSiteVO.setCityName(item.getCityName());
         basicSiteVO.setSiteCode(item.getDmsSiteId());
         basicSiteVO.setDmsSiteCode(item.getDmsCode());
         basicSiteVO.setSiteName(item.getDmsStoreName());
