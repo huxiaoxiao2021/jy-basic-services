@@ -195,4 +195,26 @@ public class PositionQueryJsfServiceImpl implements PositionQueryJsfService {
         }
         return response;
 	}
+
+
+    @Override
+    public Result<String> queryWorkGridKeyByPositionCode(String positionCode) {
+        String methodDesc = "PositionQueryJsfServiceImpl:queryWorkGridKeyByPositionCode:根据岗位码查询网格码:";
+        if(log.isInfoEnabled()){
+            log.info("{}参数={}", methodDesc, positionCode);
+        }
+        Result<String> response = new Result<>();
+        response.toSuccess();
+        if(StringUtils.isBlank(positionCode)) {
+            response.toFail("参数为空");
+            return response;
+        }
+        try {
+            return positionRecordService.queryWorkGridKeyByPositionCode(positionCode);
+        }catch (Exception e){
+            log.error("{}参数={},errMsg={}", methodDesc, positionCode, e.getMessage(), e);
+            response.toFail("根据岗位码查询网格码服务异常！");
+            return response;
+        }
+    }
 }

@@ -114,6 +114,7 @@
 		from
 			work_grid_flow_detail_offline
 		where id > #{id,jdbcType=BIGINT}
+		and province_agency_code is null
 		order by id
 			limit 100
 	</select>

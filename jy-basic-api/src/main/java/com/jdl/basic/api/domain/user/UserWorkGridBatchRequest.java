@@ -10,5 +10,7 @@ public class UserWorkGridBatchRequest extends UserWorkGridRequest implements Ser
 
     private static final long serialVersionUID = 8642408974869081632L;
 
-    List<UserWorkGrid> userWorkGrids;
+    private Integer siteCode;
+
+    private List<UserWorkGrid> userWorkGrids;
 }

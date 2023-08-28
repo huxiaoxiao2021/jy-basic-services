@@ -7,8 +7,6 @@ public class UserWorkGrid {
 
     private Long userId;
 
-    private String userErp;
-
     private Long workGridId;
 
     private String workGridKey;

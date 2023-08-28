@@ -10,7 +10,7 @@ import com.jdl.basic.common.utils.Result;
 
 /**
  * 作业区信息表--Service接口
- * 
+ *
  * @author wuyoude
  * @date 2023年04月25日 00:18:56
  *
@@ -48,7 +48,7 @@ public interface WorkAreaService {
 	 */
 	Result<PageDto<WorkArea>> queryPageList(WorkAreaQuery query);
 	/**
-	 * 
+	 *
 	 * @param workArea
 	 */
 	Result<Boolean> saveData(WorkArea workArea);
@@ -56,7 +56,7 @@ public interface WorkAreaService {
 	 * 根据areaCode查询
 	 * @param areaCode
 	 * @return
-	 */	
+	 */
 	WorkArea queryByAreaCode(String areaCode);
 	/**
 	 * 根据areaCode加载数据，传入cacheMap优先从map中加载，不存在返回null
@@ -69,12 +69,14 @@ public interface WorkAreaService {
 	 * 根据areaCode列表查询，将返回结果以areaCode为key返回map
 	 * @param areaCode
 	 * @return
-	 */	
+	 */
 	Map<String,WorkArea> queryByAreaCodeListToMap(List<String> areaCodeList);
 	/**
 	 * 根据areaCode列表查询
 	 * @param areaCode
 	 * @return
-	 */	
+	 */
 	List<WorkArea> queryListByAreaCodeList(List<String> areaCodeList);
+
+	List<WorkArea> listAreaByLabel(WorkArea workArea);
 }

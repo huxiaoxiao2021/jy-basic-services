@@ -69,7 +69,7 @@ public class IBasicSiteQueryWSManagerImpl implements IBasicSiteQueryWSManager {
             }
             return basicSiteQueryWS.querySiteByCondition(site, pageDto);
         }catch (Exception e){
-            log.error("分页查询站点异常!", e);
+            log.error("querySiteByCondition分页查询站点异常!", e);
             Profiler.functionError(info);
         }finally {
             Profiler.registerInfoEnd(info);

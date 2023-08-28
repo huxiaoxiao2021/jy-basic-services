@@ -2,6 +2,12 @@ package com.jdl.basic.provider.core.service.site;
 
 import com.google.common.collect.Lists;
 import com.jd.etms.framework.utils.cache.annotation.Cache;
+import com.jd.ql.basic.domain.BaseSite;
+import com.jd.ql.basic.domain.PsStoreInfo;
+import com.jd.ql.basic.dto.BaseSiteSimpleDto;
+import com.jd.ql.basic.dto.PageDto;
+import com.jd.ql.basic.util.PageUtil;
+import com.jd.ump.profiler.proxy.Profiler;
 import com.jd.ql.basic.domain.BaseOrganStruct;
 import com.jd.ql.basic.domain.BaseSite;
 import com.jd.ql.basic.domain.PsStoreInfo;
@@ -16,12 +22,19 @@ import com.jdl.basic.api.dto.site.AreaVO;
 import com.jdl.basic.api.dto.site.BasicSiteVO;
 import com.jdl.basic.api.dto.site.ProvinceAgencyVO;
 import com.jdl.basic.api.dto.site.SiteQueryCondition;
+import com.jdl.basic.api.dto.site.SiteQueryCondition;
+import com.jdl.basic.api.enums.WorkSiteTypeEnum;
 import com.jdl.basic.api.service.site.SiteQueryService;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.NumberHelper;
 import com.jdl.basic.common.utils.Pager;
+import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.common.utils.JsonHelper;
+import com.jdl.basic.common.utils.ObjectHelper;
+import com.jdl.basic.common.utils.Pager;
 import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.provider.JYBasicRpcException;
 import com.jdl.basic.provider.core.dao.basic.BasicSiteEsDao;
 import com.jdl.basic.provider.core.enums.BasicAreaEnum;
 import com.jdl.basic.provider.core.enums.BasicProvinceAgencyEnum;
@@ -43,6 +56,7 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,7 +84,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
 
     @Autowired
     private BasicWareHouseWSManager basicWareHouseWSManager;
-    
+
     @Override
     public Result<List<ProvinceAgencyVO>> queryAllProvinceAgencyInfo() {
         return queryAllProvinceAgencyInfo4Cache();
@@ -93,7 +107,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         }).collect(Collectors.toList()));
         return result;
     }
-    
+
     @Override
     public Result<List<AreaVO>> queryAllAreaInfo(String provinceAgencyCode) {
         return queryAllAreaInfo4Cache(provinceAgencyCode);
@@ -119,7 +133,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         }
         return result;
     }
-    
+
     @Override
     public Result<ProvinceAgencyVO> queryProvinceAgencyInfoByCode(String provinceAgencyCode) {
         return queryProvinceAgencyInfoByCode4Cache(provinceAgencyCode);
@@ -143,7 +157,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         }
         return result;
     }
-    
+
     @Override
     public Result<AreaVO> queryAreaVOInfoByCode(String areaCode) {
         return queryAreaVOInfoByCode4Cache(areaCode);
@@ -211,7 +225,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         }
         return baseEntity;
     }
-    
+
     private BaseSite convertOutSiteQuery(SiteQueryCondition siteQueryCondition) {
         BaseSite siteQuery = new BaseSite();
         siteQuery.setOrgId(siteQueryCondition.getOrgId());
@@ -499,10 +513,10 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         }
         return true;
     }
-    
+
     /**
      * 根据站点类型判断是否查询仓数据（只要有库房类型则需要查询）
-     * 
+     *
      * @param siteTypes
      * @return
      */
@@ -603,5 +617,79 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
             siteQueryPager.setSearchVo(new SiteQueryCondition());
         }
         return result;
+    }
+
+    @Override
+    public Result<Pager<BasicSiteVO>> queryJySiteByConditionFromBasicSite(Pager<SiteQueryCondition> siteQueryPager) {
+        checkSiteQueryPager(siteQueryPager);
+        Result<Pager<BasicSiteVO>> result = assemblePageResult(siteQueryPager);
+        if(checkIsQueryJySite(siteQueryPager.getSearchVo().getSubTypes())){
+            PageDto<Object> pageDto = new PageDto<>();
+            pageDto.setCurPage(siteQueryPager.getPageNo());
+            pageDto.setPageSize(siteQueryPager.getPageSize());
+            PageDto<List<BaseSiteSimpleDto>> pageSiteResult = basicSiteQueryWSManager.querySiteByCondition(convertSiteQuery(siteQueryPager.getSearchVo()), pageDto);
+            if(pageSiteResult != null && CollectionUtils.isNotEmpty(pageSiteResult.getData())){
+                result.getData().setTotal((long) pageSiteResult.getTotalRow());
+                result.getData().getData().addAll(convertBasicSiteList(pageSiteResult.getData()));
+            }
+        }
+        return result;
+    }
+
+    private List<BasicSiteVO> convertBasicSiteList(List<BaseSiteSimpleDto> data) {
+        return data.stream().map(baseSiteSimpleDto -> {
+            BasicSiteVO basicSiteVO =new BasicSiteVO();
+            basicSiteVO.setSiteCode(baseSiteSimpleDto.getSiteCode());
+            basicSiteVO.setSiteName(baseSiteSimpleDto.getSiteName());
+            basicSiteVO.setProvinceAgencyCode(baseSiteSimpleDto.getProvinceAgencyCode());
+            basicSiteVO.setProvinceAgencyName(baseSiteSimpleDto.getProvinceAgencyName());
+            return basicSiteVO;
+        }).collect(Collectors.toList());
+    }
+
+    private Result<Pager<BasicSiteVO>> assemblePageResult(Pager<SiteQueryCondition> siteQueryPager) {
+        Result result =new Result();
+        Pager<BasicSiteVO> pager =new Pager();
+        pager.setPageNo(siteQueryPager.getPageNo());
+        pager.setPageSize(siteQueryPager.getPageSize());
+        List<BasicSiteVO> basicSiteVOList =new ArrayList<>();
+        pager.setData(basicSiteVOList);
+        result.setData(pager);
+        return result;
+    }
+
+    private BaseSite convertSiteQuery(SiteQueryCondition siteQueryCondition) {
+        BaseSite siteQuery = new BaseSite();
+        siteQuery.setSubTypeList(siteQueryCondition.getSubTypes());
+        return siteQuery;
+    }
+
+    private boolean checkIsQueryJySite(List<Integer> subTypes) {
+        if (CollectionUtils.isNotEmpty(subTypes)){
+            for (Integer subType: subTypes){
+                if (null ==WorkSiteTypeEnum.getWorkingSiteTypeBySubType(subType)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private void checkSiteQueryPager(Pager<SiteQueryCondition> siteQueryPager) {
+        if (ObjectHelper.isEmpty(siteQueryPager.getPageNo())){
+            throw  new JYBasicRpcException("参数异常：缺失分页页码！");
+        }
+        if (ObjectHelper.isEmpty(siteQueryPager.getPageSize())){
+            throw  new JYBasicRpcException("参数异常：缺失分页数量！");
+        }
+        if (ObjectHelper.isEmpty(siteQueryPager.getSearchVo())){
+            throw  new JYBasicRpcException("参数异常：缺失查询条件！");
+        }
+        if (CollectionUtils.isEmpty(siteQueryPager.getSearchVo().getSubTypes())){
+            throw  new JYBasicRpcException("参数异常：缺失子站点类型！");
+        }
+        if (siteQueryPager.getPageSize()> Constants.DEFAULT_PAGE_SIZE_QUERY_USER){
+            throw  new JYBasicRpcException("参数异常：查询数量过大！");
+        }
     }
 }

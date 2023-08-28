@@ -92,11 +92,15 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
                 updateItem.setAreaHubName(StringUtils.isEmpty(baseSite.getAreaName()) ? Constants.EMPTY_FILL : baseSite.getAreaName());
                 list.add(updateItem);
             }
-            Integer singleCount = workStationGridDao.brushUpdateById(list);
-            updatedCount += singleCount;
 
             WorkStationGrid workStationGrid = singleList.stream().max((a, b) -> (int) (a.getId() - b.getId())).get();
             offsetId = workStationGrid.getId().intValue();
+
+            if(CollectionUtils.isEmpty(list)){
+                continue;
+            }
+            Integer singleCount = workStationGridDao.brushUpdateById(list);
+            updatedCount += singleCount;
 
             loopCount ++;
         }
@@ -133,11 +137,15 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
                 updateItem.setAreaHubName(StringUtils.isEmpty(baseSite.getAreaName()) ? Constants.EMPTY_FILL : baseSite.getAreaName());
                 list.add(updateItem);
             }
-            Integer singleCount = workGridDao.brushUpdateById(list);
-            updatedCount += singleCount;
 
             WorkGrid workGrid = singleList.stream().max((a, b) -> (int) (a.getId() - b.getId())).get();
             offsetId = workGrid.getId().intValue();
+
+            if(CollectionUtils.isEmpty(list)){
+                continue;
+            }
+            Integer singleCount = workGridDao.brushUpdateById(list);
+            updatedCount += singleCount;
 
             loopCount ++;
         }
@@ -147,9 +155,9 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
     }
 
     @Override
-    public void workGridFlowDirectionBrush() {
+    public void workGridFlowDirectionBrush(Integer startId) {
         // 起始id
-        int offsetId = 0;
+        int offsetId = startId;
         int updatedCount = 0; // 更新数量
         int loopCount = 0; // 循环次数
         while (loopCount < 1000) {
@@ -182,11 +190,15 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
                 updateItem.setFlowAreaHubName(flowBaseSite == null ? Constants.EMPTY_FILL : StringUtils.isEmpty(baseSite.getAreaName()) ? Constants.EMPTY_FILL : baseSite.getAreaName());
                 list.add(updateItem);
             }
-            Integer singleCount = workGridFlowDirectionDao.brushUpdateById(list);
-            updatedCount += singleCount;
 
             WorkGridFlowDirection workGridFlowDirection = singleList.stream().max((a, b) -> (int) (a.getId() - b.getId())).get();
             offsetId = workGridFlowDirection.getId().intValue();
+
+            if(CollectionUtils.isEmpty(list)){
+                continue;
+            }
+            Integer singleCount = workGridFlowDirectionDao.brushUpdateById(list);
+            updatedCount += singleCount;
 
             loopCount ++;
         }
@@ -196,15 +208,23 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
     }
 
     @Override
-    public void workGridFlowDetailOfflineBrush() {
+    public void workGridFlowDetailOfflineBrush(Integer startId, Integer endId) {
         // 起始id
-        int offsetId = 0;
+        int offsetId = startId;
         int updatedCount = 0; // 更新数量
         int loopCount = 0; // 循环次数
-        while (loopCount < 1000) {
+        while (offsetId < endId || loopCount < 10000) {
+            loopCount ++;
+            if(loopCount % 100 == 0){
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    log.error("休眠异常!");
+                }
+            }
             List<WorkGridFlowDetailOffline> singleList = workGridFlowDetailOfflineDao.brushQueryAllByPage(offsetId);
             if(CollectionUtils.isEmpty(singleList)){
-                break;
+                continue;
             }
             List<WorkGridFlowDetailOffline> list = Lists.newArrayList();
             for (WorkGridFlowDetailOffline item : singleList) {
@@ -231,13 +251,16 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
                 updateItem.setFlowAreaHubName(flowBaseSite == null ? Constants.EMPTY_FILL : StringUtils.isEmpty(baseSite.getAreaName()) ? Constants.EMPTY_FILL : baseSite.getAreaName());
                 list.add(updateItem);
             }
-            Integer singleCount = workGridFlowDetailOfflineDao.brushUpdateById(list);
-            updatedCount += singleCount;
 
             WorkGridFlowDetailOffline workGridFlowDetailOffline = singleList.stream().max((a, b) -> (int) (a.getId() - b.getId())).get();
             offsetId = workGridFlowDetailOffline.getId().intValue();
 
-            loopCount ++;
+            if(CollectionUtils.isEmpty(list)){
+                continue;
+            }
+            Integer singleCount = workGridFlowDetailOfflineDao.brushUpdateById(list);
+            updatedCount += singleCount;
+
         }
         if(log.isInfoEnabled()){
             log.info("work_grid_flow_direction 表省区刷数:{}", updatedCount);
@@ -245,9 +268,9 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
     }
 
     @Override
-    public void siteWaveScheduleBrush() {
+    public void siteWaveScheduleBrush(Integer startId) {
         // 起始id
-        int offsetId = 0;
+        int offsetId = startId;
         int updatedCount = 0; // 更新数量
         int loopCount = 0; // 循环次数
         while (loopCount < 1000) {
@@ -272,11 +295,15 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
                 updateItem.setAreaHubName(StringUtils.isEmpty(baseSite.getAreaName()) ? Constants.EMPTY_FILL : baseSite.getAreaName());
                 list.add(updateItem);
             }
-            Integer singleCount = siteWaveScheduleDao.brushUpdateById(list);
-            updatedCount += singleCount;
 
             SiteWaveSchedule siteWaveSchedule = singleList.stream().max((a, b) -> (int) (a.getId() - b.getId())).get();
             offsetId = siteWaveSchedule.getId().intValue();
+
+            if(CollectionUtils.isEmpty(list)){
+                continue;
+            }
+            Integer singleCount = siteWaveScheduleDao.brushUpdateById(list);
+            updatedCount += singleCount;
 
             loopCount ++;
         }
@@ -286,9 +313,9 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
     }
 
     @Override
-    public void siteAttendPlanBrush() {
+    public void siteAttendPlanBrush(Integer startId) {
         // 起始id
-        int offsetId = 0;
+        int offsetId = startId;
         int updatedCount = 0; // 更新数量
         int loopCount = 0; // 循环次数
         while (loopCount < 1000) {
@@ -313,11 +340,15 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
                 updateItem.setAreaHubName(StringUtils.isEmpty(baseSite.getAreaName()) ? Constants.EMPTY_FILL : baseSite.getAreaName());
                 list.add(updateItem);
             }
-            Integer singleCount = siteAttendPlanDao.brushUpdateById(list);
-            updatedCount += singleCount;
 
             SiteAttendPlan siteAttendPlan = singleList.stream().max((a, b) -> (int) (a.getId() - b.getId())).get();
             offsetId = siteAttendPlan.getId().intValue();
+
+            if(CollectionUtils.isEmpty(list)){
+                continue;
+            }
+            Integer singleCount = siteAttendPlanDao.brushUpdateById(list);
+            updatedCount += singleCount;
 
             loopCount ++;
         }
@@ -347,26 +378,28 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
                     continue;
                 }
                 BaseStaffSiteOrgDto endBaseSite = baseMajorManager.getBaseSiteBySiteId(item.getEndSiteId());
-                if(endBaseSite == null){
-                    continue;
-                }
+                
                 CollectBoxFlowDirectionConf updateItem = new CollectBoxFlowDirectionConf();
                 updateItem.setId(item.getId());
                 updateItem.setStartProvinceAgencyCode(StringUtils.isEmpty(startBaseSite.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : startBaseSite.getProvinceAgencyCode() );
                 updateItem.setStartProvinceAgencyName(StringUtils.isEmpty(startBaseSite.getProvinceAgencyName()) ? Constants.EMPTY_FILL : startBaseSite.getProvinceAgencyName());
                 updateItem.setStartAreaHubCode(StringUtils.isEmpty(startBaseSite.getAreaCode()) ? Constants.EMPTY_FILL : startBaseSite.getAreaCode());
                 updateItem.setStartAreaHubName(StringUtils.isEmpty(startBaseSite.getAreaName()) ? Constants.EMPTY_FILL : startBaseSite.getAreaName());
-                updateItem.setEndProvinceAgencyCode(StringUtils.isEmpty(endBaseSite.getProvinceAgencyCode()) ? Constants.EMPTY_FILL : endBaseSite.getProvinceAgencyCode() );
-                updateItem.setEndProvinceAgencyName(StringUtils.isEmpty(endBaseSite.getProvinceAgencyName()) ? Constants.EMPTY_FILL : endBaseSite.getProvinceAgencyName());
-                updateItem.setEndAreaHubCode(StringUtils.isEmpty(endBaseSite.getAreaCode()) ? Constants.EMPTY_FILL : endBaseSite.getAreaCode());
-                updateItem.setEndAreaHubName(StringUtils.isEmpty(endBaseSite.getAreaName()) ? Constants.EMPTY_FILL : endBaseSite.getAreaName());
+                updateItem.setEndProvinceAgencyCode(endBaseSite == null ? Constants.EMPTY_FILL : endBaseSite.getProvinceAgencyCode() );
+                updateItem.setEndProvinceAgencyName(endBaseSite == null ? Constants.EMPTY_FILL : endBaseSite.getProvinceAgencyName());
+                updateItem.setEndAreaHubCode(endBaseSite == null ? Constants.EMPTY_FILL : endBaseSite.getAreaCode());
+                updateItem.setEndAreaHubName(endBaseSite == null ? Constants.EMPTY_FILL : endBaseSite.getAreaName());
                 list.add(updateItem);
             }
-            Integer singleCount = collectBoxFlowDirectionConfDao.brushUpdateById(list);
-            updatedCount += singleCount;
 
             CollectBoxFlowDirectionConf collectBoxFlowDirectionConf = singleList.stream().max((a, b) -> (int) (a.getId() - b.getId())).get();
             offsetId = collectBoxFlowDirectionConf.getId().intValue();
+
+            if(CollectionUtils.isEmpty(list)){
+                continue;
+            }
+            Integer singleCount = collectBoxFlowDirectionConfDao.brushUpdateById(list);
+            updatedCount += singleCount;
 
             loopCount ++;
         }
@@ -485,11 +518,15 @@ public class OrgSwitchProvinceBrushJsfServiceImpl implements OrgSwitchProvinceBr
                 updateItem.setAreaHubName(StringUtils.isEmpty(baseSite.getAreaName()) ? Constants.EMPTY_FILL : baseSite.getAreaName());
                 list.add(updateItem);
             }
-            Integer singleCount = workStationAttendPlanDao.brushUpdateById(list);
-            updatedCount += singleCount;
 
             WorkStationAttendPlan workStationAttendPlan = singleList.stream().max((a, b) -> (int) (a.getId() - b.getId())).get();
             offsetId = workStationAttendPlan.getId().intValue();
+
+            if(CollectionUtils.isEmpty(list)){
+                continue;
+            }
+            Integer singleCount = workStationAttendPlanDao.brushUpdateById(list);
+            updatedCount += singleCount;
 
             loopCount ++;
         }

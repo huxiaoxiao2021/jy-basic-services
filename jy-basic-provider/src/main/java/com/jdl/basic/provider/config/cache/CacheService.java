@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.config.cache;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -108,4 +109,24 @@ public interface CacheService {
 	 * @return
 	 */
 	boolean exists(String key);
+
+	/**
+	 * hash缓存
+	 * @param key
+	 * @param val
+	 * @return
+	 */
+	<T> boolean hMSet(String key, Map<String, T> val);
+
+	<T> boolean hMSetEx(String key, Map<String, T> val, long exTime,TimeUnit exTimeUnit);
+
+	/**
+	 * 根据key获取不到值时会返回一个包含空指针的list
+	 * @param key
+	 * @param fields
+	 * @return
+	 */
+	List<String> hMGet(String key, String... fields);
+
+
 }
