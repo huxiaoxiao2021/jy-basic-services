@@ -790,7 +790,7 @@
         <foreach collection="refWorkGridKeyList" item="item" open="(" close=")" separator=",">
             #{item,jdbcType=VARCHAR}
         </foreach>
-		and dock_code is not null
+		and dock_code is not null and dock_code!= ""
         limit #{offset}, #{limit}
     </select>
     <select id="queryPhoneByDockCodeForTms" resultMap="WorkStationGrid">
