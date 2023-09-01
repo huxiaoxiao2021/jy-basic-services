@@ -75,7 +75,7 @@ public class UserConsumer {
             if (ObjectHelper.isEmpty(siteTypeEnum)) {
               log.info("非分拣中心类型场地数据：{}", content);
               condition.setSiteType(WorkSiteTypeEnum.OTHER.getCode());
-              return;
+              //return;
             }
             else {
             condition.setSiteType(siteTypeEnum.getCode());
