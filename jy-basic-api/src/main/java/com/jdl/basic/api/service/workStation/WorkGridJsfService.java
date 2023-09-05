@@ -145,4 +145,17 @@ public interface WorkGridJsfService {
 	 * @return
 	 */
 	public List<WorkGrid> getGridInfoBySiteCodes(List<String> siteCodes);
+
+	/**
+	 * 根据场地+作业区+楼层+网格编码--精确查询网格数据
+	 *
+	 * siteCode
+	 * floor
+	 * gridCode
+	 * areaCode
+	 *
+	 * @param query
+	 * @return
+	 */
+	Result<WorkGrid> queryWorkGridByBizKey(WorkGrid query);
 }

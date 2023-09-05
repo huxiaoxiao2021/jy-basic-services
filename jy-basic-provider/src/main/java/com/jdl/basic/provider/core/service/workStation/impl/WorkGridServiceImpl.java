@@ -777,4 +777,15 @@ public class WorkGridServiceImpl implements WorkGridService {
 	public List<WorkGrid> getGridInfoBySiteCodes(List<String> siteCodes) {
 		return workGridDao.getGridInfoBySiteCodes(siteCodes);
 	}
+
+	/**
+	 * 根据唯一码查询网格信息
+	 *
+	 * @param query
+	 * @return
+	 */
+	@Override
+	public List<WorkGrid> queryWorkGridByBizKey(WorkGrid query) {
+		return workGridDao.queryWorkGridByBizKey(query);
+	}
 }

@@ -112,4 +112,11 @@ public interface WorkGridDao {
 	 * @return
 	 */
     List<WorkGrid> getGridInfoBySiteCodes(@Param("siteCodes") List<String> siteCodes);
+
+	/**
+	 * 根据网格唯一信息查询网格信息
+	 * @param query
+	 * @return
+	 */
+	List<WorkGrid> queryWorkGridByBizKey(WorkGrid query);
 }

@@ -159,4 +159,11 @@ public interface WorkGridService {
 	 * @return
 	 */
 	List<WorkGrid> getGridInfoBySiteCodes(List<String> siteCodes);
+
+	/**
+	 * 根据唯一码查询网格信息
+	 * @param query
+	 * @return
+	 */
+    List<WorkGrid> queryWorkGridByBizKey(WorkGrid query);
 }
