@@ -31,7 +31,7 @@
         <dms-java-utils-sdk.version>1.0.0-SNAPSHOT</dms-java-utils-sdk.version>
 <!--        <jd.ump.version>6.2.13-HOTFIX-T1</jd.ump.version>-->
 <!--        <jd.ump-x.version>1.0.2</jd.ump-x.version>-->
-        <jd.jmq.version>2.6.0</jd.jmq.version>
+        <jd.jmq.version>2.3.3-RC2</jd.jmq.version>
         <jd.jmq.jspliter.version>1.0.3</jd.jmq.jspliter.version>
         <jd.lsb.task.api>0.0.6-SNAPSHOT</jd.lsb.task.api>
         <elasticsearch.transport.version>6.3.2</elasticsearch.transport.version>
@@ -39,6 +39,8 @@
         <laf.config.version>1.1.0</laf.config.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dms-component-sdk.version>1.0.2-SNAPSHOT</dms-component-sdk.version>
+        <aces.version>3.0.1-SNAPSHOT</aces.version>
+        <aces-mybatis.version>3.0.1-SNAPSHOT</aces-mybatis.version>
     </properties>
 
     <!--配置环境的profile-->
@@ -285,6 +287,27 @@
                 <artifactId>laf-config-client-jd-springboot-starter</artifactId>
                 <version>${laf.config.version}</version>
                 <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>com.jd.security</groupId>
+                <artifactId>aces-mybatisclient</artifactId>
+                <version>${aces-mybatis.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>tdeclient</artifactId>
+                        <groupId>com.jd.security</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.jd.security</groupId>
+                <artifactId>tdeclient</artifactId>
+                <version>${aces.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jd.security</groupId>
+                <artifactId>aces-springclient</artifactId>
+                <version>${aces.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
