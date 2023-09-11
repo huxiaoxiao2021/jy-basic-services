@@ -253,12 +253,12 @@ public class PositionRecordServiceImpl implements PositionRecordService {
             result.toFail(String.format("岗位码:%s对应的工序不存在，请联系分拣小秘!", positionCode));
             return;
         }
+        
+        // 未绑定功能编码的正常返回网格信息
         JyWorkMapFuncConfigEntity entity = jyWorkMapFuncConfigDao.queryByBusinessKey(queryWork.getBusinessKey());
-        if(entity == null || StringUtils.isEmpty(entity.getFuncCode())){
-            result.toFail(String.format("岗位码:%s对应的功能编码未配置，请联系分拣小秘!", positionCode));
-            return;
+        if(entity != null && !StringUtils.isEmpty(entity.getFuncCode())){
+            positionData.setDefaultMenuCode(entity.getFuncCode());
         }
-        positionData.setDefaultMenuCode(entity.getFuncCode());
     }
 
 	@Override
