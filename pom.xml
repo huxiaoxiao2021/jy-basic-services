@@ -292,17 +292,6 @@
                 <groupId>com.jd.security</groupId>
                 <artifactId>aces-mybatisclient</artifactId>
                 <version>${aces-mybatis.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>tdeclient</artifactId>
-                        <groupId>com.jd.security</groupId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>com.jd.security</groupId>
-                <artifactId>tdeclient</artifactId>
-                <version>${aces.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.jd.security</groupId>
