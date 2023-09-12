@@ -40,7 +40,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dms-component-sdk.version>1.0.2-SNAPSHOT</dms-component-sdk.version>
         <aces.version>3.0.1-SNAPSHOT</aces.version>
-        <aces-mybatis.version>3.0.1-SNAPSHOT</aces-mybatis.version>
+        <aces-mybatis.version>2.2.4-SNAPSHOT</aces-mybatis.version>
     </properties>
 
     <!--配置环境的profile-->
