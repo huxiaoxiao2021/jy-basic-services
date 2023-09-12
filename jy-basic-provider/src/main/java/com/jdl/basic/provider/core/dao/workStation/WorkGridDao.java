@@ -105,4 +105,9 @@ public interface WorkGridDao {
 	 */
 	Integer brushUpdateById(List<WorkGrid> list);
 
+	/**
+	 * 根据场地编码更新
+	 */
+	Boolean updateBySiteCode(WorkGrid workGrid);
+
 }

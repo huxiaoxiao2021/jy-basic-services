@@ -152,4 +152,6 @@ public interface WorkGridService {
 	 * @return
 	 */
 	Result<Boolean> deleteByWorkGridKey(WorkGrid deleteData);
+
+	Result<Boolean> updateBySiteCode(WorkGrid workGrid);
 }

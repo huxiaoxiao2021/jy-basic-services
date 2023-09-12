@@ -766,4 +766,17 @@ public class WorkGridServiceImpl implements WorkGridService {
 		}		
 		return workGridDao.queryListForManagerSiteScan(query);
 	}
+
+
+	@Override
+	public Result<Boolean> updateBySiteCode(WorkGrid workGrid) {
+		Result<Boolean> result = Result.success();
+		if (workGrid.getSiteCode() == null) {
+			result.toFail("场地编码不能为空");
+			return result;
+		}
+		result.setData(workGridDao.updateBySiteCode(workGrid));
+		return result;
+	}
+
 }
