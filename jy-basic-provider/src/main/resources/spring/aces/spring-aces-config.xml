@@ -6,7 +6,7 @@
     <bean id="tdeClient" class="com.jd.security.tde.spring.TdeClientFactoryBean">
         <property name="token" value="${aces.token}"/>
         <property name="rPath" value="${aces.rPath}"/>
-        <property name="isProd" value="false"/>
+        <property name="isProd" value="${aces.isProd}"/>
         <property name="enableGM" value="${aces.enableGM}"/>
     </bean>
 </beans>
