@@ -248,17 +248,21 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 
 		if (siteNameSet.size() > 1 || provinceSet.size() > 1) {
 			BaseStaffSiteOrgDto dto = baseMajorManager.getBaseSiteBySiteId(siteCode);
-			WorkGrid workGrid = new WorkGrid();
-			workGrid.setProvinceAgencyCode(dto.getProvinceAgencyCode());
-			workGrid.setProvinceAgencyName(dto.getProvinceAgencyName());
-			workGrid.setSiteCode(dto.getSiteCode());
-			workGrid.setSiteName(dto.getSiteName());
-			workGrid.setUpdateUser("sys");
-			workGrid.setUpdateUserName("场地信息变更刷数");
-			workGrid.setUpdateTime(new Date());
-			Result<Boolean> result = workGridService.updateBySiteCode(workGrid);
-			if (!result.getData()) {
-				log.warn("JSF 网格刷数 更新失败, {}", JsonHelper.toJSONString(workGrid));
+			if (dto != null) {
+				WorkGrid workGrid = new WorkGrid();
+				workGrid.setProvinceAgencyCode(dto.getProvinceAgencyCode());
+				workGrid.setProvinceAgencyName(dto.getProvinceAgencyName());
+				workGrid.setSiteCode(dto.getSiteCode());
+				workGrid.setSiteName(dto.getSiteName());
+				workGrid.setUpdateUser("sys");
+				workGrid.setUpdateUserName("场地信息变更刷数");
+				workGrid.setUpdateTime(new Date());
+				Result<Boolean> result = workGridService.updateBySiteCode(workGrid);
+				if (!result.getData()) {
+					log.warn("JSF 网格刷数 更新失败, {}", JsonHelper.toJSONString(workGrid));
+				}
+			} else {
+				log.info("找不到场地 {}", siteCode);
 			}
 		}
 		return Result.success();
