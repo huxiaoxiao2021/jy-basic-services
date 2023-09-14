@@ -71,34 +71,37 @@ public class UserJsfServiceImpl implements UserJsfService {
 
     @Override
     public Result<List<JyUser>> queryDistributedUserList(JyUserQueryDto jyUserQueryDto) {
+        //查询场地人员列表
         Result<List<JyUser>> rs =userService.searchUserBySiteCode(jyUserQueryDto.getSiteCode());
         if (ObjectHelper.isNotNull(rs) && rs.isSuccess() && CollectionUtils.isNotEmpty(rs.getData())){
             List<JyUser> jyUsers =rs.getData();
-
-            List<UserWorkGrid> userWorkGrids =jyUsers.stream().map(
-                    jyUser -> {
-                        UserWorkGrid userWorkGrid =new UserWorkGrid();
-                        userWorkGrid.setUserId(jyUser.getId());
-                        return userWorkGrid;
-                    }).collect(Collectors.toList());
-
+            List<UserWorkGrid> userWorkGrids =jyUsers.stream().map(jyUser ->
+            {
+                UserWorkGrid userWorkGrid =new UserWorkGrid();
+                userWorkGrid.setUserId(jyUser.getId());
+                return userWorkGrid;
+            }).collect(Collectors.toList());
             UserWorkGridBatchRequest userWorkGridBatchRequest = new UserWorkGridBatchRequest();
             userWorkGridBatchRequest.setUserWorkGrids(userWorkGrids);
             Result<List<UserWorkGrid>> result =userWorkGridService.queryByUserIds(userWorkGridBatchRequest);
             if (ObjectHelper.isNotNull(result) && result.isSuccess() && CollectionUtils.isNotEmpty(result.getData())){
-                for (JyUser jyUser: jyUsers){
-                    for (UserWorkGrid userWorkGrid :userWorkGrids){
-                        if (userWorkGrid.getUserId().equals(jyUser.getId())){
-                            jyUser.setWorkGridKey(userWorkGrid.getWorkGridKey());
-                            break;
-                        }
-                    }
-                }
+                rs.setData(jyUsers.stream().map(jyUser -> assetWorkGridKey(jyUser,userWorkGrids)).filter(jyUser -> ObjectHelper.isNotNull(jyUser.getWorkGridKey())).collect(Collectors.toList()));
             }
             return rs;
         }
         return Result.success();
     }
+
+    private JyUser assetWorkGridKey(JyUser jyUser, List<UserWorkGrid> userWorkGrids) {
+        for (UserWorkGrid userWorkGrid :userWorkGrids){
+            if (userWorkGrid.getUserId().equals(jyUser.getId())){
+                jyUser.setWorkGridKey(userWorkGrid.getWorkGridKey());
+                break;
+            }
+        }
+        return jyUser;
+    }
+
 
     private void checkUnDistributedUserQueryDto(UnDistributedUserQueryDto dto) {
     if (ObjectHelper.isEmpty(dto.getPageNo())) {
