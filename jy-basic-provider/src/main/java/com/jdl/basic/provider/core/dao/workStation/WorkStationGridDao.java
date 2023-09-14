@@ -225,4 +225,11 @@ public interface WorkStationGridDao {
 	 * @param workGridFlowDirectionQuery
 	 */
 	List<WorkStationGrid> queryPhoneByDockCodeForTms(WorkGridFlowDirectionQuery workGridFlowDirectionQuery);
+
+	/**
+	 * 根据场地ID获取网格信息
+	 * @param siteCodes
+	 * @return
+	 */
+    List<WorkStationGrid> getGridInfoBySiteCodes(List<String> siteCodes);
 }

@@ -225,4 +225,50 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	public List<WorkGrid> queryListForManagerSiteScan(WorkGridQuery workGridQuery) {
 		return workGridService.queryListForManagerSiteScan(workGridQuery);
 	}
+
+	/**
+	 * 根据场地ID获取网格信息
+	 * @param siteCodes
+	 * @return
+	 */
+	@Override
+	public List<WorkGrid> getGridInfoBySiteCodes(List<String> siteCodes) {
+		return workGridService.getGridInfoBySiteCodes(siteCodes);
+	}
+
+	/**
+	 * 根据场地+作业区+楼层+网格编码--精确查询网格数据
+	 * <p>
+	 * siteCode
+	 * floor
+	 * gridCode
+	 * areaCode
+	 *
+	 * @param query
+	 * @return
+	 */
+	@Override
+	public Result<WorkGrid> queryWorkGridByBizKey(WorkGrid query) {
+		checkWorkGrid4Query(query);
+		List<WorkGrid> workGridList =workGridService.queryWorkGridByBizKey(query);
+		if (CollectionUtils.isNotEmpty(workGridList)){
+			return Result.success(workGridList.get(0));
+		}
+		return Result.fail("未查询到相应的网格数据！");
+	}
+
+	private void checkWorkGrid4Query(WorkGrid query) {
+		if (ObjectHelper.isEmpty(query.getSiteCode())){
+			throw new JYBasicRpcException("参数错误：siteCode为空！");
+		}
+		if (ObjectHelper.isEmpty(query.getAreaCode())){
+			throw new JYBasicRpcException("参数错误：areaCode为空！");
+		}
+		if (ObjectHelper.isEmpty(query.getFloor())){
+			throw new JYBasicRpcException("参数错误：floor为空！");
+		}
+		if (ObjectHelper.isEmpty(query.getGridCode())){
+			throw new JYBasicRpcException("参数错误：gridCode为空！");
+		}
+	}
 }

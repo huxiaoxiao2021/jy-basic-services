@@ -3,6 +3,7 @@ package com.jdl.basic.provider.core.dao.workStation;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
 import com.jdl.basic.api.domain.workStation.WorkGridQuery;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -105,4 +106,17 @@ public interface WorkGridDao {
 	 */
 	Integer brushUpdateById(List<WorkGrid> list);
 
+	/**
+	 * 根据场地查询网格信息
+	 * @param siteCodes
+	 * @return
+	 */
+    List<WorkGrid> getGridInfoBySiteCodes(@Param("siteCodes") List<String> siteCodes);
+
+	/**
+	 * 根据网格唯一信息查询网格信息
+	 * @param query
+	 * @return
+	 */
+	List<WorkGrid> queryWorkGridByBizKey(WorkGrid query);
 }
