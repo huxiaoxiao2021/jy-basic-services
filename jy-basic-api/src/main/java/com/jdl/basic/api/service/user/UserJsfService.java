@@ -50,6 +50,14 @@ public interface UserJsfService {
      * @return
      */
     Result<List<JyUser>> queryUnDistributedUserList(UnDistributedUserQueryDto unDistributedUserQueryDto);
+
+    /**
+     * 查询场地已分配网格人员
+     * @param jyUserQueryDto
+     * @return
+     */
+    Result<List<JyUser>> queryDistributedUserList(JyUserQueryDto jyUserQueryDto);
+
     /**
      * 查询人员岗位下列表
      * @param dto

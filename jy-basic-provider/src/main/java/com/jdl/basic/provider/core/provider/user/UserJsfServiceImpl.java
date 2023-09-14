@@ -9,6 +9,8 @@ import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.core.service.user.UserService;
 import java.util.Date;
+
+import com.jdl.basic.provider.core.service.user.UserWorkGridService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
@@ -17,12 +19,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service("userJsfServiceImpl")
 public class UserJsfServiceImpl implements UserJsfService {
     @Autowired
     private UserService userService;
+    @Autowired
+    UserWorkGridService userWorkGridService;
     @Override
     public Result<List<JyUserDto>> searchUserBySiteCode(JyUserQueryDto dto) {
         return convertToResult(userService.searchUserBySiteCode(dto.getSiteCode()));
@@ -63,7 +68,39 @@ public class UserJsfServiceImpl implements UserJsfService {
     return Result.fail("未查询到相关的用户信息");
   }
 
-  private void checkUnDistributedUserQueryDto(UnDistributedUserQueryDto dto) {
+
+    @Override
+    public Result<List<JyUser>> queryDistributedUserList(JyUserQueryDto jyUserQueryDto) {
+        Result<List<JyUser>> rs =userService.searchUserBySiteCode(jyUserQueryDto.getSiteCode());
+        if (ObjectHelper.isNotNull(rs) && rs.isSuccess() && CollectionUtils.isNotEmpty(rs.getData())){
+            List<JyUser> jyUsers =rs.getData();
+
+            List<UserWorkGrid> userWorkGrids =jyUsers.stream().map(
+                    jyUser -> {
+                        UserWorkGrid userWorkGrid =new UserWorkGrid();
+                        userWorkGrid.setUserId(jyUser.getId());
+                        return userWorkGrid;
+                    }).collect(Collectors.toList());
+
+            UserWorkGridBatchRequest userWorkGridBatchRequest = new UserWorkGridBatchRequest();
+            userWorkGridBatchRequest.setUserWorkGrids(userWorkGrids);
+            Result<List<UserWorkGrid>> result =userWorkGridService.queryByUserIds(userWorkGridBatchRequest);
+            if (ObjectHelper.isNotNull(result) && result.isSuccess() && CollectionUtils.isNotEmpty(result.getData())){
+                for (JyUser jyUser: jyUsers){
+                    for (UserWorkGrid userWorkGrid :userWorkGrids){
+                        if (userWorkGrid.getUserId().equals(jyUser.getId())){
+                            jyUser.setWorkGridKey(userWorkGrid.getWorkGridKey());
+                            break;
+                        }
+                    }
+                }
+            }
+            return rs;
+        }
+        return Result.success();
+    }
+
+    private void checkUnDistributedUserQueryDto(UnDistributedUserQueryDto dto) {
     if (ObjectHelper.isEmpty(dto.getPageNo())) {
       dto.setPageNo(Constants.DEFAULT_PAGE_NO);
     }
