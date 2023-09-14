@@ -39,6 +39,12 @@ public class UserWorkGridJsfServiceImpl implements UserWorkGridJsfService {
         return userWorkGridService.batchDelete(request);
     }
 
+    @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridJsfServiceImpl.batchUpdateUserWorkGrid", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<Boolean> batchUpdateUserWorkGrid(UserWorkGridBatchUpdateRequest request) {
+        return userWorkGridService.batchUpdateUserWorkGrid(request);
+    }
+
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridJsfServiceImpl.queryByUserIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<List<UserWorkGrid>> queryByUserIds(UserWorkGridBatchRequest request) {
         return userWorkGridService.queryByUserIds(request);

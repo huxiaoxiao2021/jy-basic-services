@@ -175,6 +175,9 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		}
 		List<WorkStationGridMachine> machines = new ArrayList<>();
 		for (Machine m : insertData.getMachine()) {
+			if (StringUtils.isEmpty(m.getMachineTypeCode()) || StringUtils.isEmpty(m.getMachineCode())) {
+				break;
+			}
 			WorkStationGridMachine machine =  new WorkStationGridMachine();
 			machine.setCreateUser(insertData.getCreateUser());
 			machine.setRefGridKey(insertData.getBusinessKey());

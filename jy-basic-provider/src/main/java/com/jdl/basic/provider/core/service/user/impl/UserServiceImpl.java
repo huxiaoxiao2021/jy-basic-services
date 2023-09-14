@@ -17,12 +17,13 @@ import com.jdl.basic.provider.core.service.user.UserService;
 import com.jdl.basic.provider.core.service.user.model.JyUserQueryCondition;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -60,12 +61,14 @@ public class UserServiceImpl implements UserService {
       return result.toFail("场地编码不能为空！");
     }
     List<JyUser> jyUsers;
-    if (jimdbCacheService.exists(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode))) {
-      String json = jimdbCacheService.get(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode));
-      jyUsers = JSON.parseObject(json, new TypeReference<ArrayList<JyUser>>(){});
+    Map<String, String> jsonMap = jimdbCacheService.hGetAll(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode));
+    if (jsonMap != null && !jsonMap.isEmpty()) {
+      jyUsers = jsonMap.values().stream().map(item -> JSON.parseObject(item, JyUser.class)).collect(Collectors.toList());
     } else {
       jyUsers = jyUserDao.searchUserBySiteCode(siteCode);
-      jimdbCacheService.setEx(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode), jyUsers, 30L, TimeUnit.MINUTES);
+      Map<String, JyUser> idToUserMap;
+      idToUserMap = jyUsers.stream().collect(Collectors.toMap((item) -> item.getId().toString(), item -> item));
+      jimdbCacheService.hMSetEx(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode), idToUserMap, 30L, TimeUnit.MINUTES);
     }
     result.setData(jyUsers);
     return result;
@@ -97,7 +100,29 @@ public class UserServiceImpl implements UserService {
     if (request.getGridDistributeFlag() == null) {
       return result.toFail("用户网格分配状态不能为空！");
     }
-    return result.setData(jyUserDao.batchUpdateByUserIds(request) > 0);
+    if (request.getSiteCode() == null) {
+      return result.toFail("更新用户场地编码不能为空！");
+    }
+    Boolean bool = jyUserDao.batchUpdateByUserIds(request) > 0;
+    Integer siteCode = request.getSiteCode();
+    Map<String, String> map = jimdbCacheService.hGetAll(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode));
+    // 更新JimDb中的缓存数据
+    if (bool) {
+      String[] fieldKeys = request.getUsers().stream().map(item -> String.valueOf(item.getId())).toArray(String[]::new);
+      List<String> json = jimdbCacheService.hMGet(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode), fieldKeys);
+      if (CollectionUtils.isNotEmpty(json)) {
+        Map<String, JyUser> idToUserMap = json.stream().filter(Objects::nonNull).map(item -> JSON.parseObject(item, JyUser.class))
+                .collect(Collectors.toMap(item -> String.valueOf(item.getId()), item -> item));
+        for (JyUser user: request.getUsers()) {
+          JyUser jyUser = idToUserMap.get(String.valueOf(user.getId()));
+          if (jyUser != null) {
+            jyUser.setGridDistributeFlag(user.getGridDistributeFlag());
+          }
+        }
+        jimdbCacheService.hMSetEx(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode), idToUserMap, 30L, TimeUnit.MINUTES);
+      }
+    }
+    return result.setData(bool);
   }
 
   @Override
