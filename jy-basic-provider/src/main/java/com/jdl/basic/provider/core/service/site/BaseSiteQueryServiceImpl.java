@@ -271,6 +271,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         basicSiteVO.setProvinceId(item.getProvinceId());
         basicSiteVO.setProvinceName(item.getProvinceName());
         basicSiteVO.setCityId(item.getCityId());
+        basicSiteVO.setCityName(item.getCityName());
         basicSiteVO.setSiteCode(item.getSiteCode());
         basicSiteVO.setDmsSiteCode(item.getDmsCode());
         basicSiteVO.setSiteName(item.getSiteName());
@@ -288,6 +289,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         basicSiteVO.setProvinceId(item.getProvinceId());
         basicSiteVO.setProvinceName(item.getProvinceName());
         basicSiteVO.setCityId(item.getCityId());
+        basicSiteVO.setCityName(item.getCityName());
         basicSiteVO.setSiteCode(item.getDmsSiteId());
         basicSiteVO.setDmsSiteCode(item.getDmsCode());
         basicSiteVO.setSiteName(item.getDmsStoreName());
@@ -542,6 +544,15 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         psStoreInfoRequest.setCityId(siteQueryCondition.getCityId());
         psStoreInfoRequest.setCountyId(siteQueryCondition.getCountryId());
         psStoreInfoRequest.setProvinceAgencyCode(siteQueryCondition.getProvinceAgencyCode());
+        if(StringUtils.isNotEmpty(siteQueryCondition.getSearchStr())){
+            if(NumberHelper.isNumber(siteQueryCondition.getSearchStr())){
+                // 数字，则根据站点id查询
+                psStoreInfoRequest.setDmsSiteId(Integer.valueOf(siteQueryCondition.getSearchStr()));
+            }else {
+                // 非数字则根据站点名称模糊查询
+                psStoreInfoRequest.setSiteNamePym(siteQueryCondition.getSearchStr());
+            }
+        }
         return psStoreInfoRequest;
     }
 

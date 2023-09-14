@@ -175,6 +175,9 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		}
 		List<WorkStationGridMachine> machines = new ArrayList<>();
 		for (Machine m : insertData.getMachine()) {
+			if (StringUtils.isEmpty(m.getMachineTypeCode()) || StringUtils.isEmpty(m.getMachineCode())) {
+				break;
+			}
 			WorkStationGridMachine machine =  new WorkStationGridMachine();
 			machine.setCreateUser(insertData.getCreateUser());
 			machine.setRefGridKey(insertData.getBusinessKey());
@@ -858,5 +861,25 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryCountByRefGridKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public int queryCountByRefGridKey(String refGridKey) {
 		return workStationGridDao.queryCountByRefGridKey(refGridKey);
-	}	
+	}
+
+	/**
+	 * 获取月台号
+	 *
+	 * @param workGridFlowDirectionQuery
+	 */
+	@Override
+	public List<String> queryDockCodeByFlowDirection(WorkGridFlowDirectionQuery workGridFlowDirectionQuery) {
+		return workStationGridDao.queryDockCodeByFlowDirection(workGridFlowDirectionQuery);
+	}
+
+	/**
+	 * 获取网格信息
+	 *
+	 * @param workGridFlowDirectionQuery
+	 */
+	@Override
+	public List<WorkStationGrid> queryPhoneByDockCodeForTms(WorkGridFlowDirectionQuery workGridFlowDirectionQuery) {
+		return workStationGridDao.queryPhoneByDockCodeForTms(workGridFlowDirectionQuery);
+	}
 }

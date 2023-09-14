@@ -35,10 +35,15 @@ spring:
         enabled: true
       ####--app consumer 定义--##########################################################
     consumers:
-      basic-consumer:
-        password: FBBB11B7
+      jmq2-consumer:
+        password: 25F7EDCD
         app: JYBasic
         address: jmq-testcluster.jd.local:50088
+        enabled: true
+      jmq4-consumer:
+        password: 809375866c4842f28d7e4eec04da1e41
+        app: JYBasic
+        address: test-nameserver.jmq.jd.local:50088
         enabled: true
 
 
@@ -57,6 +62,7 @@ mq:
       wlUserInfo: wlUserInfo
       site_change: basic_base_site_change
       wmsSite_Change: basic_ps_storeinfo
+      workGridModifyMq: workGridModifyMq
 
   jmq4producer:
     password: 809375866c4842f28d7e4eec04da1e41
@@ -75,7 +81,7 @@ mq:
 
 ## 云redis配置
 jimdb:
-  url: "redis://:erdTest123@redis-nwdwv9zb0ij7-proxy-nlb.jvessel-open-hb.jdcloud.com:6379/0"
+  url: "redis://:Kktest123456@redis-wjcq8oxg0xjx-proxy-nlb.jvessel-open-hb.jdcloud.com/0"
   cfg:
     timeout: 2000
     newTimeout: 1000
@@ -102,7 +108,7 @@ jdq:
   #基础服务JSF别名
 jsf:
   jy_basic:
-    alias: jy-basic-server-test
+    alias: jy-basic-server-dev
     token: jy-basic-server-token
 
 basic:
@@ -138,7 +144,7 @@ es:
     basicSite:
       queryIndexAlias: jy_basic_site
       type: jy_basic_site
-      
+
 ## ducc 配置(不同应用请设置不同的application)
 laf:
   config:
@@ -150,3 +156,14 @@ laf:
       parameters[0]:
         name: autoListener
         value: true
+
+#flowDirectionFunction 配置
+fdf:
+  functionMap:
+    1:
+      - "UNSEAL_CAR_POSITION"
+      - "UNLOAD_CAR_POSITION"
+    2:
+      - "SEND_CAR_POSITION"
+
+

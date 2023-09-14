@@ -106,4 +106,14 @@ public class JyWorkMapFuncConfigServiceImpl implements JyWorkMapFuncConfigServic
         }
         return jyWorkMapFuncConfigDao.queryByCondition(entity);    
     }
+
+    /**
+     * 根据funcCodeList查询
+     * @param functionList
+     * @return
+     */
+    @Override
+    public List<String> queryByFuncCodeList(List<String> functionList) {
+        return jyWorkMapFuncConfigDao.queryByFuncCodeList(functionList);
+    }
 }

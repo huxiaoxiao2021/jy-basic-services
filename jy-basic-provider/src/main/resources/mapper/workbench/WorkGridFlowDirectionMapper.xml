@@ -478,7 +478,7 @@
     <select id="queryFlowDataForSelect1" resultMap="WorkGridFlowDirectionVo">
         select ref_work_grid_key,flow_site_code,flow_site_name,flow_org_code,flow_org_name,
 				flow_province_agency_code,flow_province_agency_name,flow_area_hub_code,flow_area_hub_name,
-               0 as config_flow_status,1 as flow_site_use_status 
+               0 as config_flow_status,1 as flow_site_use_status
           from work_grid_flow_detail_offline o 
            <include refid="queryFlowDataForSelectConditionOffline"/> 
             and not exists(
@@ -504,7 +504,7 @@
     <select id="queryFlowDataForSelect2" resultMap="WorkGridFlowDirectionVo">
         select ref_work_grid_key,flow_site_code,flow_site_name,flow_org_code,flow_org_name,
 				flow_province_agency_code,flow_province_agency_name,flow_area_hub_code,flow_area_hub_name,
-               1 as config_flow_status,0 as flow_site_use_status 
+               1 as config_flow_status,0 as flow_site_use_status
            from work_grid_flow_direction t 
            <include refid="queryFlowDataForSelectCondition"/>
 	           and not exists(
@@ -530,7 +530,7 @@
     <select id="queryFlowDataForSelect3" resultMap="WorkGridFlowDirectionVo">
         select ref_work_grid_key,flow_site_code,flow_site_name,flow_org_code,flow_org_name,
 				flow_province_agency_code,flow_province_agency_name,flow_area_hub_code,flow_area_hub_name,
-               1 as config_flow_status,1 as flow_site_use_status 
+               1 as config_flow_status,1 as flow_site_use_status
            from work_grid_flow_direction t 
            <include refid="queryFlowDataForSelectCondition"/>
 	           and exists(
@@ -578,6 +578,7 @@
 		from
 			work_grid_flow_direction
 		where yn = 1
+		  and province_agency_code = ''
 		  and id > #{id,jdbcType=BIGINT}
 		order by id
 			limit 100
@@ -617,4 +618,14 @@
 		</foreach>
 	</update>
 	<!-- 刷数sql end -->
+
+	<select id="queryRefWorkGridKeyByFlowDirection" resultType="java.lang.String">
+		select ref_work_grid_key
+		from work_grid_flow_direction
+		where yn = 1
+		and flow_direction_type = #{flowDirectionType,jdbcType=INTEGER}
+		and flow_site_code = #{flowSiteCode,jdbcType=INTEGER}
+		and site_code = #{siteCode,jdbcType=INTEGER}
+		limit #{offset}, #{limit}
+	</select>
 </mapper>

@@ -740,7 +740,7 @@
         </foreach> 
         limit #{offset}, #{limit}
     </select>
-	
+
 	<!-- 刷数sql start -->
 	<select id="brushQueryAllByPage" parameterType="java.lang.Integer" resultMap="WorkStationGrid">
 		select
@@ -748,6 +748,7 @@
 		from
 			work_station_grid
 		where yn = 1
+		and province_agency_code = ''
 		and id > #{id,jdbcType=BIGINT}
 		order by id
 		limit 100
@@ -775,4 +776,39 @@
 		</foreach>
 	</update>
 	<!-- 刷数sql end -->
+    <select id="queryDockCodeByFlowDirection" resultType="java.lang.String">
+        select
+        distinct dock_code
+        from work_station_grid
+        where yn = 1
+		and site_code = #{siteCode,jdbcType=INTEGER}
+        and ref_station_key in
+        <foreach collection="refWorkKeyList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        and ref_work_grid_key in
+        <foreach collection="refWorkGridKeyList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+		and dock_code is not null and dock_code!= ''
+        limit #{offset}, #{limit}
+    </select>
+    <select id="queryPhoneByDockCodeForTms" resultMap="WorkStationGrid">
+        select
+        dock_code,business_key,owner_user_erp
+        from work_station_grid
+        where yn = 1
+		and site_code = #{siteCode,jdbcType=INTEGER}
+        and ref_station_key in
+        <foreach collection="refWorkKeyList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        and ref_work_grid_key in
+        <foreach collection="refWorkGridKeyList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        and dock_code = #{dockCode,jdbcType=VARCHAR}
+        limit #{offset}, #{limit}
+    </select>
+
 </mapper>

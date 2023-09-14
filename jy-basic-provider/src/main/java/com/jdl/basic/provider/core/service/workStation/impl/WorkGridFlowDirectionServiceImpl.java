@@ -1,5 +1,9 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
+
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.enums.ConfigFlowStatusEnum;
@@ -454,5 +458,16 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	@Override
 	public int deleteByRefGridKey(WorkGridFlowDirection deleteData) {
 		return workGridFlowDirectionDao.deleteByRefGridKey(deleteData);
+	}
+
+	/**
+	 * 查询流向-根据传入的流向
+	 *
+	 * @param query
+	 * @return
+	 */
+	@Override
+	public List<String> queryRefWorkGridKeyByFlowDirection(WorkGridFlowDirectionQuery query) {
+		return workGridFlowDirectionDao.queryRefWorkGridKeyByFlowDirection(query);
 	}
 }

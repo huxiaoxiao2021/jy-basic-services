@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.jd.jim.cli.Cluster;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.config.cache.CacheService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.codehaus.jackson.type.JavaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -283,7 +284,33 @@ public class JimdbCacheServiceImpl implements CacheService {
 		}
 	}
 
+	@Override
+	public <T> boolean hMSet(String key, Map<String, T> val) {
+		return hMSetEx(key, val, exTime, exTimeUnit);
+	}
 
+	@Override
+	public <T> boolean hMSetEx(String key, Map<String, T> val, long exTime, TimeUnit exTimeUnit) {
+		if(verifySetParams(key, val)){
+			Map<String, String> hashes = new HashMap<>();
+			for (Map.Entry<String, T> entry : val.entrySet()) {
+				hashes.put(entry.getKey(), serialize(entry.getValue()));
+			}
+			jimdbClient.hMSet(key, hashes);
+			if (null == hasSetExpireTimeKeySet.getIfPresent(key)) {
+				jimdbClient.expire(key, exTime, exTimeUnit);
+				hasSetExpireTimeKeySet.put(key, EXPIRE_FLAG_VALUE);
+			}
+			return true;
+		}
+		return false;
+	}
 
-
+	@Override
+	public List<String> hMGet(String key, String... fields) {
+		if (verifyGetParams(key)) {
+			return jimdbClient.hMGet(key, fields);
+		}
+		return null;
+	}
 }

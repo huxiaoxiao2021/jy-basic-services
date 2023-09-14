@@ -17,7 +17,7 @@ public interface BaseMajorManager {
     BaseStaffSiteOrgDto getBaseStaffByErp(String erp);
     /**
      * 根据场地ID查询场地信息
-     * 
+     *
      * @param siteId
      * @return
      */
@@ -25,7 +25,7 @@ public interface BaseMajorManager {
 
     /**
      * 分页查询站点
-     * 
+     *
      * @param subType 站点(分拣)子类型，可不传，不传则获取所有站点ID
      * @param pageIndex
      * @return
@@ -34,9 +34,11 @@ public interface BaseMajorManager {
 
     /**
      * 分页获取库房
-     * 
+     *
      * @param pageIndex
      * @return
      */
     PageDto<List<BaseStoreInfoDto>> getBaseStoreInfoByPage(Integer pageIndex);
+
+    public abstract BaseStaffSiteOrgDto getBaseSiteByDmsCode(String siteCode);
 }
