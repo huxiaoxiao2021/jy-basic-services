@@ -57,4 +57,12 @@ public interface UserWorkGridService {
     Result<List<UserWorkGrid>> batchQueryDeletedUserWorkGrid(UserWorkGridBatchRequest request);
 
     boolean removeFromGridByUserId(RemoveUserDto removeUserDto);
+
+    /**
+     * 批量调出人员网格信息
+     *
+     * @param request
+     * @return
+     */
+    Result<Boolean> batchTransferUserWorkGrid(UserWorkGridBatchUpdateRequest request);
 }

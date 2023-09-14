@@ -88,4 +88,16 @@ public class UserWorkGridJsfServiceImpl implements UserWorkGridJsfService {
         return userWorkGridService.batchQueryDeletedUserWorkGrid(request);
     }
 
+    /**
+     * 批量调出人员网格信息
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridJsfServiceImpl.UserWorkGridJsfService", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<Boolean> batchTransferUserWorkGrid(UserWorkGridBatchUpdateRequest request) {
+        return userWorkGridService.batchTransferUserWorkGrid(request);
+    }
+
 }

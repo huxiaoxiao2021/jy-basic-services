@@ -248,4 +248,69 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
     public boolean removeFromGridByUserId(RemoveUserDto removeUserDto) {
         return userWorkGridDao.removeFromGridByUserId(removeUserDto) >0;
     }
+
+    /**
+     * 批量调出人员网格信息
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    @Transactional
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.batchTransferUserWorkGrid", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<Boolean> batchTransferUserWorkGrid(UserWorkGridBatchUpdateRequest request) {
+        Result<Boolean> result = batchTransferParamsCheck(request);
+        if (result.isFail()) {
+            return result;
+        }
+
+        List<UserWorkGrid> deleteList = request.getDeleteUserWorkGrids();
+        if (CollectionUtils.isNotEmpty(deleteList)) {
+            UserWorkGridBatchRequest deleteRequest = new UserWorkGridBatchRequest();
+            deleteRequest.setUserWorkGrids(deleteList);
+            deleteRequest.setUpdateTime(request.getUpdateTime());
+            deleteRequest.setUpdateUserErp(request.getUpdateUserErp());
+            deleteRequest.setUpdateUserName(request.getUpdateUserName());
+            deleteRequest.setSiteCode(request.getSiteCode());
+            Result<Boolean> deleteResult = batchDelete(deleteRequest);
+            if (deleteResult.isFail()) {
+                log.warn("batchUpdate 删除网格人员分配失败！删除入参:{}", JsonHelper.toJSONString(deleteRequest));
+                return result.toFail(deleteResult.getMessage());
+            }
+        }
+
+        List<UserWorkGrid> addList = request.getAddUserWorkGrids();
+        if (CollectionUtils.isNotEmpty(addList)) {
+            UserWorkGridBatchRequest addRequest = new UserWorkGridBatchRequest();
+            addRequest.setSiteCode(request.getSiteCode());
+            addRequest.setUserWorkGrids(addList);
+            Result<Boolean> insertResult = batchInsert(addRequest);
+            if (insertResult.isFail()) {
+                log.warn("batchUpdate 插入网格人员分配失败！{}", JsonHelper.toJSONString(addRequest));
+                return result.toFail(insertResult.getMessage());
+            }
+        }
+        return result.setData(Boolean.TRUE);
+    }
+
+    private Result<Boolean> batchTransferParamsCheck(UserWorkGridBatchUpdateRequest request) {
+        Result<Boolean> result = Result.success();
+        if (request.getSiteCode() == null) {
+            return result.toFail("场地编码不能为空！");
+        }
+
+        List<UserWorkGrid> deleteList = request.getDeleteUserWorkGrids();
+        if (CollectionUtils.isNotEmpty(deleteList)) {
+            if (request.getUpdateTime() == null) {
+                return result.toFail("修改时间不能为空！");
+            }
+            if(StringUtils.isEmpty(request.getUpdateUserErp())) {
+                return result.toFail("修改人erp不能为空！");
+            }
+            if (StringUtils.isEmpty(request.getUpdateUserName())) {
+                return result.toFail("修改人姓名不能为空！");
+            }
+        }
+        return result;
+    }
 }
