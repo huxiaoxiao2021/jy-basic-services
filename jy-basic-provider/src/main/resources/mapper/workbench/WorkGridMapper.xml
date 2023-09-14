@@ -670,7 +670,7 @@
 		    yn = 1
 	</update>
 
-	<select id="selectDistinctSiteCode">
+	<select id="selectDistinctSiteCode" parameterType="java.lang.Integer">
 		select distinct(site_code) from work_grid where yn = 1;
 	</select>
 </mapper>
