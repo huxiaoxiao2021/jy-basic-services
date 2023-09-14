@@ -34,6 +34,8 @@ public class AttendanceBlackList implements Serializable {
 
     private Long ts;//时间戳
 
+    private Integer status;
+
     private String statusStr;
 
 }
