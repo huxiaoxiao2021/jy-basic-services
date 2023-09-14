@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.dao.workMapFunc;
 
 import com.jdl.basic.api.domain.workMapFunc.JyWorkMapFuncConfigEntity;
 import com.jdl.basic.api.domain.workMapFunc.JyWorkMapFuncQuery;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -30,4 +31,11 @@ public interface JyWorkMapFuncConfigDao {
     List<JyWorkMapFuncConfigEntity> queryByCondition(JyWorkMapFuncConfigEntity entity);
 
     List<JyWorkMapFuncConfigEntity> queryFuncCodeMap();
+
+    /**
+     * 根据funcCodeList查询
+     * @param functionList
+     * @return
+     */
+    List<String> queryByFuncCodeList(@Param("functionList") List<String> functionList);
 }

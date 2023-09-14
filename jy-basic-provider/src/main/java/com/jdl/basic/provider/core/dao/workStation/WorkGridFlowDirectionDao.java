@@ -4,6 +4,7 @@ import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -135,4 +136,13 @@ public interface WorkGridFlowDirectionDao {
 	 * @return
 	 */
 	int deleteByRefGridKey(WorkGridFlowDirection deleteData);
+
+	/**
+	 * 查询流向-根据传入的流向
+	 *
+	 * @param query
+	 * @return
+	 */
+	List<String> queryRefWorkGridKeyByFlowDirection(WorkGridFlowDirectionQuery query);
+
 }

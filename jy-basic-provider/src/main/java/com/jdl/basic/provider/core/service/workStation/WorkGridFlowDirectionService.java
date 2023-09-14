@@ -93,4 +93,13 @@ public interface WorkGridFlowDirectionService {
 	 * @return
 	 */
 	int deleteByRefGridKey(WorkGridFlowDirection deleteData);
+
+
+	/**
+	 * 查询流向-根据传入的流向
+	 *
+	 * @param query
+	 * @return
+	 */
+	List<String> queryRefWorkGridKeyByFlowDirection(WorkGridFlowDirectionQuery query);
 }

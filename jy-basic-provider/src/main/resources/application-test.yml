@@ -144,7 +144,7 @@ es:
     basicSite:
       queryIndexAlias: jy_basic_site
       type: jy_basic_site
-      
+
 ## ducc 配置(不同应用请设置不同的application)
 laf:
   config:
@@ -156,3 +156,14 @@ laf:
       parameters[0]:
         name: autoListener
         value: true
+
+#flowDirectionFunction 配置
+fdf:
+  functionMap:
+    1:
+      - "UNSEAL_CAR_POSITION"
+      - "UNLOAD_CAR_POSITION"
+    2:
+      - "SEND_CAR_POSITION"
+
+

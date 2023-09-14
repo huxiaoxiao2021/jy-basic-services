@@ -1,15 +1,22 @@
 package com.jdl.basic.provider.core.manager;
 
 import com.jd.etms.framework.utils.cache.annotation.Cache;
+import com.jd.ldop.basic.api.BasicTraderAPI;
+import com.jd.ldop.basic.dto.BasicTraderInfoDTO;
+import com.jd.ldop.basic.dto.ResponseDTO;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jd.ql.basic.dto.BaseStoreInfoDto;
 import com.jd.ql.basic.dto.PageDto;
 import com.jd.ql.basic.ws.BasicPrimaryWS;
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import com.jd.ump.profiler.CallerInfo;
 import com.jd.ump.profiler.proxy.Profiler;
+import com.jdl.basic.common.contants.BaseContants;
 import com.jdl.basic.common.contants.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +33,10 @@ public class BaseMajorManagerImpl implements BaseMajorManager {
 
     @Autowired
     private BasicPrimaryWS basicPrimaryWS;
+
+    @Autowired
+    @Qualifier("basicTraderAPI")
+    private BasicTraderAPI basicTraderAPI;
 
     @Cache(key = "baseMajorManagerImpl.getBaseSiteBySiteId@args0", memoryEnable = true, memoryExpiredTime = 5 * 60 * 1000,
             redisEnable = true, redisExpiredTime = 10 * 60 * 1000)
@@ -83,5 +94,48 @@ public class BaseMajorManagerImpl implements BaseMajorManager {
             log.error("invoke getBaseStaffByErp error:{}",erp,e);
         }
         return null;
+    }
+
+    /**
+     * 7位编码
+     */
+    @Override
+    @Cache(key = "baseMajorManagerImpl.getBaseSiteByDmsCode@args0", memoryEnable = true, memoryExpiredTime = 5 * 60 * 1000,
+            redisEnable = true, redisExpiredTime = 10 * 60 * 1000)
+    @JProfiler(jKey = "DMS.BASE.BaseMajorManagerImpl.getBaseSiteByDmsCode", mState = {JProEnum.TP, JProEnum.FunctionError})
+    public BaseStaffSiteOrgDto getBaseSiteByDmsCode(String siteCode) {
+        BaseStaffSiteOrgDto dtoStaff = basicPrimaryWS.getBaseSiteByDmsCode(siteCode);
+        BasicTraderInfoDTO dtoTrade = null;
+        ResponseDTO<BasicTraderInfoDTO> responseDTO = null;
+        if (dtoStaff != null)
+            return dtoStaff;
+        else
+            dtoStaff = basicPrimaryWS.getBaseStoreByDmsCode(siteCode);
+
+        if (dtoStaff != null)
+            return dtoStaff;
+        else
+            responseDTO = basicTraderAPI.getBaseTraderByCode(siteCode);
+
+        if (responseDTO != null && responseDTO.getResult() != null)
+            dtoStaff = getBaseStaffSiteOrgDtoFromTrader(responseDTO.getResult());
+        return dtoStaff;
+    }
+
+    public BaseStaffSiteOrgDto getBaseStaffSiteOrgDtoFromTrader(
+            BasicTraderInfoDTO trader) {
+        BaseStaffSiteOrgDto baseStaffSiteOrgDto = new BaseStaffSiteOrgDto();
+        baseStaffSiteOrgDto.setDmsSiteCode(trader.getTraderCode());
+        baseStaffSiteOrgDto.setSiteCode(trader.getId());
+        baseStaffSiteOrgDto.setSiteName(trader.getTraderName());
+        baseStaffSiteOrgDto.setSiteType(BaseContants.BASIC_B_TRADER_SITE_TYPE);
+        baseStaffSiteOrgDto.setOrgId(BaseContants.BASIC_B_TRADER_ORG);
+        baseStaffSiteOrgDto.setOrgName(BaseContants.BASIC_B_TRADER_ORG_NAME);
+        baseStaffSiteOrgDto.setTraderTypeEbs(trader.getTraderTypeEbs());
+        baseStaffSiteOrgDto.setAccountingOrg(trader.getAccountingOrg());
+        baseStaffSiteOrgDto.setAirTransport(trader.getAirTransport());
+        baseStaffSiteOrgDto.setSitePhone(trader.getTelephone());
+        baseStaffSiteOrgDto.setPhone(trader.getContactMobile());
+        return baseStaffSiteOrgDto;
     }
 }

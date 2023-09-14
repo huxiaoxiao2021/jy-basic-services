@@ -213,6 +213,20 @@ public interface WorkStationGridDao {
 	int queryCountByRefGridKey(String refGridKey);
 
 	/**
+	 * 获取月台号
+	 *
+	 * @param workGridFlowDirectionQuery
+	 */
+	List<String> queryDockCodeByFlowDirection(WorkGridFlowDirectionQuery workGridFlowDirectionQuery);
+
+	/**
+	 * 获取网格信息
+	 *
+	 * @param workGridFlowDirectionQuery
+	 */
+	List<WorkStationGrid> queryPhoneByDockCodeForTms(WorkGridFlowDirectionQuery workGridFlowDirectionQuery);
+
+	/**
 	 * 根据场地ID获取网格信息
 	 * @param siteCodes
 	 * @return

@@ -863,5 +863,23 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		return workStationGridDao.queryCountByRefGridKey(refGridKey);
 	}
 
+	/**
+	 * 获取月台号
+	 *
+	 * @param workGridFlowDirectionQuery
+	 */
+	@Override
+	public List<String> queryDockCodeByFlowDirection(WorkGridFlowDirectionQuery workGridFlowDirectionQuery) {
+		return workStationGridDao.queryDockCodeByFlowDirection(workGridFlowDirectionQuery);
+	}
 
+	/**
+	 * 获取网格信息
+	 *
+	 * @param workGridFlowDirectionQuery
+	 */
+	@Override
+	public List<WorkStationGrid> queryPhoneByDockCodeForTms(WorkGridFlowDirectionQuery workGridFlowDirectionQuery) {
+		return workStationGridDao.queryPhoneByDockCodeForTms(workGridFlowDirectionQuery);
+	}
 }
