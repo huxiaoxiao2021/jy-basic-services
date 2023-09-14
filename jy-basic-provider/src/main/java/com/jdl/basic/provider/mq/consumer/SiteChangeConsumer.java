@@ -32,53 +32,50 @@ public class SiteChangeConsumer {
 
     private final String UPDATE_USER_NAME = "场地信息变更";
 
-    @Autowired
-    private SiteService siteService;
 
     @Autowired
     private WorkGridService workGridService;
 
-    @Autowired
-    private BaseMajorManager baseMajorManager;
 
     @JmqListener(id= "jmq2-consumer", topics = {"${mq.consumer.topic.site_change}"})
     public void onMessage(List<Message> messages) {
         for (Message message : messages) {
 
             String content = message.getText();
-            log.info("consumer site_change topic: " + message.getTopic() + " , body: " + content);
+            log.error("consumer site_change topic: " + message.getTopic() + " , body: " + content);
             if (StringUtils.isEmpty(content)) {
                 return;
             }
-            BasicSiteChangeMQ basicSiteChangeMQ = null;
+            BasicSiteChangeMQ mq = null;
             try {
-                basicSiteChangeMQ = JsonHelper.toObject(content, BasicSiteChangeMQ.class);
+                mq = JsonHelper.toObject(content, BasicSiteChangeMQ.class);
             } catch (Exception e) {
                 log.error("场地变更消息解析异常！{}{}", content, e);
                 return;
             }
-//            siteService.updateBasicSite(basicSiteChangeMQ);
-            if (basicSiteChangeMQ.getSiteCode() == null) {
-                log.warn("场地变更消息缺少必要字段 {}", content);
+//            siteService.updateBasicSite(mq);
+            if (mq.getSiteCode() == null || StringUtils.isEmpty(mq.getSiteName()) || StringUtils.isEmpty(mq.getProvinceAgencyCode()) || StringUtils.isEmpty(mq.getProvinceAgencyName())) {
+                log.error("场地变更消息缺少必要字段 {}", content);
                 return;
             }
-            BaseStaffSiteOrgDto siteOrgDto = baseMajorManager.getBaseSiteBySiteId(basicSiteChangeMQ.getSiteCode());
-            if (siteOrgDto == null) {
-                log.warn("根据场地编码找不到场地 siteCode={}", basicSiteChangeMQ.getSiteCode());
-                return;
-            }
-            WorkGrid workGrid = new WorkGrid();
-            workGrid.setProvinceAgencyCode(siteOrgDto.getProvinceAgencyCode());
-            workGrid.setProvinceAgencyName(siteOrgDto.getProvinceAgencyName());
-            workGrid.setSiteCode(siteOrgDto.getSiteCode());
-            workGrid.setSiteName(siteOrgDto.getSiteName());
-            workGrid.setUpdateUser(UPDATE_USER_ERP);
-            workGrid.setUpdateUserName(UPDATE_USER_NAME);
-            workGrid.setUpdateTime(new Date());
-            Result<Boolean> updateResult = workGridService.updateBySiteCode(workGrid);
-            if (updateResult.isFail()) {
-                log.warn("消费场地信息变更失败 {}", content);
-            }
+            // 更新网格信息
+            updateWorkGridBySiteCode(mq);
+        }
+    }
+
+    private void updateWorkGridBySiteCode(BasicSiteChangeMQ mq) {
+
+        WorkGrid workGrid = new WorkGrid();
+        workGrid.setProvinceAgencyCode(mq.getProvinceAgencyCode());
+        workGrid.setProvinceAgencyName(mq.getProvinceAgencyName());
+        workGrid.setSiteCode(mq.getSiteCode());
+        workGrid.setSiteName(mq.getSiteName());
+        workGrid.setUpdateUser(UPDATE_USER_ERP);
+        workGrid.setUpdateUserName(UPDATE_USER_NAME);
+        workGrid.setUpdateTime(new Date());
+        Result<Boolean> updateResult = workGridService.updateBySiteCode(workGrid);
+        if (updateResult.isFail()) {
+            log.error("消费场地信息变更失败 {}", JsonHelper.toJSONString(mq));
         }
     }
     

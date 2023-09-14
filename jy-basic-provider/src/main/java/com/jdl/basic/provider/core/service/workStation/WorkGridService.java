@@ -154,4 +154,6 @@ public interface WorkGridService {
 	Result<Boolean> deleteByWorkGridKey(WorkGrid deleteData);
 
 	Result<Boolean> updateBySiteCode(WorkGrid workGrid);
+
+	List<Integer> selectDistinctSiteCode();
 }

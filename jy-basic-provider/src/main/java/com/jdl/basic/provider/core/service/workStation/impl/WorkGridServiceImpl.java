@@ -779,4 +779,8 @@ public class WorkGridServiceImpl implements WorkGridService {
 		return result;
 	}
 
+	@Override
+	public List<Integer> selectDistinctSiteCode() {
+		return workGridDao.selectDistinctSiteCode();
+	}
 }

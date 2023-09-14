@@ -36,8 +36,8 @@ spring:
       ####--app consumer 定义--##########################################################
     consumers:
       jmq2-consumer:
-        password: 25F7EDCD
-        app: JYFLAT
+        password: FBBB11B7
+        app: JYBasic
         address: jmq-testcluster.jd.local:50088
         enabled: true
       jmq4-consumer:

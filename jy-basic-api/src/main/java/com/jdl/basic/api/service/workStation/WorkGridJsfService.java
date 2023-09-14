@@ -142,4 +142,8 @@ public interface WorkGridJsfService {
 	 * @return
 	 */
 	List<WorkGrid> queryListForManagerSiteScan(WorkGridQuery workGridQuery);
+
+	Result<Void> brushOne(Integer siteCode);
+
+	Result<Void> brushAll();
 }

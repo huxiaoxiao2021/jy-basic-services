@@ -110,4 +110,5 @@ public interface WorkGridDao {
 	 */
 	Boolean updateBySiteCode(WorkGrid workGrid);
 
+	List<Integer> selectDistinctSiteCode();
 }

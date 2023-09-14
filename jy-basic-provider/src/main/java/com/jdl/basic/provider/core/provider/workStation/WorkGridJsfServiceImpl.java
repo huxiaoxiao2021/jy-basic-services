@@ -1,10 +1,16 @@
 package com.jdl.basic.provider.core.provider.workStation;
 
 
-import com.jdl.basic.common.utils.ObjectHelper;
+import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
+import com.jdl.basic.common.utils.*;
 import com.jdl.basic.provider.JYBasicRpcException;
-import java.util.List;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,9 +24,6 @@ import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridVo;
 import com.jdl.basic.api.service.workStation.WorkGridJsfService;
 import com.jdl.basic.common.contants.CacheKeyConstants;
-import com.jdl.basic.common.utils.DateHelper;
-import com.jdl.basic.common.utils.PageDto;
-import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.config.lock.LockService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.hander.ResultHandler;
@@ -45,6 +48,9 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	@Autowired
 	@Qualifier("jimdbRemoteLockService")
 	private LockService lockService;
+
+	@Autowired
+	private BaseMajorManager baseMajorManager;
 
 	/**
 	 * 插入一条数据
@@ -224,5 +230,50 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	@Override
 	public List<WorkGrid> queryListForManagerSiteScan(WorkGridQuery workGridQuery) {
 		return workGridService.queryListForManagerSiteScan(workGridQuery);
+	}
+
+	@Override
+	public Result<Void> brushOne(Integer siteCode) {
+		WorkGridQuery query = new WorkGridQuery();
+		query.setSiteCode(siteCode);
+		List<WorkGrid> grids = workGridService.queryAllGridBySiteCode(query);
+
+		Set<String> siteNameSet = new HashSet<>();
+		Set<String> provinceSet = new HashSet<>();
+
+		for (WorkGrid grid : grids) {
+			siteNameSet.add(grid.getSiteName());
+			provinceSet.add(grid.getProvinceAgencyCode());
+		}
+
+		if (siteNameSet.size() > 1 || provinceSet.size() > 1) {
+			BaseStaffSiteOrgDto dto = baseMajorManager.getBaseSiteBySiteId(siteCode);
+			WorkGrid workGrid = new WorkGrid();
+			workGrid.setProvinceAgencyCode(dto.getProvinceAgencyCode());
+			workGrid.setProvinceAgencyName(dto.getProvinceAgencyName());
+			workGrid.setSiteCode(dto.getSiteCode());
+			workGrid.setSiteName(dto.getSiteName());
+			workGrid.setUpdateUser("sys");
+			workGrid.setUpdateUserName("场地信息变更刷数");
+			workGrid.setUpdateTime(new Date());
+			Result<Boolean> result = workGridService.updateBySiteCode(workGrid);
+			if (!result.getData()) {
+				log.warn("JSF 网格刷数 更新失败, {}", JsonHelper.toJSONString(workGrid));
+			}
+		}
+		return Result.success();
+	}
+
+	@Override
+	public Result<Void> brushAll() {
+		List<Integer> siteCodes = workGridService.selectDistinctSiteCode();
+		log.info("场地总数 {}", siteCodes.size());
+		for (int i = 0; i < siteCodes.size(); i++) {
+			Integer siteCode = siteCodes.get(i);
+			log.info("当前是第{}个场地, 编码{}", i + 1, siteCode);
+			brushOne(siteCode);
+		}
+		log.info("网格场地刷数完毕！");
+		return Result.success();
 	}
 }
