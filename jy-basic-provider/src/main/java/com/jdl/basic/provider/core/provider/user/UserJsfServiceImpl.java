@@ -7,6 +7,7 @@ import com.jdl.basic.api.service.user.UserJsfService;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
+import com.jdl.basic.provider.JYBasicRpcException;
 import com.jdl.basic.provider.core.service.user.UserService;
 import java.util.Date;
 
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.quartz.JobStoreType;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -71,6 +73,7 @@ public class UserJsfServiceImpl implements UserJsfService {
 
     @Override
     public Result<List<JyUser>> queryDistributedUserList(JyUserQueryDto jyUserQueryDto) {
+        checkDistributedUserQueryDto(jyUserQueryDto);
         //查询场地人员列表
         Result<List<JyUser>> rs =userService.searchUserBySiteCode(jyUserQueryDto.getSiteCode());
         if (ObjectHelper.isNotNull(rs) && rs.isSuccess() && CollectionUtils.isNotEmpty(rs.getData())){
@@ -85,11 +88,27 @@ public class UserJsfServiceImpl implements UserJsfService {
             userWorkGridBatchRequest.setUserWorkGrids(userWorkGrids);
             Result<List<UserWorkGrid>> result =userWorkGridService.queryByUserIds(userWorkGridBatchRequest);
             if (ObjectHelper.isNotNull(result) && result.isSuccess() && CollectionUtils.isNotEmpty(result.getData())){
-                jyUsers =jyUsers.stream().map(jyUser -> assetWorkGridKey(jyUser,result.getData())).filter(jyUser -> ObjectHelper.isNotNull(jyUser.getWorkGridKey())).collect(Collectors.toList());
+                jyUsers =jyUsers.stream().map(jyUser -> assetWorkGridKey(jyUser,result.getData())).filter(jyUser -> filterGridAndJobType(jyUser,jyUserQueryDto)).collect(Collectors.toList());
             }
             return rs;
         }
         return Result.success();
+    }
+
+    private void checkDistributedUserQueryDto(JyUserQueryDto jyUserQueryDto) {
+        if (!ObjectHelper.isNotNull(jyUserQueryDto.getSiteCode())){
+            throw new JYBasicRpcException("参数错误：缺失场地编码！");
+        }
+        if (!ObjectHelper.isNotNull(jyUserQueryDto.getJobType())){
+            throw new JYBasicRpcException("参数错误：确实用工种类编码！");
+        }
+    }
+
+    private  Boolean filterGridAndJobType(JyUser jyUser,JyUserQueryDto jyUserQueryDto) {
+        if (ObjectHelper.isNotNull(jyUser.getWorkGridKey()) && jyUserQueryDto.getJobType().equals(UserJobTypeEnum.getJyJobEnumByNature(jyUser.getNature()))){
+            return true;
+        }
+        return false;
     }
 
     private JyUser assetWorkGridKey(JyUser jyUser, List<UserWorkGrid> userWorkGrids) {
