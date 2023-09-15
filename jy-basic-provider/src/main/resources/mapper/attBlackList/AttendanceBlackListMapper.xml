@@ -160,9 +160,7 @@
             <if test="takeTime != null" >
                 `take_time` = #{takeTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="loseTime != null" >
-                `lose_time` = #{loseTime,jdbcType=TIMESTAMP},
-            </if>
+            `lose_time` = #{loseTime,jdbcType=TIMESTAMP},
             <if test="operatorErp != null" >
                 `operator_erp` = #{operatorErp,jdbcType=VARCHAR},
             </if>
