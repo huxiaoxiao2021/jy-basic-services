@@ -36,7 +36,7 @@ spring:
       ####--app consumer 定义--##########################################################
     consumers:
       jmq2-consumer:
-        password: 25F7EDCD
+        password: FBBB11B7
         app: JYBasic
         address: jmq-testcluster.jd.local:50088
         enabled: true
@@ -55,14 +55,17 @@ mq:
     collectBoxFlowNotice: collect_box_flow_notice
     workGridManagerTaskConfigMq: workGridManagerTaskConfigMq
     workGridModifyMq: workGridModifyMq
-    
+
   consumer:
+    type:
+      jyUser: jmq2-consumer
     topic:
       sort_cross_detail: basic_sort_cross_detail
       wlUserInfo: wlUserInfo
       site_change: basic_base_site_change
       wmsSite_Change: basic_ps_storeinfo
       workGridModifyMq: workGridModifyMq
+      basic_base_staff_change: basic_base_staff_change
 
   jmq4producer:
     password: 809375866c4842f28d7e4eec04da1e41
@@ -74,6 +77,9 @@ mq:
     uat:
       switch: false
 
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 
 
@@ -81,7 +87,7 @@ mq:
 
 ## 云redis配置
 jimdb:
-  url: "redis://:Kktest123456@redis-wjcq8oxg0xjx-proxy-nlb.jvessel-open-hb.jdcloud.com/0"
+  url: "redis://:Kktest123456@redis-wjcq8oxg0xjx-proxy-nlb.jvessel-open-hb.jdcloud.com:6379/0"
   cfg:
     timeout: 2000
     newTimeout: 1000
@@ -108,8 +114,13 @@ jdq:
   #基础服务JSF别名
 jsf:
   jy_basic:
-    alias: jy-basic-server-dev
+    alias: jy-basic-server-test-wxf
     token: jy-basic-server-token
+  sortWorkbenchBusiness:
+    alias: sortWorkbenchBusiness-test
+    token: sortWorkbenchBusiness-token
+  boxFlowRouterVerifyTask:
+    alias: boxFlowRouterVerifyTask
 
 basic:
   jsf:
