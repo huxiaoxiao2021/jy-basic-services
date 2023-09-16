@@ -105,7 +105,7 @@ public class UserJsfServiceImpl implements UserJsfService {
     }
 
     private  Boolean filterGridAndJobType(JyUser jyUser,JyUserQueryDto jyUserQueryDto) {
-        if (ObjectHelper.isNotNull(jyUser.getWorkGridKey()) && jyUserQueryDto.getJobType().equals(UserJobTypeEnum.getJyJobEnumByNature(jyUser.getNature()))){
+        if (ObjectHelper.isNotNull(jyUser.getWorkGridKey()) && jyUserQueryDto.getJobType().equals(UserJobTypeEnum.getJyJobEnumByNature(jyUser.getNature()).getJyJobTypeCode())){
             return true;
         }
         return false;
