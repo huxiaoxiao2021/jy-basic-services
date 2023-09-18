@@ -11,6 +11,7 @@ import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConfChangeLog;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowInfo;
 import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowNoticDto;
 import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.common.enums.CollectBoxFlowNoticTypeEnum;
 import com.jdl.basic.common.utils.*;
 import com.jdl.basic.provider.config.jdq.JDQ4Producer;
 import com.jdl.basic.provider.core.dao.boxFlow.CollectBoxFlowDirectionConfDao;
@@ -179,7 +180,9 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
             collectBoxFlowDirectionConf.setIfChangeSinceLastUpdate(conf.getIfChangeSinceLastUpdate());
         }
         collectBoxFlowDirectionConf.setVersion(conf.getVersion());
-
+        if(conf.getRouteErrorType() != null){
+            collectBoxFlowDirectionConf.setRouteErrorType(conf.getRouteErrorType());
+        }
         int i = collectBoxFlowDirectionConfMapper.updateByPrimaryKeySelective(collectBoxFlowDirectionConf);
         if (i != 1) {
             return result.toFail("更新失败");
@@ -398,7 +401,7 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
     private CollectBoxFlowNoticDto initCollectBoxFlowNoticDto(String version){
         CollectBoxFlowNoticDto dto = new CollectBoxFlowNoticDto();
         dto.setVersion(version);
-        dto.setOperateType(ROLLBACK.getCode());
+        dto.setOperateType(CollectBoxFlowNoticTypeEnum.ROLLBACK.getCode());
         return dto;
     }
     @Override

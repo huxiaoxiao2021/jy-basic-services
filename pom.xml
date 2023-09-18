@@ -39,6 +39,7 @@
         <laf.config.version>1.1.0</laf.config.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dms-component-sdk.version>1.0.2-SNAPSHOT</dms-component-sdk.version>
+        <jdmeta-project-outer-api-sort.version>1.0-SNAPSHOT</jdmeta-project-outer-api-sort.version>
     </properties>
 
     <!--配置环境的profile-->
@@ -285,6 +286,12 @@
                 <artifactId>laf-config-client-jd-springboot-starter</artifactId>
                 <version>${laf.config.version}</version>
                 <type>pom</type>
+            </dependency>
+            <!--大数据集包规则路由校验-->
+            <dependency>
+                <groupId>com.jd.jdl.aidata.isc</groupId>
+                <artifactId>jdmeta-project-outer-api-sort</artifactId>
+                <version>${jdmeta-project-outer-api-sort.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

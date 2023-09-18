@@ -49,4 +49,7 @@ public interface CollectBoxFlowDirectionConfDao {
      * @return
      */
     Integer brushUpdateById(List<CollectBoxFlowDirectionConf> list);
+    List<CollectBoxFlowDirectionConf> selectPageById(@Param("id") Long id, @Param("collectClaim")Integer collectClaim,
+                                                     @Param("version") String version);
+
 }

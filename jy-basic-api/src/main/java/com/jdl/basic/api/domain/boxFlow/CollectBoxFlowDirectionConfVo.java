@@ -123,4 +123,9 @@ public class CollectBoxFlowDirectionConfVo {
     
     private String version;
 
+    /**
+     * 路由错误, 1 无匹配路由 2 未经过拆包地 3 od多路由
+     */
+    private Integer routeErrorType;
+
 }

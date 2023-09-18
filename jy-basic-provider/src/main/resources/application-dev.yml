@@ -119,6 +119,11 @@ jsf:
   jy_basic:
     alias: jy-basic-server-dev
     token: jy-basic-server-token
+  sortWorkbenchBusiness:
+    alias: sortWorkbenchBusiness-dev
+    token: sortWorkbenchBusiness-token
+  boxFlowRouterVerifyTask:
+    alias: boxFlowRouterVerifyTask
 
 basic:
   jsf:
