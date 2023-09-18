@@ -89,6 +89,7 @@ public class UserJsfServiceImpl implements UserJsfService {
             Result<List<UserWorkGrid>> result =userWorkGridService.queryByUserIds(userWorkGridBatchRequest);
             if (ObjectHelper.isNotNull(result) && result.isSuccess() && CollectionUtils.isNotEmpty(result.getData())){
                 jyUsers =jyUsers.stream().map(jyUser -> assetWorkGridKey(jyUser,result.getData())).filter(jyUser -> filterGridAndJobType(jyUser,jyUserQueryDto)).collect(Collectors.toList());
+                rs.setData(jyUsers);
             }
             return rs;
         }
