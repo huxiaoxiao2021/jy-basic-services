@@ -390,7 +390,7 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
             dto.setOperateType(ROUTER_WARNING.getCode());
             dto.setMessage(msgb.toString());
             try {
-//                collectBoxFlowNoticeMQ.send(startSiteId.toString(), JsonHelper.toJSONString(dto));
+                collectBoxFlowNoticeMQ.send(startSiteId.toString(), JsonHelper.toJSONString(dto));
                 log.info("箱号规则路由校验，MQ发送通知businessId:{}, message.body:{}", startSiteId.toString(), JsonHelper.toJSONString(dto));
             } catch (Exception ex) {
                 log.error("箱号规则路由校验，MQ发送通知失败:{}",startSiteId, ex);
