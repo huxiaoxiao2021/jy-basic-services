@@ -17,7 +17,7 @@ public class AkboxConfig implements Serializable {
     private String areaHubCode;
     private String areaHubName;
 
-    private Integer siteCode;
+    private Long siteCode;
     private String siteName;
 
     private Integer smallStock;

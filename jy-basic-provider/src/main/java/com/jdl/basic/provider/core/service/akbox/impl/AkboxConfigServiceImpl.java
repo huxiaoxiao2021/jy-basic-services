@@ -29,7 +29,7 @@ public class AkboxConfigServiceImpl implements IAkboxConfService {
     @Override
     public int batchSave(List<AkboxConfig> akboxConfigList) {
         akboxConfigList.stream().forEach(akboxConfig -> {
-            if (akboxConfigDao.selectBySiteCode(akboxConfig.getSiteCode().longValue()) != null) {
+            if (akboxConfigDao.selectBySiteCode(akboxConfig.getSiteCode()) != null) {
                 akboxConfigDao.updateBySiteCode(akboxConfig);
             } else {
                 akboxConfigDao.insert(akboxConfig);

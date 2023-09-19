@@ -32,7 +32,7 @@ public class AkboxConfigJsfServiceImpl implements AkboxConfigJsfService {
                 Constants.UMP_APP_NAME, false, true);
         Result result = new Result<>();
         try{
-            if (akboxConfigService.selectBySiteCode(akboxConfig.getSiteCode().longValue())!=null) {
+            if (akboxConfigService.selectBySiteCode(akboxConfig.getSiteCode())!=null) {
                 result.setCode(500);
                 result.setMessage("当前场站已存在，请选中当前场站编辑");
             } else {
@@ -56,7 +56,7 @@ public class AkboxConfigJsfServiceImpl implements AkboxConfigJsfService {
                 Constants.UMP_APP_NAME, false, true);
         try{
             akboxConfigList.forEach(akboxConfig -> {
-                AkboxConfig akbox = akboxConfigService.selectBySiteCode(akboxConfig.getSiteCode().longValue());
+                AkboxConfig akbox = akboxConfigService.selectBySiteCode(akboxConfig.getSiteCode());
                 if (akbox != null) {
                     akbox.setSmallStock(akboxConfig.getSmallStock());
                     akbox.setLargeStock(akboxConfig.getLargeStock());
