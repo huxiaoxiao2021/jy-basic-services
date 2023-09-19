@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.dao.workStation;
 
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
+import com.jdl.basic.api.domain.workStation.WorkGridBatchUpdateRequest;
 import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 
 import java.util.List;
@@ -111,4 +112,6 @@ public interface WorkGridDao {
 	Boolean updateBySiteCode(WorkGrid workGrid);
 
 	List<Integer> selectDistinctSiteCode();
+
+	int batchUpdateByIds(WorkGridBatchUpdateRequest request);
 }

@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
+import com.jdl.basic.api.domain.workStation.*;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
@@ -23,19 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jd.jsf.gd.util.StringUtils;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.machine.Machine;
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkArea;
-import com.jdl.basic.api.domain.workStation.WorkGrid;
-import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
-import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
-import com.jdl.basic.api.domain.workStation.WorkGridImport;
-import com.jdl.basic.api.domain.workStation.WorkGridModifyMqData;
-import com.jdl.basic.api.domain.workStation.WorkGridQuery;
-import com.jdl.basic.api.domain.workStation.WorkGridVo;
 import com.jdl.basic.api.domain.workStation.WorkGridVo.FlowInfoItem;
 import com.jdl.basic.api.domain.workStation.WorkGridVo.WorkDataInfo;
-import com.jdl.basic.api.domain.workStation.WorkStationGrid;
-import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
 import com.jdl.basic.api.enums.ConfigFlowStatusEnum;
 import com.jdl.basic.api.enums.EditTypeEnum;
 import com.jdl.basic.api.enums.GridFlowLineTypeEnum;
@@ -769,6 +762,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 
 
 	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridServiceImpl.updateBySiteCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> updateBySiteCode(WorkGrid workGrid) {
 		Result<Boolean> result = Result.success();
 		if (workGrid.getSiteCode() == null) {
@@ -782,5 +776,11 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Override
 	public List<Integer> selectDistinctSiteCode() {
 		return workGridDao.selectDistinctSiteCode();
+	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridServiceImpl.batchUpdateByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public int batchUpdateByIds(WorkGridBatchUpdateRequest request) {
+		return workGridDao.batchUpdateByIds(request);
 	}
 }

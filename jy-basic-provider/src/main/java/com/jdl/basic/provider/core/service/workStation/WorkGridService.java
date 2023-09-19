@@ -1,15 +1,10 @@
 package com.jdl.basic.provider.core.service.workStation;
 
+import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 
 import java.util.List;
-
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkGrid;
-import com.jdl.basic.api.domain.workStation.WorkGridImport;
-import com.jdl.basic.api.domain.workStation.WorkGridQuery;
-import com.jdl.basic.api.domain.workStation.WorkGridVo;
 
 /**
  * 场地网格表--Service接口
@@ -156,4 +151,6 @@ public interface WorkGridService {
 	Result<Boolean> updateBySiteCode(WorkGrid workGrid);
 
 	List<Integer> selectDistinctSiteCode();
+
+	int batchUpdateByIds(WorkGridBatchUpdateRequest request);
 }
