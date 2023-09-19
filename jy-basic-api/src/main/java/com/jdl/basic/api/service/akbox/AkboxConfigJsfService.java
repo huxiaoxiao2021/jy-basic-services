@@ -37,5 +37,5 @@ public interface AkboxConfigJsfService {
      */
     Result<Pager<AkboxConfig>> queryPageByCondition(AkboxConfigQuery query);
 
-    Result<AkboxConfig> queryBySiteCode(Long siteCode);
+    Result<AkboxConfig> queryBySiteCode(Integer siteCode);
 }

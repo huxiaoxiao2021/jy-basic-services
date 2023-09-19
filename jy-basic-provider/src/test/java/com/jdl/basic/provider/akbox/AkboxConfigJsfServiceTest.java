@@ -31,7 +31,7 @@ public class AkboxConfigJsfServiceTest {
         akboxConfig.setProvinceAgencyName("pn1001");
         akboxConfig.setAreaHubCode("a100101");
         akboxConfig.setAreaHubName("an100101");
-        akboxConfig.setSiteCode(10010101L);
+        akboxConfig.setSiteCode(10010101);
         akboxConfig.setSiteName("sn10010101");
         akboxConfig.setSmallStock(1);
         akboxConfig.setLargeStock(2);

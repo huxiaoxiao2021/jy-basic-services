@@ -28,7 +28,7 @@ public interface AkboxConfigDao {
      */
     AkboxConfig selectById(Long id);
 
-    AkboxConfig selectBySiteCode(Long siteCode);
+    AkboxConfig selectBySiteCode(Integer siteCode);
 
     /**
      *根据主键更新集箱包裹配置信息

@@ -49,7 +49,7 @@ public class AkboxConfigServiceImpl implements IAkboxConfService {
     }
 
     @Override
-    public AkboxConfig selectBySiteCode(Long siteCode) {
+    public AkboxConfig selectBySiteCode(Integer siteCode) {
         return akboxConfigDao.selectBySiteCode(siteCode);
     }
 

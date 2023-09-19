@@ -11,7 +11,7 @@ public class AkboxConfigQuery {
 
     private String areaHubCode;
 
-    private Long siteCode;
+    private Integer siteCode;
 
     private Integer pageSize;
 

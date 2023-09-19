@@ -35,7 +35,7 @@ public interface IAkboxConfService {
      */
     Pager<AkboxConfig> queryPageByCondition(Pager<AkboxConfigQuery> query);
 
-    AkboxConfig selectBySiteCode(Long siteCode);
+    AkboxConfig selectBySiteCode(Integer siteCode);
 
 
 }

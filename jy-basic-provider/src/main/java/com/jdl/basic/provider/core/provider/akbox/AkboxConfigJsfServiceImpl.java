@@ -132,7 +132,7 @@ public class AkboxConfigJsfServiceImpl implements AkboxConfigJsfService {
     }
 
     @Override
-    public Result<AkboxConfig> queryBySiteCode(Long siteCode) {
+    public Result<AkboxConfig> queryBySiteCode(Integer siteCode) {
         Result result = new Result<>();
         CallerInfo info = Profiler.registerInfo("com.jdl.basic.provider.core.provider.akbox.AkboxConfigJsfServiceImpl.update",
                 Constants.UMP_APP_NAME, false, true);
