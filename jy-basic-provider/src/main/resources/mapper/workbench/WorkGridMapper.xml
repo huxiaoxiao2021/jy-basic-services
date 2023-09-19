@@ -674,7 +674,7 @@
 		select distinct(site_code) from work_grid where yn = 1;
 	</select>
 
-	<select id="batchUpdateByIds">
+	<update id="batchUpdateByIds">
 		update work_grid
 		<set>
 			<if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
@@ -701,5 +701,5 @@
 		<foreach collection="ids" item="item" separator="," close=")" open="(">
 			#{item}
 		</foreach>
-	</select>
+	</update>
 </mapper>

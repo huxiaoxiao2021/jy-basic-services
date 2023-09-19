@@ -82,6 +82,7 @@ public class SiteChangeConsumer {
             }
             if (CollectionUtils.isNotEmpty(ids)) {
                 WorkGridBatchUpdateRequest updateRequest = new WorkGridBatchUpdateRequest();
+                updateRequest.setIds(ids);
                 updateRequest.setProvinceAgencyCode(mq.getProvinceAgencyCode());
                 updateRequest.setProvinceAgencyName(mq.getProvinceAgencyName());
                 updateRequest.setSiteCode(mq.getSiteCode());
