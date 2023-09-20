@@ -4,6 +4,8 @@ import com.jd.jmq.common.message.Message;
 import com.jd.joyqueue.client.springboot2.annotation.JmqListener;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
+import com.jd.ump.profiler.CallerInfo;
+import com.jd.ump.profiler.proxy.Profiler;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
 import com.jdl.basic.api.domain.workStation.WorkGridBatchUpdateRequest;
 import com.jdl.basic.common.contants.Constants;
@@ -67,36 +69,46 @@ public class SiteChangeConsumer {
     }
 
     private void updateWorkGridBySiteCode(BasicSiteChangeMQ mq) {
-        WorkGrid query = new WorkGrid();
-        query.setSiteCode(mq.getSiteCode());
-        List<WorkGrid> workGrids = workGridService.queryWorkGrid(query);
+        CallerInfo info = Profiler.registerInfo(Constants.UMP_APP_NAME + "SiteChangeConsumer.updateWorkGridBySiteCode",
+                Constants.UMP_APP_NAME, false, true);
+        try {
+            WorkGrid query = new WorkGrid();
+            query.setSiteCode(mq.getSiteCode());
+            List<WorkGrid> workGrids = workGridService.queryWorkGrid(query);
 
-        if (CollectionUtils.isNotEmpty(workGrids)) {
-            List<Long> ids = new ArrayList<>();
-            for (WorkGrid workGrid : workGrids) {
-                if (!Objects.equals(workGrid.getProvinceAgencyCode(), mq.getProvinceAgencyCode())
-                        || !Objects.equals(workGrid.getProvinceAgencyName(), mq.getProvinceAgencyName())
-                        || !Objects.equals(workGrid.getSiteName(), mq.getSiteName())) {
-                    ids.add(workGrid.getId());
+            if (CollectionUtils.isNotEmpty(workGrids)) {
+                List<Long> ids = new ArrayList<>();
+                for (WorkGrid workGrid : workGrids) {
+                    if (!Objects.equals(workGrid.getProvinceAgencyCode(), mq.getProvinceAgencyCode())
+                            || !Objects.equals(workGrid.getProvinceAgencyName(), mq.getProvinceAgencyName())
+                            || !Objects.equals(workGrid.getSiteName(), mq.getSiteName())) {
+                        ids.add(workGrid.getId());
+                    }
+                }
+                if (CollectionUtils.isNotEmpty(ids)) {
+                    WorkGridBatchUpdateRequest updateRequest = new WorkGridBatchUpdateRequest();
+                    updateRequest.setIds(ids);
+                    updateRequest.setProvinceAgencyCode(mq.getProvinceAgencyCode());
+                    updateRequest.setProvinceAgencyName(mq.getProvinceAgencyName());
+                    updateRequest.setSiteCode(mq.getSiteCode());
+                    updateRequest.setSiteName(mq.getSiteName());
+                    updateRequest.setUpdateUser(UPDATE_USER_ERP);
+                    updateRequest.setUpdateUserName(UPDATE_USER_NAME);
+                    updateRequest.setUpdateTime(new Date());
+
+                    int result = workGridService.batchUpdateByIds(updateRequest);
+                    if (result <= 0) {
+                        log.info("消费场地信息变更失败 {}", JsonHelper.toJSONString(mq));
+                    }
                 }
             }
-            if (CollectionUtils.isNotEmpty(ids)) {
-                WorkGridBatchUpdateRequest updateRequest = new WorkGridBatchUpdateRequest();
-                updateRequest.setIds(ids);
-                updateRequest.setProvinceAgencyCode(mq.getProvinceAgencyCode());
-                updateRequest.setProvinceAgencyName(mq.getProvinceAgencyName());
-                updateRequest.setSiteCode(mq.getSiteCode());
-                updateRequest.setSiteName(mq.getSiteName());
-                updateRequest.setUpdateUser(UPDATE_USER_ERP);
-                updateRequest.setUpdateUserName(UPDATE_USER_NAME);
-                updateRequest.setUpdateTime(new Date());
-
-                int result = workGridService.batchUpdateByIds(updateRequest);
-                if (result <= 0) {
-                    log.info("消费场地信息变更失败 {}", JsonHelper.toJSONString(mq));
-                }
-            }
+        } catch (Exception e) {
+            Profiler.functionError(info);
+            throw e;
+        } finally {
+            Profiler.registerInfoEnd(info);
         }
+
     }
 
 }
