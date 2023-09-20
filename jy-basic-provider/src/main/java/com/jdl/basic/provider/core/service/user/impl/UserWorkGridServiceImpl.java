@@ -115,7 +115,19 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         if (result.isFail()) {
             return result;
         }
+        Result<Boolean> deleteResult = deleteUserWorkGrid(request);
+        if (deleteResult.isFail()){
+            return deleteResult;
+        }
+        Result<Boolean> addResult = addUserWorkGrid(request);
+        if (addResult.isFail()){
+            return addResult;
+        }
+        return result.setData(Boolean.TRUE);
+    }
 
+    private Result<Boolean> deleteUserWorkGrid(UserWorkGridBatchUpdateRequest request){
+        Result<Boolean> result = Result.success();
         List<UserWorkGrid> deleteList = request.getDeleteUserWorkGrids();
         if (CollectionUtils.isNotEmpty(deleteList)) {
             UserWorkGridBatchRequest deleteRequest = new UserWorkGridBatchRequest();
@@ -130,7 +142,11 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
                 return result.toFail(deleteResult.getMessage());
             }
         }
+        return result;
+    }
 
+    private Result<Boolean> addUserWorkGrid(UserWorkGridBatchUpdateRequest request){
+        Result<Boolean> result = Result.success();
         List<UserWorkGrid> addList = request.getAddUserWorkGrids();
         if (CollectionUtils.isNotEmpty(addList)) {
             UserWorkGridBatchRequest addRequest = new UserWorkGridBatchRequest();
@@ -142,7 +158,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
                 return result.toFail(insertResult.getMessage());
             }
         }
-        return result.setData(Boolean.TRUE);
+        return result;
     }
 
     private Result<Boolean> batchUpdateParamsCheck(UserWorkGridBatchUpdateRequest request) {
@@ -263,32 +279,13 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         if (result.isFail()) {
             return result;
         }
-
-        List<UserWorkGrid> deleteList = request.getDeleteUserWorkGrids();
-        if (CollectionUtils.isNotEmpty(deleteList)) {
-            UserWorkGridBatchRequest deleteRequest = new UserWorkGridBatchRequest();
-            deleteRequest.setUserWorkGrids(deleteList);
-            deleteRequest.setUpdateTime(request.getUpdateTime());
-            deleteRequest.setUpdateUserErp(request.getUpdateUserErp());
-            deleteRequest.setUpdateUserName(request.getUpdateUserName());
-            deleteRequest.setSiteCode(request.getSiteCode());
-            Result<Boolean> deleteResult = batchDelete(deleteRequest);
-            if (deleteResult.isFail()) {
-                log.warn("batchUpdate 删除网格人员分配失败！删除入参:{}", JsonHelper.toJSONString(deleteRequest));
-                return result.toFail(deleteResult.getMessage());
-            }
+        Result<Boolean> deleteResult = deleteUserWorkGrid(request);
+        if (deleteResult.isFail()){
+            return deleteResult;
         }
-
-        List<UserWorkGrid> addList = request.getAddUserWorkGrids();
-        if (CollectionUtils.isNotEmpty(addList)) {
-            UserWorkGridBatchRequest addRequest = new UserWorkGridBatchRequest();
-            addRequest.setSiteCode(request.getSiteCode());
-            addRequest.setUserWorkGrids(addList);
-            Result<Boolean> insertResult = batchInsert(addRequest);
-            if (insertResult.isFail()) {
-                log.warn("batchUpdate 插入网格人员分配失败！{}", JsonHelper.toJSONString(addRequest));
-                return result.toFail(insertResult.getMessage());
-            }
+        Result<Boolean> addResult = addUserWorkGrid(request);
+        if (addResult.isFail()){
+            return addResult;
         }
         return result.setData(Boolean.TRUE);
     }
