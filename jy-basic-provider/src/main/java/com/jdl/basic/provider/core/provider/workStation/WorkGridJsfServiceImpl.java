@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
+import com.jdl.basic.api.domain.workStation.WorkGridDeviceVo;
+import com.jdl.basic.api.domain.workStation.WorkGridEditVo;
 import com.jdl.basic.api.domain.workStation.WorkGridImport;
 import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridVo;
@@ -59,7 +61,7 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	 * @param updateData
 	 * @return
 	 */
-	public Result<Boolean> updateById(WorkGrid updateData){
+	public Result<Boolean> updateById(WorkGridEditVo updateData){
 		return workGridService.updateById(updateData);
 	 }
 	/**
@@ -224,5 +226,9 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	@Override
 	public List<WorkGrid> queryListForManagerSiteScan(WorkGridQuery workGridQuery) {
 		return workGridService.queryListForManagerSiteScan(workGridQuery);
+	}
+	@Override
+	public Result<PageDto<WorkGridDeviceVo>> queryMachineListData(WorkGridQuery query) {
+		return workGridService.queryMachineListData(query);
 	}
 }

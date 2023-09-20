@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.springframework.beans.BeanUtils;
@@ -20,16 +19,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jd.bd.dms.automatic.sdk.modules.device.dto.DeviceGridDto;
 import com.jd.jsf.gd.util.StringUtils;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.machine.Machine;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkArea;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
+import com.jdl.basic.api.domain.workStation.WorkGridDeviceVo;
+import com.jdl.basic.api.domain.workStation.WorkGridEditVo;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridImport;
 import com.jdl.basic.api.domain.workStation.WorkGridModifyMqData;
+import com.jdl.basic.api.domain.workStation.WorkGridOwnerUser;
 import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridVo;
 import com.jdl.basic.api.domain.workStation.WorkGridVo.FlowInfoItem;
@@ -41,6 +44,7 @@ import com.jdl.basic.api.enums.EditTypeEnum;
 import com.jdl.basic.api.enums.GridFlowLineTypeEnum;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.enums.AreaEnum;
+import com.jdl.basic.common.enums.WaveTypeEnum;
 import com.jdl.basic.common.utils.CheckHelper;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
@@ -48,9 +52,12 @@ import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringHelper;
 import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkGridDao;
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
+import com.jdl.basic.provider.core.manager.DeviceConfigInfoJsfServiceManager;
 import com.jdl.basic.provider.core.service.machine.WorkStationGridMachineService;
 import com.jdl.basic.provider.core.service.workStation.WorkAreaService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDirectionService;
+import com.jdl.basic.provider.core.service.workStation.WorkGridOwnerUserService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.mq.producer.DefaultJMQProducer;
@@ -87,6 +94,11 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Autowired
 	@Qualifier("workAreaService")
 	private WorkAreaService workAreaService;
+	
+	@Autowired
+	@Qualifier("workGridOwnerUserService")
+	private WorkGridOwnerUserService workGridOwnerUserService;
+	
 	/**
 	 * 导入总数据限制
 	 */
@@ -102,6 +114,10 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Qualifier("workGridModifyMq")
 	DefaultJMQProducer workGridModifyMq;
 	
+	@Autowired
+	@Qualifier("deviceConfigInfoJsfServiceManager")
+	DeviceConfigInfoJsfServiceManager deviceConfigInfoJsfServiceManager;
+	
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -114,6 +130,39 @@ public class WorkGridServiceImpl implements WorkGridService {
 		result.setData(workGridDao.insert(insertData) == 1);
 		return result;
 	 }
+	/**
+	 * 根据id更新数据
+	 * @param updateData
+	 * @return
+	 */
+	@Transactional
+	public Result<Boolean> updateById(WorkGridEditVo updateData){
+		Result<Boolean> result = Result.success();
+		WorkGridOwnerUser deleteData = new WorkGridOwnerUser();
+		deleteData.setRefWorkGridKey(updateData.getBusinessKey());
+		deleteData.setUpdateTime(new Date());
+		deleteData.setUpdateUser(updateData.getUpdateUser());
+		workGridOwnerUserService.deleteByGridKey(deleteData);
+		
+		workGridOwnerUserService.insert(buildOwnerUserData(updateData,WaveTypeEnum.DAY.getCode(),updateData.getOwnerUserErp1()));
+		workGridOwnerUserService.insert(buildOwnerUserData(updateData,WaveTypeEnum.MIDDLE.getCode(),updateData.getOwnerUserErp2()));
+		workGridOwnerUserService.insert(buildOwnerUserData(updateData,WaveTypeEnum.NIGHT.getCode(),updateData.getOwnerUserErp3()));
+			
+		result.setData(workGridDao.updateById(updateData) == 1);
+		return result;
+	 }
+	private WorkGridOwnerUser buildOwnerUserData(WorkGridEditVo updateData,Integer waveCode,String erp){
+		if(updateData == null || StringUtils.isBlank(erp)) {
+			return null;
+		}
+		WorkGridOwnerUser data = new WorkGridOwnerUser();
+		data.setRefWorkGridKey(updateData.getBusinessKey());
+		data.setOwnerUserErp(erp);
+		data.setWaveCode(waveCode);
+		data.setCreateTime(new Date());
+		data.setCreateUser(data.getUpdateUser());
+		return data;
+	}
 	/**
 	 * 根据id更新数据
 	 * @param updateData
@@ -216,6 +265,8 @@ public class WorkGridServiceImpl implements WorkGridService {
 		voData.setConfigFlowStatusName(ConfigFlowStatusEnum.getNameByCode(voData.getConfigFlowStatus()));
 		//特殊字段设置
 		loadFlowInfo(voData);
+		loadOwnerInfo(voData);
+		loadMachineBindInfo(voData);
 		return voData;
 	}
 	/**
@@ -258,7 +309,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 	 * @param query
 	 * @return
 	 */
-	public Result<Boolean> checkParamForQueryPageList(WorkGridQuery query){
+	public Result<Boolean> checkParamForQueryMachineList(WorkGridQuery query){
 		Result<Boolean> result = Result.success();
 		if(query.getPageSize() == null || query.getPageSize() <= 0) {
 			query.setPageSize(DmsConstants.PAGE_SIZE_DEFAULT);
@@ -270,6 +321,23 @@ public class WorkGridServiceImpl implements WorkGridService {
 		};
 		return result;
 	 }
+	/**
+	 * 查询参数校验
+	 * @param query
+	 * @return
+	 */
+	public Result<Boolean> checkParamForQueryPageList(WorkGridQuery query){
+		Result<Boolean> result = Result.success();
+		if(query.getPageSize() == null || query.getPageSize() <= 0) {
+			query.setPageSize(DmsConstants.PAGE_SIZE_DEFAULT);
+		};
+		query.setOffset(0);
+		query.setLimit(query.getPageSize());
+		if(query.getPageSize() == null || query.getPageNumber() > 0) {
+			query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
+		};
+		return result;
+	 }	
 	/**
 	 * 对象转换成vo
 	 * @param data
@@ -296,6 +364,20 @@ public class WorkGridServiceImpl implements WorkGridService {
 			voData.setFlowDirectionType(workArea.getFlowDirectionType());
 		}
 		voData.setFlowInfo(queryFlowInfoByWorkGridKey(voData));
+	}
+	private void loadOwnerInfo(WorkGridVo voData) {
+		if(voData == null) {
+			return;
+		}
+		List<WorkGridOwnerUser> ownerUserList = this.workGridOwnerUserService.queryListByGridKey(voData.getBusinessKey());
+		voData.setOwnerUserList(ownerUserList);
+	}
+	private void loadMachineBindInfo(WorkGridVo voData) {
+		if(voData == null) {
+			return;
+		}
+		List<WorkGridOwnerUser> machineBindList = this.workGridOwnerUserService.queryListByGridKey(voData.getBusinessKey());
+		voData.setMachineBindList(machineBindList);
 	}
 	private void loadWorkInfo(WorkGridVo voData) {
 		if(voData == null) {
@@ -765,5 +847,25 @@ public class WorkGridServiceImpl implements WorkGridService {
 			query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
 		}		
 		return workGridDao.queryListForManagerSiteScan(query);
+	}
+	@Override
+	public Result<PageDto<WorkGridDeviceVo>> queryMachineListData(WorkGridQuery query) {
+		Result<PageDto<WorkGridDeviceVo>> result = Result.success();
+		Result<Boolean> checkResult = this.checkParamForQueryMachineList(query);
+		if(!checkResult.isSuccess()){
+		    return Result.fail(checkResult.getMessage());
+		}
+		List<WorkGridDeviceVo> voDataList = new ArrayList<>();
+		PageDto<WorkGridDeviceVo> pageDto = new PageDto<>(query.getPageNumber(), query.getPageSize());
+		Result<List<WorkGridDeviceVo>> deviceResult = deviceConfigInfoJsfServiceManager.findDeviceGridByBusinessKey(query.getBusinessKey());
+		Long totalCount = 0L;
+		if(deviceResult != null && !CollectionUtils.isEmpty(deviceResult.getData())){
+		    voDataList = deviceResult.getData();
+		    totalCount = (long) deviceResult.getData().size();
+		}
+		pageDto.setResult(voDataList);
+		pageDto.setTotalRow(totalCount.intValue());
+		result.setData(pageDto);
+		return result;
 	}
 }

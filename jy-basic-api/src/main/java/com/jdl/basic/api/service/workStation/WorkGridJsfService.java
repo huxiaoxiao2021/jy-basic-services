@@ -2,9 +2,10 @@ package com.jdl.basic.api.service.workStation;
 
 import java.util.List;
 
-import com.jdl.basic.api.domain.user.UserWorkGrid;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
+import com.jdl.basic.api.domain.workStation.WorkGridDeviceVo;
+import com.jdl.basic.api.domain.workStation.WorkGridEditVo;
 import com.jdl.basic.api.domain.workStation.WorkGridImport;
 import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridVo;
@@ -31,7 +32,7 @@ public interface WorkGridJsfService {
 	 * @param updateData
 	 * @return
 	 */
-	Result<Boolean> updateById(WorkGrid updateData);
+	Result<Boolean> updateById(WorkGridEditVo updateData);
 	/**
 	 * 根据id删除数据
 	 * @param deleteData
@@ -142,4 +143,10 @@ public interface WorkGridJsfService {
 	 * @return
 	 */
 	List<WorkGrid> queryListForManagerSiteScan(WorkGridQuery workGridQuery);
+	/**
+	 * 查询设备信息
+	 * @param query
+	 * @return
+	 */
+	Result<PageDto<WorkGridDeviceVo>> queryMachineListData(WorkGridQuery query);
 }

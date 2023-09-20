@@ -33,6 +33,14 @@ public class WorkGridVo extends WorkGrid {
 	 * 流向类型 1-进 2-出 0-其他
 	 */
 	private Integer flowDirectionType;
+	/**
+	 * 负责人列表
+	 */
+	private List<WorkGridOwnerUser> ownerUserList;
+	/**
+	 * 负责人列表
+	 */
+	private List<WorkGridOwnerUser> machineBindList;	
 	
 	public static class FlowInfoItem implements Serializable{
 		
@@ -152,5 +160,8 @@ public class WorkGridVo extends WorkGrid {
 		public void setSupplierName(String supplierName) {
 			this.supplierName = supplierName;
 		}
+	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}	
 }
