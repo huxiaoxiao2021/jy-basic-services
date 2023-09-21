@@ -115,19 +115,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
         if (result.isFail()) {
             return result;
         }
-        Result<Boolean> deleteResult = deleteUserWorkGrid(request);
-        if (deleteResult.isFail()){
-            return deleteResult;
-        }
-        Result<Boolean> addResult = addUserWorkGrid(request);
-        if (addResult.isFail()){
-            return addResult;
-        }
-        return result.setData(Boolean.TRUE);
-    }
 
-    private Result<Boolean> deleteUserWorkGrid(UserWorkGridBatchUpdateRequest request){
-        Result<Boolean> result = Result.success();
         List<UserWorkGrid> deleteList = request.getDeleteUserWorkGrids();
         if (CollectionUtils.isNotEmpty(deleteList)) {
             UserWorkGridBatchRequest deleteRequest = new UserWorkGridBatchRequest();
@@ -142,11 +130,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
                 return result.toFail(deleteResult.getMessage());
             }
         }
-        return result;
-    }
 
-    private Result<Boolean> addUserWorkGrid(UserWorkGridBatchUpdateRequest request){
-        Result<Boolean> result = Result.success();
         List<UserWorkGrid> addList = request.getAddUserWorkGrids();
         if (CollectionUtils.isNotEmpty(addList)) {
             UserWorkGridBatchRequest addRequest = new UserWorkGridBatchRequest();
@@ -158,7 +142,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
                 return result.toFail(insertResult.getMessage());
             }
         }
-        return result;
+        return result.setData(Boolean.TRUE);
     }
 
     private Result<Boolean> batchUpdateParamsCheck(UserWorkGridBatchUpdateRequest request) {
@@ -193,9 +177,11 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             if (userResult.isFail()) {
                 return result.toFail(userResult.getMessage());
             }
-            for(JyUser user : userResult.getData()) {
-                if (user.getGridDistributeFlag()) {
-                    return result.toFail(String.format("用户【%s】已分配网格！请刷新页面获取最新数据。", user.getUserErp()));
+            if (!Constants.NUMBER_ZERO.equals(request.getFunctionType())) {
+                for(JyUser user : userResult.getData()) {
+                    if (user.getGridDistributeFlag()) {
+                        return result.toFail(String.format("用户【%s】已分配网格！请刷新页面获取最新数据。", user.getUserErp()));
+                    }
                 }
             }
         }
@@ -263,51 +249,5 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.removeFromGridByUserId", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public boolean removeFromGridByUserId(RemoveUserDto removeUserDto) {
         return userWorkGridDao.removeFromGridByUserId(removeUserDto) >0;
-    }
-
-    /**
-     * 批量调出人员网格信息
-     *
-     * @param request
-     * @return
-     */
-    @Override
-    @Transactional
-    @JProfiler(jKey = Constants.UMP_APP_NAME + ".UserWorkGridServiceImpl.batchTransferUserWorkGrid", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-    public Result<Boolean> batchTransferUserWorkGrid(UserWorkGridBatchUpdateRequest request) {
-        Result<Boolean> result = batchTransferParamsCheck(request);
-        if (result.isFail()) {
-            return result;
-        }
-        Result<Boolean> deleteResult = deleteUserWorkGrid(request);
-        if (deleteResult.isFail()){
-            return deleteResult;
-        }
-        Result<Boolean> addResult = addUserWorkGrid(request);
-        if (addResult.isFail()){
-            return addResult;
-        }
-        return result.setData(Boolean.TRUE);
-    }
-
-    private Result<Boolean> batchTransferParamsCheck(UserWorkGridBatchUpdateRequest request) {
-        Result<Boolean> result = Result.success();
-        if (request.getSiteCode() == null) {
-            return result.toFail("场地编码不能为空！");
-        }
-
-        List<UserWorkGrid> deleteList = request.getDeleteUserWorkGrids();
-        if (CollectionUtils.isNotEmpty(deleteList)) {
-            if (request.getUpdateTime() == null) {
-                return result.toFail("修改时间不能为空！");
-            }
-            if(StringUtils.isEmpty(request.getUpdateUserErp())) {
-                return result.toFail("修改人erp不能为空！");
-            }
-            if (StringUtils.isEmpty(request.getUpdateUserName())) {
-                return result.toFail("修改人姓名不能为空！");
-            }
-        }
-        return result;
     }
 }

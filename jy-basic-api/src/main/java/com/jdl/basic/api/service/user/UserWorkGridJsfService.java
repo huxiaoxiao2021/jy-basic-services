@@ -20,12 +20,4 @@ public interface UserWorkGridJsfService {
     Result<List<JyUserDto>> getWorkGridDistributedStaff(UserWorkGridRequest request);
 
     Result<List<UserWorkGrid>> batchQueryDeletedUserWorkGrid(UserWorkGridBatchRequest request);
-
-    /**
-     * 批量调出人员网格信息
-     *
-     * @param request
-     * @return
-     */
-    Result<Boolean> batchTransferUserWorkGrid(UserWorkGridBatchUpdateRequest request);
 }
