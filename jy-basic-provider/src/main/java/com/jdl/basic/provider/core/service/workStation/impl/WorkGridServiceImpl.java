@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jd.bd.dms.automatic.sdk.modules.device.dto.DeviceGridDto;
 import com.jd.jsf.gd.util.StringUtils;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.machine.Machine;
@@ -147,7 +146,8 @@ public class WorkGridServiceImpl implements WorkGridService {
 		workGridOwnerUserService.insert(buildOwnerUserData(updateData,WaveTypeEnum.DAY.getCode(),updateData.getOwnerUserErp1()));
 		workGridOwnerUserService.insert(buildOwnerUserData(updateData,WaveTypeEnum.MIDDLE.getCode(),updateData.getOwnerUserErp2()));
 		workGridOwnerUserService.insert(buildOwnerUserData(updateData,WaveTypeEnum.NIGHT.getCode(),updateData.getOwnerUserErp3()));
-			
+		//更新网格下所有工序信息
+		this.workStationGridService.syncWorkGridInfo(updateData);
 		result.setData(workGridDao.updateById(updateData) == 1);
 		return result;
 	 }
@@ -266,7 +266,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		//特殊字段设置
 		loadFlowInfo(voData);
 		loadOwnerInfo(voData);
-		loadMachineBindInfo(voData);
+		loadWorkInfo(voData);
 		return voData;
 	}
 	/**
@@ -372,13 +372,6 @@ public class WorkGridServiceImpl implements WorkGridService {
 		List<WorkGridOwnerUser> ownerUserList = this.workGridOwnerUserService.queryListByGridKey(voData.getBusinessKey());
 		voData.setOwnerUserList(ownerUserList);
 	}
-	private void loadMachineBindInfo(WorkGridVo voData) {
-		if(voData == null) {
-			return;
-		}
-		List<WorkGridOwnerUser> machineBindList = this.workGridOwnerUserService.queryListByGridKey(voData.getBusinessKey());
-		voData.setMachineBindList(machineBindList);
-	}
 	private void loadWorkInfo(WorkGridVo voData) {
 		if(voData == null) {
 			return;
@@ -479,9 +472,6 @@ public class WorkGridServiceImpl implements WorkGridService {
 			updateData.setGridCode(workGrid.getGridCode());
 			updateData.setGridName(workGrid.getGridName());
 			updateData.setAreaName(workGrid.getAreaName());
-			updateData.setStandardNum(workGrid.getStandardNum());
-			updateData.setOwnerUserErp(workGrid.getOwnerUserErp());
-			updateData.setDockCode(workGrid.getDockCode());
 			updateData.setSupplierCode(workGrid.getSupplierCode());
 			updateData.setSupplierName(workGrid.getSupplierName());
 			updateData.setUpdateUser(workGrid.getUpdateUser());
@@ -857,7 +847,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		}
 		List<WorkGridDeviceVo> voDataList = new ArrayList<>();
 		PageDto<WorkGridDeviceVo> pageDto = new PageDto<>(query.getPageNumber(), query.getPageSize());
-		Result<List<WorkGridDeviceVo>> deviceResult = deviceConfigInfoJsfServiceManager.findDeviceGridByBusinessKey(query.getBusinessKey());
+		Result<List<WorkGridDeviceVo>> deviceResult = deviceConfigInfoJsfServiceManager.findDeviceGridByBusinessKey(query.getBusinessKey(),query.getBusinessKeyList());
 		Long totalCount = 0L;
 		if(deviceResult != null && !CollectionUtils.isEmpty(deviceResult.getData())){
 		    voDataList = deviceResult.getData();

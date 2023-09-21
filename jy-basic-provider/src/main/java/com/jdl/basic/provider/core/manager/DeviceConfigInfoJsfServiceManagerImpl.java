@@ -32,21 +32,21 @@ public class DeviceConfigInfoJsfServiceManagerImpl implements DeviceConfigInfoJs
     private DeviceConfigInfoJsfService deviceConfigInfoJsfService;
 
     @Override
-    public Result<List<WorkGridDeviceVo>> findDeviceGridByBusinessKey(String machineCode) {
+    public Result<List<WorkGridDeviceVo>> findDeviceGridByBusinessKey(String gridKey,List<String> gridKeyList) {
         CallerInfo callerInfo = Profiler.registerInfo("basic.client.automatic.deviceConfigInfoJsfService.findDeviceGridByBusinessKey",
                 Constants.UMP_APP_NAME, false, true);
         Result<List<WorkGridDeviceVo>> result = Result.success();
         List<WorkGridDeviceVo> dataList = new ArrayList<>();
         result.setData(dataList);
         try {
-        	BaseDmsAutoJsfResponse<List<DeviceGridDto>> remoteResult = deviceConfigInfoJsfService.findDeviceGridByBusinessKey(machineCode);
+        	BaseDmsAutoJsfResponse<List<DeviceGridDto>> remoteResult = deviceConfigInfoJsfService.findDeviceGridByBusinessKey(gridKey,gridKeyList);
         	if(remoteResult != null && CollectionUtils.isEmpty(remoteResult.getData())) {
         		for(DeviceGridDto dto:remoteResult.getData()) {
         			dataList.add(toWorkGridDeviceVo(dto));
         		}
         	}
         }catch (Exception e){
-            log.error("根据设备编码:{}查询设备详情异常!", machineCode, e);
+            log.error("根据设备编码:{},{}查询设备详情异常!", gridKey,gridKeyList, e);
             Profiler.functionError(callerInfo);
         }finally {
             Profiler.registerInfoEnd(callerInfo);

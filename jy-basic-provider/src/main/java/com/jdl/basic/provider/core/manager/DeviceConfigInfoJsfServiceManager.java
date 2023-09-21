@@ -13,6 +13,6 @@ public interface DeviceConfigInfoJsfServiceManager {
      * @param machineCode
      * @return
      */
-	Result<List<WorkGridDeviceVo>> findDeviceGridByBusinessKey(String machineCode);
+	Result<List<WorkGridDeviceVo>> findDeviceGridByBusinessKey(String gridKey,List<String> gridKeyList);
 
 }

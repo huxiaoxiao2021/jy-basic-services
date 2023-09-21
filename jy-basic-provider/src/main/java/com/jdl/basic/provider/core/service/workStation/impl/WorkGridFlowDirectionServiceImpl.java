@@ -50,6 +50,11 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	
 	@Value("${beans.workGridFlowDirectionService.importDatasLimit:100}")
 	private int importDatasLimit;
+	/**
+	 * 需要按作业区校验流向的列表
+	 */
+	@Value("${beans.workGridFlowDirectionService.workAreaCodesForFlowCheck:}")
+	private List<String> workAreaCodesForFlowCheck;
 
 	/**
 	 * 插入一条数据

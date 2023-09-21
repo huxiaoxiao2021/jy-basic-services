@@ -1,5 +1,7 @@
 package com.jdl.basic.provider.config.ducc;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 
 /**
@@ -17,6 +19,12 @@ public class DuccPropertyConfiguration {
      */
     @Value("${siteQuery_downgrade_switch:false}")
     private boolean siteQueryDowngradeSwitch;
+    
+	/**
+	 * 需要按作业区校验流向的列表
+	 */
+	@Value("${ducc.workAreaCodesForFlowCheck:}")
+	private String workAreaCodesForFlowCheck;  
 
     public boolean getSiteQueryDowngradeSwitch() {
         return siteQueryDowngradeSwitch;

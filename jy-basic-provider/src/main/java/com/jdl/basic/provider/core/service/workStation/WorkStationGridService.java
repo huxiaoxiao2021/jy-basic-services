@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.service.workStation;
 
 
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
+import com.jdl.basic.api.domain.workStation.WorkGrid;
 import com.jdl.basic.api.domain.workStation.WorkStationGrid;
 import com.jdl.basic.api.domain.workStation.WorkStationGridCountVo;
 import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
@@ -190,4 +191,10 @@ public interface WorkStationGridService {
 	 * @return
 	 */
 	int queryCountByRefGridKey(String refGridKey);
+	/**
+	 * 同步更新网格下所有工序信息
+	 * @param updateData
+	 * @return
+	 */
+	int syncWorkGridInfo(WorkGrid gridData);
 }

@@ -211,4 +211,6 @@ public interface WorkStationGridDao {
 	 * @return
 	 */
 	int queryCountByRefGridKey(String refGridKey);
+	
+	int syncWorkGridInfo(WorkStationGrid updateData);
 }
