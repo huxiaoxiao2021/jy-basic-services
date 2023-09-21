@@ -288,7 +288,7 @@
         site_type =#{siteType},
       </if>
       <if test="organizationFullPath != null">
-        organizationFullPath = #{organizationFullPath},
+        organization_full_path = #{organizationFullPath},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -314,7 +314,7 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       ts = #{ts,jdbcType=TIMESTAMP},
-      organizationFullPath = #{organizationFullPath},
+        organization_full_path = #{organizationFullPath},
         where id = #{id,jdbcType=BIGINT}
   </update>
 
