@@ -83,4 +83,10 @@ public interface UserService {
    */
   Result<List<JyUser>> queryNatureUndistributedUsers(JyUserQueryDto dto);
 
+  /**
+   * 校验员工是否属于拣运
+   * @param dto
+   * @return
+   */
+  Result<Boolean> checkUserBelongToJy(JyUserQueryDto dto);
 }

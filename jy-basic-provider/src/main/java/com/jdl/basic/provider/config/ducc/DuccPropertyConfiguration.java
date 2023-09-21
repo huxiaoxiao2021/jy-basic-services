@@ -18,11 +18,22 @@ public class DuccPropertyConfiguration {
     @Value("${siteQuery_downgrade_switch:false}")
     private boolean siteQueryDowngradeSwitch;
 
+    @Value("${jyOrganizationCodeStr:}")
+    private String jyOrganizationCodeStr;
+    
     public boolean getSiteQueryDowngradeSwitch() {
         return siteQueryDowngradeSwitch;
     }
 
     public void setSiteQueryDowngradeSwitch(boolean siteQueryDowngradeSwitch) {
         this.siteQueryDowngradeSwitch = siteQueryDowngradeSwitch;
+    }
+
+    public String getJyOrganizationCodeStr() {
+        return jyOrganizationCodeStr;
+    }
+
+    public void setJyOrganizationCodeStr(String jyOrganizationCodeStr) {
+        this.jyOrganizationCodeStr = jyOrganizationCodeStr;
     }
 }

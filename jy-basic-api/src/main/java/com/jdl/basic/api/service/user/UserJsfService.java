@@ -62,4 +62,11 @@ public interface UserJsfService {
      */
     Result<List<JyUserDto>> queryNatureUndistributedUsers(JyUserQueryDto dto);
 
+    /**
+     * 判断当前登录人是否是拣运人员
+     * @param dto
+     * @return
+     */
+    Result<Boolean> checkUserBelongToJy(JyUserQueryDto dto);
+    
 }
