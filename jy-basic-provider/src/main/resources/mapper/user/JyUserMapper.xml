@@ -57,8 +57,8 @@
       organization_name, organization_full_name,
       user_status, quit_action_date, nature,
       nature_desc,position_code, position_name, std_position_code, std_position_name,
-      grid_distribute_flag, create_time, update_time, organization_full_path
-      ts)
+      grid_distribute_flag, create_time, update_time, 
+      ts, organization_full_path)
     values (#{id,jdbcType=BIGINT}, #{userErp,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
       #{sex,jdbcType=VARCHAR}, #{entryDate,jdbcType=VARCHAR}, #{organizationCode,jdbcType=VARCHAR},
       #{organizationName,jdbcType=VARCHAR}, #{organizationFullName,jdbcType=VARCHAR},
@@ -314,7 +314,7 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       ts = #{ts,jdbcType=TIMESTAMP},
-        organization_full_path = #{organizationFullPath},
+        organization_full_path = #{organizationFullPath}
         where id = #{id,jdbcType=BIGINT}
   </update>
 
