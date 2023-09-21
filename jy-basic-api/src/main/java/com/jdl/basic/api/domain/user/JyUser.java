@@ -48,7 +48,10 @@ public class JyUser {
     private String siteName;
 
     private Integer siteType;
-
+    /**
+     * 机构全编码
+     */
+    private String organizationFullPath;
     public Integer getSiteCode() {
         return siteCode;
     }
@@ -231,5 +234,13 @@ public class JyUser {
 
     public void setTs(Date ts) {
         this.ts = ts;
+    }
+
+    public String getOrganizationFullPath() {
+        return organizationFullPath;
+    }
+
+    public void setOrganizationFullPath(String organizationFullPath) {
+        this.organizationFullPath = organizationFullPath;
     }
 }
