@@ -38,7 +38,7 @@
         where id = #{id,jdbcType=BIGINT}
     </select>
 
-    <select id="selectBySiteCode" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="selectBySiteCode" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from akbox_config

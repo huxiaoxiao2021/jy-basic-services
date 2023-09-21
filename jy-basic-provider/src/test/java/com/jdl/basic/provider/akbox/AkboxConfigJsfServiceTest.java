@@ -3,6 +3,7 @@ package com.jdl.basic.provider.akbox;
 import com.jdl.basic.api.domain.akbox.AkboxConfig;
 import com.jdl.basic.api.domain.akbox.AkboxConfigQuery;
 import com.jdl.basic.api.service.akbox.AkboxConfigJsfService;
+import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.Pager;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.ApplicationLaunch;
@@ -75,5 +76,11 @@ public class AkboxConfigJsfServiceTest {
         query.setPageNo(1);
         Result<Pager<AkboxConfig>> pagerResult = jsfService.queryPageByCondition(query);
         log.info(pagerResult.getData().getData().toString());
+    };
+
+    @Test
+    public void queryBySiteCodeTest() {
+        Result<AkboxConfig> akboxConfigResult = jsfService.queryBySiteCode(910);
+        log.info(JsonHelper.toJSONString(akboxConfigResult));
     };
 }
