@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.dao.workStation;
 
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
+import com.jdl.basic.api.domain.workStation.WorkGridBatchUpdateRequest;
 import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import org.apache.ibatis.annotations.Param;
 
@@ -119,4 +120,12 @@ public interface WorkGridDao {
 	 * @return
 	 */
 	List<WorkGrid> queryWorkGridByBizKey(WorkGrid query);
+	/**
+	 * 根据场地编码更新
+	 */
+	Boolean updateBySiteCode(WorkGrid workGrid);
+
+	List<Integer> selectDistinctSiteCode();
+
+	int batchUpdateByIds(WorkGridBatchUpdateRequest request);
 }

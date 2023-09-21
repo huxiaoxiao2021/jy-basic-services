@@ -27,4 +27,6 @@ public interface ICollectBoxFlowDirectionVerifyService {
      * @return true是成品包，false 不是成品包
      */
     Result<CollectBoxFlowFinishBoxResp> ifBoxesWasFinishBox(CollectBoxFlowFinishBoxReq req);
+
+    void checkAllMixableRoute();
 }

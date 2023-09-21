@@ -36,8 +36,8 @@ spring:
       ####--app consumer 定义--##########################################################
     consumers:
       jmq2-consumer:
-        password: 25F7EDCD
-        app: JYFLAT
+        password: FBBB11B7
+        app: JYBasic
         address: jmq-testcluster.jd.local:50088
         enabled: true
       jmq4-consumer:
@@ -119,6 +119,11 @@ jsf:
   jy_basic:
     alias: jy-basic-server-dev
     token: jy-basic-server-token
+  sortWorkbenchBusiness:
+    alias: sortWorkbenchBusiness-dev
+    token: sortWorkbenchBusiness-token
+  boxFlowRouterVerifyTask:
+    alias: boxFlowRouterVerifyTask
 
 basic:
   jsf:

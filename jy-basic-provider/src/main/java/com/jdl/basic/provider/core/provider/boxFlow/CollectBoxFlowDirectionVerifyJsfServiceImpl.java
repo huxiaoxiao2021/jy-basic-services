@@ -2,6 +2,9 @@ package com.jdl.basic.provider.core.provider.boxFlow;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.jd.lsb.task.domain.Request;
+import com.jd.lsb.task.domain.Response;
+import com.jd.lsb.task.handler.Handler;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf;
 import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowDirectionConfReq;
 import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowDirectionConfResp;
@@ -21,7 +24,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class CollectBoxFlowDirectionVerifyJsfServiceImpl implements CollectBoxFlowDirectionVerifyJsfService {
+public class CollectBoxFlowDirectionVerifyJsfServiceImpl implements CollectBoxFlowDirectionVerifyJsfService, Handler {
 
     @Autowired
     private ICollectBoxFlowDirectionVerifyService collectBoxFlowDirectionVerifyService;
@@ -54,5 +57,17 @@ public class CollectBoxFlowDirectionVerifyJsfServiceImpl implements CollectBoxFl
         }
 
         return r;
+    }
+
+    /**
+     * 混包校验路由
+     * 只校验可混包
+     * @param request
+     * @param response
+     * @throws Throwable
+     */
+    @Override
+    public void handle(Request request, Response response) throws Throwable {
+        collectBoxFlowDirectionVerifyService.checkAllMixableRoute();
     }
 }

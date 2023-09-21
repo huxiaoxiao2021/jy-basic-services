@@ -104,7 +104,11 @@ jsf:
   jy_basic:
     alias: jy-basic-server-uat
     token: anktYmFzaWMtc2VydmVyLXRva2Vu
-
+  sortWorkbenchBusiness:
+    alias: sort_pub
+    token: 973BFAFDBF2DBC182140F9024EDF1946
+  boxFlowRouterVerifyTask:
+    alias: boxFlowRouterVerifyTask-uat
 basic:
   jsf:
     token: 96KYOS24GJ

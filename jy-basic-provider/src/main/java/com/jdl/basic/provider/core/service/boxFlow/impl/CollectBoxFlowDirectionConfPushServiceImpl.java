@@ -15,6 +15,7 @@ import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowNoticDto;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.enums.CollectBoxFlowInfoOperateTypeEnum;
 import com.jdl.basic.common.enums.CollectBoxFlowInfoStatusEnum;
+import com.jdl.basic.common.enums.CollectBoxFlowNoticTypeEnum;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.core.dao.boxFlow.CollectBoxFlowInfoDao;
 import com.jdl.basic.provider.core.service.boxFlow.ICollectBoxFlowDirectionConfPushService;
@@ -237,7 +238,7 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
         Date after3Day = DateHelper.addDays(todayFistTime, 3);
         String after3DayStr = DateHelper.getDateOfyyMMdd2(after3Day);
         dto.setEffectTime(after3DayStr + " 10:00");
-        dto.setOperateType(ADD.getCode());
+        dto.setOperateType(CollectBoxFlowNoticTypeEnum.ADD.getCode());
         return dto;
     }
     

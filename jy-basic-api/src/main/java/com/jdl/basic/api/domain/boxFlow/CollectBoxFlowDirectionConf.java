@@ -174,4 +174,9 @@ public class CollectBoxFlowDirectionConf {
      * 枢纽名称
      */
     private String endAreaHubName;
+
+    /**
+     * 路由错误, 1 无匹配路由 2 未经过拆包地 3 OD多路由
+     */
+    private Integer routeErrorType;
 }
