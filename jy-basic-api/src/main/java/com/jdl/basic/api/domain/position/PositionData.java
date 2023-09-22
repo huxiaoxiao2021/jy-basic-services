@@ -93,4 +93,8 @@ public class PositionData implements Serializable {
      * 岗位编码
      */
     private String positionCode;
+	/**
+	 * 关联场地网格key:work_grid
+	 */
+	private String refWorkGridKey;    
 }
