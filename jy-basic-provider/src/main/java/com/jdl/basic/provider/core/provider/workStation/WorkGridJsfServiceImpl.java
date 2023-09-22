@@ -263,6 +263,7 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 		return Result.fail("未查询到相应的网格数据！");
 	}
 
+
 	private void checkWorkGrid4Query(WorkGrid query) {
 		if (ObjectHelper.isEmpty(query.getSiteCode())){
 			throw new JYBasicRpcException("参数错误：siteCode为空！");
@@ -276,5 +277,16 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 		if (ObjectHelper.isEmpty(query.getGridCode())){
 			throw new JYBasicRpcException("参数错误：gridCode为空！");
 		}
+	}
+
+	/**
+	 * 根据BusinessKey查询网格
+	 *
+	 * @param query
+	 * @return
+	 */
+	@Override
+	public Result<WorkGrid> queryByBusinessKeys(WorkGrid query) {
+		return workGridService.queryByBusinessKeys(query);
 	}
 }
