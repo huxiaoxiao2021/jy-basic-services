@@ -74,8 +74,8 @@
             #{areaHubCode,jdbcType=VARCHAR}, #{areaHubName,jdbcType=VARCHAR},
             #{siteCode,jdbcType=BIGINT}, #{siteName,jdbcType=VARCHAR},
             #{smallStock,jdbcType=INTEGER}, #{largeStock,jdbcType=INTEGER},
-            #{createUserErp,jdbcType=VARCHAR}, #{updateUserErp,jdbcType=VARCHAR},
-            #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR},
+            #{createUserErp,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+            #{updateUserErp,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR},
                 #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{ts,jdbcType=TIMESTAMP},
                 #{yn,jdbcType=BOOLEAN})
     </insert>
@@ -93,8 +93,8 @@
                 #{item.areaHubCode,jdbcType=VARCHAR}, #{item.areaHubName,jdbcType=VARCHAR},
                 #{item.siteCode,jdbcType=BIGINT}, #{item.siteName,jdbcType=VARCHAR},
                 #{item.smallStock,jdbcType=INTEGER}, #{item.largeStock,jdbcType=INTEGER},
-                #{item.createUserErp,jdbcType=VARCHAR}, #{item.updateUserErp,jdbcType=VARCHAR},
-                #{item.createUser,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR},
+                #{createUserErp,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+                #{updateUserErp,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR},
                 #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.ts,jdbcType=TIMESTAMP},
                 #{item.yn,jdbcType=BOOLEAN})
         </foreach>
