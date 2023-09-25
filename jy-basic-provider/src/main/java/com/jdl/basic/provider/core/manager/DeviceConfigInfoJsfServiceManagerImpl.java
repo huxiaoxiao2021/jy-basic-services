@@ -40,7 +40,7 @@ public class DeviceConfigInfoJsfServiceManagerImpl implements DeviceConfigInfoJs
         result.setData(dataList);
         try {
         	BaseDmsAutoJsfResponse<List<DeviceGridDto>> remoteResult = deviceConfigInfoJsfService.findDeviceGridByBusinessKey(gridKey,gridKeyList);
-        	if(remoteResult != null && CollectionUtils.isEmpty(remoteResult.getData())) {
+        	if(remoteResult != null && CollectionUtils.isNotEmpty(remoteResult.getData())) {
         		for(DeviceGridDto dto:remoteResult.getData()) {
         			dataList.add(toWorkGridDeviceVo(dto));
         		}
