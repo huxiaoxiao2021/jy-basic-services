@@ -120,7 +120,7 @@ jsf:
     alias: jy-basic-server-dev
     token: jy-basic-server-token
   automatic:
-    alias: testlevel0
+    alias: test
     token: automatic
     timeout: 2000
 
