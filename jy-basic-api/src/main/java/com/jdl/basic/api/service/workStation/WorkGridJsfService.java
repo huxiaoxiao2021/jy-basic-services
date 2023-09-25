@@ -158,12 +158,4 @@ public interface WorkGridJsfService {
 	 * @return
 	 */
 	Result<WorkGrid> queryWorkGridByBizKey(WorkGrid query);
-
-	/**
-	 * 根据BusinessKey查询网格
-	 *
-	 * @param query
-	 * @return
-	 */
-	Result<WorkGrid> queryByBusinessKeys(WorkGrid query);
 }

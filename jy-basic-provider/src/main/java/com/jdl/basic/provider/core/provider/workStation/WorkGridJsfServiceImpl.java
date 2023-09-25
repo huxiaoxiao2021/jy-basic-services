@@ -278,15 +278,4 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 			throw new JYBasicRpcException("参数错误：gridCode为空！");
 		}
 	}
-
-	/**
-	 * 根据BusinessKey查询网格
-	 *
-	 * @param query
-	 * @return
-	 */
-	@Override
-	public Result<WorkGrid> queryByBusinessKeys(WorkGrid query) {
-		return workGridService.queryByBusinessKeys(query);
-	}
 }
