@@ -59,6 +59,7 @@ public class DeviceConfigInfoJsfServiceManagerImpl implements DeviceConfigInfoJs
 		vo.setChuteCode(dto.getChuteCode());
 		vo.setMachineCode(dto.getMachineCode());
 		vo.setSupplyNo(dto.getSupplyNo());
+		vo.setRefWorkGridKey(dto.getBusinessKey());
 		return vo;
 	}
 }

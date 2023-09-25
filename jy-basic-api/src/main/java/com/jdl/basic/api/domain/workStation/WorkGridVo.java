@@ -36,7 +36,11 @@ public class WorkGridVo extends WorkGrid {
 	/**
 	 * 负责人列表
 	 */
-	private List<WorkGridOwnerUser> ownerUserList;	
+	private List<WorkGridOwnerUser> ownerUserList;
+	/**
+	 * 设备列表
+	 */
+	private List<WorkGridDeviceVo> workGridDeviceVoList;	
 	
 	public static class FlowInfoItem implements Serializable{
 		

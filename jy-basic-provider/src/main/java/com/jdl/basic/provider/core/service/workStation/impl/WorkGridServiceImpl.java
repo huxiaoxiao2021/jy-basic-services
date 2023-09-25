@@ -299,6 +299,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		    	voDataList.add(this.toWorkGridVo(tmp));
 		    }
 		}
+		this.loadDeviceInfo(voDataList);
 		pageDto.setResult(voDataList);
 		pageDto.setTotalRow(totalCount.intValue());
 		result.setData(pageDto);
@@ -510,8 +511,41 @@ public class WorkGridServiceImpl implements WorkGridService {
 	    for (WorkGrid tmp : dataList) {
 	    	voDataList.add(this.toWorkGridVo(tmp));
 	    }
+	    loadDeviceInfo(voDataList);
 		result.setData(voDataList);
 		return result;
+	}
+	/**
+	 * 批量加载设备绑定信息
+	 * @param dataList
+	 */
+	private void loadDeviceInfo(List<WorkGridVo> dataList) {
+		if(CollectionUtils.isEmpty(dataList)) {
+			return;
+		}
+		List<String> gridKeys = new ArrayList<String>();
+		for(WorkGridVo data:dataList) {
+			gridKeys.add(data.getBusinessKey());
+		}
+		Result<List<WorkGridDeviceVo>> deviceResult = deviceConfigInfoJsfServiceManager.findDeviceGridByBusinessKey(null,gridKeys);
+		Map<String,List<WorkGridDeviceVo>> tmpMachineListMap = new HashMap<>();
+		if(deviceResult != null && CollectionUtils.isNotEmpty(deviceResult.getData())) {
+			for(WorkGridDeviceVo device:deviceResult.getData()) {
+				List<WorkGridDeviceVo> tmpList = tmpMachineListMap.get(device.getRefWorkGridKey());
+				if(tmpList == null) {
+					tmpList = new ArrayList<WorkGridDeviceVo>();
+					tmpMachineListMap.put(device.getRefWorkGridKey(), tmpList);
+				}
+				tmpList.add(device);
+			}
+		}
+		for(WorkGridVo vo:dataList) {
+			if(tmpMachineListMap.containsKey(vo.getBusinessKey())) {
+				vo.setWorkGridDeviceVoList(tmpMachineListMap.get(vo.getBusinessKey()));
+			}else {
+				vo.setWorkGridDeviceVoList(new ArrayList<>());
+			}
+		}
 	}
 	@Transactional
 	@Override

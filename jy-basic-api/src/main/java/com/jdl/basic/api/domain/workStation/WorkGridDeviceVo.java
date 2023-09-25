@@ -17,7 +17,10 @@ import java.io.Serializable;
 public class WorkGridDeviceVo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+	/**
+	 * 网格key
+	 */
+	private String refWorkGridKey;	
 	/**
 	 * 格口
 	 */
