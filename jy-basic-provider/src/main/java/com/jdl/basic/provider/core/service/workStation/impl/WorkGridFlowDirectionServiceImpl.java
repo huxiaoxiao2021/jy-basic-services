@@ -77,10 +77,10 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		if(!result.isSuccess()) {
 			return result;
 		}
+		boolean checkByArea = duccPropertyConfiguration.needAreaCodesForFlowCheck(gridData.getAreaCode());
 		WorkGridFlowDirectionQuery query = new WorkGridFlowDirectionQuery();
 		query.setFlowDirectionType(insertData.getFlowDirectionType());
-		query.setRefWorkGridKey(insertData.getRefWorkGridKey());
-		if(duccPropertyConfiguration.needAreaCodesForFlowCheck(gridData.getAreaCode())) {
+		if(checkByArea) {
 			WorkGridQuery workGridQuery = new WorkGridQuery();
 			workGridQuery.setSiteCode(gridData.getSiteCode());
 			workGridQuery.setAreaCode(gridData.getAreaCode());
@@ -91,8 +91,10 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		query.setFlowSiteCodeList(flowSiteCodes);
 		query.setLineType(insertData.getLineType());
 		List<Integer> flowSiteCodesExist = this.queryExistFlowSiteCodeList(query);
-		//todo- contains
 		if(flowSiteCodesExist.contains(insertData.getFlowSiteCode())) {
+			if(checkByArea) {
+				return result.toFail("添加失败，同一作业区下流向站点已存在！");
+			}
 			return result.toFail("添加失败，流向站点已存在！");
 		}
 		//更新-配置状态

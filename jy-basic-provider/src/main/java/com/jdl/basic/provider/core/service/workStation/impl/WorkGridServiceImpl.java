@@ -613,7 +613,6 @@ public class WorkGridServiceImpl implements WorkGridService {
 				WorkGridFlowDirection data0 = flowList.get(0);
 				WorkGridFlowDirectionQuery query = new WorkGridFlowDirectionQuery();
 				query.setFlowDirectionType(data0.getFlowDirectionType());
-				query.setRefWorkGridKey(data0.getRefWorkGridKey());
 				if(duccPropertyConfiguration.needAreaCodesForFlowCheck(gridData.getAreaCode())) {
 					WorkGridQuery workGridQuery = new WorkGridQuery();
 					workGridQuery.setSiteCode(gridData.getSiteCode());
