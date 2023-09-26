@@ -34,10 +34,6 @@ public class WorkGridVo extends WorkGrid {
 	 */
 	private Integer flowDirectionType;
 	/**
-	 * 负责人列表
-	 */
-	private List<WorkGridOwnerUser> ownerUserList;
-	/**
 	 * 设备列表
 	 */
 	private List<WorkGridDeviceVo> workGridDeviceVoList;	

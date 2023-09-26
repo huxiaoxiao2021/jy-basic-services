@@ -103,8 +103,6 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(result.getData()) {
 			// 添加岗位记录
 			addPosition(insertData);
-			// 添加自动化设备
-			addMachine(insertData);
 		}
 		return result;
 	 }
@@ -179,27 +177,6 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		workGrid.setAreaHubName(siteInfo == null ? Constants.EMPTY_FILL : siteInfo.getAreaName());
 	}
 
-	private void addMachine(WorkStationGrid insertData) {
-		if (CollectionUtils.isEmpty(insertData.getMachine())){
-			return;
-		}
-		List<WorkStationGridMachine> machines = new ArrayList<>();
-		for (Machine m : insertData.getMachine()) {
-			if (StringUtils.isEmpty(m.getMachineTypeCode()) || StringUtils.isEmpty(m.getMachineCode())) {
-				break;
-			}
-			WorkStationGridMachine machine =  new WorkStationGridMachine();
-			machine.setCreateUser(insertData.getCreateUser());
-			machine.setRefGridKey(insertData.getBusinessKey());
-			machine.setMachineCode(m.getMachineCode());
-			machine.setMachineTypeCode(m.getMachineTypeCode());
-			machines.add(machine);
-		}
-		if (!machineService.batchInsert(machines)) {
-			throw new RuntimeException("关联自动化设备失败,网格:"+insertData.getBusinessKey());
-		}
-	}
-
 	private String generalBusinessKey() {
 		return DmsConstants.CODE_PREFIX_WORK_STATION_GRID.concat(StringHelper.padZero(this.genObjectId.getObjectId(WorkStationGrid.class.getName()),11));
 	}
@@ -271,9 +248,6 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(!CheckHelper.checkInteger("编制人数", standardNum, 1,1000000, result).isSuccess()) {
 			return result;
 		}
-		if(!CheckHelper.checkStr("负责人ERP", ownerUserErp, 50, result).isSuccess()) {
-			return result;
-		}
 		BaseStaffSiteOrgDto siteInfo = baseMajorManager.getBaseSiteBySiteId(siteCode);
 		if(siteInfo == null) {
 			return result.toFail("青龙ID在基础资料中不存在！");
@@ -338,23 +312,12 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		// 清除网格工序缓存
 		invalidateWorkStationGridCache(oldData.getBusinessKey());
 
-		// 更新关联自动化设备
-		deleteMachineByRefGridKey(updateData);
-		addMachine(updateData);
 		return result;
 	}
 
 	private void invalidateWorkStationGridCache(String businessKey) {
 		String cacheKey = "WorkStationGridDao.queryWorkStationGridBybusinessKeyWithCache" + businessKey;
 		cacheService.del(cacheKey);
-	}
-
-	private void deleteMachineByRefGridKey(WorkStationGrid updateData) {
-		// 删除关联设备
-		WorkStationGridMachine updateMachine = new WorkStationGridMachine();
-		updateMachine.setRefGridKey(updateData.getBusinessKey());
-		updateMachine.setUpdateUser(updateData.getUpdateUser());
-		machineService.deleteByRefGridKey(updateMachine);
 	}
 
 	/**
@@ -378,8 +341,6 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		// 同步删除异常网格绑定数据
 		deleteWorkAbnormalGridBinding(queryResult.getData(),deleteData);
 
-		// 同步删除绑定自动化设备
-		deleteMachineByRefGridKey(deleteData);
 		//删除对应的网格数据
 		WorkGrid deleteGrid = new WorkGrid();
 		deleteGrid.setBusinessKey(queryResult.getData().getRefWorkGridKey());
@@ -515,17 +476,8 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			}
 			// 同步处理岗位
 			syncDealPosition(oldData, data);
-			// 删除旧数据，保存新的自动化设备
-			deleteAndAddMachine(oldData,data);
 		}
 		return result;
-	}
-
-	private void deleteAndAddMachine(WorkStationGrid oldData, WorkStationGrid data) {
-		if (oldData != null){
-			deleteMachineByRefGridKey(oldData);
-		}
-		addMachine(data);
 	}
 
 	private void syncDealPosition(WorkStationGrid oldData, WorkStationGrid newData) {

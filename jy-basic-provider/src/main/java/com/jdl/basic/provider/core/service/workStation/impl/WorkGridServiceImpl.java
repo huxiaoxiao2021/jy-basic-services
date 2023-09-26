@@ -31,7 +31,6 @@ import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridImport;
 import com.jdl.basic.api.domain.workStation.WorkGridModifyMqData;
-import com.jdl.basic.api.domain.workStation.WorkGridOwnerUser;
 import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridVo;
 import com.jdl.basic.api.domain.workStation.WorkGridVo.FlowInfoItem;
@@ -43,7 +42,6 @@ import com.jdl.basic.api.enums.EditTypeEnum;
 import com.jdl.basic.api.enums.GridFlowLineTypeEnum;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.enums.AreaEnum;
-import com.jdl.basic.common.enums.WaveTypeEnum;
 import com.jdl.basic.common.utils.CheckHelper;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
@@ -57,7 +55,6 @@ import com.jdl.basic.provider.core.manager.DeviceConfigInfoJsfServiceManager;
 import com.jdl.basic.provider.core.service.machine.WorkStationGridMachineService;
 import com.jdl.basic.provider.core.service.workStation.WorkAreaService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDirectionService;
-import com.jdl.basic.provider.core.service.workStation.WorkGridOwnerUserService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.mq.producer.DefaultJMQProducer;
@@ -94,10 +91,6 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Autowired
 	@Qualifier("workAreaService")
 	private WorkAreaService workAreaService;
-	
-	@Autowired
-	@Qualifier("workGridOwnerUserService")
-	private WorkGridOwnerUserService workGridOwnerUserService;
 	
 	/**
 	 * 导入总数据限制
@@ -141,32 +134,11 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Transactional
 	public Result<Boolean> updateById(WorkGridEditVo updateData){
 		Result<Boolean> result = Result.success();
-		WorkGridOwnerUser deleteData = new WorkGridOwnerUser();
-		deleteData.setRefWorkGridKey(updateData.getBusinessKey());
-		deleteData.setUpdateTime(new Date());
-		deleteData.setUpdateUser(updateData.getUpdateUser());
-		workGridOwnerUserService.deleteByGridKey(deleteData);
-		
-		workGridOwnerUserService.insert(buildOwnerUserData(updateData,WaveTypeEnum.DAY.getCode(),updateData.getOwnerUserErp1()));
-		workGridOwnerUserService.insert(buildOwnerUserData(updateData,WaveTypeEnum.MIDDLE.getCode(),updateData.getOwnerUserErp2()));
-		workGridOwnerUserService.insert(buildOwnerUserData(updateData,WaveTypeEnum.NIGHT.getCode(),updateData.getOwnerUserErp3()));
 		//更新网格下所有工序信息
 		this.workStationGridService.syncWorkGridInfo(updateData);
 		result.setData(workGridDao.updateById(updateData) == 1);
 		return result;
 	 }
-	private WorkGridOwnerUser buildOwnerUserData(WorkGridEditVo updateData,Integer waveCode,String erp){
-		if(updateData == null || StringUtils.isBlank(erp)) {
-			return null;
-		}
-		WorkGridOwnerUser data = new WorkGridOwnerUser();
-		data.setRefWorkGridKey(updateData.getBusinessKey());
-		data.setOwnerUserErp(erp);
-		data.setWaveCode(waveCode);
-		data.setCreateTime(new Date());
-		data.setCreateUser(data.getUpdateUser());
-		return data;
-	}
 	/**
 	 * 根据id更新数据
 	 * @param updateData
@@ -269,7 +241,6 @@ public class WorkGridServiceImpl implements WorkGridService {
 		voData.setConfigFlowStatusName(ConfigFlowStatusEnum.getNameByCode(voData.getConfigFlowStatus()));
 		//特殊字段设置
 		loadFlowInfo(voData);
-		loadOwnerInfo(voData);
 		loadWorkInfo(voData);
 		return voData;
 	}
@@ -369,13 +340,6 @@ public class WorkGridServiceImpl implements WorkGridService {
 			voData.setFlowDirectionType(workArea.getFlowDirectionType());
 		}
 		voData.setFlowInfo(queryFlowInfoByWorkGridKey(voData));
-	}
-	private void loadOwnerInfo(WorkGridVo voData) {
-		if(voData == null) {
-			return;
-		}
-		List<WorkGridOwnerUser> ownerUserList = this.workGridOwnerUserService.queryListByGridKey(voData.getBusinessKey());
-		voData.setOwnerUserList(ownerUserList);
 	}
 	private void loadWorkInfo(WorkGridVo voData) {
 		if(voData == null) {
