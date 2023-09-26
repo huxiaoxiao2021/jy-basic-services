@@ -49,6 +49,7 @@ import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringHelper;
+import com.jdl.basic.provider.config.ducc.DuccPropertyConfiguration;
 import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkGridDao;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
@@ -116,6 +117,9 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Autowired
 	@Qualifier("deviceConfigInfoJsfServiceManager")
 	DeviceConfigInfoJsfServiceManager deviceConfigInfoJsfServiceManager;
+	
+	@Autowired
+	private DuccPropertyConfiguration duccPropertyConfiguration;
 	
 	/**
 	 * 插入一条数据
@@ -610,6 +614,14 @@ public class WorkGridServiceImpl implements WorkGridService {
 				WorkGridFlowDirectionQuery query = new WorkGridFlowDirectionQuery();
 				query.setFlowDirectionType(data0.getFlowDirectionType());
 				query.setRefWorkGridKey(data0.getRefWorkGridKey());
+				if(duccPropertyConfiguration.needAreaCodesForFlowCheck(gridData.getAreaCode())) {
+					WorkGridQuery workGridQuery = new WorkGridQuery();
+					workGridQuery.setSiteCode(gridData.getSiteCode());
+					workGridQuery.setAreaCode(gridData.getAreaCode());
+					query.setRefWorkGridKeyList(this.queryGridKeyListBySiteAndArea(workGridQuery));
+				}else {
+					query.setRefWorkGridKey(data0.getRefWorkGridKey());
+				}
 				query.setFlowSiteCodeList(flowSiteCodes);
 				query.setLineType(lineType);
 				List<Integer> flowSiteCodesExist = this.workGridFlowDirectionService.queryExistFlowSiteCodeList(query);
@@ -639,6 +651,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		//逐条校验
 		int rowNum = 1;
 		Map<String,Integer> uniqueKeysRowNumMap = new HashMap<String,Integer>();
+		List<String> importFlowKeyList = new ArrayList<>();
 		List<String> areaCodeList = new ArrayList<>();
 		for(WorkGridImport data : dataList) {
 			String rowKey = "第" + rowNum + "行";
@@ -658,7 +671,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		rowNum = 1;
 		for(WorkGridImport data : dataList) {
 			String rowKey = "第" + rowNum + "行";
-			Result<Boolean> result0 = checkAndFillNewData(data,areaMap);
+			Result<Boolean> result0 = checkAndFillNewData(data,areaMap,importFlowKeyList);
 			if(!result0.isSuccess()) {
 				return result0.toFail(rowKey + result0.getMessage());
 			}
@@ -677,7 +690,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 	 * @param data
 	 * @return
 	 */
-	private Result<Boolean> checkAndFillNewData(WorkGridImport data,Map<String,WorkArea> areaMap){
+	private Result<Boolean> checkAndFillNewData(WorkGridImport data,Map<String,WorkArea> areaMap,List<String> importFlowKeyList){
 		Result<Boolean> result = Result.success();
 		Integer siteCode = data.getSiteCode();
 		Integer floor = data.getFloor();
@@ -759,6 +772,20 @@ public class WorkGridServiceImpl implements WorkGridService {
 				if(siteCodeInt.equals(workGridData.getSiteCode())) {
 					return result.toFail(lineType.getName()+"流向ID不能是网格的站点！【"+siteCodeStr+"】");
 				}
+				String importFlowKey = getImportFlowKey(workGridData.getBusinessKey(),lineType.getCode(),siteCodeInt);
+				//判断是否按作业区校验
+				boolean checkByArea = this.duccPropertyConfiguration.needAreaCodesForFlowCheck(areaCode);
+				if(checkByArea) {
+					importFlowKey = getImportFlowKey(areaCode,lineType.getCode(),siteCodeInt);
+				}
+				if(importFlowKeyList.contains(importFlowKey)){
+					if(checkByArea) {
+						return result.toFail(workArea.getAreaName() + "】同一作业区下" +lineType.getName()+" 存在重复流向站点！【"+siteCodeStr+"】");
+					}else {
+						return result.toFail(lineType.getName()+"存在重复流向站点！【"+siteCodeStr+"】");
+					}
+				}
+				importFlowKeyList.add(importFlowKey);
 				WorkGridFlowDirection flowData = new WorkGridFlowDirection();
 				flowData.setRefWorkGridKey(workGridData.getBusinessKey());
 				flowData.setSiteCode(workGridData.getSiteCode());
@@ -790,6 +817,14 @@ public class WorkGridServiceImpl implements WorkGridService {
 			flowDataMap.put(lineType.getCode(), flowDataList);
 		}
 		return result;
+	}
+	private String getImportFlowKey(String areaCodeOrGridKey,Integer lineType,Integer flowSiteCode) {
+		return areaCodeOrGridKey
+				.concat(DmsConstants.KEYS_SPLIT)
+				.concat(lineType.toString())
+				.concat(DmsConstants.KEYS_SPLIT)
+				.concat(flowSiteCode.toString())
+				;
 	}
 	@Override
 	public String getUniqueKeysStr(WorkGrid data) {
@@ -891,5 +926,9 @@ public class WorkGridServiceImpl implements WorkGridService {
 		pageDto.setTotalRow(totalCount.intValue());
 		result.setData(pageDto);
 		return result;
+	}
+	@Override
+	public List<String> queryGridKeyListBySiteAndArea(WorkGridQuery workGridQuery) {
+		return workGridDao.queryGridKeyListBySiteAndArea(workGridQuery);
 	}
 }

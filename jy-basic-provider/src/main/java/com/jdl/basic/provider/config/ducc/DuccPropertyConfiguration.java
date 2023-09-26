@@ -2,6 +2,7 @@ package com.jdl.basic.provider.config.ducc;
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
@@ -23,8 +24,8 @@ public class DuccPropertyConfiguration {
 	/**
 	 * 需要按作业区校验流向的列表
 	 */
-	@Value("${ducc.workAreaCodesForFlowCheck:}")
-	private String workAreaCodesForFlowCheck;  
+	@Value("${ducc.workAreaCodesForFlowCheck:[xxx]}")
+	private List<String> workAreaCodesForFlowCheck;  
 
     public boolean getSiteQueryDowngradeSwitch() {
         return siteQueryDowngradeSwitch;
@@ -33,4 +34,18 @@ public class DuccPropertyConfiguration {
     public void setSiteQueryDowngradeSwitch(boolean siteQueryDowngradeSwitch) {
         this.siteQueryDowngradeSwitch = siteQueryDowngradeSwitch;
     }
+
+	public List<String> getWorkAreaCodesForFlowCheck() {
+		return workAreaCodesForFlowCheck;
+	}
+
+	public void setWorkAreaCodesForFlowCheck(List<String> workAreaCodesForFlowCheck) {
+		this.workAreaCodesForFlowCheck = workAreaCodesForFlowCheck;
+	}
+	public boolean needAreaCodesForFlowCheck(String areaCode) {
+		if(CollectionUtils.isNotEmpty(workAreaCodesForFlowCheck) && areaCode != null) {
+			return workAreaCodesForFlowCheck.contains(areaCode);
+		}
+		return false;
+	}
 }

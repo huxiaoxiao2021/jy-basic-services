@@ -90,4 +90,8 @@ public class WorkGridFlowDirectionQuery extends BasePagerCondition implements Se
 	*/
 	private Integer pageSize;
 
+	/**
+	 * 关联场地网格key列表:work_grid
+	 */
+	private List<String> refWorkGridKeyList;
 }

@@ -104,5 +104,10 @@ public interface WorkGridDao {
 	 * @return
 	 */
 	Integer brushUpdateById(List<WorkGrid> list);
-
+	/**
+	 * 查询场地和作业区下的网格key列表
+	 * @param workGridQuery
+	 * @return
+	 */
+	List<String> queryGridKeyListBySiteAndArea(WorkGridQuery workGridQuery);
 }
