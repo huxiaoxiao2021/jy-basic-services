@@ -24,7 +24,7 @@ public class DuccPropertyConfiguration {
 	/**
 	 * 需要按作业区校验流向的列表
 	 */
-	@Value("${ducc.workAreaCodesForFlowCheck:[FJZCQ]}")
+	@Value("${ducc.workAreaCodesForFlowCheck:FJZCQ}")
 	private List<String> workAreaCodesForFlowCheck;  
 
     public boolean getSiteQueryDowngradeSwitch() {
