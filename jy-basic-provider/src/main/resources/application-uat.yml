@@ -104,6 +104,10 @@ jsf:
   jy_basic:
     alias: jy-basic-server-uat
     token: anktYmFzaWMtc2VydmVyLXRva2Vu
+  automatic:
+    alias: level0_UAT
+    token: automatic_UAT
+    timeout: 2000
 
 basic:
   jsf:
