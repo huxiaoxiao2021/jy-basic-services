@@ -40,6 +40,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dms-component-sdk.version>1.0.2-SNAPSHOT</dms-component-sdk.version>
         <jdmeta-project-outer-api-sort.version>1.0-SNAPSHOT</jdmeta-project-outer-api-sort.version>
+        <aces.version>3.0.1-SNAPSHOT</aces.version>
     </properties>
 
     <!--配置环境的profile-->
@@ -292,6 +293,16 @@
                 <groupId>com.jd.jdl.aidata.isc</groupId>
                 <artifactId>jdmeta-project-outer-api-sort</artifactId>
                 <version>${jdmeta-project-outer-api-sort.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jd.security</groupId>
+                <artifactId>aces-mybatisclient</artifactId>
+                <version>${aces.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jd.security</groupId>
+                <artifactId>aces-springclient</artifactId>
+                <version>${aces.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -312,6 +312,14 @@
             <groupId>com.jd.jdl.aidata.isc</groupId>
             <artifactId>jdmeta-project-outer-api-sort</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.jd.security</groupId>
+            <artifactId>aces-mybatisclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jd.security</groupId>
+            <artifactId>aces-springclient</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

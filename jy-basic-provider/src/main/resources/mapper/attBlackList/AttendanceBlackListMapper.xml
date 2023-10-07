@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jdl.basic.provider.core.dao.attBlackList.AttendanceBlackListDao" >
+    <resultMap id="BaseResultMap" type="com.jdl.basic.api.domain.attBlackList.AttendanceBlackList">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="user_code_encrypt" property="userCode" typeHandler="com.jd.security.aces.mybatis.handle.AcesCipherTextHandle"/>
+        <result column="take_time" jdbcType="TIMESTAMP" property="takeTime" />
+        <result column="lose_time" jdbcType="TIMESTAMP" property="loseTime" />
+        <result column="operator_erp" jdbcType="VARCHAR" property="operatorErp" />
+        <result column="notes" jdbcType="VARCHAR" property="notes" />
+        <result column="cancel_flag" jdbcType="TINYINT" property="cancelFlag" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="yn" jdbcType="TINYINT" property="yn" />
+        <result column="ts" jdbcType="TIMESTAMP" property="ts" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `id`, `name`,`user_code`,`user_code_encrypt`, `take_time`, `lose_time`, `operator_erp`, `notes`, `cancel_flag`, `create_time`, `update_time`, `yn`, `ts`
+    </sql>
+    <!-- where条件 -->
+    <sql id="where">
+        <where>
+            <include refid="sql_if_not_null"/>
+        </where>
+    </sql>
+    <!-- 判断空值 -->
+    <sql id="sql_if_not_null">
+        yn = 1
+        <if test="id != null" >
+            and id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="name != null and name != ''" >
+            and name like CONCAT('%', #{name, jdbcType=VARCHAR}, '%')
+        </if>
+        <if test="userCode != null and userCode != '' " >
+            and user_code_index = #{userCode,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
+        </if>
+        <if test="takeTime != null" >
+            and take_time  = #{takeTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="loseTime != null" >
+            and lose_time  = #{loseTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="cancelFlag != null and cancelFlag != ''" >
+            and cancel_flag  = #{cancelFlag,jdbcType=TINYINT}
+        </if>
+        <if test="notes != null and notes != ''" >
+            and notes  like CONCAT('%', #{notes, jdbcType=VARCHAR}, '%')
+        </if>
+        <if test="createTime != null" >
+            and create_time  = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateTime != null" >
+            and update_time  = #{updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="operatorErp != null and operatorErp != ''" >
+            and operator_erp  = #{operatorErp,jdbcType=VARCHAR}
+        </if>
+        <choose>
+            <when test="status == 0">
+                and cancel_flag=1
+            </when>
+            <when test="status == 1">
+                and cancel_flag=0 and current_date() <![CDATA[ < ]]> take_time
+            </when>
+            <when test="status == 2">
+                and ((cancel_flag=0 and lose_time is null and take_time <![CDATA[ <= ]]> current_date()) or (cancel_flag=0 and lose_time is not null and take_time <![CDATA[ <= ]]>  current_date() and current_date() <![CDATA[ < ]]>  lose_time))
+            </when>
+            <when test="status == 3">
+                and cancel_flag=0 and lose_time is not null and  current_date() <![CDATA[ >= ]]> lose_time
+            </when>
+        </choose>
+    </sql>
+    <insert id="insert" parameterType="com.jdl.basic.api.domain.attBlackList.AttendanceBlackList" useGeneratedKeys="true" keyProperty="id">
+        insert into attendance_black_list
+        (
+        <trim suffixOverrides=",">
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="name != null" >
+                name,
+            </if>
+            <if test="userCode != null" >
+                user_code_encrypt,
+                user_code_index,
+            </if>
+            <if test="takeTime != null" >
+                take_time,
+            </if>
+            <if test="loseTime != null" >
+                lose_time,
+            </if>
+            <if test="operatorErp != null" >
+                operator_erp,
+            </if>
+            <if test="notes != null" >
+                notes,
+            </if>
+            <if test="cancelFlag != null" >
+                cancel_flag,
+            </if>
+            create_time,
+            update_time,
+            yn,
+            ts
+        </trim>
+        )
+        values
+        (
+        <trim suffixOverrides=",">
+            <if test="id != null" >
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="name != null" >
+                #{name, jdbcType=VARCHAR},
+            </if>
+            <if test="userCode != null" >
+                #{userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+                #{userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+            </if>
+            <if test="takeTime != null" >
+                #{takeTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="loseTime != null" >
+                #{loseTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="operatorErp != null" >
+                #{operatorErp, jdbcType=VARCHAR},
+            </if>
+            <if test="notes != null" >
+                #{notes, jdbcType=VARCHAR},
+            </if>
+            <if test="cancelFlag != null" >
+                #{cancelFlag, jdbcType=TINYINT},
+            </if>
+            now(),
+            now(),
+            1,
+            now()
+        </trim>
+        )
+    </insert>
+    <update id="deleteById" parameterType="java.lang.Integer">
+        update attendance_black_list set yn = 0 where `id` = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateById" parameterType="com.jdl.basic.api.domain.attBlackList.AttendanceBlackList">
+        update attendance_black_list
+        <set>
+            <if test="name != null" >
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="userCode != null" >
+                `user_code_encrypt` = #{userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+                `user_code_index` = #{userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+            </if>
+            <if test="takeTime != null" >
+                `take_time` = #{takeTime,jdbcType=TIMESTAMP},
+            </if>
+            `lose_time` = #{loseTime,jdbcType=TIMESTAMP},
+            <if test="operatorErp != null" >
+                `operator_erp` = #{operatorErp,jdbcType=VARCHAR},
+            </if>
+            <if test="notes != null" >
+                `notes` = #{notes,jdbcType=VARCHAR},
+            </if>
+            <if test="cancelFlag != null" >
+                `cancel_flag` = #{cancelFlag,jdbcType=TINYINT},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime,jdbcType=TIMESTAMP}
+            </if>
+        </set>
+        where `id` = #{id,jdbcType=INTEGER}
+    </update>
+    <select id="queryByCondition" parameterType="com.jdl.basic.api.domain.attBlackList.AttendanceBlackListCondition" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from attendance_black_list
+        <include refid="where"/>
+        order by create_time desc
+        <if test="pageSize != 0 and pageNo != 0" >
+            limit #{offset}, #{pageSize}
+        </if>
+    </select>
+    <select id="countByCondition" parameterType="com.jdl.basic.api.domain.attBlackList.AttendanceBlackListCondition" resultType="java.lang.Long">
+        select
+        count(*) as count
+        from attendance_black_list
+        <include refid="where"/>
+    </select>
+    <select id="checkCountCondition" parameterType="com.jdl.basic.api.domain.attBlackList.AttendanceBlackListCondition" resultType="java.lang.Long">
+        select
+        count(*) as count
+        from attendance_black_list
+        <where>
+            yn = 1
+            <if test="id != null" >
+                and id != #{id,jdbcType=INTEGER}
+            </if>
+            <if test="userCode != null" >
+                and user_code_index = #{userCode,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
+            </if>
+        </where>
+    </select>
+    <select id="queryByUserCode" parameterType="java.lang.String"  resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from attendance_black_list
+        where   yn = 1  and user_code_index = #{userCode,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
+    </select>
+</mapper>
