@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.provider.workStation;
 
 
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
+import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.common.utils.*;
 import com.jdl.basic.provider.JYBasicRpcException;
 
@@ -17,11 +18,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkGrid;
-import com.jdl.basic.api.domain.workStation.WorkGridImport;
-import com.jdl.basic.api.domain.workStation.WorkGridQuery;
-import com.jdl.basic.api.domain.workStation.WorkGridVo;
 import com.jdl.basic.api.service.workStation.WorkGridJsfService;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.provider.config.lock.LockService;
@@ -277,5 +273,16 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 		if (ObjectHelper.isEmpty(query.getGridCode())){
 			throw new JYBasicRpcException("参数错误：gridCode为空！");
 		}
+	}
+
+	@Override
+	public Result<List<WorkGrid>> batchQueryAreaWorkGrid(BatchAreaWorkGridQuery query) {
+		if (CollectionUtils.isEmpty(query.getSiteCodes())) {
+			return Result.fail("场地编码不能为空！");
+		}
+		if (CollectionUtils.isEmpty(query.getAreaCodes())) {
+			return Result.fail("作业区编码不能为空！");
+		}
+		return Result.success(workGridService.batchQueryAreaWorkGrid(query));
 	}
 }

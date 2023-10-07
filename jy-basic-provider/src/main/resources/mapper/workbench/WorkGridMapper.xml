@@ -732,4 +732,22 @@
 			#{item}
 		</foreach>
 	</update>
+
+	<select id="batchQueryAreaWorkGrid" resultMap="WorkGrid">
+		select
+		<include refid="Base_Column_List"/>
+		from
+			work_grid
+		where
+			yn = 1
+		and site_code in
+		<foreach collection="siteCodes" item="item" separator="," close=")" open="(">
+			#{item, jdbcType=INTEGER}
+		</foreach>
+		and area_code in
+		<foreach collection="areaCodes" item="item" separator="," close=")" open="(">
+			#{item, jdbcType=VARCHAR}
+		</foreach>
+	limit 1000
+	</select>
 </mapper>

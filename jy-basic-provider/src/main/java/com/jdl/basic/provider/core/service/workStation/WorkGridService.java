@@ -167,4 +167,6 @@ public interface WorkGridService {
 	List<Integer> selectDistinctSiteCode();
 
 	int batchUpdateByIds(WorkGridBatchUpdateRequest request);
+
+	List<WorkGrid> batchQueryAreaWorkGrid(BatchAreaWorkGridQuery query);
 }

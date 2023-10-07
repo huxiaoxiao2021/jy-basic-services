@@ -805,4 +805,9 @@ public class WorkGridServiceImpl implements WorkGridService {
 	public int batchUpdateByIds(WorkGridBatchUpdateRequest request) {
 		return workGridDao.batchUpdateByIds(request);
 	}
+
+	@Override
+	public List<WorkGrid> batchQueryAreaWorkGrid(BatchAreaWorkGridQuery query) {
+		return workGridDao.batchQueryAreaWorkGrid(query);
+	}
 }
