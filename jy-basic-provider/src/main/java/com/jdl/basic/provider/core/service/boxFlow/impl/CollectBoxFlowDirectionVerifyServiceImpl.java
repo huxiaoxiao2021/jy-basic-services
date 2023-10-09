@@ -184,7 +184,13 @@ public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlow
             //错误的配置list
             List<CollectBoxFlowDirectionConf> wrongList = select.stream().filter(s -> {
                 Integer boxReceiveId = s.getBoxReceiveId();
-                if (!Objects.equals(boxReceiveId, req.getBoxReceiveId())) {
+                Integer deputyBoxReceiveId = s.getDeputyBoxReceiveId();
+                // 建包流向id 和传进来的不一致
+                boolean b = !Objects.equals(boxReceiveId, req.getBoxReceiveId());
+                // 副流向id不为空，并且和传进来的不一致
+                boolean c = deputyBoxReceiveId == null ? false : (!Objects.equals(deputyBoxReceiveId, req.getBoxReceiveId()));
+
+                if (b || c) {
                     return true;
                 }
                 return false;

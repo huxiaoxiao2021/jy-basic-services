@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static com.jdl.basic.common.enums.CollectBoxFlowInfoOperateTypeEnum.ACTIVATE;
 import static com.jdl.basic.common.enums.CollectBoxFlowInfoOperateTypeEnum.ADD;
@@ -46,6 +46,10 @@ import static com.jdl.basic.common.enums.CollectBoxFlowInfoStatusEnum.UNACTIVATE
 @Service("collectBoxFlowDirectionConfPushService")
 @Slf4j
 public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxFlowDirectionConfPushService {
+    private ExecutorService deleteHistoryExecutorService= new ThreadPoolExecutor(1, 1,
+            0L, TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<Runnable>(1));
+
 
     private static Integer DELETE_COUNT = 2000;
     
@@ -98,10 +102,23 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
                     dto.getTransportType() == null ||
                     dto.getFlowType() == null ||
                     dto.getCollectClaim() == null ||
-                    StringUtils.isEmpty(dto.getUpdateDate())) {
+                    StringUtils.isEmpty(dto.getUpdateDate()) ||
+                    dto.getSupportDeputyReceiveSite() == null) {
                 result.setCode(2);
                 result.setMessage("参数不能为空");
                 return result;
+            }
+            if (Objects.equals(dto.getSupportDeputyReceiveSite(), 1)) {
+                if (dto.getDeputyBoxReceiveId() == null) {
+                    result.setCode(2);
+                    result.setMessage("支持副流向时，副流向id不能为空");
+                    return result;
+                }
+                if (StringUtils.isEmpty(dto.getDeputyBoxPkgName())) {
+                    result.setCode(2);
+                    result.setMessage("支持副流向时，副流向包牌名称不能为空");
+                    return result;
+                }
             }
             if (dto.getStartOrgId() == null) {
                 BaseStaffSiteOrgDto baseSiteBySiteId = basicPrimaryWS.getBaseSiteBySiteId(dto.getStartSiteId());
@@ -121,6 +138,12 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
                     dto.setEndProvinceAgencyName(baseSiteBySiteId.getProvinceAgencyName());
                     dto.setEndAreaHubCode(baseSiteBySiteId.getAreaCode());
                     dto.setEndAreaHubName(baseSiteBySiteId.getAreaName());
+                }
+            }
+            if (StringUtils.isEmpty(dto.getDeputyBoxReceiveName())) {
+                BaseStaffSiteOrgDto deputyBoxReceive = basicPrimaryWS.getBaseSiteBySiteId(dto.getDeputyBoxReceiveId());
+                if (deputyBoxReceive != null) {
+                    dto.setDeputyBoxReceiveName(deputyBoxReceive.getSiteName());
                 }
             }
             //删除老版本数据
@@ -184,21 +207,29 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
             cluster.del(key);
         }
     }
-    
-    private void deleteHistory(){
-        CollectBoxFlowInfo history = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null, HISTORY.getCode());
-        if(history == null){
-            log.info("大数据推送小件集包新版本，未查到历史版本数据");
-            return;
+
+    private void deleteHistory() {
+        Runnable runnable = () -> {
+            CollectBoxFlowInfo history = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null, HISTORY.getCode());
+            if (history == null) {
+                log.info("大数据推送小件集包新版本，未查到历史版本数据");
+                return;
+            }
+            int count = 0;
+            int sum = 0;
+            do {
+                count = confService.deleteByVersion(history.getVersion(), DELETE_COUNT);
+                sum += count;
+            } while (count > 0);
+            collectBoxFlowInfoDao.deleteByPrimaryKey(history.getId());
+            log.info("大数据推送小件集包新版本,删除历史版本数据version:{},sum:{}", history.getVersion(), sum);
+        };
+
+        try {
+            deleteHistoryExecutorService.execute(runnable);
+        } catch (RejectedExecutionException e) {
+            log.warn("删除历史版本数据正在运行，拒绝新加");
         }
-        int count = 0;
-        int sum = 0;
-        do {
-            count = confService.deleteByVersion(history.getVersion(), DELETE_COUNT);
-            sum += count;
-        }while (count > 0);
-        collectBoxFlowInfoDao.deleteByPrimaryKey(history.getId());
-        log.info("大数据推送小件集包新版本,删除历史版本数据version:{},sum:{}", history.getVersion(), sum);
     }
     //新增集包规则主表信息
     private boolean addCollectBoxFlowInfo(String version){

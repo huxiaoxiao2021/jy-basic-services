@@ -133,7 +133,8 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         Result<Boolean> result = new Result<>();
         if (conf.getStartSiteId() == null || conf.getEndSiteId() == null
                 || conf.getStartOrgId() == null || conf.getEndOrgId() == null
-                || conf.getFlowType() == null || conf.getTransportType() == null) {
+                || conf.getFlowType() == null || conf.getTransportType() == null
+                || conf.getSupportDeputyReceiveSite() == null) {
             return result.toFail("参数错误，不能为空");
         }
         CollectBoxFlowDirectionConf query = new CollectBoxFlowDirectionConf();
@@ -182,6 +183,18 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         collectBoxFlowDirectionConf.setVersion(conf.getVersion());
         if(conf.getRouteErrorType() != null){
             collectBoxFlowDirectionConf.setRouteErrorType(conf.getRouteErrorType());
+        }
+        if (conf.getSupportDeputyReceiveSite() != null) {
+            collectBoxFlowDirectionConf.setSupportDeputyReceiveSite(conf.getSupportDeputyReceiveSite());
+        }
+        if (conf.getDeputyBoxReceiveId() != null) {
+            collectBoxFlowDirectionConf.setDeputyBoxReceiveId(conf.getDeputyBoxReceiveId());
+        }
+        if (StringUtils.isNotEmpty(conf.getDeputyBoxReceiveName())) {
+            collectBoxFlowDirectionConf.setDeputyBoxReceiveName(conf.getDeputyBoxReceiveName());
+        }
+        if (StringUtils.isNotEmpty(conf.getDeputyBoxPkgName())) {
+            collectBoxFlowDirectionConf.setDeputyBoxPkgName(conf.getDeputyBoxPkgName());
         }
         int i = collectBoxFlowDirectionConfMapper.updateByPrimaryKeySelective(collectBoxFlowDirectionConf);
         if (i != 1) {

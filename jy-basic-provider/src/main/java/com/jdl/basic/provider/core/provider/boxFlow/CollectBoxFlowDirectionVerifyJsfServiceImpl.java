@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.*;
+
 /**
  * @Author: chenyaguo@jd.com
  * @Date: 2022/8/11 16:39
@@ -25,6 +27,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class CollectBoxFlowDirectionVerifyJsfServiceImpl implements CollectBoxFlowDirectionVerifyJsfService, Handler {
+    private ExecutorService checkAllMixableRouteExecutorService= new ThreadPoolExecutor(1, 1,
+            0L, TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<Runnable>(1));
 
     @Autowired
     private ICollectBoxFlowDirectionVerifyService collectBoxFlowDirectionVerifyService;
@@ -68,6 +73,10 @@ public class CollectBoxFlowDirectionVerifyJsfServiceImpl implements CollectBoxFl
      */
     @Override
     public void handle(Request request, Response response) throws Throwable {
-        collectBoxFlowDirectionVerifyService.checkAllMixableRoute();
+        try {
+            checkAllMixableRouteExecutorService.execute(() -> collectBoxFlowDirectionVerifyService.checkAllMixableRoute());
+        } catch (RejectedExecutionException e) {
+            log.warn("checkAllMixableRoute 正在运行，拒绝");
+        }
     }
 }

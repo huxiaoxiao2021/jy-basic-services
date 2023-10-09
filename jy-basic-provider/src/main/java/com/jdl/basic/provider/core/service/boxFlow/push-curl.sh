@@ -1,0 +1,22 @@
+curl -XPOST http://127.0.0.1:22000/com.jdl.basic.api.service.boxFlow.CollectBoxFlowDirectionConfPushJsfService/jy-basic-server-dev/updateOrNewConfig -H "token:jy-basic-server-token" -d '
+[
+{
+	"boxPkgName":"主包牌名",
+	"boxReceiveId":910,
+	"boxReceiveName":"目的地名",
+	"collectClaim":1,
+	"deputyBoxPkgName":"包牌名称",
+	"deputyBoxReceiveId":910,
+	"endOrgId":6,
+	"endSiteId":1868,
+	"endSiteName":"endName",
+	"flowType":2,
+	"startOrgId":6,
+	"startSiteId":482,
+	"startSiteName":"startName",
+	"supportDeputyReceiveSite":1,
+	"transportType":1,
+	"updateDate":"2023-10-10"
+}
+]
+'
