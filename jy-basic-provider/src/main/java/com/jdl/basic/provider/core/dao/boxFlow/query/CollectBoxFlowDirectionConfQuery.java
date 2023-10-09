@@ -144,4 +144,24 @@ public class CollectBoxFlowDirectionConfQuery {
      * 枢纽编码
      */
     private String endAreaHubCode;
+
+    /**
+     * 是否支持副流向
+     */
+    private Integer supportDeputyReceiveSite;
+
+    /**
+     * 副流向
+     */
+    private Integer deputyBoxReceiveId;
+
+    /**
+     * 副流向站点名字
+     */
+    private String deputyBoxReceiveName;
+
+    /**
+     * 副流向包牌名称
+     */
+    private String deputyBoxPkgName;
 }

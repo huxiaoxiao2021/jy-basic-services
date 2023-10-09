@@ -190,10 +190,10 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         if (conf.getDeputyBoxReceiveId() != null) {
             collectBoxFlowDirectionConf.setDeputyBoxReceiveId(conf.getDeputyBoxReceiveId());
         }
-        if (StringUtils.isNotEmpty(conf.getDeputyBoxReceiveName())) {
+        if (conf.getDeputyBoxReceiveName() != null) {
             collectBoxFlowDirectionConf.setDeputyBoxReceiveName(conf.getDeputyBoxReceiveName());
         }
-        if (StringUtils.isNotEmpty(conf.getDeputyBoxPkgName())) {
+        if (conf.getDeputyBoxPkgName() != null) {
             collectBoxFlowDirectionConf.setDeputyBoxPkgName(conf.getDeputyBoxPkgName());
         }
         int i = collectBoxFlowDirectionConfMapper.updateByPrimaryKeySelective(collectBoxFlowDirectionConf);

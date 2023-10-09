@@ -49,7 +49,7 @@
         end_site_id, end_site_name, box_receive_id, box_receive_name, box_pkg_name, transport_type,
         flow_type, create_user_erp, update_user_erp, create_time, update_time, ts, yn, collect_claim, 
             if_change_since_last_update,version,route_error_type,
-        support_deputy_receive_site,deputy_box_receive_id
+        support_deputy_receive_site,deputy_box_receive_id,
         deputy_box_receive_name,deputy_box_pkg_name
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
