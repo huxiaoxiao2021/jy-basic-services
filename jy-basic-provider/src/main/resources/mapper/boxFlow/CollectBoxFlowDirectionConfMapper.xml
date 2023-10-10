@@ -35,6 +35,7 @@
         <result column="collect_claim" jdbcType="INTEGER" property="collectClaim"/>
         <result column="if_change_since_last_update" jdbcType="INTEGER" property="ifChangeSinceLastUpdate"/>
         <result column="version" jdbcType="VARCHAR" property="version"/>
+        <result column="route_error_type" jdbcType="INTEGER" property="routeErrorType"/>
         <result column="support_deputy_receive_site" jdbcType="INTEGER" property="supportDeputyReceiveSite"/>
         <result column="deputy_box_receive_id" jdbcType="INTEGER" property="deputyBoxReceiveId"/>
         <result column="deputy_box_receive_name" jdbcType="VARCHAR" property="deputyBoxReceiveName"/>
@@ -77,7 +78,7 @@
                                                      flow_type, create_user_erp, update_user_erp,
                                                      create_time, update_time, ts,
                                                      yn,collect_claim,if_change_since_last_update,route_error_type,
-                                                    support_deputy_receive_site,deputy_box_receive_id
+                                                    support_deputy_receive_site,deputy_box_receive_id,
                                                     deputy_box_receive_name,deputy_box_pkg_name)
         values (#{startOrgId,jdbcType=INTEGER}, #{startOrgName,jdbcType=VARCHAR}, #{startSiteId,jdbcType=INTEGER},
                 #{startSiteName,jdbcType=VARCHAR}, #{endOrgId,jdbcType=INTEGER}, #{endOrgName,jdbcType=VARCHAR},
@@ -90,7 +91,7 @@
                 #{yn,jdbcType=BOOLEAN},#{collectClaim,jdbcType=INTEGER},#{ifChangeSinceLastUpdate,jdbcType=INTEGER},
         #{routeErrorType,jdbcType=INTEGER},
         #{supportDeputyReceiveSite,jdbcType=INTEGER},#{deputyBoxReceiveId,jdbcType=INTEGER},
-        #{deputyBoxReceiveName,jdbcType=VARCHAR},#{deputyBoxPkgName,jdbcType=VARCHAR},)
+        #{deputyBoxReceiveName,jdbcType=VARCHAR},#{deputyBoxPkgName,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id"
             parameterType="com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf" useGeneratedKeys="true">
