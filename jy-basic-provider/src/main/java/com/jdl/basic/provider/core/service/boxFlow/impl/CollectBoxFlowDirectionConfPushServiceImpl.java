@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.*;
 
+import static com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionPushConfDto.COLLECT_CLAIM_FINISHED_BOX;
 import static com.jdl.basic.common.enums.CollectBoxFlowInfoOperateTypeEnum.ACTIVATE;
 import static com.jdl.basic.common.enums.CollectBoxFlowInfoOperateTypeEnum.ADD;
 import static com.jdl.basic.common.enums.CollectBoxFlowInfoStatusEnum.HISTORY;
@@ -117,6 +118,11 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
                 if (StringUtils.isEmpty(dto.getDeputyBoxPkgName())) {
                     result.setCode(2);
                     result.setMessage("支持副流向时，副流向包牌名称不能为空");
+                    return result;
+                }
+                if (Objects.equals(dto.getCollectClaim(), COLLECT_CLAIM_FINISHED_BOX)) {
+                    result.setCode(2);
+                    result.setMessage("参数错误，成品包不支持副流向");
                     return result;
                 }
             }
