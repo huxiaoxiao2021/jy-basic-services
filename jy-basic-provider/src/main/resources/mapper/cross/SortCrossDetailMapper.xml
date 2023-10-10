@@ -451,7 +451,7 @@
         from
             sort_cross_detail
         where  yn = 1
-            and site_code = #{siteCode,jdbcType=VARCHAR}
+            and site_code = #{siteCodeStr,jdbcType=VARCHAR}
             and dms_id = #{dmsId,jdbcType=INTEGER}
     </select>
     <select id="queryCrossCodeTableTrolleyBySiteFlowList" parameterType="com.jdl.basic.api.domain.cross.TableTrolleyQuery"
@@ -462,7 +462,7 @@
         where  yn = 1
         and dms_id = #{dmsId,jdbcType=INTEGER}
         and site_code in
-        <foreach collection="siteCodeList" item="item" index="index" open="(" separator="," close=")">
+        <foreach collection="siteCodeStrList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
     </select>

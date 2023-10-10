@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static com.jdl.basic.common.contants.CacheKeyConstants.CACHE_KEY_INSERT_OR_UPDATE_SORT_CROSS;
@@ -202,6 +203,9 @@ public class SortCrossServiceImpl implements SortCrossService {
     @Override
     public TableTrolleyJsfResp queryCrossCodeTableTrolleyBySiteFlow(TableTrolleyQuery tableTrolleyQuery) {
         TableTrolleyJsfResp tableTrolley = new TableTrolleyJsfResp();
+        if(!Objects.isNull(tableTrolleyQuery.getSiteCode())) {
+            tableTrolleyQuery.setSiteCodeStr(tableTrolleyQuery.getSiteCode().toString());
+        }
         List<TableTrolleyJsfDto> tableTrolleyList = crossDetailDao.queryCrossCodeTableTrolleyBySiteFlow(tableTrolleyQuery);
         tableTrolley.setTableTrolleyDtoJsfList(tableTrolleyList);
         return tableTrolley;
@@ -210,6 +214,15 @@ public class SortCrossServiceImpl implements SortCrossService {
     @Override
     public TableTrolleyJsfResp queryCrossCodeTableTrolleyBySiteFlowList(TableTrolleyQuery tableTrolleyQuery) {
         TableTrolleyJsfResp tableTrolley = new TableTrolleyJsfResp();
+        if(CollectionUtils.isNotEmpty(tableTrolleyQuery.getSiteCodeList())) {
+            List<String> siteCodeStrList = new ArrayList<>();
+            tableTrolleyQuery.getSiteCodeList().forEach(siteCode -> {
+                if(!Objects.isNull(siteCode)) {
+                    siteCodeStrList.add(siteCode.toString());
+                }
+            });
+            tableTrolleyQuery.setSiteCodeStrList(siteCodeStrList);
+        }
         List<TableTrolleyJsfDto> tableTrolleyList = crossDetailDao.queryCrossCodeTableTrolleyBySiteFlowList(tableTrolleyQuery);
         tableTrolley.setTableTrolleyDtoJsfList(tableTrolleyList);
         return tableTrolley;

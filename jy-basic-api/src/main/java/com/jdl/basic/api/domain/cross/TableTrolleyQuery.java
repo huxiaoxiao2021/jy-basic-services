@@ -36,4 +36,11 @@ public class TableTrolleyQuery extends BasePagerCondition {
      * 目的地list(批量查询)
      */
     private List<Integer> siteCodeList;
+
+    /**
+     * 目的地场地ID
+     * siteCode 为Integer,DB存储Varchar, 前置类型转换
+     */
+    private String siteCodeStr;
+    private List<String> siteCodeStrList;
 }
