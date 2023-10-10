@@ -352,5 +352,13 @@
                   alias="${jsf.jy_basic.alias}"
                   server="jsf">
     </jsf:provider>
+    <!-- 出勤黑名单 -->
+    <jsf:provider id="attendanceBlackListJsfService"
+                  interface="com.jdl.basic.api.service.attBlackList.AttendanceBlackListJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="attendanceBlackListJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
 </beans>
 

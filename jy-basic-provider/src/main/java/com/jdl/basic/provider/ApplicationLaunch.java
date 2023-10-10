@@ -28,6 +28,7 @@ import org.springframework.context.annotation.PropertySources;
 @PropertySources(
         value = {
                 @PropertySource(value = {"classpath:important.properties"}, encoding = "utf-8", factory = JDSecurityPropertySourceFactory.class),
+                @PropertySource(value = {"classpath:aces.properties"}, encoding = "utf-8", factory = JDSecurityPropertySourceFactory.class)
         }
 )
 @Import(JDSecurityPropertyCleanService.class)

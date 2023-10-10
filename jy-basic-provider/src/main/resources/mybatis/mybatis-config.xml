@@ -20,5 +20,9 @@
         <!-- 数据库超过25000秒仍未响应则超时 -->
         <setting name="defaultStatementTimeout" value="25000"/>
     </settings>
-
+    <typeHandlers>
+        <typeHandler handler="com.jd.security.aces.mybatis.handle.AcesPlainTextHandle" javaType="com.jd.security.aces.mybatis.type.AcesPlainText"/>
+        <typeHandler handler="com.jd.security.aces.mybatis.handle.AcesCipherTextHandle" javaType="com.jd.security.aces.mybatis.type.AcesCipherText"/>
+        <typeHandler handler="com.jd.security.aces.mybatis.handle.AcesIndexHandle" javaType="com.jd.security.aces.mybatis.type.AcesIndex"/>
+    </typeHandlers>
 </configuration>
