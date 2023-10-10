@@ -312,7 +312,7 @@
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
-    
+
     <!-- 基础站点接口 -->
     <jsf:provider id="siteQueryJsfService"
                   interface="com.jdl.basic.api.service.site.SiteQueryService"
@@ -343,6 +343,22 @@
                   ref="collectBoxFlowDirectionVerifyJsfServiceImpl"
                   alias="${jsf.boxFlowRouterVerifyTask.alias}"
                   server="jsf">
+    </jsf:provider>
+
+    <!--  周转筐配置  -->
+    <jsf:provider id="akboxConfigJsf"
+                  interface="com.jdl.basic.api.service.akbox.AkboxConfigJsfService"
+                  ref="akboxConfigJsfServiceImpl"
+                  alias="${jsf.jy_basic.alias}"
+                  server="jsf">
+    </jsf:provider>
+    <!-- 出勤黑名单 -->
+    <jsf:provider id="attendanceBlackListJsfService"
+                  interface="com.jdl.basic.api.service.attBlackList.AttendanceBlackListJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="attendanceBlackListJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
 </beans>
 

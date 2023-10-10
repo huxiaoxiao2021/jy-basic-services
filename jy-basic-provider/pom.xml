@@ -27,7 +27,7 @@
         <dependency>
             <groupId>com.jdl.basic</groupId>
             <artifactId>jy-basic-api</artifactId>
-            <version>1.5.2-SNAPSHOT</version>
+            <version>1.5.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.jdl.basic</groupId>
@@ -312,6 +312,31 @@
             <groupId>com.jd.jdl.aidata.isc</groupId>
             <artifactId>jdmeta-project-outer-api-sort</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.jd.security</groupId>
+            <artifactId>aces-mybatisclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jd.security</groupId>
+            <artifactId>aces-springclient</artifactId>
+        </dependency>
+        <dependency>
+            <!-- [显式引入]核心包 -->
+            <groupId>com.jd</groupId>
+            <artifactId>throttle-core</artifactId>
+        </dependency>
+        <dependency>
+            <!-- [显式引入]注解定义包 -->
+            <groupId>com.jd</groupId>
+            <artifactId>throttle-annotation-aspectj</artifactId>
+        </dependency>
+        <dependency>
+            <!-- [确认依赖]请确认wormhole-manager版本 >= 1.2.2-SNAPSHOT，该依赖可能会由其他中间件引入低版本导致功能不可用-->
+            <!-- 可如下方式显式指定 -->
+            <groupId>com.jd</groupId>
+            <artifactId>wormhole-manager</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

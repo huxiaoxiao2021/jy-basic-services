@@ -1,8 +1,11 @@
 package com.jdl.basic.provider.core.provider.cross;
 
 import com.jd.ql.basic.dto.BaseSiteInfoDto;
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.cross.*;
 import com.jdl.basic.api.service.cross.SortCrossJsfService;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.enums.SortCrossEnableEnum;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
@@ -46,6 +49,7 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
     private static final Integer QUERY_LIMIT = 500;
     
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossJsfServiceImpl.queryPage", mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<PageDto<SortCrossDetail>> queryPage(SortCrossQuery query) {
         log.info("开始分页查询滑道笼车配置，查询条件为：{}",query);
         Result<PageDto<SortCrossDetail>> result = new Result<>();
@@ -59,6 +63,7 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossJsfServiceImpl.updateEnableByIds", mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<Boolean> updateEnableByIds(SortCrossUpdateRequest request) {
         log.info("开始更新滑道笼车配置的状态: {}", JsonHelper.toJSONString(request));
         Result<Boolean> result = new Result<>();
@@ -71,6 +76,7 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
 
     
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossJsfServiceImpl.initSortCross", mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<Boolean> initSortCross(Integer siteCode) {
         if (siteCode == null ) {
             return Result.success(Boolean.FALSE);
@@ -102,6 +108,7 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossJsfServiceImpl.queryCrossDataByDmsCode", mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<CrossDataJsfResp> queryCrossDataByDmsCode(CrossPageQuery query) {
         log.info("开始分页查询场地滑道信息: {}", JsonHelper.toJSONString(query));
         Result<CrossDataJsfResp> result = new Result<>();
@@ -122,6 +129,7 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossJsfServiceImpl.queryTableTrolleyListByCrossCode", mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<TableTrolleyJsfResp> queryTableTrolleyListByCrossCode(TableTrolleyQuery query) {
         log.info("开始根据滑道分页查询笼车信息: {}", JsonHelper.toJSONString(query));
         Result<TableTrolleyJsfResp> result = new Result<>();
@@ -145,6 +153,7 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossJsfServiceImpl.queryTableTrolleyListByDmsId", mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<TableTrolleyJsfResp> queryTableTrolleyListByDmsId(TableTrolleyQuery query) {
         log.info("开始根据场地分页查询笼车信息: {}", JsonHelper.toJSONString(query));
         Result<TableTrolleyJsfResp> result = new Result<>();
@@ -165,6 +174,7 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossJsfServiceImpl.queryCTTByStartEndSiteCode", mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<TableTrolleyJsfResp> queryCTTByStartEndSiteCode(TableTrolleyQuery query) {
         log.info("开始根据始发：{}和目的地：{} 获取滑道笼车信息", query.getDmsId(),query.getSiteCode());
         Result<TableTrolleyJsfResp> result = new Result<>();
@@ -182,6 +192,7 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossJsfServiceImpl.queryCTTByCTTCode", mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<TableTrolleyJsfResp> queryCTTByCTTCode(TableTrolleyQuery query) {
         log.info("开始根据滑道笼车号获取流向信息：{}", JsonHelper.toJSONString(query));
         Result<TableTrolleyJsfResp> result = new Result<>();
@@ -198,6 +209,7 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
         return result;    }
     
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossJsfServiceImpl.initSiteType", mState = {JProEnum.TP, JProEnum.FunctionError})
     public Boolean initSiteType(SortCrossDetail sortCrossDetail) {
         BaseSiteInfoDto baseSiteInfoDto = basicSiteQueryWSManager.getBaseSiteInfoBySiteId(Integer.valueOf(sortCrossDetail.getSiteCode()));
         if (baseSiteInfoDto != null) {
@@ -227,6 +239,7 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossJsfServiceImpl.queryCrossCodeTableTrolleyBySiteFlow", mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<TableTrolleyJsfResp> queryCrossCodeTableTrolleyBySiteFlow(TableTrolleyQuery request) {
         Result<TableTrolleyJsfResp> result = new Result<>();
         result.toSuccess();
@@ -254,6 +267,7 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
 
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossJsfServiceImpl.queryCrossCodeTableTrolleyBySiteFlowList", mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<TableTrolleyJsfResp> queryCrossCodeTableTrolleyBySiteFlowList(TableTrolleyQuery request) {
         Result<TableTrolleyJsfResp> result = new Result<>();
         result.toSuccess();
@@ -282,6 +296,7 @@ public class SortCrossJsfServiceImpl implements SortCrossJsfService {
 
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".SortCrossJsfServiceImpl.querySiteFlowByCrossCodeTableTrolley", mState = {JProEnum.TP, JProEnum.FunctionError})
     public Result<TableTrolleyJsfResp> querySiteFlowByCrossCodeTableTrolley(TableTrolleyQuery request) {
         Result<TableTrolleyJsfResp> result = new Result<>();
         result.toSuccess();

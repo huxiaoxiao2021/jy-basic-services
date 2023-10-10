@@ -11,6 +11,7 @@
     <result column="organization_code" jdbcType="VARCHAR" property="organizationCode"/>
     <result column="organization_name" jdbcType="VARCHAR" property="organizationName"/>
     <result column="organization_full_name" jdbcType="VARCHAR" property="organizationFullName"/>
+    <result column="organization_full_path" jdbcType="VARCHAR" property="organizationFullPath"/>
     <result column="user_status" jdbcType="INTEGER" property="userStatus"/>
     <result column="quit_action_date" jdbcType="VARCHAR" property="quitActionDate"/>
     <result column="nature" jdbcType="VARCHAR" property="nature"/>
@@ -31,7 +32,7 @@
   <sql id="Base_Column_List">
     id, user_erp, user_name, sex, entry_date, organization_code, organization_name, organization_full_name,
     user_status, quit_action_date, nature, nature_desc,position_code, position_name, std_position_code, std_position_name,
-    grid_distribute_flag, create_time, update_time, ts,site_code,site_name,site_type
+    grid_distribute_flag, create_time, update_time, ts,site_code,site_name,site_type, organization_full_path
   </sql>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -56,15 +57,15 @@
       organization_name, organization_full_name,
       user_status, quit_action_date, nature,
       nature_desc,position_code, position_name, std_position_code, std_position_name,
-      grid_distribute_flag, create_time, update_time,
-      ts)
+      grid_distribute_flag, create_time, update_time, 
+      ts, organization_full_path)
     values (#{id,jdbcType=BIGINT}, #{userErp,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
       #{sex,jdbcType=VARCHAR}, #{entryDate,jdbcType=VARCHAR}, #{organizationCode,jdbcType=VARCHAR},
       #{organizationName,jdbcType=VARCHAR}, #{organizationFullName,jdbcType=VARCHAR},
       #{userStatus,jdbcType=INTEGER}, #{quitActionDate,jdbcType=VARCHAR}, #{nature,jdbcType=VARCHAR},
       #{natureDesc,jdbcType=VARCHAR},#{positionCode,jdbcType=VARCHAR}, #{positionName,jdbcType=VARCHAR}, #{stdPositionCode,jdbcType=VARCHAR}, #{stdPositionName,jdbcType=VARCHAR},
       #{gridDistributeFlag,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
-      #{ts,jdbcType=TIMESTAMP})
+      #{ts,jdbcType=TIMESTAMP}, #{organizationFullPath,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jdl.basic.api.domain.user.JyUser">
     insert into jy_user
@@ -138,6 +139,9 @@
       <if test="siteType != null">
         site_type,
       </if>
+      <if test="organizationFullPath != null">
+        organization_full_path,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -208,6 +212,9 @@
       </if>
       <if test="siteType != null">
         #{siteType},
+      </if>
+      <if test="organizationFullPath != null">
+        #{organizationFullPath},
       </if>
     </trim>
   </insert>
@@ -280,6 +287,9 @@
       <if test="siteType != null">
         site_type =#{siteType},
       </if>
+      <if test="organizationFullPath != null">
+        organization_full_path = #{organizationFullPath},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -303,8 +313,9 @@
       grid_distribute_flag = #{gridDistributeFlag,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      ts = #{ts,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
+      ts = #{ts,jdbcType=TIMESTAMP},
+        organization_full_path = #{organizationFullPath}
+        where id = #{id,jdbcType=BIGINT}
   </update>
 
   <select id="searchUserBySiteCode" parameterType="com.jdl.basic.provider.core.service.user.model.JyUserQueryCondition" resultMap="BaseResultMap">

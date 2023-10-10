@@ -2,6 +2,9 @@ package com.jdl.basic.provider.mq.consumer;
 
 import com.jd.jmq.common.message.Message;
 import com.jd.joyqueue.client.springboot2.annotation.JmqListener;
+import com.jd.throttle.core.Entry;
+import com.jd.throttle.core.ThrottleGuard;
+import com.jd.throttle.core.slots.block.BlockException;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jd.ump.profiler.CallerInfo;
@@ -64,8 +67,31 @@ public class SiteChangeConsumer {
                 return;
             }
             // 更新网格信息
-            updateWorkGridBySiteCode(mq);
+            updateWorkGridBySiteCodeWithLimit(mq);
         }
+    }
+
+    /**
+     * 侵入式 限流模式的执行方法
+     * @param mq
+     */
+    private void updateWorkGridBySiteCodeWithLimit(BasicSiteChangeMQ mq){
+        Entry entry = null;
+        try {
+            entry = ThrottleGuard.entry("SITE_CHANGE_DEAL_LIMIT");
+            // 您需要限流的代码逻辑
+            updateWorkGridBySiteCode(mq);
+        } catch (BlockException e) {
+            // 发生限流/熔断事件时，触发BlockException
+            log.warn("消费站点变更消息时触发限流,{}",JsonHelper.toJSONString(mq), e);
+            throw new RuntimeException(e.getMessage());
+        } finally {
+            if (entry != null) {
+                // 清理API，用于清理资源和采集访问时延，为监控和熔断等服务提供数据
+                entry.exit();
+            }
+        }
+
     }
 
     private void updateWorkGridBySiteCode(BasicSiteChangeMQ mq) {

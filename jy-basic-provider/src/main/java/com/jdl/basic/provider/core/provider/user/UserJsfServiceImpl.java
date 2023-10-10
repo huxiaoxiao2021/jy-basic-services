@@ -80,6 +80,11 @@ public class UserJsfServiceImpl implements UserJsfService {
         return convertToResult(userService.queryNatureUndistributedUsers(dto));
     }
 
+    @Override
+    public Result<Boolean> checkUserBelongToJy(JyUserQueryDto dto) {
+        return userService.checkUserBelongToJy(dto);
+    }
+
     private Result<List<JyUserDto>> convertToResult(Result<List<JyUser>> inputResult) {
         Result<List<JyUserDto>> result = Result.success();
 

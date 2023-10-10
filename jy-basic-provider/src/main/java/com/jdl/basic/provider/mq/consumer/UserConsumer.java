@@ -151,6 +151,7 @@ public class UserConsumer {
     user.setPositionName(userInfo.getPositionName());
     user.setStdPositionCode(userInfo.getStdPositionCode());
     user.setStdPositionName(userInfo.getStdPositionName());
+    user.setOrganizationFullPath(userInfo.getOrganizationFullPath());
     return user;
   }
 

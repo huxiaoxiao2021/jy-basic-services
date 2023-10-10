@@ -8,5 +8,6 @@
     <import resource="jsf/jsf-provider.xml" />
     <import resource="jsf/jsf-consumer.xml" />
     <import resource="jmq/jmq-conf.xml" />
+    <import resource="aces/spring-aces-config.xml" />
 
 </beans>

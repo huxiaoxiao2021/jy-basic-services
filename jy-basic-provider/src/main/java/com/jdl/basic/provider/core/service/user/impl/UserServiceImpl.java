@@ -12,6 +12,7 @@ import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.config.cache.CacheService;
+import com.jdl.basic.provider.config.ducc.DuccPropertyConfiguration;
 import com.jdl.basic.provider.core.dao.user.JyUserDao;
 import com.jdl.basic.provider.core.service.user.UserService;
 import com.jdl.basic.provider.core.service.user.model.JyUserQueryCondition;
@@ -34,7 +35,10 @@ public class UserServiceImpl implements UserService {
 
   @Autowired
   CacheService jimdbCacheService;
-
+  
+  @Autowired
+  private DuccPropertyConfiguration duccPropertyConfiguration;
+  
   @Override
   public JyUser queryUserInfo(JyUser condition) {
     if (ObjectHelper.isEmpty(condition.getUserErp())) {
@@ -197,6 +201,41 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
       return result.toFail("工种不能为空！");
     }
     return result.setData(jyUserDao.queryNatureUndistributedUsers(condition));
+  }
+
+  @Override
+  public Result<Boolean> checkUserBelongToJy(JyUserQueryDto dto) {
+    Result<Boolean> result = Result.success();
+    result.setData(Boolean.FALSE);
+    if (StringUtils.isEmpty(dto.getUserErp())) {
+      return result.toFail("人员erp不能为空！");
+    }
+    JyUser condition = new JyUser();
+    condition.setUserErp(dto.getUserErp());
+    JyUser jyUser = jyUserDao.queryUserInfo(condition);
+    if (jyUser == null) {
+      return result;
+    }
+    
+    String organizationFullPath = jyUser.getOrganizationFullPath();
+    // 判断是否包含拣运机构ID
+    List<String> jyOrganizationCodeList = getJyOrganizationCodeList();
+    log.info("获取ducc的值：{}", JsonHelper.toJSONString(jyOrganizationCodeList));
+    for (String organizationCode : jyOrganizationCodeList) {
+      if (organizationFullPath.contains(organizationCode)) {
+        result.setData(Boolean.TRUE);
+        return result;
+      }
+    }
+    return result;
+  }
+
+  private List<String> getJyOrganizationCodeList() {
+    if (com.jdl.basic.common.utils.StringUtils.isEmpty(duccPropertyConfiguration.getJyOrganizationCodeStr())) {
+      return new ArrayList<>();
+    }else {
+      return Arrays.asList(duccPropertyConfiguration.getJyOrganizationCodeStr().split(";"));
+    }    
   }
 
   private JyUserQueryCondition convertQuery(JyUserQueryDto dto) {
