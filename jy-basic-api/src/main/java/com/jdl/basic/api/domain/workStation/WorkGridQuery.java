@@ -102,4 +102,8 @@ public class WorkGridQuery extends BasePagerCondition implements Serializable {
 	 * 枢纽编码
 	 */
 	private String areaHubCode;
+	/**
+	 * 列表
+	 */
+	private List<String> businessKeyList;
 }

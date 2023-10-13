@@ -39,8 +39,11 @@ import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringHelper;
+import com.jdl.basic.provider.config.ducc.DuccPropertyConfiguration;
 import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkGridDao;
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
+import com.jdl.basic.provider.core.manager.DeviceConfigInfoJsfServiceManager;
 import com.jdl.basic.provider.core.service.machine.WorkStationGridMachineService;
 import com.jdl.basic.provider.core.service.workStation.WorkAreaService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDirectionService;
@@ -80,6 +83,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Autowired
 	@Qualifier("workAreaService")
 	private WorkAreaService workAreaService;
+	
 	/**
 	 * 导入总数据限制
 	 */
@@ -95,6 +99,13 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Qualifier("workGridModifyMq")
 	DefaultJMQProducer workGridModifyMq;
 	
+	@Autowired
+	@Qualifier("deviceConfigInfoJsfServiceManager")
+	DeviceConfigInfoJsfServiceManager deviceConfigInfoJsfServiceManager;
+	
+	@Autowired
+	private DuccPropertyConfiguration duccPropertyConfiguration;
+	
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -105,6 +116,19 @@ public class WorkGridServiceImpl implements WorkGridService {
 		Result<Boolean> result = Result.success();
 		insertData.setBusinessKey(generalBusinessKey());
 		result.setData(workGridDao.insert(insertData) == 1);
+		return result;
+	 }
+	/**
+	 * 根据id更新数据
+	 * @param updateData
+	 * @return
+	 */
+	@Transactional
+	public Result<Boolean> updateById(WorkGridEditVo updateData){
+		Result<Boolean> result = Result.success();
+		//更新网格下所有工序信息
+		this.workStationGridService.syncWorkGridInfo(updateData);
+		result.setData(workGridDao.updateById(updateData) == 1);
 		return result;
 	 }
 	/**
@@ -209,6 +233,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		voData.setConfigFlowStatusName(ConfigFlowStatusEnum.getNameByCode(voData.getConfigFlowStatus()));
 		//特殊字段设置
 		loadFlowInfo(voData);
+		loadWorkInfo(voData);
 		return voData;
 	}
 	/**
@@ -241,9 +266,27 @@ public class WorkGridServiceImpl implements WorkGridService {
 		    	voDataList.add(this.toWorkGridVo(tmp));
 		    }
 		}
+		this.loadDeviceInfo(voDataList);
 		pageDto.setResult(voDataList);
 		pageDto.setTotalRow(totalCount.intValue());
 		result.setData(pageDto);
+		return result;
+	 }
+	/**
+	 * 查询参数校验
+	 * @param query
+	 * @return
+	 */
+	public Result<Boolean> checkParamForQueryMachineList(WorkGridQuery query){
+		Result<Boolean> result = Result.success();
+		if(query.getPageSize() == null || query.getPageSize() <= 0) {
+			query.setPageSize(DmsConstants.PAGE_SIZE_DEFAULT);
+		};
+		query.setOffset(0);
+		query.setLimit(query.getPageSize());
+		if(query.getPageSize() == null || query.getPageNumber() > 0) {
+			query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
+		};
 		return result;
 	 }
 	/**
@@ -262,7 +305,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 			query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
 		};
 		return result;
-	 }
+	 }	
 	/**
 	 * 对象转换成vo
 	 * @param data
@@ -390,9 +433,6 @@ public class WorkGridServiceImpl implements WorkGridService {
 			updateData.setGridCode(workGrid.getGridCode());
 			updateData.setGridName(workGrid.getGridName());
 			updateData.setAreaName(workGrid.getAreaName());
-			updateData.setStandardNum(workGrid.getStandardNum());
-			updateData.setOwnerUserErp(workGrid.getOwnerUserErp());
-			updateData.setDockCode(workGrid.getDockCode());
 			updateData.setSupplierCode(workGrid.getSupplierCode());
 			updateData.setSupplierName(workGrid.getSupplierName());
 			updateData.setUpdateUser(workGrid.getUpdateUser());
@@ -431,8 +471,41 @@ public class WorkGridServiceImpl implements WorkGridService {
 	    for (WorkGrid tmp : dataList) {
 	    	voDataList.add(this.toWorkGridVo(tmp));
 	    }
+	    loadDeviceInfo(voDataList);
 		result.setData(voDataList);
 		return result;
+	}
+	/**
+	 * 批量加载设备绑定信息
+	 * @param dataList
+	 */
+	private void loadDeviceInfo(List<WorkGridVo> dataList) {
+		if(CollectionUtils.isEmpty(dataList)) {
+			return;
+		}
+		List<String> gridKeys = new ArrayList<String>();
+		for(WorkGridVo data:dataList) {
+			gridKeys.add(data.getBusinessKey());
+		}
+		Result<List<WorkGridDeviceVo>> deviceResult = deviceConfigInfoJsfServiceManager.findDeviceGridByBusinessKey(null,gridKeys);
+		Map<String,List<WorkGridDeviceVo>> tmpMachineListMap = new HashMap<>();
+		if(deviceResult != null && CollectionUtils.isNotEmpty(deviceResult.getData())) {
+			for(WorkGridDeviceVo device:deviceResult.getData()) {
+				List<WorkGridDeviceVo> tmpList = tmpMachineListMap.get(device.getRefWorkGridKey());
+				if(tmpList == null) {
+					tmpList = new ArrayList<WorkGridDeviceVo>();
+					tmpMachineListMap.put(device.getRefWorkGridKey(), tmpList);
+				}
+				tmpList.add(device);
+			}
+		}
+		for(WorkGridVo vo:dataList) {
+			if(tmpMachineListMap.containsKey(vo.getBusinessKey())) {
+				vo.setWorkGridDeviceVoList(tmpMachineListMap.get(vo.getBusinessKey()));
+			}else {
+				vo.setWorkGridDeviceVoList(new ArrayList<>());
+			}
+		}
 	}
 	@Transactional
 	@Override
@@ -496,7 +569,14 @@ public class WorkGridServiceImpl implements WorkGridService {
 				WorkGridFlowDirection data0 = flowList.get(0);
 				WorkGridFlowDirectionQuery query = new WorkGridFlowDirectionQuery();
 				query.setFlowDirectionType(data0.getFlowDirectionType());
-				query.setRefWorkGridKey(data0.getRefWorkGridKey());
+				if(duccPropertyConfiguration.needAreaCodesForFlowCheck(gridData.getAreaCode())) {
+					WorkGridQuery workGridQuery = new WorkGridQuery();
+					workGridQuery.setSiteCode(gridData.getSiteCode());
+					workGridQuery.setAreaCode(gridData.getAreaCode());
+					query.setRefWorkGridKeyList(this.queryGridKeyListBySiteAndArea(workGridQuery));
+				}else {
+					query.setRefWorkGridKey(data0.getRefWorkGridKey());
+				}
 				query.setFlowSiteCodeList(flowSiteCodes);
 				query.setLineType(lineType);
 				List<Integer> flowSiteCodesExist = this.workGridFlowDirectionService.queryExistFlowSiteCodeList(query);
@@ -526,6 +606,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		//逐条校验
 		int rowNum = 1;
 		Map<String,Integer> uniqueKeysRowNumMap = new HashMap<String,Integer>();
+		List<String> importFlowKeyList = new ArrayList<>();
 		List<String> areaCodeList = new ArrayList<>();
 		for(WorkGridImport data : dataList) {
 			String rowKey = "第" + rowNum + "行";
@@ -545,7 +626,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		rowNum = 1;
 		for(WorkGridImport data : dataList) {
 			String rowKey = "第" + rowNum + "行";
-			Result<Boolean> result0 = checkAndFillNewData(data,areaMap);
+			Result<Boolean> result0 = checkAndFillNewData(data,areaMap,importFlowKeyList);
 			if(!result0.isSuccess()) {
 				return result0.toFail(rowKey + result0.getMessage());
 			}
@@ -564,7 +645,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 	 * @param data
 	 * @return
 	 */
-	private Result<Boolean> checkAndFillNewData(WorkGridImport data,Map<String,WorkArea> areaMap){
+	private Result<Boolean> checkAndFillNewData(WorkGridImport data,Map<String,WorkArea> areaMap,List<String> importFlowKeyList){
 		Result<Boolean> result = Result.success();
 		Integer siteCode = data.getSiteCode();
 		Integer floor = data.getFloor();
@@ -646,6 +727,20 @@ public class WorkGridServiceImpl implements WorkGridService {
 				if(siteCodeInt.equals(workGridData.getSiteCode())) {
 					return result.toFail(lineType.getName()+"流向ID不能是网格的站点！【"+siteCodeStr+"】");
 				}
+				String importFlowKey = getImportFlowKey(workGridData.getBusinessKey(),lineType.getCode(),siteCodeInt);
+				//判断是否按作业区校验
+				boolean checkByArea = this.duccPropertyConfiguration.needAreaCodesForFlowCheck(areaCode);
+				if(checkByArea) {
+					importFlowKey = getImportFlowKey(areaCode,lineType.getCode(),siteCodeInt);
+				}
+				if(importFlowKeyList.contains(importFlowKey)){
+					if(checkByArea) {
+						return result.toFail(workArea.getAreaName() + "】同一作业区下" +lineType.getName()+" 存在重复流向站点！【"+siteCodeStr+"】");
+					}else {
+						return result.toFail(lineType.getName()+"存在重复流向站点！【"+siteCodeStr+"】");
+					}
+				}
+				importFlowKeyList.add(importFlowKey);
 				WorkGridFlowDirection flowData = new WorkGridFlowDirection();
 				flowData.setRefWorkGridKey(workGridData.getBusinessKey());
 				flowData.setSiteCode(workGridData.getSiteCode());
@@ -677,6 +772,14 @@ public class WorkGridServiceImpl implements WorkGridService {
 			flowDataMap.put(lineType.getCode(), flowDataList);
 		}
 		return result;
+	}
+	private String getImportFlowKey(String areaCodeOrGridKey,Integer lineType,Integer flowSiteCode) {
+		return areaCodeOrGridKey
+				.concat(DmsConstants.KEYS_SPLIT)
+				.concat(lineType.toString())
+				.concat(DmsConstants.KEYS_SPLIT)
+				.concat(flowSiteCode.toString())
+				;
 	}
 	@Override
 	public String getUniqueKeysStr(WorkGrid data) {
@@ -804,5 +907,29 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridServiceImpl.batchUpdateByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public int batchUpdateByIds(WorkGridBatchUpdateRequest request) {
 		return workGridDao.batchUpdateByIds(request);
+	}
+	@Override
+	public Result<PageDto<WorkGridDeviceVo>> queryMachineListData(WorkGridQuery query) {
+		Result<PageDto<WorkGridDeviceVo>> result = Result.success();
+		Result<Boolean> checkResult = this.checkParamForQueryMachineList(query);
+		if(!checkResult.isSuccess()){
+		    return Result.fail(checkResult.getMessage());
+		}
+		List<WorkGridDeviceVo> voDataList = new ArrayList<>();
+		PageDto<WorkGridDeviceVo> pageDto = new PageDto<>(query.getPageNumber(), query.getPageSize());
+		Result<List<WorkGridDeviceVo>> deviceResult = deviceConfigInfoJsfServiceManager.findDeviceGridByBusinessKey(query.getBusinessKey(),query.getBusinessKeyList());
+		Long totalCount = 0L;
+		if(deviceResult != null && !CollectionUtils.isEmpty(deviceResult.getData())){
+		    voDataList = deviceResult.getData();
+		    totalCount = (long) deviceResult.getData().size();
+		}
+		pageDto.setResult(voDataList);
+		pageDto.setTotalRow(totalCount.intValue());
+		result.setData(pageDto);
+		return result;
+	}
+	@Override
+	public List<String> queryGridKeyListBySiteAndArea(WorkGridQuery workGridQuery) {
+		return workGridDao.queryGridKeyListBySiteAndArea(workGridQuery);
 	}
 }

@@ -124,6 +124,10 @@ jsf:
     token: sortWorkbenchBusiness-token
   boxFlowRouterVerifyTask:
     alias: boxFlowRouterVerifyTask
+  automatic:
+    alias: test
+    token: automatic
+    timeout: 2000
 
 basic:
   jsf:

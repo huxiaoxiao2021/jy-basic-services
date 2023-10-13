@@ -732,4 +732,14 @@
 			#{item}
 		</foreach>
 	</update>
+    <select id="queryGridKeyListBySiteAndArea" parameterType="com.jdl.basic.api.domain.workStation.WorkGridQuery" resultType="java.lang.String">
+        select 
+            business_key
+        from
+            work_grid g
+        where g.yn = 1 
+          and g.site_code = #{siteCode,jdbcType=INTEGER}
+          and g.area_code = #{areaCode,jdbcType=VARCHAR}
+        limit 200
+    </select>	
 </mapper>

@@ -201,4 +201,10 @@ public interface WorkStationGridService {
 	 * @param workGridFlowDirectionQuery
 	 */
 	List<WorkStationGrid> queryPhoneByDockCodeForTms(WorkGridFlowDirectionQuery workGridFlowDirectionQuery);
+	/**
+	 * 同步更新网格下所有工序信息
+	 * @param updateData
+	 * @return
+	 */
+	int syncWorkGridInfo(WorkGrid gridData);
 }
