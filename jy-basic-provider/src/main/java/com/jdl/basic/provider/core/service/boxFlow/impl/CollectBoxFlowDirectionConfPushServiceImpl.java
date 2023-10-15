@@ -200,6 +200,7 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
         collectBoxFlowInfoDao.deleteByPrimaryKey(history.getId());
         log.info("大数据推送小件集包新版本,删除历史版本数据version:{},sum:{}", history.getVersion(), sum);
     }
+    
     //新增集包规则主表信息
     private boolean addCollectBoxFlowInfo(String version){
         
