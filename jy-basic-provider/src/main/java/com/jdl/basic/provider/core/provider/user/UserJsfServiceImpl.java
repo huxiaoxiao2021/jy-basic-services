@@ -111,4 +111,9 @@ public class UserJsfServiceImpl implements UserJsfService {
         log.warn("获取工种枚举为空  入参{}", user.getNature());
         return dto;
     }
+
+    @Override
+    public JyUser queryUserInfo(JyUser condition) {
+        return userService.queryUserInfo(condition);
+    }
 }
