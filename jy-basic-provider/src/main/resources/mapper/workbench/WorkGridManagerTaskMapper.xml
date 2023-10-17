@@ -225,7 +225,7 @@
         where yn = 1
             limit 100
     </select>
-	<select id="queryByBizType" parameterType="java.lang.String" resultMap="WorkGridManagerTask">
+	<select id="queryByBizType" parameterType="java.lang.Integer" resultMap="WorkGridManagerTask">
 		select
 		<include refid="Base_Column_List"/>
 		from
