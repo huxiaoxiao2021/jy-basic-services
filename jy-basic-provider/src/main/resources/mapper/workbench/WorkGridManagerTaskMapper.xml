@@ -225,4 +225,11 @@
         where yn = 1
             limit 100
     </select>
+	<select id="queryByBizType" parameterType="java.lang.String" resultMap="WorkGridManagerTask">
+		select
+		<include refid="Base_Column_List"/>
+		from
+		work_grid_manager_task t
+		where yn = 1 and task_biz_Type = #{taskBizType,jdbcType=TINYINT}
+	</select>
 </mapper>
