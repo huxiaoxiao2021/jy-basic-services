@@ -14,4 +14,9 @@ public class UserWorkGridBatchUpdateRequest extends UserWorkGridRequest implemen
     private List<UserWorkGrid> addUserWorkGrids;
 
     private List<UserWorkGrid> deleteUserWorkGrids;
+
+    /**
+     * 功能类型 0-调出人员
+     */
+    private Integer functionType;
 }

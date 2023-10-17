@@ -1,9 +1,6 @@
 package com.jdl.basic.provider.core.dao.workStation;
 
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkGrid;
-import com.jdl.basic.api.domain.workStation.WorkGridBatchUpdateRequest;
-import com.jdl.basic.api.domain.workStation.WorkGridQuery;
+import com.jdl.basic.api.domain.workStation.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -128,4 +125,6 @@ public interface WorkGridDao {
 	List<Integer> selectDistinctSiteCode();
 
 	int batchUpdateByIds(WorkGridBatchUpdateRequest request);
+
+	List<WorkGrid> batchQueryAreaWorkGrid(BatchAreaWorkGridQuery query);
 }
