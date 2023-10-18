@@ -2,8 +2,11 @@ package com.jdl.basic.provider.core.provider.workStation;
 
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.service.workStation.WorkGridBusinessJsfService;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.workStation.WorkGridBusinessService;
@@ -34,6 +37,7 @@ public class WorkGridBusinessJsfServiceImpl implements WorkGridBusinessJsfServic
     private BaseMajorManager baseMajorManager;
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridBusinessJsfService.queryDockCodeByFlowDirection", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP, JProEnum.FunctionError})
     public Result<List<String>> queryDockCodeByFlowDirection(DockCodeAndPhoneQuery dockCodeAndPhoneQuery) {
         Result<List<String>> result = new Result<>();
         //根据传过来的siteId转换为网格的siteId
@@ -51,6 +55,7 @@ public class WorkGridBusinessJsfServiceImpl implements WorkGridBusinessJsfServic
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridBusinessJsfService.queryPhoneByDockCodeForTms", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP, JProEnum.FunctionError})
     public Result<List<WorkStationGrid>> queryPhoneByDockCodeForTms(DockCodeAndPhoneQuery dockCodeAndPhoneQuery) {
         Result<List<WorkStationGrid>> result = new Result<>();
         //根据传过来的siteId转换为网格的siteId

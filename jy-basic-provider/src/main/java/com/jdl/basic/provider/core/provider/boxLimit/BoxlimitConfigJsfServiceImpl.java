@@ -3,12 +3,15 @@ package com.jdl.basic.provider.core.provider.boxLimit;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.LoginUser;
 import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigDto;
 import com.jdl.basic.api.domain.boxLimit.BoxLimitConfigQueryDto;
 import com.jdl.basic.api.response.JDResponse;
 import com.jdl.basic.api.service.boxLimit.BoxlimitConfigJsfService;
 
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.ResultCodeConstant;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
@@ -34,6 +37,7 @@ public class BoxlimitConfigJsfServiceImpl implements BoxlimitConfigJsfService {
     private BoxlimitService boxlimitService;
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitConfigJsfService.insertBoxlimitConfig", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result insertBoxlimitConfig(BoxLimitConfigDto po) {
         log.info("集箱包裹上限配置 insertBoxlimitConfig -{}", JSONObject.toJSONString(po));
         Result response = new Result();
@@ -53,6 +57,7 @@ public class BoxlimitConfigJsfServiceImpl implements BoxlimitConfigJsfService {
 
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitConfigJsfService.listData", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<PageDto<BoxLimitConfigDto>> listData(BoxLimitConfigQueryDto dto) {
         log.info("获取集箱包裹上限配置列表信息入参-{}", JSONObject.toJSONString(dto));
         Result<PageDto<BoxLimitConfigDto>> response = new Result<>();
@@ -71,12 +76,14 @@ public class BoxlimitConfigJsfServiceImpl implements BoxlimitConfigJsfService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitConfigJsfService.getSiteNameById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<String> getSiteNameById(Integer siteId) {
         log.info("集箱包裹上限配置 getSiteNameById -{}", JSONObject.toJSONString(siteId));
         return boxlimitService.querySiteNameById(siteId);
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitConfigJsfService.saveOrUpdate", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result saveOrUpdate(BoxLimitConfigDto dto, LoginUser loginUser) {
         log.info("新增或者修改集箱包裹限制-入参-{}", JSON.toJSONString(dto));
         if (dto.getId() == null) {
@@ -87,12 +94,14 @@ public class BoxlimitConfigJsfServiceImpl implements BoxlimitConfigJsfService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitConfigJsfService.delete", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result delete(ArrayList<Long> ids, LoginUser loginUser) {
         log.info("集箱包裹上限配置 delete -{}-{}", JSONObject.toJSONString(ids),JSONObject.toJSONString(loginUser));
         return boxlimitService.delete(ids, loginUser.getUserErp());
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitConfigJsfService.toImport", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result toImport(List<BoxLimitConfigDto> dataList, LoginUser loginUser) {
         try {
             return boxlimitService.importData(dataList, loginUser);
@@ -105,18 +114,21 @@ public class BoxlimitConfigJsfServiceImpl implements BoxlimitConfigJsfService {
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitConfigJsfService.countByCondition", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Integer> countByCondition(BoxLimitConfigQueryDto dto) {
         log.info("集箱包裹上限配置 countByCondition -{}", JSONObject.toJSONString(dto));
         return boxlimitService.countByCondition(dto);
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitConfigJsfService.getBoxTypeList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<List<String>> getBoxTypeList() {
         log.info("集箱包裹上限配置 getBoxTypeList");
         return boxlimitService.getBoxTypeList();
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".BoxlimitConfigJsfService.getLimitNums", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Integer> getLimitNums(Integer createSiteCode, String type) {
         if(log.isInfoEnabled()){
             log.info("集箱包裹上限配置 getLimitNums -{} -{}",createSiteCode,type);

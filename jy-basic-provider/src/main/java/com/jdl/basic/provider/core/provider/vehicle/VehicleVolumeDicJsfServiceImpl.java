@@ -1,9 +1,12 @@
 package com.jdl.basic.provider.core.provider.vehicle;
 
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.vehicle.VehicleVolumeDic;
 import com.jdl.basic.api.domain.vehicle.VehicleVolumeDicReq;
 import com.jdl.basic.api.domain.vehicle.VehicleVolumeDicResp;
 import com.jdl.basic.api.service.vehicle.VehicleVolumeDicJsfService;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.BeanUtils;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.common.utils.Result;
@@ -20,6 +23,7 @@ public class VehicleVolumeDicJsfServiceImpl implements VehicleVolumeDicJsfServic
 
 
   @Override
+  @JProfiler(jKey = Constants.UMP_APP_NAME + ".VehicleVolumeDicJsfService.queryVolumeByVehicleType", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP, JProEnum.FunctionError})
   public Result<VehicleVolumeDicResp> queryVolumeByVehicleType(VehicleVolumeDicReq req) {
     checkVehicleVolumeDicReq(req);
     VehicleVolumeDic vehicleVolumeDic = vehicleVolumeDicService.queryVolumeByVehicleType(req.getVehicleType());
