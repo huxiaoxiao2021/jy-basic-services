@@ -14,7 +14,31 @@ public enum WorkGridManagerTaskBizType {
         this.code = code;
         this.name = name;
     }
-
+    /**
+     * 根据code获取名称
+     * @param code
+     * @return
+     */
+    public static String getNameByCode(Integer code) {
+        WorkGridManagerTaskBizType data = getEnum(code);
+        if(data != null) {
+            return data.getName();
+        }
+        return null;
+    }
+    /**
+     * 根据code获取enum
+     * @param code
+     * @return
+     */
+    public static WorkGridManagerTaskBizType getEnum(Integer code) {
+        for (WorkGridManagerTaskBizType value : WorkGridManagerTaskBizType.values()) {
+            if (value.code.equals(code)) {
+                return value;
+            }
+        }
+        return null;
+    }
     public Integer getCode() {
         return code;
     }
