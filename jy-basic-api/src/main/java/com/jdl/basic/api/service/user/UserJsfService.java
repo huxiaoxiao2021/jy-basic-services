@@ -78,5 +78,6 @@ public interface UserJsfService {
      * @return
      */
     Result<Boolean> checkUserBelongToJy(JyUserQueryDto dto);
-    
+
+    JyUser queryUserInfo(JyUser condition);
 }

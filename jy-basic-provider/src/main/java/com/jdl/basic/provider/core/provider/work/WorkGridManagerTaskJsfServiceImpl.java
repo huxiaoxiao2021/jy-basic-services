@@ -82,5 +82,10 @@ public class WorkGridManagerTaskJsfServiceImpl implements WorkGridManagerTaskJsf
 	public List<WorkGridManagerTask> queryWorkGridManagerTaskDictList() {
 		return workGridManagerTaskService.queryWorkGridManagerTaskDictList();
 	}
+	@Override
+	public List<WorkGridManagerTask> queryByBizType(Integer taskBizType){
+		return workGridManagerTaskService.queryByBizType(taskBizType);
+	}
+	
 
 }
