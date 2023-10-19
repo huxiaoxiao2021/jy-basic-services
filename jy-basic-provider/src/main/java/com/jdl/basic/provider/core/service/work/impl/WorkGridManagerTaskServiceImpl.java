@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.BeanUtils;
 
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.PageDto;
@@ -136,6 +135,11 @@ public class WorkGridManagerTaskServiceImpl implements WorkGridManagerTaskServic
 	@Override
 	public List<WorkGridManagerTask> queryWorkGridManagerTaskDictList() {
 		return workGridManagerTaskDao.queryWorkGridManagerTaskDictList();
+	}
+	
+	@Override
+	public List<WorkGridManagerTask> queryByBizType(Integer taskBizType){
+		return workGridManagerTaskDao.queryByBizType(taskBizType);
 	}
 
 }

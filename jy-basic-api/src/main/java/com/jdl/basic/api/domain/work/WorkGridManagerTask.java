@@ -87,6 +87,9 @@ public class WorkGridManagerTask implements Serializable {
 	 * 数据库时间
 	 */
 	private Date ts;
-
+	/**
+	 * 任务业务类型：1-日常巡查 2-管理巡视 3-异常及时检查 4-指标周期改善 5-事件治理整改任务
+	 */
+	private Integer taskBizType;
 
 }
