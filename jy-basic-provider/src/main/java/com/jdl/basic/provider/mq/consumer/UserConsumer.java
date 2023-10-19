@@ -146,7 +146,7 @@ public class UserConsumer {
       user.setQuitActionDate(DateHelper.getDateOfyyMMdd2(userInfo.getQuitActionDate()));
     }
     user.setNature(userInfo.getNature());
-    user.setNatureDesc(userInfo.getNatureDesc());
+    user.setNatureDesc(ObjectHelper.isNotNull(userInfo.getNatureDesc())? userInfo.getNatureDesc() : "");
     user.setPositionCode(userInfo.getPositionCode());
     user.setPositionName(userInfo.getPositionName());
     user.setStdPositionCode(userInfo.getStdPositionCode());

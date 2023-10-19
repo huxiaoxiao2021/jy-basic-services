@@ -699,7 +699,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         if (CollectionUtils.isEmpty(siteQueryPager.getSearchVo().getSubTypes())){
             throw  new JYBasicRpcException("参数异常：缺失子站点类型！");
         }
-        if (siteQueryPager.getPageSize()> Constants.DEFAULT_PAGE_SIZE_QUERY_USER){
+        if (siteQueryPager.getPageSize()> 512){
             throw  new JYBasicRpcException("参数异常：查询数量过大！");
         }
     }

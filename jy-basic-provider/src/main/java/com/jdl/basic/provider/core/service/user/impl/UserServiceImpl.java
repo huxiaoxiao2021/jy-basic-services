@@ -13,6 +13,7 @@ import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.BeanUtils;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
+import com.jdl.basic.provider.JYBasicRpcException;
 import com.jdl.basic.provider.config.cache.CacheService;
 import com.jdl.basic.provider.config.ducc.DuccPropertyConfiguration;
 import com.jdl.basic.provider.core.dao.user.JyUserDao;
@@ -44,7 +45,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public JyUser queryUserInfo(JyUser condition) {
     if (ObjectHelper.isEmpty(condition.getUserErp())) {
-//      throw new JYBasicRpcException("查询参数错误：erp为空！");
+     throw new JYBasicRpcException("查询参数错误：erp为空！");
     }
     return jyUserDao.queryUserInfo(condition);
   }
@@ -88,8 +89,8 @@ public class UserServiceImpl implements UserService {
       return result.setData(new ArrayList<>());
     }
     // 查询场景针对某一个网格 限制300
-    if (request.getUsers().size() > 300) {
-      return result.toFail(String.format("根据用户ID批量查询人员分配网格超出查询上限,查询量【%s】,上限【%s】", request.getUsers().size(), 300));
+    if (request.getUsers().size() > 512) {
+      return result.toFail(String.format("根据用户ID批量查询人员分配网格超出查询上限,查询量【%s】,上限【%s】", request.getUsers().size(), 512));
     }
     result.setData(jyUserDao.queryByUserIds(request));
     return result;

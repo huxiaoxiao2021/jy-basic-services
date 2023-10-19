@@ -7,6 +7,7 @@ public class Constants {
 
     public static final String SEPARATOR_COMMA = ",";
     public static final String EMPTY_FILL = "";
+    public static final String SEPARATOR_HYPHEN = "-";
 
     public static final Integer YN_YES = 1; // 使用
     public static final Integer YN_NO = 0; // 已删除
@@ -244,8 +245,15 @@ public class Constants {
      */
     public static final Integer USER_SIGN_CHECK_DAYS= -7;
 
-    public static final String SEPARATOR_HYPHEN = "-";
+    /**
+     * String类型标识-1-true
+     */
+    public static final String STRING_FLG_TRUE = "1";
 
+    /**
+     * Integer类型标识-true
+     */
+    public static final Integer INTEGER_FLG_TRUE = 1;
     public static final String LEFT_PARENTHESIS = "(";
 
     public static final String RIGHT_PARENTHESIS = ")";
