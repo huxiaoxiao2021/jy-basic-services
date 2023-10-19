@@ -7,22 +7,29 @@ import com.jdl.basic.api.service.user.UserJsfService;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
+import com.jdl.basic.provider.JYBasicRpcException;
 import com.jdl.basic.provider.core.service.user.UserService;
 import java.util.Date;
+
+import com.jdl.basic.provider.core.service.user.UserWorkGridService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.quartz.JobStoreType;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service("userJsfServiceImpl")
 public class UserJsfServiceImpl implements UserJsfService {
     @Autowired
     private UserService userService;
+    @Autowired
+    UserWorkGridService userWorkGridService;
     @Override
     public Result<List<JyUserDto>> searchUserBySiteCode(JyUserQueryDto dto) {
         return convertToResult(userService.searchUserBySiteCode(dto.getSiteCode()));
@@ -33,7 +40,12 @@ public class UserJsfServiceImpl implements UserJsfService {
         return convertToResult(userService.queryByUserIds(request));
     }
 
-    @Override
+  @Override
+  public Result<JyUserDto> queryByUserErp(JyUserQueryDto jyUserQueryDto) {
+    return Result.success(userService.queryByUserErp(jyUserQueryDto));
+  }
+
+  @Override
     public Result<Integer> queryUndistributedCountBySiteCode(JyUserQueryDto dto) {
         return userService.queryUndistributedCountBySiteCode(dto);
     }
@@ -58,7 +70,60 @@ public class UserJsfServiceImpl implements UserJsfService {
     return Result.fail("未查询到相关的用户信息");
   }
 
-  private void checkUnDistributedUserQueryDto(UnDistributedUserQueryDto dto) {
+
+    @Override
+    public Result<List<JyUser>> queryDistributedUserList(JyUserQueryDto jyUserQueryDto) {
+        checkDistributedUserQueryDto(jyUserQueryDto);
+        //查询场地人员列表
+        Result<List<JyUser>> rs =userService.searchUserBySiteCode(jyUserQueryDto.getSiteCode());
+        if (ObjectHelper.isNotNull(rs) && rs.isSuccess() && CollectionUtils.isNotEmpty(rs.getData())){
+            List<JyUser> jyUsers =rs.getData();
+            List<UserWorkGrid> userWorkGrids =jyUsers.stream().map(jyUser ->
+            {
+                UserWorkGrid userWorkGrid =new UserWorkGrid();
+                userWorkGrid.setUserId(jyUser.getId());
+                return userWorkGrid;
+            }).collect(Collectors.toList());
+            UserWorkGridBatchRequest userWorkGridBatchRequest = new UserWorkGridBatchRequest();
+            userWorkGridBatchRequest.setUserWorkGrids(userWorkGrids);
+            Result<List<UserWorkGrid>> result =userWorkGridService.queryByUserIds(userWorkGridBatchRequest);
+            if (ObjectHelper.isNotNull(result) && result.isSuccess() && CollectionUtils.isNotEmpty(result.getData())){
+                jyUsers =jyUsers.stream().map(jyUser -> assetWorkGridKey(jyUser,result.getData())).filter(jyUser -> filterGridAndJobType(jyUser,jyUserQueryDto)).collect(Collectors.toList());
+                rs.setData(jyUsers);
+            }
+            return rs;
+        }
+        return Result.success();
+    }
+
+    private void checkDistributedUserQueryDto(JyUserQueryDto jyUserQueryDto) {
+        if (!ObjectHelper.isNotNull(jyUserQueryDto.getSiteCode())){
+            throw new JYBasicRpcException("参数错误：缺失场地编码！");
+        }
+        if (!ObjectHelper.isNotNull(jyUserQueryDto.getJobType())){
+            throw new JYBasicRpcException("参数错误：确实用工种类编码！");
+        }
+    }
+
+    private  Boolean filterGridAndJobType(JyUser jyUser,JyUserQueryDto jyUserQueryDto) {
+        if (ObjectHelper.isNotNull(jyUser.getWorkGridKey()) && ObjectHelper.isNotNull(UserJobTypeEnum.getJyJobEnumByNature(jyUser.getNature())) && jyUserQueryDto.getJobType().equals(UserJobTypeEnum.getJyJobEnumByNature(jyUser.getNature()).getJyJobTypeCode())){
+            return true;
+        }
+        return false;
+    }
+
+    private JyUser assetWorkGridKey(JyUser jyUser, List<UserWorkGrid> userWorkGrids) {
+        for (UserWorkGrid userWorkGrid :userWorkGrids){
+            if (userWorkGrid.getUserId().equals(jyUser.getId())){
+                jyUser.setWorkGridKey(userWorkGrid.getWorkGridKey());
+                break;
+            }
+        }
+        return jyUser;
+    }
+
+
+    private void checkUnDistributedUserQueryDto(UnDistributedUserQueryDto dto) {
     if (ObjectHelper.isEmpty(dto.getPageNo())) {
       dto.setPageNo(Constants.DEFAULT_PAGE_NO);
     }

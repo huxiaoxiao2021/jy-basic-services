@@ -277,4 +277,9 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 			throw new JYBasicRpcException("参数错误：gridCode为空！");
 		}
 	}
+
+	@Override
+	public Result<WorkGrid> queryByBusinessKeys(WorkGrid workGrid) {
+		return workGridService.queryByBusinessKeys(workGrid);
+	}
 }

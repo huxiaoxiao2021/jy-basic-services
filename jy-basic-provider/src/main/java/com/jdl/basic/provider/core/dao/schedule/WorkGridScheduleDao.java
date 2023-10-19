@@ -30,5 +30,7 @@ public interface WorkGridScheduleDao {
 
     WorkGridSchedule queryWorkGridScheduleByKey(WorkGridScheduleRequest request);
 
-  List<WorkGridSchedule> listWorkGridScheduleByKeys(BatchWorkGridScheduleQueryDto dto);
+    List<WorkGridSchedule> listWorkGridScheduleByKeys(BatchWorkGridScheduleQueryDto dto);
+
+    WorkGridSchedule queryWorkGridScheduleByName(WorkGridScheduleRequest request);
 }

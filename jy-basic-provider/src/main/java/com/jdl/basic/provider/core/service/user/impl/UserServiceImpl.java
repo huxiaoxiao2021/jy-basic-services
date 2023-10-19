@@ -7,8 +7,10 @@ import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.api.enums.JyJobTypeEnum;
+import com.jdl.basic.api.enums.UserJobTypeEnum;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.common.utils.BeanUtils;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.config.cache.CacheService;
@@ -35,10 +37,10 @@ public class UserServiceImpl implements UserService {
 
   @Autowired
   CacheService jimdbCacheService;
-  
+
   @Autowired
   private DuccPropertyConfiguration duccPropertyConfiguration;
-  
+
   @Override
   public JyUser queryUserInfo(JyUser condition) {
     if (ObjectHelper.isEmpty(condition.getUserErp())) {
@@ -216,7 +218,7 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
     if (jyUser == null) {
       return result;
     }
-    
+
     String organizationFullPath = jyUser.getOrganizationFullPath();
     // 判断是否包含拣运机构ID
     List<String> jyOrganizationCodeList = getJyOrganizationCodeList();
@@ -235,7 +237,21 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
       return new ArrayList<>();
     }else {
       return Arrays.asList(duccPropertyConfiguration.getJyOrganizationCodeStr().split(";"));
-    }    
+    }
+  }
+
+  @Override
+  public JyUserDto queryByUserErp(JyUserQueryDto jyUserQueryDto) {
+    JyUser jyUser =jyUserDao.queryByUserErp(jyUserQueryDto);
+    if (ObjectHelper.isNotNull(jyUser)){
+      JyUserDto jyUserDto = BeanUtils.copy(jyUser,JyUserDto.class);
+      UserJobTypeEnum userJobTypeEnum = UserJobTypeEnum.getJyJobEnumByNature(jyUser.getNature());
+      if (userJobTypeEnum != null) {
+        jyUserDto.setNature(String.valueOf(userJobTypeEnum.getJyJobTypeCode()));
+      }
+      return jyUserDto;
+    }
+    return null;
   }
 
   private JyUserQueryCondition convertQuery(JyUserQueryDto dto) {

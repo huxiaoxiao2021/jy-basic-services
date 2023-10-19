@@ -106,6 +106,7 @@
         <Logger name="com.jd.jmq" level="ERROR" />
         <Logger name="com.jd.ql.framework" level="ERROR" />
         <Logger name="com.jd" level="DEBUG" />
+        <Logger name="com.jd.wormhole" level="ERROR"/>
 
         <!--监控系统信息-->
         <!--若是additivity设为false，则 子Logger 只会在自己的appender里输出，而不会在 父Logger 的appender里输出。-->

@@ -137,4 +137,9 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
     public List<WorkGridSchedule> listWorkGridScheduleByKeys(BatchWorkGridScheduleQueryDto dto) {
         return workGridScheduleDao.listWorkGridScheduleByKeys(dto);
     }
+
+    @Override
+    public WorkGridSchedule queryWorkGridScheduleByName(WorkGridScheduleRequest request) {
+        return workGridScheduleDao.queryWorkGridScheduleByName(request);
+    }
 }
