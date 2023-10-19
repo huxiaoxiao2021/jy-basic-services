@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static com.jdl.basic.common.enums.CollectBoxFlowInfoOperateTypeEnum.ACTIVATE;
 import static com.jdl.basic.common.enums.CollectBoxFlowInfoOperateTypeEnum.ADD;
@@ -46,7 +46,9 @@ import static com.jdl.basic.common.enums.CollectBoxFlowInfoStatusEnum.UNACTIVATE
 @Service("collectBoxFlowDirectionConfPushService")
 @Slf4j
 public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxFlowDirectionConfPushService {
-
+    private ExecutorService deleteHistoryExecutorService= new ThreadPoolExecutor(1, 1,
+            0L, TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<Runnable>(1));
     private static Integer DELETE_COUNT = 2000;
     
     @Resource
@@ -184,21 +186,29 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
             cluster.del(key);
         }
     }
-    
-    private void deleteHistory(){
-        CollectBoxFlowInfo history = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null, HISTORY.getCode());
-        if(history == null){
-            log.info("大数据推送小件集包新版本，未查到历史版本数据");
-            return;
+
+    private void deleteHistory() {
+        Runnable runnable = () -> {
+            CollectBoxFlowInfo history = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null, HISTORY.getCode());
+            if (history == null) {
+                log.info("大数据推送小件集包新版本，未查到历史版本数据");
+                return;
+            }
+            int count = 0;
+            int sum = 0;
+            do {
+                count = confService.deleteByVersion(history.getVersion(), DELETE_COUNT);
+                sum += count;
+            } while (count > 0);
+            collectBoxFlowInfoDao.deleteByPrimaryKey(history.getId());
+            log.info("大数据推送小件集包新版本,删除历史版本数据version:{},sum:{}", history.getVersion(), sum);
+        };
+
+        try {
+            deleteHistoryExecutorService.execute(runnable);
+        } catch (RejectedExecutionException e) {
+            log.warn("删除历史版本数据正在运行，拒绝新加");
         }
-        int count = 0;
-        int sum = 0;
-        do {
-            count = confService.deleteByVersion(history.getVersion(), DELETE_COUNT);
-            sum += count;
-        }while (count > 0);
-        collectBoxFlowInfoDao.deleteByPrimaryKey(history.getId());
-        log.info("大数据推送小件集包新版本,删除历史版本数据version:{},sum:{}", history.getVersion(), sum);
     }
     
     //新增集包规则主表信息
