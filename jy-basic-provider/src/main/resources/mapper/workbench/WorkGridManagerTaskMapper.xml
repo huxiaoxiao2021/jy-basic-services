@@ -17,12 +17,13 @@
 		<result column="update_time" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
 		<result column="yn" property="yn" javaType="java.lang.Integer" jdbcType="TINYINT" />
 		<result column="ts" property="ts" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result column="task_biz_type" property="taskBizType" javaType="java.lang.Integer" jdbcType="TINYINT" />
 	</resultMap>
 
 	<sql id="Base_Column_List" >
 		id,task_code,task_name,task_description,task_type,need_scan_grid,
 		create_user,create_user_name,update_user,update_user_name,create_time,
-		update_time,yn,ts
+		update_time,yn,ts,task_biz_type
 	</sql>
 
 	<insert id="insert" parameterType="com.jdl.basic.api.domain.work.WorkGridManagerTask" useGeneratedKeys="true" keyProperty="id">
