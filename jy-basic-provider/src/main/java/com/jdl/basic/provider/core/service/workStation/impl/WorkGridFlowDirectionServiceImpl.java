@@ -1,14 +1,9 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
-import com.jd.etms.framework.utils.cache.annotation.Cache;
-import com.jd.ump.annotation.JProEnum;
-import com.jd.ump.annotation.JProfiler;
-
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.enums.ConfigFlowStatusEnum;
 import com.jdl.basic.api.enums.FlowSiteUseStatusEnum;
-import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.enums.AreaEnum;
 import com.jdl.basic.common.utils.DateHelper;
@@ -28,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 场地网格流向表--Service接口实现
@@ -469,5 +463,22 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	@Override
 	public List<String> queryRefWorkGridKeyByFlowDirection(WorkGridFlowDirectionQuery query) {
 		return workGridFlowDirectionDao.queryRefWorkGridKeyByFlowDirection(query);
+	}
+
+	/**
+	 * 根据多个refWorkGridKey、流向类型、流向和线路类型查询符合的网格refWorkGridKey
+	 * @param refWorkGridKeyList
+	 * @param lineTypeList
+	 * @param flowDirectionType
+	 * @param flowSiteCode
+	 * @return
+	 */
+	@Override
+	public String queryFlowDirectionByCondition(List<String> refWorkGridKeyList,
+												 List<Integer> lineTypeList,
+												 Integer flowDirectionType,
+												 Integer flowSiteCode){
+		return workGridFlowDirectionDao.queryFlowDirectionByCondition(refWorkGridKeyList, lineTypeList,
+				flowDirectionType, flowSiteCode);
 	}
 }

@@ -102,4 +102,9 @@ public interface WorkGridFlowDirectionService {
 	 * @return
 	 */
 	List<String> queryRefWorkGridKeyByFlowDirection(WorkGridFlowDirectionQuery query);
+
+	String queryFlowDirectionByCondition(List<String> refWorkGridKeyList,
+                                          List<Integer> lineTypeList,
+                                          Integer flowDirectionType,
+                                          Integer flowSiteCode);
 }

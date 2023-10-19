@@ -73,4 +73,9 @@ public interface WorkGridFlowDirectionJsfService {
 	
 	void stopInit();
 	void initWorkGridFlowOffline();
+
+	String queryFlowDirectionByCondition(List<String> refWorkGridKeyList,
+												List<Integer> lineTypeList,
+												Integer flowDirectionType,
+												Integer flowSiteCode);
 }
