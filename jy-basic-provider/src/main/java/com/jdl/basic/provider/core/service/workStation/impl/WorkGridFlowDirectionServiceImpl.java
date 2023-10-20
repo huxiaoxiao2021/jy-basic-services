@@ -1,5 +1,10 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
+
+import com.jd.jsf.gd.util.StringUtils;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.enums.ConfigFlowStatusEnum;
@@ -9,6 +14,7 @@ import com.jdl.basic.common.enums.AreaEnum;
 import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.provider.config.ducc.DuccPropertyConfiguration;
 import com.jdl.basic.provider.core.dao.workStation.WorkGridFlowDirectionDao;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDirectionService;
@@ -48,6 +54,9 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	
 	@Value("${beans.workGridFlowDirectionService.importDatasLimit:100}")
 	private int importDatasLimit;
+	
+	@Autowired
+	private DuccPropertyConfiguration duccPropertyConfiguration;
 
 	/**
 	 * 插入一条数据
@@ -70,14 +79,24 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		if(!result.isSuccess()) {
 			return result;
 		}
+		boolean checkByArea = duccPropertyConfiguration.needAreaCodesForFlowCheck(gridData.getAreaCode());
 		WorkGridFlowDirectionQuery query = new WorkGridFlowDirectionQuery();
 		query.setFlowDirectionType(insertData.getFlowDirectionType());
-		query.setRefWorkGridKey(insertData.getRefWorkGridKey());
+		if(checkByArea) {
+			WorkGridQuery workGridQuery = new WorkGridQuery();
+			workGridQuery.setSiteCode(gridData.getSiteCode());
+			workGridQuery.setAreaCode(gridData.getAreaCode());
+			query.setRefWorkGridKeyList(this.workGridService.queryGridKeyListBySiteAndArea(workGridQuery));
+		}else {
+			query.setRefWorkGridKey(insertData.getRefWorkGridKey());
+		}
 		query.setFlowSiteCodeList(flowSiteCodes);
 		query.setLineType(insertData.getLineType());
 		List<Integer> flowSiteCodesExist = this.queryExistFlowSiteCodeList(query);
-		//todo- contains
 		if(flowSiteCodesExist.contains(insertData.getFlowSiteCode())) {
+			if(checkByArea) {
+				return result.toFail("添加失败，同一作业区下流向站点已存在！");
+			}
 			return result.toFail("添加失败，流向站点已存在！");
 		}
 		//更新-配置状态
@@ -225,7 +244,14 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 		}
 		WorkGridFlowDirectionQuery query = new WorkGridFlowDirectionQuery();
 		query.setFlowDirectionType(data0.getFlowDirectionType());
-		query.setRefWorkGridKey(data0.getRefWorkGridKey());
+		if(duccPropertyConfiguration.needAreaCodesForFlowCheck(gridData.getAreaCode())) {
+			WorkGridQuery workGridQuery = new WorkGridQuery();
+			workGridQuery.setSiteCode(gridData.getSiteCode());
+			workGridQuery.setAreaCode(gridData.getAreaCode());
+			query.setRefWorkGridKeyList(this.workGridService.queryGridKeyListBySiteAndArea(workGridQuery));
+		}else {
+			query.setRefWorkGridKey(data0.getRefWorkGridKey());
+		}
 		query.setFlowSiteCodeList(flowSiteCodes);
 		query.setLineType(data0.getLineType());
 		List<Integer> flowSiteCodesExist = this.queryExistFlowSiteCodeList(query);
@@ -346,6 +372,11 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	}
 	@Override
 	public List<Integer> queryExistFlowSiteCodeList(WorkGridFlowDirectionQuery query) {
+		if(query == null
+				|| (StringUtils.isBlank(query.getRefWorkGridKey())
+						&& CollectionUtils.isEmpty(query.getRefWorkGridKeyList()))) {
+			return new ArrayList<>();
+		}
 		return workGridFlowDirectionDao.queryExistFlowSiteCodeList(query);
 	}
 	@Override
