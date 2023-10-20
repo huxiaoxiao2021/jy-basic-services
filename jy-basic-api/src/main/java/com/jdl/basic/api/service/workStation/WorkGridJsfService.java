@@ -160,4 +160,6 @@ public interface WorkGridJsfService {
 	Result<WorkGrid> queryWorkGridByBizKey(WorkGrid query);
 
 	Result<WorkGrid> queryByBusinessKeys(WorkGrid workGrid);
+
+	Result<List<WorkGrid>> batchQueryAreaWorkGrid(BatchAreaWorkGridQuery query);
 }

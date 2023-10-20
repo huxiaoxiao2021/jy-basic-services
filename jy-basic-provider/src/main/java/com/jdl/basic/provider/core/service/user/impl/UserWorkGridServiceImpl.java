@@ -177,9 +177,11 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             if (userResult.isFail()) {
                 return result.toFail(userResult.getMessage());
             }
-            for(JyUser user : userResult.getData()) {
-                if (user.getGridDistributeFlag()) {
-                    return result.toFail(String.format("用户【%s】已分配网格！请刷新页面获取最新数据。", user.getUserErp()));
+            if (!Constants.NUMBER_ZERO.equals(request.getFunctionType())) {
+                for(JyUser user : userResult.getData()) {
+                    if (user.getGridDistributeFlag()) {
+                        return result.toFail(String.format("用户【%s】已分配网格！请刷新页面获取最新数据。", user.getUserErp()));
+                    }
                 }
             }
         }
