@@ -328,4 +328,16 @@
     </foreach>
     order by id desc
   </select>
+
+
+  <select id="queryWorkGridScheduleByName" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from
+    work_grid_schedule
+    where
+          work_grid_key = #{workGridKey}
+          and schedule_name =#{scheduleName}
+          and yn = 1
+  </select>
 </mapper>
