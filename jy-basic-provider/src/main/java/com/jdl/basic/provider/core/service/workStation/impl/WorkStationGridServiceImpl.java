@@ -840,7 +840,6 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	public List<WorkStationGrid> queryPhoneByDockCodeForTms(WorkGridFlowDirectionQuery workGridFlowDirectionQuery) {
 		return workStationGridDao.queryPhoneByDockCodeForTms(workGridFlowDirectionQuery);
 	}
-	}
 	/**
 	 * 更新网格下工序数据
 	 * @param updateData
