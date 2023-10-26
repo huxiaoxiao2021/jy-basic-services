@@ -1,8 +1,13 @@
 package com.jdl.basic.provider.core.service.workStation;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.ListUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,6 +73,17 @@ public class WorkGridFlowDirectionServiceTest {
         deleteData.setUpdateTime(new Date());
         deleteData.setUpdateUser("updateUser");
         workGridFlowDirectionService.deleteByRefGridKey(deleteData);
+    }
+    @Test
+    public void queryFlowDirectionByConditionTest(){
+        List<String> refWorkGridKeyList = Arrays.asList("CDWG00000061007", "CDWG00000061008");
+        
+        List<Integer> lineTypeList = Arrays.asList(1,2,3,4);
+        Integer flowDirectionType = 2;
+        Integer flowSiteCode = 38;
+        String refWorkGridKey = workGridFlowDirectionService.queryFlowDirectionByCondition(refWorkGridKeyList, lineTypeList, flowDirectionType,
+                flowSiteCode);
+        logger.info("refWorkGridKey={}",refWorkGridKey);
     }
 
 }

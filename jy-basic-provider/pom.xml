@@ -21,13 +21,14 @@
         <maven.compiler.target>8</maven.compiler.target>
         <spring-boot-jsf.version>1.7.3.4-SNAPSHOT</spring-boot-jsf.version>
         <jsf.version>1.7.4-HOTFIX-T8</jsf.version>
+        <version.automatic.automatic-sdk>2.3-SNAPSHOT</version.automatic.automatic-sdk>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.jdl.basic</groupId>
             <artifactId>jy-basic-api</artifactId>
-            <version>1.5.3-SNAPSHOT</version>
+            <version>1.5.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.jdl.basic</groupId>
@@ -337,6 +338,11 @@
             <artifactId>wormhole-manager</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.jd.bd.dms.automatic</groupId>
+            <artifactId>automatic-sdk</artifactId>
+            <version>${version.automatic.automatic-sdk}</version>
+        </dependency>        
     </dependencies>
 
     <build>

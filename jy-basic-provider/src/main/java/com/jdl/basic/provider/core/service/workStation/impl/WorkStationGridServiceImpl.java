@@ -33,14 +33,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -100,18 +98,29 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		insertData.setBusinessKey(generalBusinessKey());
 		//保存场地网格信息，设置关联关系字段
 		WorkGrid workGrid = saveWorkGird(insertData,new HashMap<>());
-		insertData.setRefWorkGridKey(workGrid.getBusinessKey());
-		
+		setStationDataFromGrid(insertData,workGrid);
 		result.setData(workStationGridDao.insert(insertData) == 1);
 		if(result.getData()) {
 			// 添加岗位记录
 			addPosition(insertData);
-			// 添加自动化设备
-			addMachine(insertData);
 		}
 		return result;
 	 }
 	
+	private void setStationDataFromGrid(WorkStationGrid stationData, WorkGrid workGrid) {
+		stationData.setRefWorkGridKey(workGrid.getBusinessKey());
+		if(StringUtils.isNotBlank(workGrid.getDockCode())) {
+			stationData.setDockCode(workGrid.getDockCode());
+		}else {
+			stationData.setDockCode("");
+		}
+		if(StringUtils.isNotBlank(workGrid.getOwnerUserErp())) {
+			stationData.setOwnerUserErp(workGrid.getOwnerUserErp());
+		}else {
+			stationData.setOwnerUserErp("");
+		}
+	}
+
 	private WorkGrid saveWorkGird(WorkStationGrid workStationGrid,Map<String,WorkGrid> savedWorkGridMap) {
 		WorkGrid workGrid = new WorkGrid();
 		workGrid.setOrgCode(workStationGrid.getOrgCode());
@@ -124,8 +133,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		workGrid.setGridName(workStationGrid.getGridName());
 		workGrid.setAreaCode(workStationGrid.getAreaCode());
 		workGrid.setAreaName(workStationGrid.getAreaName());
-		workGrid.setOwnerUserErp(workStationGrid.getOwnerUserErp());		
-		workGrid.setDockCode(workStationGrid.getDockCode());
+		workGrid.setOwnerUserErp(workStationGrid.getOwnerUserErp());
 		workGrid.setSupplierCode(workStationGrid.getSupplierCode());
 		workGrid.setSupplierName(workStationGrid.getSupplierName());
 		workGrid.setCreateUser(workStationGrid.getCreateUser());
@@ -167,27 +175,6 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		workGrid.setProvinceAgencyName(siteInfo == null ? Constants.EMPTY_FILL : siteInfo.getProvinceAgencyName());
 		workGrid.setAreaHubCode(siteInfo == null ? Constants.EMPTY_FILL : siteInfo.getAreaCode());
 		workGrid.setAreaHubName(siteInfo == null ? Constants.EMPTY_FILL : siteInfo.getAreaName());
-	}
-
-	private void addMachine(WorkStationGrid insertData) {
-		if (CollectionUtils.isEmpty(insertData.getMachine())){
-			return;
-		}
-		List<WorkStationGridMachine> machines = new ArrayList<>();
-		for (Machine m : insertData.getMachine()) {
-			if (StringUtils.isEmpty(m.getMachineTypeCode()) || StringUtils.isEmpty(m.getMachineCode())) {
-				break;
-			}
-			WorkStationGridMachine machine =  new WorkStationGridMachine();
-			machine.setCreateUser(insertData.getCreateUser());
-			machine.setRefGridKey(insertData.getBusinessKey());
-			machine.setMachineCode(m.getMachineCode());
-			machine.setMachineTypeCode(m.getMachineTypeCode());
-			machines.add(machine);
-		}
-		if (!machineService.batchInsert(machines)) {
-			throw new RuntimeException("关联自动化设备失败,网格:"+insertData.getBusinessKey());
-		}
 	}
 
 	private String generalBusinessKey() {
@@ -261,9 +248,6 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(!CheckHelper.checkInteger("编制人数", standardNum, 1,1000000, result).isSuccess()) {
 			return result;
 		}
-		if(!CheckHelper.checkStr("负责人ERP", ownerUserErp, 50, result).isSuccess()) {
-			return result;
-		}
 		BaseStaffSiteOrgDto siteInfo = baseMajorManager.getBaseSiteBySiteId(siteCode);
 		if(siteInfo == null) {
 			return result.toFail("青龙ID在基础资料中不存在！");
@@ -320,9 +304,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(workGrid == null) {
 			return result.toFail("网格数据修改失败！");
 		}
-		if(StringUtils.isBlank(updateData.getRefWorkGridKey())) {
-			updateData.setRefWorkGridKey(workGrid.getBusinessKey());
-		}
+		setStationDataFromGrid(updateData,workGrid);
 		workStationGridDao.deleteById(updateData);
 		updateData.setId(null);
 		result.setData(workStationGridDao.insert(updateData) == 1);
@@ -330,23 +312,12 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		// 清除网格工序缓存
 		invalidateWorkStationGridCache(oldData.getBusinessKey());
 
-		// 更新关联自动化设备
-		deleteMachineByRefGridKey(updateData);
-		addMachine(updateData);
 		return result;
 	}
 
 	private void invalidateWorkStationGridCache(String businessKey) {
 		String cacheKey = "WorkStationGridDao.queryWorkStationGridBybusinessKeyWithCache" + businessKey;
 		cacheService.del(cacheKey);
-	}
-
-	private void deleteMachineByRefGridKey(WorkStationGrid updateData) {
-		// 删除关联设备
-		WorkStationGridMachine updateMachine = new WorkStationGridMachine();
-		updateMachine.setRefGridKey(updateData.getBusinessKey());
-		updateMachine.setUpdateUser(updateData.getUpdateUser());
-		machineService.deleteByRefGridKey(updateMachine);
 	}
 
 	/**
@@ -370,8 +341,6 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		// 同步删除异常网格绑定数据
 		deleteWorkAbnormalGridBinding(queryResult.getData(),deleteData);
 
-		// 同步删除绑定自动化设备
-		deleteMachineByRefGridKey(deleteData);
 		//删除对应的网格数据
 		WorkGrid deleteGrid = new WorkGrid();
 		deleteGrid.setBusinessKey(queryResult.getData().getRefWorkGridKey());
@@ -501,25 +470,14 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			if(workGrid == null) {
 				throw  new RuntimeException("网格数据导入失败！");
 			}
-			if(StringUtils.isBlank(data.getRefWorkGridKey())) {
-				data.setRefWorkGridKey(workGrid.getBusinessKey());
-			}
+			setStationDataFromGrid(data,workGrid);
 			if(!Objects.equals(workStationGridDao.insert(data), Constants.YN_YES)){
 				throw  new RuntimeException("新增businessKey为:" + data.getBusinessKey() + "的数据失败");
 			}
 			// 同步处理岗位
 			syncDealPosition(oldData, data);
-			// 删除旧数据，保存新的自动化设备
-			deleteAndAddMachine(oldData,data);
 		}
 		return result;
-	}
-
-	private void deleteAndAddMachine(WorkStationGrid oldData, WorkStationGrid data) {
-		if (oldData != null){
-			deleteMachineByRefGridKey(oldData);
-		}
-		addMachine(data);
 	}
 
 	private void syncDealPosition(WorkStationGrid oldData, WorkStationGrid newData) {
@@ -810,7 +768,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
     private void initWorkGrid(WorkStationGrid data) {
     	WorkGrid workGrid = this.saveWorkGird(data,new HashMap<>());
 		if(workGrid != null) {
-			data.setRefWorkGridKey(workGrid.getBusinessKey());
+			setStationDataFromGrid(data,workGrid);
 			this.workStationGridDao.updateById(data);
 		}else {
 			log.warn("initAllWorkGrid-失败！"+data.getId());
@@ -881,5 +839,31 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	@Override
 	public List<WorkStationGrid> queryPhoneByDockCodeForTms(WorkGridFlowDirectionQuery workGridFlowDirectionQuery) {
 		return workStationGridDao.queryPhoneByDockCodeForTms(workGridFlowDirectionQuery);
+	}
+	/**
+	 * 更新网格下工序数据
+	 * @param updateData
+	 * @return
+	 */
+	@Transactional
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.syncWorkGridInfo", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public int syncWorkGridInfo(WorkGrid gridData){
+		WorkStationGrid updateStationData = new WorkStationGrid();
+		//设置需要更新工序的字段
+		if(StringUtils.isNotBlank(gridData.getDockCode())) {
+			updateStationData.setDockCode(gridData.getDockCode());
+		}else {
+			updateStationData.setDockCode("");
+		}
+		if(StringUtils.isNotBlank(gridData.getOwnerUserErp())) {
+			updateStationData.setOwnerUserErp(gridData.getOwnerUserErp());
+		}else {
+			updateStationData.setOwnerUserErp("");
+		}		
+		updateStationData.setRefWorkGridKey(gridData.getBusinessKey());
+		updateStationData.setUpdateTime(new Date());
+		updateStationData.setUpdateUser(gridData.getUpdateUser());
+		updateStationData.setUpdateUserName(gridData.getUpdateUserName());
+		return workStationGridDao.syncWorkGridInfo(updateStationData);
 	}
 }

@@ -29,5 +29,7 @@ public interface WorkGridScheduleDao {
 
     List<WorkGridSchedule> listWorkGridScheduleByKeys(BatchWorkGridScheduleQueryDto dto);
 
+    WorkGridSchedule queryWorkGridScheduleByName(WorkGridScheduleRequest request);
+
     boolean cleanWorkGridScheduleOldTime(BatchCleanOldTimeRequest request);
 }

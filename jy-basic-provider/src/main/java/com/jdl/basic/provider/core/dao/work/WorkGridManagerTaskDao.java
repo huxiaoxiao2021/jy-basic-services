@@ -57,5 +57,5 @@ public interface WorkGridManagerTaskDao {
 	 * @return
 	 */
 	List<WorkGridManagerTask> queryWorkGridManagerTaskDictList();
-
+    List<WorkGridManagerTask> queryByBizType(Integer taskBizType);
 }

@@ -27,6 +27,7 @@
     <result column="site_code" jdbcType="INTEGER" property="siteCode"/>
     <result column="site_name" jdbcType="VARCHAR" property="siteName"/>
     <result column="site_type" jdbcType="TINYINT" property="siteType"/>
+    <result column="work_grid_key" jdbcType="VARCHAR" property="workGridKey"/>
 
   </resultMap>
   <sql id="Base_Column_List">
@@ -450,5 +451,18 @@
       #{item}
     </foreach>
     limit 10000
+  </select>
+  <select id="queryByUserErp" resultMap="BaseResultMap">
+    SELECT
+      ju.*,ug.work_grid_key
+    FROM
+      jy_user ju
+        LEFT JOIN user_work_grid ug ON ug.user_id = ju.id
+    WHERE
+      ju.user_erp = #{userErp}
+      AND ju.user_status = 1
+      AND ju.grid_distribute_flag = 1
+      AND ug.yn =1
+    LIMIT 1
   </select>
 </mapper>

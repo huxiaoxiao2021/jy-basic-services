@@ -145,4 +145,17 @@ public interface WorkGridFlowDirectionDao {
 	 */
 	List<String> queryRefWorkGridKeyByFlowDirection(WorkGridFlowDirectionQuery query);
 
+	/**
+	 * 根据多个refWorkGridKey、流向类型、流向和线路类型查询符合的网格refWorkGridKey
+	 * @param refWorkGridKeyList 
+	 * @param lineTypeList
+	 * @param flowDirectionType
+	 * @param flowSiteCode
+	 * @return
+	 */
+	String queryFlowDirectionByCondition(@Param("refWorkGridKeyList") List<String> refWorkGridKeyList,
+												@Param("lineTypeList") List<Integer> lineTypeList, 
+												@Param("flowDirectionType") Integer flowDirectionType,
+												@Param("flowSiteCode") Integer flowSiteCode);
+
 }

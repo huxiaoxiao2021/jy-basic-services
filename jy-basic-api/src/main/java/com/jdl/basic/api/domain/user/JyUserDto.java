@@ -54,4 +54,6 @@ public class JyUserDto implements Serializable {
     private String siteName;
 
     private Integer siteType;
+
+    private String workGridKey;
 }

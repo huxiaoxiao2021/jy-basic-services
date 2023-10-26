@@ -21,6 +21,8 @@ public interface UserJsfService {
      */
     Result<List<JyUserDto>> queryByUserIds(JyUserBatchRequest request);
 
+
+    Result<JyUserDto> queryByUserErp(JyUserQueryDto jyUserQueryDto);
     /**
      * 查询场地下未分配员工数量
      * @param dto
@@ -48,6 +50,14 @@ public interface UserJsfService {
      * @return
      */
     Result<List<JyUser>> queryUnDistributedUserList(UnDistributedUserQueryDto unDistributedUserQueryDto);
+
+    /**
+     * 查询场地已分配网格人员
+     * @param jyUserQueryDto
+     * @return
+     */
+    Result<List<JyUser>> queryDistributedUserList(JyUserQueryDto jyUserQueryDto);
+
     /**
      * 查询人员岗位下列表
      * @param dto
@@ -68,5 +78,6 @@ public interface UserJsfService {
      * @return
      */
     Result<Boolean> checkUserBelongToJy(JyUserQueryDto dto);
-    
+
+    JyUser queryUserInfo(JyUser condition);
 }

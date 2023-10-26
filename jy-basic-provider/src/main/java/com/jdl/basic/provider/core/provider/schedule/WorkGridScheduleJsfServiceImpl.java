@@ -51,6 +51,11 @@ public class WorkGridScheduleJsfServiceImpl implements WorkGridScheduleJsfServic
     }
 
     @Override
+    public Result<WorkGridSchedule> queryWorkGridScheduleByName(WorkGridScheduleRequest request) {
+        return Result.success(workGridScheduleService.queryWorkGridScheduleByName(request));
+    }
+
+    @Override
     public Result<Boolean> cleanWorkGridScheduleOldTime(BatchCleanOldTimeRequest request) {
         return workGridScheduleService.cleanWorkGridScheduleOldTime(request);
     }

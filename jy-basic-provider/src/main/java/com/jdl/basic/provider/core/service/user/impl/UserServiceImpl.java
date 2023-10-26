@@ -7,10 +7,13 @@ import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.api.enums.JyJobTypeEnum;
+import com.jdl.basic.api.enums.UserJobTypeEnum;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.common.utils.BeanUtils;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
+import com.jdl.basic.provider.JYBasicRpcException;
 import com.jdl.basic.provider.config.cache.CacheService;
 import com.jdl.basic.provider.config.ducc.DuccPropertyConfiguration;
 import com.jdl.basic.provider.core.dao.user.JyUserDao;
@@ -35,14 +38,14 @@ public class UserServiceImpl implements UserService {
 
   @Autowired
   CacheService jimdbCacheService;
-  
+
   @Autowired
   private DuccPropertyConfiguration duccPropertyConfiguration;
-  
+
   @Override
   public JyUser queryUserInfo(JyUser condition) {
     if (ObjectHelper.isEmpty(condition.getUserErp())) {
-//      throw new JYBasicRpcException("查询参数错误：erp为空！");
+     throw new JYBasicRpcException("查询参数错误：erp为空！");
     }
     return jyUserDao.queryUserInfo(condition);
   }
@@ -86,8 +89,8 @@ public class UserServiceImpl implements UserService {
       return result.setData(new ArrayList<>());
     }
     // 查询场景针对某一个网格 限制300
-    if (request.getUsers().size() > 300) {
-      return result.toFail(String.format("根据用户ID批量查询人员分配网格超出查询上限,查询量【%s】,上限【%s】", request.getUsers().size(), 300));
+    if (request.getUsers().size() > 512) {
+      return result.toFail(String.format("根据用户ID批量查询人员分配网格超出查询上限,查询量【%s】,上限【%s】", request.getUsers().size(), 512));
     }
     result.setData(jyUserDao.queryByUserIds(request));
     return result;
@@ -109,7 +112,6 @@ public class UserServiceImpl implements UserService {
     }
     Boolean bool = jyUserDao.batchUpdateByUserIds(request) > 0;
     Integer siteCode = request.getSiteCode();
-    Map<String, String> map = jimdbCacheService.hGetAll(String.format(CacheKeyConstants.CACHE_KEY_SEARCH_SITE_USER, siteCode));
     // 更新JimDb中的缓存数据
     if (bool) {
       String[] fieldKeys = request.getUsers().stream().map(item -> String.valueOf(item.getId())).toArray(String[]::new);
@@ -216,7 +218,7 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
     if (jyUser == null) {
       return result;
     }
-    
+
     String organizationFullPath = jyUser.getOrganizationFullPath();
     // 判断是否包含拣运机构ID
     List<String> jyOrganizationCodeList = getJyOrganizationCodeList();
@@ -235,7 +237,21 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
       return new ArrayList<>();
     }else {
       return Arrays.asList(duccPropertyConfiguration.getJyOrganizationCodeStr().split(";"));
-    }    
+    }
+  }
+
+  @Override
+  public JyUserDto queryByUserErp(JyUserQueryDto jyUserQueryDto) {
+    JyUser jyUser =jyUserDao.queryByUserErp(jyUserQueryDto);
+    if (ObjectHelper.isNotNull(jyUser)){
+      JyUserDto jyUserDto = BeanUtils.copy(jyUser,JyUserDto.class);
+      UserJobTypeEnum userJobTypeEnum = UserJobTypeEnum.getJyJobEnumByNature(jyUser.getNature());
+      if (userJobTypeEnum != null) {
+        jyUserDto.setNature(String.valueOf(userJobTypeEnum.getJyJobTypeCode()));
+      }
+      return jyUserDto;
+    }
+    return null;
   }
 
   private JyUserQueryCondition convertQuery(JyUserQueryDto dto) {

@@ -89,4 +89,5 @@ public interface UserService {
    * @return
    */
   Result<Boolean> checkUserBelongToJy(JyUserQueryDto dto);
+  JyUserDto queryByUserErp(JyUserQueryDto jyUserQueryDto);
 }

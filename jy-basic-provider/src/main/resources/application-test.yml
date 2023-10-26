@@ -57,12 +57,15 @@ mq:
     workGridModifyMq: workGridModifyMq
     
   consumer:
+    type:
+      jyUser: jmq2-consumer
     topic:
       sort_cross_detail: basic_sort_cross_detail
       wlUserInfo: wlUserInfo
       site_change: basic_base_site_change
       wmsSite_Change: basic_ps_storeinfo
       workGridModifyMq: workGridModifyMq
+      basic_base_staff_change: basic_base_staff_change
 
   jmq4producer:
     password: 809375866c4842f28d7e4eec04da1e41
@@ -115,6 +118,11 @@ jsf:
     token: sortWorkbenchBusiness-token
   boxFlowRouterVerifyTask:
     alias: boxFlowRouterVerifyTask
+  automatic:
+    alias: test
+    token: automatic
+    timeout: 2000
+
 basic:
   jsf:
     token: 123456

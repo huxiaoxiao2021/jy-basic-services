@@ -241,4 +241,11 @@ public class WorkGridFlowDirectionJsfServiceImpl implements WorkGridFlowDirectio
 		}while(initDataFlag && !CollectionUtils.isEmpty(dataList));	
 		initDataFlag = false;
 	}
+
+	@Override
+	public String queryFlowDirectionByCondition(List<String> refWorkGridKeyList, List<Integer> lineTypeList, 
+												Integer flowDirectionType, Integer flowSiteCode) {
+		return workGridFlowDirectionService.queryFlowDirectionByCondition(refWorkGridKeyList, lineTypeList, flowDirectionType,
+				flowSiteCode);
+	}
 }

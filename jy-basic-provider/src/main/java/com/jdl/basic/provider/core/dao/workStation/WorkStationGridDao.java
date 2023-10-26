@@ -232,4 +232,6 @@ public interface WorkStationGridDao {
 	 * @return
 	 */
     List<WorkStationGrid> getGridInfoBySiteCodes(List<String> siteCodes);
+	
+	int syncWorkGridInfo(WorkStationGrid updateData);
 }

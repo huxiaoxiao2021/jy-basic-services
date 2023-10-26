@@ -111,6 +111,11 @@ jsf:
     token: 973BFAFDBF2DBC182140F9024EDF1946
   boxFlowRouterVerifyTask:
     alias: boxFlowRouterVerifyTask
+  automatic:
+    alias: level0
+    token: automatic
+    timeout: 2000
+
 basic:
   jsf:
     token: 96KYOS24GJ
@@ -157,12 +162,3 @@ laf:
       parameters[0]:
         name: autoListener
         value: true
-
-#flowDirectionFunction 配置
-fdf:
-  functionMap:
-    1:
-      - "UNSEAL_CAR_POSITION"
-      - "UNLOAD_CAR_POSITION"
-    2:
-      - "SEND_CAR_POSITION"
