@@ -1,9 +1,6 @@
 package com.jdl.basic.provider.core.dao.schedule;
 
-import com.jdl.basic.api.domain.schedule.BatchWorkGridScheduleQueryDto;
-import com.jdl.basic.api.domain.schedule.WorkGridSchedule;
-import com.jdl.basic.api.domain.schedule.WorkGridScheduleBatchRequest;
-import com.jdl.basic.api.domain.schedule.WorkGridScheduleRequest;
+import com.jdl.basic.api.domain.schedule.*;
 
 import java.util.List;
 
@@ -30,5 +27,7 @@ public interface WorkGridScheduleDao {
 
     WorkGridSchedule queryWorkGridScheduleByKey(WorkGridScheduleRequest request);
 
-  List<WorkGridSchedule> listWorkGridScheduleByKeys(BatchWorkGridScheduleQueryDto dto);
+    List<WorkGridSchedule> listWorkGridScheduleByKeys(BatchWorkGridScheduleQueryDto dto);
+
+    boolean cleanWorkGridScheduleOldTime(BatchCleanOldTimeRequest request);
 }

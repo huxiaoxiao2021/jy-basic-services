@@ -49,4 +49,9 @@ public class WorkGridScheduleJsfServiceImpl implements WorkGridScheduleJsfServic
     public Result<List<WorkGridSchedule>> listWorkGridScheduleByKeys(BatchWorkGridScheduleQueryDto dto) {
         return Result.success(workGridScheduleService.listWorkGridScheduleByKeys(dto));
     }
+
+    @Override
+    public Result<Boolean> cleanWorkGridScheduleOldTime(BatchCleanOldTimeRequest request) {
+        return workGridScheduleService.cleanWorkGridScheduleOldTime(request);
+    }
 }

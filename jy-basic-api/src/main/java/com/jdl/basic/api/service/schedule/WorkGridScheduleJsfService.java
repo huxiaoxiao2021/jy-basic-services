@@ -20,4 +20,7 @@ public interface WorkGridScheduleJsfService {
     Result<WorkGridSchedule> queryWorkGridScheduleByKey(WorkGridScheduleRequest request);
 
     Result<List<WorkGridSchedule>> listWorkGridScheduleByKeys(BatchWorkGridScheduleQueryDto dto);
+
+    Result<Boolean> cleanWorkGridScheduleOldTime(BatchCleanOldTimeRequest request);
+
 }

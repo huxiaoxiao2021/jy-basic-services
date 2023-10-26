@@ -137,4 +137,14 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
     public List<WorkGridSchedule> listWorkGridScheduleByKeys(BatchWorkGridScheduleQueryDto dto) {
         return workGridScheduleDao.listWorkGridScheduleByKeys(dto);
     }
+
+    @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridScheduleServiceImpl.cleanWorkGridScheduleOldTime", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<Boolean> cleanWorkGridScheduleOldTime(BatchCleanOldTimeRequest request) {
+        Result<Boolean> result = Result.success();
+        if (StringUtils.isEmpty(request.getWorkGridKey())) {
+            return result.toFail("网格主键不能为空！");
+        }
+        return result.setData(workGridScheduleDao.cleanWorkGridScheduleOldTime(request));
+    }
 }

@@ -21,11 +21,13 @@
     <result column="update_user_erp" jdbcType="VARCHAR" property="updateUserErp" />
     <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
     <result column="ts" jdbcType="TIMESTAMP" property="ts" />
+    <result column="old_start_time" jdbcType="VARCHAR" property="oldStartTime" />
+    <result column="old_end_time" jdbcType="VARCHAR" property="oldEndTime" />
   </resultMap>
   <sql id="Base_Column_List">
     id, work_grid_key, schedule_no, schedule_key, schedule_name, start_time, end_time,
     schedule_type, source_type, site_code, area_code, yn, create_time, update_time, create_user_erp, create_user_name, update_user_erp,
-    update_user_name, ts
+    update_user_name, ts, old_start_time, old_end_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
@@ -262,7 +264,9 @@
         create_user_erp,
         create_user_name,
         update_user_erp,
-        update_user_name
+        update_user_name,
+        old_start_time,
+        old_end_time
     )
     values
     <foreach collection="workGridSchedules" item="item" separator=",">
@@ -282,7 +286,9 @@
         #{item.createUserErp},
         #{item.createUserName},
         #{item.updateUserErp},
-        #{item.updateUserName}
+        #{item.updateUserName},
+        #{item.oldStartTime},
+        #{item.oldEndTime}
       )
     </foreach>
   </insert>
@@ -328,4 +334,18 @@
     </foreach>
     order by id desc
   </select>
+  
+  <update id="cleanWorkGridScheduleOldTime">
+    update
+        work_grid_schedule
+    set
+        old_start_time = #{oldStartTime},
+        old_end_time = #{oldEndTime}
+    where
+        yn = 1
+    and work_grid_key in
+    <foreach collection="workGridKeys" item="item" separator="," open="(" close=")">
+        #{item}
+    </foreach>
+  </update>
 </mapper>

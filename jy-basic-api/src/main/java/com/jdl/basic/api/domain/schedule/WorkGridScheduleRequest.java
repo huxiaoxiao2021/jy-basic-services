@@ -42,4 +42,8 @@ public class WorkGridScheduleRequest implements Serializable {
     private String updateUserErp;
 
     private String updateUserName;
+
+    private String oldStartTime;
+
+    private String oldEndTime;
 }

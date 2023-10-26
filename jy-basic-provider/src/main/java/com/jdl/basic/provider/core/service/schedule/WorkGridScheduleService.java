@@ -20,4 +20,6 @@ public interface WorkGridScheduleService {
     WorkGridSchedule queryWorkGridScheduleByKey(WorkGridScheduleRequest request);
 
     List<WorkGridSchedule> listWorkGridScheduleByKeys(BatchWorkGridScheduleQueryDto dto);
+
+    Result<Boolean> cleanWorkGridScheduleOldTime(BatchCleanOldTimeRequest request);
 }
