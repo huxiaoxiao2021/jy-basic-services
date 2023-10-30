@@ -147,8 +147,11 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridScheduleServiceImpl.cleanWorkGridScheduleOldTime", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> cleanWorkGridScheduleOldTime(BatchCleanOldTimeRequest request) {
         Result<Boolean> result = Result.success();
-        if (StringUtils.isEmpty(request.getWorkGridKey())) {
+        if (CollectionUtils.isEmpty(request.getWorkGridKeys())) {
             return result.toFail("网格主键不能为空！");
+        }
+        if (request.getOldStartTime() == null || request.getOldEndTime() == null) {
+            return result.toFail("oldStartTime和oldEndTime不允许为null");
         }
         return result.setData(workGridScheduleDao.cleanWorkGridScheduleOldTime(request));
     }

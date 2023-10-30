@@ -1,5 +1,6 @@
 package com.jdl.basic.api.domain.schedule;
 
+import com.jdl.basic.common.contants.Constants;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -43,7 +44,7 @@ public class WorkGridScheduleRequest implements Serializable {
 
     private String updateUserName;
 
-    private String oldStartTime;
+    private String oldStartTime = Constants.EMPTY_FILL;
 
-    private String oldEndTime;
+    private String oldEndTime = Constants.EMPTY_FILL;
 }
