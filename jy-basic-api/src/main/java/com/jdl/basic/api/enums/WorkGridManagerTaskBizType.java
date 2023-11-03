@@ -1,11 +1,12 @@
 package com.jdl.basic.api.enums;
 
 public enum WorkGridManagerTaskBizType {
-    DAILY_PATROL(1, "日常巡场"),
-    MANAGER_PATROL(2, "管理巡视"),
-    EXP_INSPECT(3, "异常及时检查"),
-    KPI_IMPROVE(4, "指标周期改善"),
-    EVENT_GOVERN(5, "事件治理整改任务");
+    DAILY_PATROL(1, "例行自检巡场任务"),
+    MANAGER_PATROL(2, "飞检巡场任务"),
+    EXP_INSPECT(3, "异常自检任务"),
+    KPI_IMPROVE(4, "指标改善任务"),
+    EVENT_GOVERN(5, "工单事件自检任务"),
+    MONITOR_PATROL(6, "监控巡场任务");
 
     private Integer code;
     private String name;
