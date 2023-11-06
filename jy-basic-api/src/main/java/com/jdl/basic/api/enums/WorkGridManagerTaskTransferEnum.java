@@ -1,17 +1,13 @@
 package com.jdl.basic.api.enums;
 
-public enum WorkGridManagerTaskBizType {
-    DAILY_PATROL(1, "例行自检巡场任务"),
-    MANAGER_PATROL(2, "飞检巡场任务"),
-    EXP_INSPECT(3, "异常自检任务"),
-    KPI_IMPROVE(4, "指标改善任务"),
-    EVENT_GOVERN(5, "工单时间自检任务"),
-    MONITOR_TASK(6, "监控巡场任务");
+public enum WorkGridManagerTaskTransferEnum {
+    UN_TRANSFER(0, "未转派"),
+    TRANSFERED(1, "已转派");
 
     private Integer code;
     private String name;
 
-    WorkGridManagerTaskBizType(Integer code, String name) {
+    WorkGridManagerTaskTransferEnum(Integer code, String name) {
         this.code = code;
         this.name = name;
     }
@@ -21,7 +17,7 @@ public enum WorkGridManagerTaskBizType {
      * @return
      */
     public static String getNameByCode(Integer code) {
-        WorkGridManagerTaskBizType data = getEnum(code);
+        WorkGridManagerTaskTransferEnum data = getEnum(code);
         if(data != null) {
             return data.getName();
         }
@@ -32,8 +28,8 @@ public enum WorkGridManagerTaskBizType {
      * @param code
      * @return
      */
-    public static WorkGridManagerTaskBizType getEnum(Integer code) {
-        for (WorkGridManagerTaskBizType value : WorkGridManagerTaskBizType.values()) {
+    public static WorkGridManagerTaskTransferEnum getEnum(Integer code) {
+        for (WorkGridManagerTaskTransferEnum value : WorkGridManagerTaskTransferEnum.values()) {
             if (value.code.equals(code)) {
                 return value;
             }
