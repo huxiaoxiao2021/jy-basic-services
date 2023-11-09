@@ -10,6 +10,7 @@ import com.jdl.basic.provider.core.service.schedule.WorkGridScheduleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -154,5 +155,23 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
             return result.toFail("oldStartTime和oldEndTime不允许为null");
         }
         return result.setData(workGridScheduleDao.cleanWorkGridScheduleOldTime(request));
+    }
+
+
+    @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridScheduleServiceImpl.queryTodayDeletedSiteSchedule", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<List<WorkGridSchedule>> queryTodayDeletedSiteSchedule(WorkGridScheduleRequest request) {
+        Result<List<WorkGridSchedule>> result = Result.success();
+        if (request.getSiteCode() == null) {
+            return result.toFail("场地编码不能为空！");
+        }
+        if (request.getSourceType() == null) {
+            return result.toFail("查询维度不能为空！");
+        }
+        if (request.getCreateTime() == null) {
+            return result.toFail("创建时间不能为空");
+        }
+        List<WorkGridSchedule> deletedWorkGridSchedule = workGridScheduleDao.queryTodayDeletedSiteSchedule(request);
+        return result.setData(deletedWorkGridSchedule);
     }
 }

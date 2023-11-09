@@ -24,4 +24,6 @@ public interface WorkGridScheduleService {
     WorkGridSchedule queryWorkGridScheduleByName(WorkGridScheduleRequest request);
 
     Result<Boolean> cleanWorkGridScheduleOldTime(BatchCleanOldTimeRequest request);
+
+    Result<List<WorkGridSchedule>> queryTodayDeletedSiteSchedule(WorkGridScheduleRequest request);
 }

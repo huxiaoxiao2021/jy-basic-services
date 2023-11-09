@@ -25,4 +25,6 @@ public interface WorkGridScheduleJsfService {
 
     Result<Boolean> cleanWorkGridScheduleOldTime(BatchCleanOldTimeRequest request);
 
+    Result<List<WorkGridSchedule>> queryTodayDeletedSiteSchedule(WorkGridScheduleRequest request);
+
 }

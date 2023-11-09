@@ -4,6 +4,7 @@ import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.schedule.BatchCleanOldTimeRequest;
 import com.jdl.basic.api.domain.schedule.WorkGridSchedule;
 import com.jdl.basic.api.domain.schedule.WorkGridScheduleRequest;
+import com.jdl.basic.api.enums.ScheduleTypeEnum;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.ApplicationLaunch;
@@ -40,6 +41,8 @@ public class WorkGridScheduleServiceTest {
     public void querySiteScheduleByCondition() {
         WorkGridScheduleRequest request = new WorkGridScheduleRequest();
         request.setSiteCode(910);
+        request.setSourceType(ScheduleTypeEnum.WORK_GRID.getCode());
+        request.setWorkGridKey("CDWG00000022154");
         Result<List<WorkGridSchedule>> result = workGridScheduleService.querySiteScheduleByCondition(request);
         log.info("result {}", JsonHelper.toJSONString(result));
     }

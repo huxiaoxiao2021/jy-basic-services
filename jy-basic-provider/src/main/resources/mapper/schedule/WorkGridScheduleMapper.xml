@@ -360,4 +360,26 @@
         #{item}
     </foreach>
   </update>
+
+  <select id="queryTodayDeletedSiteSchedule" resultMap="BaseResultMap">
+    select
+        <include refid="Base_Column_List"/>
+    from
+        work_grid_schedule
+    where
+        yn = 0
+    and site_code = #{siteCode}
+    <if test="areaCode != null and areaCode != ''">
+      and area_code = #{areaCode}
+    </if>
+    <if test="workGridKey != null and workGridKey != ''">
+      and work_grid_key = #{workGridKey}
+    </if>
+    and
+        source_type <![CDATA[ <= ]]> #{sourceType}
+    and
+        create_time <![CDATA[ >= ]]> #{createTime}
+    order by create_time asc
+    limit 9
+  </select>
 </mapper>

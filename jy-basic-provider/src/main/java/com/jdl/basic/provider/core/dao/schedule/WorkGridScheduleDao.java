@@ -32,4 +32,6 @@ public interface WorkGridScheduleDao {
     WorkGridSchedule queryWorkGridScheduleByName(WorkGridScheduleRequest request);
 
     boolean cleanWorkGridScheduleOldTime(BatchCleanOldTimeRequest request);
+
+    List<WorkGridSchedule> queryTodayDeletedSiteSchedule(WorkGridScheduleRequest request);
 }
