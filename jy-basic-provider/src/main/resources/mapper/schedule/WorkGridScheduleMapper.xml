@@ -378,7 +378,7 @@
     and
         source_type <![CDATA[ <= ]]> #{sourceType}
     and
-        create_time <![CDATA[ >= ]]> #{createTime}
+        update_time <![CDATA[ >= ]]> #{updateTime}
     order by create_time asc
     limit 9
   </select>

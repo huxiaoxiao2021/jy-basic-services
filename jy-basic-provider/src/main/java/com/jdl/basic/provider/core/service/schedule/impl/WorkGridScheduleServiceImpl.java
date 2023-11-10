@@ -168,8 +168,8 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         if (request.getSourceType() == null) {
             return result.toFail("查询维度不能为空！");
         }
-        if (request.getCreateTime() == null) {
-            return result.toFail("创建时间不能为空");
+        if (request.getUpdateTime() == null) {
+            return result.toFail("更新时间不能为空");
         }
         List<WorkGridSchedule> deletedWorkGridSchedule = workGridScheduleDao.queryTodayDeletedSiteSchedule(request);
         return result.setData(deletedWorkGridSchedule);
