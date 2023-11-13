@@ -381,6 +381,5 @@
     and
         update_time <![CDATA[ >= ]]> #{updateTime}
     order by create_time asc
-    limit 9
   </select>
 </mapper>
