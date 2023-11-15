@@ -196,7 +196,7 @@ public class UserWorkGridServiceImpl implements UserWorkGridService {
             return result.setData(new ArrayList<>());
         }
         // 目前场地没有超出1000人的场地
-        if (request.getUserWorkGrids().size() > 1200) {
+        if (request.getUserWorkGrids().size() > 2000) {
             return result.toFail(String.format("根据用户id查询人员分配网格超出查询上限,查询量【%s】,上限【%s】", request.getUserWorkGrids().size(), 1000));
         }
         result.setData(userWorkGridDao.queryByUserIds(request));
