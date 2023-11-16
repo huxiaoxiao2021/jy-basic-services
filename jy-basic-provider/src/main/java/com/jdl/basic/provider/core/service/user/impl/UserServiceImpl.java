@@ -272,6 +272,7 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
     condition.setGridDistributeFlag(dto.getGridDistributeFlag());
     condition.setCreateTime(dto.getCreateTime());
     condition.setUpdateTime(dto.getUpdateTime());
+    condition.setPositionNames(dto.getPositionNames());
     return condition;
   }
 }
