@@ -375,4 +375,9 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 	public List<WorkStationGrid> queryListForManagerSiteScan(WorkStationGridQuery workStationGridQuery) {
 		return workStationGridService.queryListForManagerSiteScan(workStationGridQuery);
 	}
+
+	@Override
+	public List<WorkStationGrid> queryListForWorkGridVo(WorkStationGridQuery query) {
+		return workStationGridService.queryListForWorkGridVo(query);
+	}
 }

@@ -158,4 +158,12 @@ public interface WorkStationGridJsfService {
 	 * @return
 	 */
 	List<WorkStationGrid> queryListForManagerSiteScan(WorkStationGridQuery workStationGridQuery);
+
+	/**
+	 * 查询场地网格工序列表
+	 *
+	 * @param query
+	 * @return
+	 */
+	List<WorkStationGrid> queryListForWorkGridVo(WorkStationGridQuery query);
 }
