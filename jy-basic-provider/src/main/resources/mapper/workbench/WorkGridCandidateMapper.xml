@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jdl.basic.provider.core.dao.work.WorkGridCandidateDao" >
+
+	<resultMap id="WorkGridCandidate" type="com.jdl.basic.api.domain.work.WorkGridCandidate" >
+		<id column="id" property="id" javaType="java.lang.Integer" jdbcType="BIGINT" />
+		<result column="site_code" property="siteCode" javaType="java.lang.Integer" jdbcType="BIGINT" />
+		<result column="site_name" property="siteName" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="site_type" property="siteType" javaType="java.lang.Integer" jdbcType="TINYINT" />
+		<result column="erp" property="erp" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result column="yn" property="yn" javaType="java.lang.Integer" jdbcType="TINYINT" />
+		<result column="ts" property="ts" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+		id,site_code,site_name,site_type,erp,create_time,yn,ts
+	</sql>
+
+	<insert id="insert" parameterType="com.jdl.basic.api.domain.work.WorkGridCandidate" useGeneratedKeys="true" keyProperty="id">
+		insert into work_grid_candidate
+			(
+			<trim suffixOverrides=",">
+				<if test="id != null" >
+					id,
+				</if>
+				<if test="siteCode != null" >
+					site_code,
+				</if>
+				<if test="siteName != null" >
+					site_name,
+				</if>
+				<if test="siteType != null" >
+					site_type,
+				</if>
+				<if test="createTime != null" >
+					create_time,
+				</if>
+				<if test="erp != null" >
+					erp,
+				</if>
+				<if test="yn != null" >
+					yn,
+				</if>
+				<if test="ts != null" >
+					ts,
+				</if>
+			</trim>
+			)
+			values
+			(
+			<trim suffixOverrides=",">
+				<if test="id != null" >
+					#{id,jdbcType=BIGINT},
+				</if>
+				<if test="siteCode != null" >
+					#{siteCode,jdbcType=VARCHAR},
+				</if>
+				<if test="siteName != null" >
+					#{siteName,jdbcType=VARCHAR},
+				</if>
+				<if test="siteType != null" >
+					#{siteType,jdbcType=VARCHAR},
+				</if>
+				<if test="createTime != null" >
+					#{createTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="erp != null" >
+					#{erp,jdbcType=TIMESTAMP},
+				</if>
+				<if test="yn != null" >
+					#{yn,jdbcType=TINYINT},
+				</if>
+				<if test="ts != null" >
+					#{ts,jdbcType=TIMESTAMP},
+				</if>
+			</trim>
+			)
+	</insert>
+
+	<update id="updateById" parameterType="com.jdl.basic.api.domain.work.WorkGridCandidate">
+		update work_grid_candidate
+			<set>
+				<if test="siteCode != null" >
+					site_code = #{siteCode,jdbcType=VARCHAR},
+				</if>
+				<if test="siteName != null" >
+					site_name = #{siteName,jdbcType=VARCHAR},
+				</if>
+				<if test="siteType != null" >
+					site_type = #{siteType,jdbcType=VARCHAR},
+				</if>
+				<if test="createTime != null" >
+					create_time = #{createTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="erp != null" >
+					erp = #{erp,jdbcType=TIMESTAMP},
+				</if>
+				<if test="yn != null" >
+					yn = #{yn,jdbcType=TINYINT},
+				</if>
+				<if test="ts != null" >
+					ts = #{ts,jdbcType=TIMESTAMP},
+				</if>
+			</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="deleteBySiteCode">
+		update work_grid_candidate
+		set yn = 0
+		where site_code = #{siteCode,jdbcType=VARCHAR}
+	</update>
+	<select id="queryList" resultMap="WorkGridCandidate">
+		select
+		site_code,site_name,site_type,group_concat(erp) erp
+		from
+		work_grid_candidate t
+		<include refid="queryCondition"/>
+		group by site_code,site_name,site_type
+		limit #{offset}, #{limit}
+	</select>
+
+	<select id="queryCount" resultType="long">
+		select count(1) from (
+			select
+			site_code
+			from
+			work_grid_candidate t
+			<where>
+				yn = 1
+				<if test="siteCode != null and siteCode != ''" >
+					and site_code = #{siteCode,jdbcType=VARCHAR}
+				</if>
+				<if test="siteType != null and siteType != ''" >
+					and site_type = #{siteType,jdbcType=VARCHAR}
+				</if>
+				<if test="erp != null and erp != ''" >
+					and erp = #{erp,jdbcType=TIMESTAMP}
+				</if>
+			</where>
+			group by site_code,site_name,site_type
+		) t
+	</select>
+	<select id="queryCandidateList" resultMap="WorkGridCandidate">
+		select <include refid="Base_Column_List"/>
+		from work_grid_candidate
+		where yn = 1 and site_code = #{siteCode,jdbcType=VARCHAR}
+	</select>
+
+	<sql id="queryCondition">
+		<where>
+			yn = 1
+			<if test="siteCode != null and siteCode != ''" >
+				and site_code = #{siteCode,jdbcType=VARCHAR}
+			</if>
+			<if test="siteType != null and siteType != ''" >
+				and site_type = #{siteType,jdbcType=VARCHAR}
+			</if>
+			<if test="erp != null and erp != ''" >
+				and site_code in (select site_code from work_grid_candidate where yn=1 and erp = #{erp,jdbcType=TIMESTAMP})
+			</if>
+		</where>
+	</sql>
+</mapper>
