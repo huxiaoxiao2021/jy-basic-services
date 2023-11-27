@@ -34,6 +34,12 @@
             <artifactId>dms-java-utils-sdk</artifactId>
             <groupId>com.jd.dms.utis</groupId>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>RELEASE</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
