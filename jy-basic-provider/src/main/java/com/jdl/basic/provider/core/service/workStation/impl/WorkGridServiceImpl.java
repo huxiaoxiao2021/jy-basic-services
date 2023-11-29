@@ -176,7 +176,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		}
 		WorkGrid oldData = workGridDao.queryById(deleteData.getId());
 		// 清除网格工序缓存
-		invalidateWorkStationGridCache(deleteData.getBusinessKey());
+		invalidateWorkStationGridCache(oldData.getBusinessKey());
 		return checkAndDeleteData(deleteData,oldData);
 	 }
 	@Transactional
