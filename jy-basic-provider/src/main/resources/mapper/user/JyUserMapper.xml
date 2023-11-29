@@ -428,9 +428,17 @@
     jy_user
     WHERE user_status =1
       and site_code = #{siteCode}
-      and position_name = #{positionName,jdbcType=VARCHAR}
+      <if test="positionName != null">
+          and position_name = #{positionName,jdbcType=VARCHAR}
+      </if>
       <if test="organizationCode != null and organizationCode != ''">
           and organization_code = #{organizationCode,jdbcType=VARCHAR}
+      </if>
+      <if test="positionNames != null and positionNames.size() != 0">
+          and position_name in
+          <foreach collection="positionNames" item="positionName" open="(" separator="," close=")">
+            #{positionName,jdbcType=VARCHAR}
+          </foreach>
       </if>
     limit 200
   </select>

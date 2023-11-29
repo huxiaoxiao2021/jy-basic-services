@@ -82,6 +82,14 @@
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
+    <!--  任务管理-线上化备选责任人服务  -->
+    <jsf:provider id="workGridCandidateJsfServiceServer"
+                  interface="com.jdl.basic.api.service.work.WorkGridCandidateJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="workGridCandidateJsfService"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
 
     <!-- 三定场地工序维度出勤计划管理jsf服务 -->
     <jsf:provider id="workStationAttendPlanJsfService"
