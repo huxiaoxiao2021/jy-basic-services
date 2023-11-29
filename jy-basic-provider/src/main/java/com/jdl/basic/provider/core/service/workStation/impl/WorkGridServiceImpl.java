@@ -147,7 +147,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 			log.warn("WorkGridServiceImpl.invalidateWorkStationGridCache businessKey is null");
 			return;
 		}
-		String cacheKey = "WorkStationGridDao.queryWorkStationGridBybusinessKeyWithCache" + businessKey;
+		String cacheKey = "WorkGridService.queryWorkStationGridBybusinessKeyWithCache" + businessKey;
 		cacheService.del(cacheKey);
 	}
 
@@ -959,4 +959,10 @@ public class WorkGridServiceImpl implements WorkGridService {
 	public List<WorkGrid> batchQueryAreaWorkGrid(BatchAreaWorkGridQuery query) {
 		return workGridDao.batchQueryAreaWorkGrid(query);
 	}
+
+	@Override
+	public WorkGrid queryByWorkGridKeyWidthCache(String workGridKey) {
+		return workGridDao.queryByWorkGridKey(workGridKey);
+	}
+
 }

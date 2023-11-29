@@ -1,6 +1,5 @@
 package com.jdl.basic.provider.core.dao.workStation;
 
-import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jdl.basic.api.domain.workStation.*;
 import org.apache.ibatis.annotations.Param;
 
@@ -74,8 +73,6 @@ public interface WorkGridDao {
 	 * @param workGridKey
 	 * @return
 	 */
-	@Cache(key = "WorkGridDao.queryByWorkGridKey@args0", memoryEnable = false,
-			redisEnable = true, redisExpiredTime = 5 * 60 * 1000)
 	WorkGrid queryByWorkGridKey(String workGridKey);
 
   List<WorkGrid> queryFloorDictList(WorkGrid queryParams);

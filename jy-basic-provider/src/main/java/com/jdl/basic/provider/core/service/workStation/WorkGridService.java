@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.core.service.workStation;
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
@@ -195,4 +196,13 @@ public interface WorkGridService {
 	List<String> queryGridKeyListBySiteAndArea(WorkGridQuery workGridQuery);
 
 	List<WorkGrid> batchQueryAreaWorkGrid(BatchAreaWorkGridQuery query);
+
+	/**
+	 * 根据key查询
+	 * @param workGridKey
+	 * @return
+	 */
+	@Cache(key = "WorkGridService.queryByWorkGridKey@args0", memoryEnable = false,
+			redisEnable = true, redisExpiredTime = 5 * 60 * 1000)
+	WorkGrid queryByWorkGridKeyWidthCache(String workGridKey);
 }

@@ -301,4 +301,12 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	public Result<PageDto<WorkGridDeviceVo>> queryMachineListData(WorkGridQuery query) {
 		return workGridService.queryMachineListData(query);
 	}
+
+	@Override
+	public Result<WorkGrid> queryByWorkGridKeyWithCache(String workGridKey) {
+		Result<WorkGrid> result = Result.success();
+		result.setData(workGridService.queryByWorkGridKey(workGridKey));
+		return result;
+	}
+
 }
