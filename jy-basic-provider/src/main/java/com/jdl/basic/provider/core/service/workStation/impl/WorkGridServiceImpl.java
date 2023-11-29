@@ -14,6 +14,7 @@ import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.provider.common.Jimdb.CacheService;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
@@ -53,6 +54,8 @@ import com.jdl.basic.provider.mq.producer.DefaultJMQProducer;
 
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Resource;
+
 /**
  * 场地网格表--Service接口实现
  *
@@ -83,6 +86,10 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Autowired
 	@Qualifier("workAreaService")
 	private WorkAreaService workAreaService;
+	@Resource
+	@Qualifier("JimdbCacheService")
+	private CacheService cacheService;
+	
 	
 	/**
 	 * 导入总数据限制
@@ -129,8 +136,21 @@ public class WorkGridServiceImpl implements WorkGridService {
 		//更新网格下所有工序信息
 		this.workStationGridService.syncWorkGridInfo(updateData);
 		result.setData(workGridDao.updateById(updateData) == 1);
+
+		// 清除网格工序缓存
+		invalidateWorkStationGridCache(updateData.getBusinessKey());
 		return result;
 	 }
+
+	private void invalidateWorkStationGridCache(String businessKey) {
+		if (StringUtils.isBlank(businessKey)) {
+			log.warn("WorkGridServiceImpl.invalidateWorkStationGridCache businessKey is null");
+			return;
+		}
+		String cacheKey = "WorkStationGridDao.queryWorkStationGridBybusinessKeyWithCache" + businessKey;
+		cacheService.del(cacheKey);
+	}
+
 	/**
 	 * 根据id更新数据
 	 * @param updateData
@@ -155,6 +175,8 @@ public class WorkGridServiceImpl implements WorkGridService {
 			return result.toFail("删除数据及id不能为空！");
 		}
 		WorkGrid oldData = workGridDao.queryById(deleteData.getId());
+		// 清除网格工序缓存
+		invalidateWorkStationGridCache(deleteData.getBusinessKey());
 		return checkAndDeleteData(deleteData,oldData);
 	 }
 	@Transactional
