@@ -59,6 +59,12 @@ public class UserConsumer {
           log.error("用户数据必要参数不全：{}", content);
           return;
         }
+
+        if (ObjectHelper.isEmpty(userInfo.getSource())  || userInfo.getSource() == Constants.CONSTANT_NUMBER_TWO){
+          log.error("数据源于账号系统，丢弃：{}",content);
+          return;
+        }
+
         JyUser condition = assembleUser(userInfo);
         String userLockKey = String.format(Constants.USER_LOCK_PREFIX, condition.getUserErp());
         String uuid = UUID.randomUUID().toString().replace("-", "");
