@@ -317,7 +317,6 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
             workGrid = JSON.parseObject(value, WorkGrid.class);
             if (workGrid != null) {
                 result.setData(workGrid);
-				log.info("WorkGridJsfServiceImpl,queryByWorkGridKeyWithCache workGrid: {}", JSON.toJSONString(workGrid));
                 return result;
             }
         }
@@ -327,8 +326,6 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
             return result;
         }
         cacheService.setEx(cacheKey, JSON.toJSONString(workGrid), 1, TimeUnit.DAYS);
-		log.info("WorkGridJsfServiceImpl,queryByWorkGridKeyWithCache db cache: {}", cacheService.get(cacheKey));
-		log.info("WorkGridJsfServiceImpl,queryByWorkGridKeyWithCache db workGrid: {}", JSON.toJSONString(workGrid));
 		result.setData(workGrid);
         return result;
     }
