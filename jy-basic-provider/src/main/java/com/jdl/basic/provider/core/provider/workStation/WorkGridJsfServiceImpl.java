@@ -12,10 +12,12 @@ import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridVo;
 import com.jdl.basic.api.service.workStation.WorkGridJsfService;
 import com.jdl.basic.common.contants.CacheKeyConstants;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.basic.provider.JYBasicRpcException;
 import com.jdl.basic.provider.common.Jimdb.CacheService;
 import com.jdl.basic.provider.config.lock.LockService;
@@ -30,13 +32,13 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 场地网格表--JsfService接口实现
  *
  * @author wuyoude
  * @date 2023年04月25日 00:18:56
- *
  */
 @Slf4j
 @Service("workGridJsfService")
@@ -52,6 +54,10 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 
 	@Autowired
 	private BaseMajorManager baseMajorManager;
+
+	@Resource
+	@Qualifier("JimdbCacheService")
+	private CacheService cacheService;
 
 	/**
 	 * 插入一条数据
@@ -160,27 +166,27 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 		return result;
 	}
 
-	@Override
-	public Result<List<WorkGrid>> queryFloorDictList(WorkGrid queryParams) {
-		return Result.success(workGridService.queryFloorDictList(queryParams));
-	}
+    @Override
+    public Result<List<WorkGrid>> queryFloorDictList(WorkGrid queryParams) {
+        return Result.success(workGridService.queryFloorDictList(queryParams));
+    }
 
-	@Override
-	public Result<List<WorkGrid>> queryAreaDictList(WorkGrid queryParams) {
-		return Result.success(workGridService.queryAreaDictList(queryParams));
-	}
+    @Override
+    public Result<List<WorkGrid>> queryAreaDictList(WorkGrid queryParams) {
+        return Result.success(workGridService.queryAreaDictList(queryParams));
+    }
 
-	@Override
-	public Result<List<WorkGrid>> queryWorkGrid(WorkGrid queryParams) {
-		return Result.success(workGridService.queryWorkGrid(queryParams));
-	}
+    @Override
+    public Result<List<WorkGrid>> queryWorkGrid(WorkGrid queryParams) {
+        return Result.success(workGridService.queryWorkGrid(queryParams));
+    }
 
-	@Override
-	public Result<WorkGrid> queryByWorkGridKey(String workGridKey) {
-		Result<WorkGrid> result = Result.success();
-		result.setData(workGridService.queryByWorkGridKey(workGridKey));
-		return result;
-	}
+    @Override
+    public Result<WorkGrid> queryByWorkGridKey(String workGridKey) {
+        Result<WorkGrid> result = Result.success();
+        result.setData(workGridService.queryByWorkGridKey(workGridKey));
+        return result;
+    }
 
 	@Override
 	public Result<List<WorkGrid>> batchQueryByWorkGridKey(List<String> workGridKeys) {
@@ -299,17 +305,29 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	public Result<PageDto<WorkGridDeviceVo>> queryMachineListData(WorkGridQuery query) {
 		return workGridService.queryMachineListData(query);
 	}
-	@Resource
-	@Qualifier("JimdbCacheService")
-	private CacheService cacheService;
-	@Override
-	public Result<WorkGrid> queryByWorkGridKeyWithCache(String workGridKey) {
-		String cacheKey = "WorkGridService.queryByWorkGridKeyWithCache" + workGridKey;
-		log.info("WorkGridJsfServiceImpl,queryByWorkGridKeyWithCache before: {}", cacheService.get(cacheKey));
-		Result<WorkGrid> result = Result.success();
-		result.setData(workGridService.queryByWorkGridKeyWithCache(workGridKey));
-		log.info("WorkGridJsfServiceImpl,queryByWorkGridKeyWithCache before: {}", cacheService.get(cacheKey));
-		return result;
-	}
+
+    @Override
+    public Result<WorkGrid> queryByWorkGridKeyWithCache(String workGridKey) {
+        String cacheKey = Constants.QUERY_BY_WORKGRID_KEY_CACHE_KEY + workGridKey;
+        Result<WorkGrid> result = Result.success();
+        WorkGrid workGrid = null;
+        String value = cacheService.get(cacheKey);
+        if (StringUtils.isNotEmpty(value)) {
+            workGrid = JSON.parseObject(value, WorkGrid.class);
+            log.info("WorkGridJsfServiceImpl,queryByWorkGridKeyWithCache: {}", value);
+            if (workGrid != null) {
+                result.setData(workGrid);
+                return result;
+            }
+        }
+        workGrid = workGridService.queryByWorkGridKeyWithCache(workGridKey);
+        if (workGrid == null) {
+            log.warn("workGrid is null, workGridKey:{}", workGridKey);
+            return result;
+        }
+        cacheService.setEx(cacheKey, JSON.toJSONString(workGrid), 1, TimeUnit.DAYS);
+        result.setData(workGrid);
+        return result;
+    }
 
 }

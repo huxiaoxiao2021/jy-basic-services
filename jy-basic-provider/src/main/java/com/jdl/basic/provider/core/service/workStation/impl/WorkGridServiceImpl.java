@@ -147,7 +147,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 			log.warn("WorkGridServiceImpl.invalidateWorkStationGridCache businessKey is null");
 			return;
 		}
-		String cacheKey = "WorkGridService.queryByWorkGridKeyWithCache" + businessKey;
+		String cacheKey = Constants.QUERY_BY_WORKGRID_KEY_CACHE_KEY + businessKey;
 		if (StringUtils.isNotEmpty(cacheService.get(cacheKey))) {
 			cacheService.del(cacheKey);
 		}
