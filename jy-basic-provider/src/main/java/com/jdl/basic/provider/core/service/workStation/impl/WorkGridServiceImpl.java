@@ -1,38 +1,31 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.jd.ump.annotation.JProEnum;
-import com.jd.ump.annotation.JProfiler;
-import com.jdl.basic.api.domain.workStation.*;
-import com.jdl.basic.common.contants.Constants;
-import com.jdl.basic.provider.common.Jimdb.CacheService;
-import com.jdl.basic.provider.core.manager.BaseMajorManager;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.ObjectUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.jd.jsf.gd.util.StringUtils;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.machine.Machine;
+import com.jdl.basic.api.domain.workStation.BatchAreaWorkGridQuery;
+import com.jdl.basic.api.domain.workStation.DeleteRequest;
+import com.jdl.basic.api.domain.workStation.WorkArea;
+import com.jdl.basic.api.domain.workStation.WorkGrid;
+import com.jdl.basic.api.domain.workStation.WorkGridBatchUpdateRequest;
+import com.jdl.basic.api.domain.workStation.WorkGridDeviceVo;
+import com.jdl.basic.api.domain.workStation.WorkGridEditVo;
+import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
+import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
+import com.jdl.basic.api.domain.workStation.WorkGridImport;
+import com.jdl.basic.api.domain.workStation.WorkGridModifyMqData;
+import com.jdl.basic.api.domain.workStation.WorkGridQuery;
+import com.jdl.basic.api.domain.workStation.WorkGridVo;
 import com.jdl.basic.api.domain.workStation.WorkGridVo.FlowInfoItem;
 import com.jdl.basic.api.domain.workStation.WorkGridVo.WorkDataInfo;
+import com.jdl.basic.api.domain.workStation.WorkStationGrid;
+import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
 import com.jdl.basic.api.enums.ConfigFlowStatusEnum;
 import com.jdl.basic.api.enums.EditTypeEnum;
 import com.jdl.basic.api.enums.GridFlowLineTypeEnum;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.enums.AreaEnum;
 import com.jdl.basic.common.utils.CheckHelper;
@@ -40,6 +33,7 @@ import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringHelper;
+import com.jdl.basic.provider.common.Jimdb.CacheService;
 import com.jdl.basic.provider.config.ducc.DuccPropertyConfiguration;
 import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkGridDao;
@@ -51,10 +45,26 @@ import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDirectionServ
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.mq.producer.DefaultJMQProducer;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 场地网格表--Service接口实现
@@ -964,6 +974,6 @@ public class WorkGridServiceImpl implements WorkGridService {
 
 	@Override
 	public WorkGrid queryByWorkGridKeyWithCache(String workGridKey) {
-		return workGridDao.queryByWorkGridKey(workGridKey);
+		return workGridDao.queryByWorkGridKeyWithCache(workGridKey);
 	}
 }

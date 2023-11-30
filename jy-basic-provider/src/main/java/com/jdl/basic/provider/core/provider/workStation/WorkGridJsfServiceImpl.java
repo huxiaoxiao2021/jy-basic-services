@@ -308,25 +308,28 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 
     @Override
     public Result<WorkGrid> queryByWorkGridKeyWithCache(String workGridKey) {
-        String cacheKey = Constants.QUERY_BY_WORKGRID_KEY_CACHE_KEY + workGridKey;
         Result<WorkGrid> result = Result.success();
-        WorkGrid workGrid = null;
-        String value = cacheService.get(cacheKey);
-		log.info("WorkGridJsfServiceImpl,queryByWorkGridKeyWithCache: {}", value);
-		if (StringUtils.isNotEmpty(value)) {
-            workGrid = JSON.parseObject(value, WorkGrid.class);
-            if (workGrid != null) {
-                result.setData(workGrid);
-                return result;
-            }
-        }
-        workGrid = workGridService.queryByWorkGridKeyWithCache(workGridKey);
-        if (workGrid == null) {
-            log.warn("workGrid is null, workGridKey:{}", workGridKey);
-            return result;
-        }
-        cacheService.setEx(cacheKey, JSON.toJSONString(workGrid), 1, TimeUnit.DAYS);
-		result.setData(workGrid);
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_QUERY_WORK_GRID_WITH_CACHE,DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				try {
+					result.setData(workGridService.queryByWorkGridKeyWithCache(workGridKey));
+				} catch (Exception e) {
+					log.error("WorkGridJsfServiceImpl.queryByWorkGridKeyWithCache db error:{}", e.getMessage());
+					result.toFail("查询网格异常:" + e.getMessage());
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在查询网格信息，请稍后操作！");
+			}
+
+			@Override
+			public void error(Exception e) {
+				log.error("WorkGridJsfServiceImpl.queryByWorkGridKeyWithCache add lock error:{}", e.getMessage());
+				result.toFail("其他用户正在查询网格信息，请稍后操作！");
+			}
+		});
         return result;
     }
 

@@ -1,19 +1,18 @@
 package com.jdl.basic.provider.core.service.workStation;
 
-import com.jd.etms.framework.utils.cache.annotation.Cache;
-import com.jdl.basic.api.domain.workStation.*;
-import com.jdl.basic.common.utils.PageDto;
-import com.jdl.basic.common.utils.Result;
-
-import java.util.List;
-
+import com.jdl.basic.api.domain.workStation.BatchAreaWorkGridQuery;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
+import com.jdl.basic.api.domain.workStation.WorkGridBatchUpdateRequest;
 import com.jdl.basic.api.domain.workStation.WorkGridDeviceVo;
 import com.jdl.basic.api.domain.workStation.WorkGridEditVo;
 import com.jdl.basic.api.domain.workStation.WorkGridImport;
 import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridVo;
+import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
+
+import java.util.List;
 
 /**
  * 场地网格表--Service接口

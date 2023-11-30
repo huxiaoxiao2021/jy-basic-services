@@ -53,8 +53,8 @@ public class WorkGridJsfServiceTest {
     
     @Test
     public void queryByWorkGridKeyWithCacheTest() {
-        workGridJsfService.queryByWorkGridKeyWithCache("CDWG00000022017");
-        Result<WorkGrid> result = workGridJsfService.queryByWorkGridKeyWithCache("CDWG00000022017");
+        workGridJsfService.queryByWorkGridKeyWithCache("CDWG00000022007");
+        Result<WorkGrid> result = workGridJsfService.queryByWorkGridKeyWithCache("CDWG00000022007");
         log.info(JsonHelper.toJSONString(result));
     }
 }

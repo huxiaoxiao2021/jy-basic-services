@@ -268,6 +268,6 @@ public class Constants {
      */
     public static final int SITE_USER_COUNT_LIMIT =2000;
     
-    public static final String QUERY_BY_WORKGRID_KEY_CACHE_KEY="WorkGridJsfServiceImpl.queryByWorkGridKeyWithCache_%s";
+    public static final String QUERY_BY_WORKGRID_KEY_CACHE_KEY="WorkGridService.queryByWorkGridKeyWithCache";
 
 }

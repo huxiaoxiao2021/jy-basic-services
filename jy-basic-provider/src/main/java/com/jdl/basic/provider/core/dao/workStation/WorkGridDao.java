@@ -1,6 +1,8 @@
 package com.jdl.basic.provider.core.dao.workStation;
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jdl.basic.api.domain.workStation.*;
+import com.jdl.basic.common.contants.Constants;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -132,4 +134,9 @@ public interface WorkGridDao {
 	int batchUpdateByIds(WorkGridBatchUpdateRequest request);
 
 	List<WorkGrid> batchQueryAreaWorkGrid(BatchAreaWorkGridQuery query);
+
+
+	@Cache(key = Constants.QUERY_BY_WORKGRID_KEY_CACHE_KEY + "@args0",
+			memoryEnable = false, redisExpiredTime = 24 * 60 * 60 * 1000)
+	WorkGrid queryByWorkGridKeyWithCache(String workGridKey);
 }
