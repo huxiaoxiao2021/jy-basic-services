@@ -1,23 +1,8 @@
 package com.jdl.basic.provider.core.provider.workStation;
 
 
-import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
-import com.jdl.basic.api.domain.workStation.*;
-import com.jdl.basic.common.utils.*;
-import com.jdl.basic.provider.JYBasicRpcException;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import com.jdl.basic.provider.core.manager.BaseMajorManager;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
+import com.jdl.basic.api.domain.workStation.BatchAreaWorkGridQuery;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
 import com.jdl.basic.api.domain.workStation.WorkGridDeviceVo;
@@ -27,11 +12,24 @@ import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridVo;
 import com.jdl.basic.api.service.workStation.WorkGridJsfService;
 import com.jdl.basic.common.contants.CacheKeyConstants;
+import com.jdl.basic.common.utils.DateHelper;
+import com.jdl.basic.common.utils.ObjectHelper;
+import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.provider.JYBasicRpcException;
+import com.jdl.basic.provider.common.Jimdb.CacheService;
 import com.jdl.basic.provider.config.lock.LockService;
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.hander.ResultHandler;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 场地网格表--JsfService接口实现
@@ -301,11 +299,16 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	public Result<PageDto<WorkGridDeviceVo>> queryMachineListData(WorkGridQuery query) {
 		return workGridService.queryMachineListData(query);
 	}
-
+	@Resource
+	@Qualifier("JimdbCacheService")
+	private CacheService cacheService;
 	@Override
 	public Result<WorkGrid> queryByWorkGridKeyWithCache(String workGridKey) {
+		String cacheKey = "WorkGridService.queryByWorkGridKeyWithCache" + workGridKey;
+		log.info("WorkGridJsfServiceImpl,queryByWorkGridKeyWithCache before: {}", cacheService.get(cacheKey));
 		Result<WorkGrid> result = Result.success();
-		result.setData(workGridService.queryByWorkGridKey(workGridKey));
+		result.setData(workGridService.queryByWorkGridKeyWithCache(workGridKey));
+		log.info("WorkGridJsfServiceImpl,queryByWorkGridKeyWithCache before: {}", cacheService.get(cacheKey));
 		return result;
 	}
 

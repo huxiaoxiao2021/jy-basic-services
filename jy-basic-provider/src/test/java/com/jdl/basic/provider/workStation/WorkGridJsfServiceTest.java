@@ -50,5 +50,12 @@ public class WorkGridJsfServiceTest {
         Result<List<WorkGrid>> result = workGridJsfService.batchQueryAreaWorkGrid(query);
         log.info("result {}", JsonHelper.toJSONString(result));
     }
+    
+    @Test
+    public void queryByWorkGridKeyWithCacheTest() {
+        workGridJsfService.queryByWorkGridKeyWithCache("CDWG00000022017");
+        Result<WorkGrid> result = workGridJsfService.queryByWorkGridKeyWithCache("CDWG00000022017");
+        log.info(JsonHelper.toJSONString(result));
+    }
 }
 
