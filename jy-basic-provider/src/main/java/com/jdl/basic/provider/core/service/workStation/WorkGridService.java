@@ -202,8 +202,5 @@ public interface WorkGridService {
 	 * @param workGridKey
 	 * @return
 	 */
-	@Cache(key = "WorkGridService.queryByWorkGridKeyWithCache@args0",
-			memoryExpiredTime =  5 * 60 * 1000,
-			redisExpiredTime = 5 * 60 * 1000)
 	WorkGrid queryByWorkGridKeyWithCache(String workGridKey);
 }
