@@ -145,10 +145,12 @@ public class WorkGridServiceImpl implements WorkGridService {
 		Result<Boolean> result = Result.success();
 		//更新网格下所有工序信息
 		this.workStationGridService.syncWorkGridInfo(updateData);
-		result.setData(workGridDao.updateById(updateData) == 1);
-
-		// 清除网格工序缓存
-		invalidateWorkStationGridCache(updateData.getBusinessKey());
+		int count = workGridDao.updateById(updateData);
+		result.setData(count == 1);
+		if (count == 1) {
+			// 清除网格工序缓存
+			this.invalidateWorkStationGridCache(updateData.getBusinessKey());
+		}
 		return result;
 	 }
 
@@ -158,8 +160,12 @@ public class WorkGridServiceImpl implements WorkGridService {
 			return;
 		}
 		String cacheKey = Constants.QUERY_BY_WORKGRID_KEY_CACHE_KEY + businessKey;
-		if (StringUtils.isNotEmpty(cacheService.get(cacheKey))) {
-			cacheService.del(cacheKey);
+		try {
+			if (StringUtils.isNotEmpty(cacheService.get(cacheKey))) {
+				cacheService.del(cacheKey);
+			}
+		} catch (Exception e) {
+			log.error("WorkGridServiceImpl.invalidateWorkStationGridCache error: {}", e.getMessage());
 		}
 	}
 
@@ -187,8 +193,6 @@ public class WorkGridServiceImpl implements WorkGridService {
 			return result.toFail("删除数据及id不能为空！");
 		}
 		WorkGrid oldData = workGridDao.queryById(deleteData.getId());
-		// 清除网格工序缓存
-		invalidateWorkStationGridCache(oldData.getBusinessKey());
 		return checkAndDeleteData(deleteData,oldData);
 	 }
 	@Transactional
@@ -220,6 +224,8 @@ public class WorkGridServiceImpl implements WorkGridService {
 			return result.toFail("操作失败！网格下存在"+stationGridCount+"个未删除的网格工序，不可删除！");
 		}
 		deleteData(deleteData,oldData);
+		// 清除网格工序缓存
+		this.invalidateWorkStationGridCache(oldData.getBusinessKey());
 		return result;
 	}
 	private void deleteData(WorkGrid deleteData, WorkGrid oldData) {

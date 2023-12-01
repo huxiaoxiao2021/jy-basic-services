@@ -303,7 +303,4 @@ public class CacheKeyConstants {
      * 查询场地下员工缓存key
      */
     public static final String CACHE_KEY_SEARCH_SITE_USER = "k_search_site_users:%s";
-
-    public static final String CACHE_KEY_QUERY_WORK_GRID_WITH_CACHE = "k_query_work_grid_with_cache";
-
 }

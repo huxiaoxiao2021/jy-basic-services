@@ -12,12 +12,10 @@ import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridVo;
 import com.jdl.basic.api.service.workStation.WorkGridJsfService;
 import com.jdl.basic.common.contants.CacheKeyConstants;
-import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
-import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.basic.provider.JYBasicRpcException;
 import com.jdl.basic.provider.common.Jimdb.CacheService;
 import com.jdl.basic.provider.config.lock.LockService;
@@ -32,7 +30,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 场地网格表--JsfService接口实现
@@ -309,27 +306,12 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
     @Override
     public Result<WorkGrid> queryByWorkGridKeyWithCache(String workGridKey) {
         Result<WorkGrid> result = Result.success();
-		lockService.tryLock(CacheKeyConstants.CACHE_KEY_QUERY_WORK_GRID_WITH_CACHE,DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
-			@Override
-			public void success() {
-				try {
-					result.setData(workGridService.queryByWorkGridKeyWithCache(workGridKey));
-				} catch (Exception e) {
-					log.error("WorkGridJsfServiceImpl.queryByWorkGridKeyWithCache db error:{}", e.getMessage());
-					result.toFail("查询网格异常:" + e.getMessage());
-				}
-			}
-			@Override
-			public void fail() {
-				result.toFail("其他用户正在查询网格信息，请稍后操作！");
-			}
-
-			@Override
-			public void error(Exception e) {
-				log.error("WorkGridJsfServiceImpl.queryByWorkGridKeyWithCache add lock error:{}", e.getMessage());
-				result.toFail("其他用户正在查询网格信息，请稍后操作！");
-			}
-		});
+		try {
+			result.setData(workGridService.queryByWorkGridKeyWithCache(workGridKey));
+		} catch (Exception e) {
+			log.error("WorkGridJsfServiceImpl.queryByWorkGridKeyWithCache db error:{}", e.getMessage());
+			result.toFail("查询网格异常:" + e.getMessage());
+		}
         return result;
     }
 
