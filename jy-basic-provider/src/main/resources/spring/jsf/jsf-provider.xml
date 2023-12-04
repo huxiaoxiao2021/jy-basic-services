@@ -368,5 +368,14 @@
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
+
+    <!--租户-->
+    <jsf:provider id="jyTenantServiceJsf"
+                  interface="com.jdl.basic.api.service.tenant.JyTenantJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="jyTenantJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
 </beans>
 
