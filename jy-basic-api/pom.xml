@@ -12,7 +12,7 @@
 
     <groupId>com.jdl.basic</groupId>
     <artifactId>jy-basic-api</artifactId>
-    <version>1.5.7-SNAPSHOT</version>
+    <version>1.5.8-SNAPSHOT</version>
     <name>jy-basic-api</name>
     <description>基础信息服务api</description>
 
@@ -33,6 +33,12 @@
         <dependency>
             <artifactId>dms-java-utils-sdk</artifactId>
             <groupId>com.jd.dms.utis</groupId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>RELEASE</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
