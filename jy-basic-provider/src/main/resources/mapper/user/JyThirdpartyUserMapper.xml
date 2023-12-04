@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jdl.basic.provider.core.dao.user.JyThirdpartyUserDao">
+  <resultMap id="BaseResultMap" type="com.jdl.basic.api.domain.user.JyThirdpartyUser">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_biz_id" jdbcType="VARCHAR" property="taskBizId" />
+    <result column="task_detail_biz_id" jdbcType="VARCHAR" property="taskDetailBizId" />
+    <result column="user_code" jdbcType="VARCHAR" property="userCode" />
+    <result column="user_code_encrypt" jdbcType="VARCHAR" property="userCodeEncrypt" />
+    <result column="user_code_index" jdbcType="VARCHAR" property="userCodeIndex" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_name_encrypt" jdbcType="VARCHAR" property="userNameEncrypt" />
+    <result column="user_name_index" jdbcType="VARCHAR" property="userNameIndex" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="mobile_encrypt" jdbcType="VARCHAR" property="mobileEncrypt" />
+    <result column="mobile_index" jdbcType="VARCHAR" property="mobileIndex" />
+    <result column="nature" jdbcType="VARCHAR" property="nature" />
+    <result column="nature_desc" jdbcType="VARCHAR" property="natureDesc" />
+    <result column="site_code" jdbcType="INTEGER" property="siteCode" />
+    <result column="deadline_time" jdbcType="DATE" property="deadlineTime" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="yn" jdbcType="TINYINT" property="yn" />
+    <result column="ts" jdbcType="TIMESTAMP" property="ts" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, task_biz_id, task_detail_biz_id, user_code, user_code_encrypt, user_code_index, 
+    user_name, user_name_encrypt, user_name_index, mobile, mobile_encrypt, mobile_index, 
+    nature, nature_desc, site_code, deadline_time, company_name, create_user, create_user_name, 
+    update_user, update_user_name, create_time, update_time, yn, ts
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from jy_thirdparty_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from jy_thirdparty_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.jdl.basic.api.domain.user.JyThirdpartyUser">
+    insert into jy_thirdparty_user (id, task_biz_id, task_detail_biz_id, 
+      user_code, user_code_encrypt, user_code_index, 
+      user_name, user_name_encrypt, user_name_index, 
+      mobile, mobile_encrypt, mobile_index, 
+      nature, nature_desc, site_code, 
+      deadline_time, company_name, create_user, 
+      create_user_name, update_user, update_user_name, 
+      create_time, update_time, yn, 
+      ts)
+    values (#{id,jdbcType=BIGINT}, #{taskBizId,jdbcType=VARCHAR}, #{taskDetailBizId,jdbcType=VARCHAR}, 
+      #{userCode,jdbcType=VARCHAR}, #{userCodeEncrypt,jdbcType=VARCHAR}, #{userCodeIndex,jdbcType=VARCHAR}, 
+      #{userName,jdbcType=VARCHAR}, #{userNameEncrypt,jdbcType=VARCHAR}, #{userNameIndex,jdbcType=VARCHAR}, 
+      #{mobile,jdbcType=VARCHAR}, #{mobileEncrypt,jdbcType=VARCHAR}, #{mobileIndex,jdbcType=VARCHAR}, 
+      #{nature,jdbcType=VARCHAR}, #{natureDesc,jdbcType=VARCHAR}, #{siteCode,jdbcType=INTEGER}, 
+      #{deadlineTime,jdbcType=DATE}, #{companyName,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{createUserName,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{updateUserName,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{yn,jdbcType=TINYINT}, 
+      #{ts,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jdl.basic.api.domain.user.JyThirdpartyUser">
+    insert into jy_thirdparty_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="taskBizId != null">
+        task_biz_id,
+      </if>
+      <if test="taskDetailBizId != null">
+        task_detail_biz_id,
+      </if>
+      <if test="userCode != null">
+        user_code,
+      </if>
+      <if test="userCodeEncrypt != null">
+        user_code_encrypt,
+      </if>
+      <if test="userCodeIndex != null">
+        user_code_index,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="userNameEncrypt != null">
+        user_name_encrypt,
+      </if>
+      <if test="userNameIndex != null">
+        user_name_index,
+      </if>
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="mobileEncrypt != null">
+        mobile_encrypt,
+      </if>
+      <if test="mobileIndex != null">
+        mobile_index,
+      </if>
+      <if test="nature != null">
+        nature,
+      </if>
+      <if test="natureDesc != null">
+        nature_desc,
+      </if>
+      <if test="siteCode != null">
+        site_code,
+      </if>
+      <if test="deadlineTime != null">
+        deadline_time,
+      </if>
+      <if test="companyName != null">
+        company_name,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createUserName != null">
+        create_user_name,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateUserName != null">
+        update_user_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="yn != null">
+        yn,
+      </if>
+      <if test="ts != null">
+        ts,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="taskBizId != null">
+        #{taskBizId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskDetailBizId != null">
+        #{taskDetailBizId,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null">
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userCodeEncrypt != null">
+        #{userCodeEncrypt,jdbcType=VARCHAR},
+      </if>
+      <if test="userCodeIndex != null">
+        #{userCodeIndex,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userNameEncrypt != null">
+        #{userNameEncrypt,jdbcType=VARCHAR},
+      </if>
+      <if test="userNameIndex != null">
+        #{userNameIndex,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="mobileEncrypt != null">
+        #{mobileEncrypt,jdbcType=VARCHAR},
+      </if>
+      <if test="mobileIndex != null">
+        #{mobileIndex,jdbcType=VARCHAR},
+      </if>
+      <if test="nature != null">
+        #{nature,jdbcType=VARCHAR},
+      </if>
+      <if test="natureDesc != null">
+        #{natureDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="siteCode != null">
+        #{siteCode,jdbcType=INTEGER},
+      </if>
+      <if test="deadlineTime != null">
+        #{deadlineTime,jdbcType=DATE},
+      </if>
+      <if test="companyName != null">
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserName != null">
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserName != null">
+        #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null">
+        #{yn,jdbcType=TINYINT},
+      </if>
+      <if test="ts != null">
+        #{ts,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jdl.basic.api.domain.user.JyThirdpartyUser">
+    update jy_thirdparty_user
+    <set>
+      <if test="taskBizId != null">
+        task_biz_id = #{taskBizId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskDetailBizId != null">
+        task_detail_biz_id = #{taskDetailBizId,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null">
+        user_code = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userCodeEncrypt != null">
+        user_code_encrypt = #{userCodeEncrypt,jdbcType=VARCHAR},
+      </if>
+      <if test="userCodeIndex != null">
+        user_code_index = #{userCodeIndex,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userNameEncrypt != null">
+        user_name_encrypt = #{userNameEncrypt,jdbcType=VARCHAR},
+      </if>
+      <if test="userNameIndex != null">
+        user_name_index = #{userNameIndex,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="mobileEncrypt != null">
+        mobile_encrypt = #{mobileEncrypt,jdbcType=VARCHAR},
+      </if>
+      <if test="mobileIndex != null">
+        mobile_index = #{mobileIndex,jdbcType=VARCHAR},
+      </if>
+      <if test="nature != null">
+        nature = #{nature,jdbcType=VARCHAR},
+      </if>
+      <if test="natureDesc != null">
+        nature_desc = #{natureDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="siteCode != null">
+        site_code = #{siteCode,jdbcType=INTEGER},
+      </if>
+      <if test="deadlineTime != null">
+        deadline_time = #{deadlineTime,jdbcType=DATE},
+      </if>
+      <if test="companyName != null">
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserName != null">
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserName != null">
+        update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null">
+        yn = #{yn,jdbcType=TINYINT},
+      </if>
+      <if test="ts != null">
+        ts = #{ts,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jdl.basic.api.domain.user.JyThirdpartyUser">
+    update jy_thirdparty_user
+    set task_biz_id = #{taskBizId,jdbcType=VARCHAR},
+      task_detail_biz_id = #{taskDetailBizId,jdbcType=VARCHAR},
+      user_code = #{userCode,jdbcType=VARCHAR},
+      user_code_encrypt = #{userCodeEncrypt,jdbcType=VARCHAR},
+      user_code_index = #{userCodeIndex,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      user_name_encrypt = #{userNameEncrypt,jdbcType=VARCHAR},
+      user_name_index = #{userNameIndex,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      mobile_encrypt = #{mobileEncrypt,jdbcType=VARCHAR},
+      mobile_index = #{mobileIndex,jdbcType=VARCHAR},
+      nature = #{nature,jdbcType=VARCHAR},
+      nature_desc = #{natureDesc,jdbcType=VARCHAR},
+      site_code = #{siteCode,jdbcType=INTEGER},
+      deadline_time = #{deadlineTime,jdbcType=DATE},
+      company_name = #{companyName,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      yn = #{yn,jdbcType=TINYINT},
+      ts = #{ts,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

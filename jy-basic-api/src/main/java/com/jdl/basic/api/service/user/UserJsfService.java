@@ -1,5 +1,6 @@
 package com.jdl.basic.api.service.user;
 
+import com.jd.dms.java.utils.sdk.base.PageData;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.*;
 
@@ -80,4 +81,18 @@ public interface UserJsfService {
     Result<Boolean> checkUserBelongToJy(JyUserQueryDto dto);
 
     JyUser queryUserInfo(JyUser condition);
+
+    /**
+     * 保存三方人员信息
+     * @param dto
+     * @return
+     */
+    Result saveJyThirdpartyUser(JyThirdpartyUserSaveDto dto);
+
+    /**
+     * 查询任务/任务明细下的三方人员信息
+     * @param dto
+     * @return
+     */
+    Result<PageData<JyThirdpartyUser>> queryJyThirdpartyUserUnderTask(JyThirdpartyUserQueryDto dto);
 }

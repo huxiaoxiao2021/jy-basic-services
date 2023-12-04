@@ -1,5 +1,8 @@
 package com.jdl.basic.provider.core.provider.user;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.jd.dms.java.utils.sdk.base.PageData;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.api.enums.UserJobTypeEnum;
@@ -8,6 +11,7 @@ import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.JYBasicRpcException;
+import com.jdl.basic.provider.core.service.user.ThirdpartyUseService;
 import com.jdl.basic.provider.core.service.user.UserService;
 import java.util.Date;
 
@@ -30,6 +34,8 @@ public class UserJsfServiceImpl implements UserJsfService {
     private UserService userService;
     @Autowired
     UserWorkGridService userWorkGridService;
+    @Autowired
+    ThirdpartyUseService thirdpartyUseService;
     @Override
     public Result<List<JyUserDto>> searchUserBySiteCode(JyUserQueryDto dto) {
         return convertToResult(userService.searchUserBySiteCode(dto.getSiteCode()));
@@ -180,5 +186,40 @@ public class UserJsfServiceImpl implements UserJsfService {
     @Override
     public JyUser queryUserInfo(JyUser condition) {
         return userService.queryUserInfo(condition);
+    }
+
+    @Override
+    public Result saveJyThirdpartyUser(JyThirdpartyUserSaveDto dto) {
+        int rs =thirdpartyUseService.batchInsert(dto.getJyThirdpartyUserList());
+        if (rs >0){
+            return Result.success();
+        }
+        return Result.fail("三方人员信息保存失败！");
+    }
+
+    @Override
+    public Result<PageData<JyThirdpartyUser>> queryJyThirdpartyUserUnderTask(JyThirdpartyUserQueryDto dto) {
+        checkJyThirdpartyUserQueryDto(dto);
+        List<JyThirdpartyUser> jyThirdpartyUserList;
+
+        Page page =PageHelper.startPage(dto.getPageNo(),dto.getPageSize());
+        if (ObjectHelper.isNotNull(dto.getTaskDetailBizId())){
+            jyThirdpartyUserList =thirdpartyUseService.queryJyThirdpartyUserByDetailBizId(dto.getTaskDetailBizId());
+        }else {
+            jyThirdpartyUserList =thirdpartyUseService.queryJyThirdpartyUserByTaskBizId(dto.getTaskBizId());
+        }
+
+        if (CollectionUtils.isNotEmpty(jyThirdpartyUserList)){
+            PageData pageData =new PageData();
+            pageData.setPageNumber(dto.getPageNo());
+            pageData.setPageSize(dto.getPageSize());
+            pageData.setTotal(page.getTotal());
+            pageData.setRecords(jyThirdpartyUserList);
+            return Result.success(pageData);
+        }
+        return Result.success();
+    }
+
+    private void checkJyThirdpartyUserQueryDto(JyThirdpartyUserQueryDto dto) {
     }
 }

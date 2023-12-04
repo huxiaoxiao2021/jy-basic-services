@@ -5,7 +5,7 @@
 
 <generatorConfiguration>
   <classPathEntry
-    location="C:\soft\repository\repository\mysql\mysql-connector-java\8.0.27\mysql-connector-java-8.0.27.jar"/>
+    location="/Users/weixiaofeng/.m2/repository/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar"/>
 
   <context id="mysqlTables" targetRuntime="MyBatis3">
 
@@ -26,19 +26,19 @@
       <property name="forceBigDecimals" value="false"/>
     </javaTypeResolver>
     <!-- 生成model模型，对应的包，存放位置可以指定具体的路径,如/ProjectName/src，也可以使用MyWebservice/src/main/java来自动生成 -->
-    <javaModelGenerator targetPackage="com.jdl.basic.api.domain.schedule"
-      targetProject="C:/devStore/jy-basic-services/jy-basic-api/src/main/java">
+    <javaModelGenerator targetPackage="com.jdl.basic.api.domain.user"
+      targetProject="/Users/weixiaofeng/javaproject/fj_c/jy-basic-services/jy-basic-provider/src/main/java">
       <property name="enableSubPackages" value="true"/>
     </javaModelGenerator>
 
     <!--对应的xml mapper文件  -->
-    <sqlMapGenerator targetPackage="mapper.schedule"
+    <sqlMapGenerator targetPackage="mapper.user"
       targetProject="src/main/resources">
       <property name="enableSubPackages" value="true"/>
     </sqlMapGenerator>
 
     <!-- 对应的dao接口 -->
-    <javaClientGenerator type="XMLMAPPER" targetPackage="com.jdl.basic.provider.core.dao.schedule"
+    <javaClientGenerator type="XMLMAPPER" targetPackage="com.jdl.basic.provider.core.dao.user"
       targetProject="src/main/java">
       <property name="enableSubPackages" value="true"/>
     </javaClientGenerator>
@@ -49,12 +49,16 @@
 
 
 
-    <table tableName="work_grid_schedule" domainObjectName="WorkGridSchedule"  mapperName="WorkGridScheduleDao"
+    <table tableName="jy_thirdparty_user" domainObjectName="JyThirdpartyUser"  mapperName="JyThirdpartyUserDao"
            enableCountByExample="false" enableUpdateByExample="false"
            enableSelectByExample="false" enableDeleteByExample="false"
            selectByExampleQueryId="false">
       <property name="useActualColumnNames" value="false"/>
     </table>
+
+
+
+
 
 
 
