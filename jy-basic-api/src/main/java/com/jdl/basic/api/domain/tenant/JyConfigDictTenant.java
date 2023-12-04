@@ -11,7 +11,7 @@ import java.util.Date;
  * @Description:
  * @date Date : 2023年11月28日 18:12
  */
-public class JyTenant implements Serializable {
+public class JyConfigDictTenant implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /**

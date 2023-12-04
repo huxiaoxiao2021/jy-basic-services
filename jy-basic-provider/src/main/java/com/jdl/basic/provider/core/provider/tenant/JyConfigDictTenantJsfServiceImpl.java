@@ -1,9 +1,9 @@
 package com.jdl.basic.provider.core.provider.tenant;
 
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
-import com.jdl.basic.api.domain.tenant.JyTenant;
+import com.jdl.basic.api.domain.tenant.JyConfigDictTenant;
 import com.jdl.basic.api.domain.user.JyUser;
-import com.jdl.basic.api.service.tenant.JyTenantJsfService;
+import com.jdl.basic.api.service.tenant.JyConfigDictTenantJsfService;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class JyTenantJsfServiceImpl implements JyTenantJsfService {
+public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfService {
 
     @Autowired
     private UserService userService;
@@ -36,7 +36,7 @@ public class JyTenantJsfServiceImpl implements JyTenantJsfService {
      * @return 插入操作的结果，返回一个Boolean类型的结果
      */
     @Override
-    public Result<Boolean> insert(JyTenant insertData) {
+    public Result<Boolean> insert(JyConfigDictTenant insertData) {
         return null;
     }
 
@@ -47,7 +47,7 @@ public class JyTenantJsfServiceImpl implements JyTenantJsfService {
      * @return 更新是否成功的结果
      */
     @Override
-    public Result<Boolean> updateById(JyTenant updateData) {
+    public Result<Boolean> updateById(JyConfigDictTenant updateData) {
         return null;
     }
 
@@ -58,7 +58,7 @@ public class JyTenantJsfServiceImpl implements JyTenantJsfService {
      * @return 删除操作的结果，返回一个Boolean类型的Result对象
      */
     @Override
-    public Result<Boolean> deleteById(JyTenant deleteData) {
+    public Result<Boolean> deleteById(JyConfigDictTenant deleteData) {
         return null;
     }
 
@@ -69,7 +69,7 @@ public class JyTenantJsfServiceImpl implements JyTenantJsfService {
      * @return 响应的 Result 对象，包含 JyTenant 对象
      */
     @Override
-    public Result<JyTenant> getJyTenantByErp(String erp) {
+    public Result<JyConfigDictTenant> getJyTenantByErp(String erp) {
         if(StringUtils.isEmpty(erp)){
             return Result.fail("未查询到相关的用户信息");
         }
@@ -98,7 +98,7 @@ public class JyTenantJsfServiceImpl implements JyTenantJsfService {
      * @return 返回JyTenant响应结果
      */
     @Override
-    public Result<JyTenant> getJyTenantBySiteCode(Integer siteCode) {
+    public Result<JyConfigDictTenant> getJyTenantBySiteCode(Integer siteCode) {
         if(siteCode == null){
             return Result.fail("未查询到相关的用户信息");
         }

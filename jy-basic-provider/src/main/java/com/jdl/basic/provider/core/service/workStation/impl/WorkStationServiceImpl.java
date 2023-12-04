@@ -199,6 +199,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 			if(uniqueKeysRowNumMap.containsKey(uniqueKeysStr)) {
 				return result0.toFail(rowKey + "和第"+uniqueKeysRowNumMap.get(uniqueKeysStr)+"行数据重复！");
 			}
+			// todo 数据隔离区分业务条线
 			if(BusinessLineTypeEnum.getEnum(data.getBusinessLineCode()) == null){
 				return result0.toFail(rowKey + "的【业务条线ID】不符合要求！");
 			}
@@ -226,6 +227,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 		String workName = data.getWorkName();
 		String areaCode = data.getAreaCode();
 		String areaName = data.getAreaName();
+		//todo 数据隔离区分条线
 		data.setBusinessLineName(BusinessLineTypeEnum.getNameByCode(data.getBusinessLineCode()));
 
 		if(!CheckHelper.checkStr("作业区ID", areaCode, 50, result).isSuccess()) {

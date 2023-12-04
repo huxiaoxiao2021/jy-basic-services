@@ -1,6 +1,6 @@
 package com.jdl.basic.api.service.tenant;
 
-import com.jdl.basic.api.domain.tenant.JyTenant;
+import com.jdl.basic.api.domain.tenant.JyConfigDictTenant;
 import com.jdl.basic.common.utils.Result;
 
 /**
@@ -11,36 +11,36 @@ import com.jdl.basic.common.utils.Result;
  * @Description:
  * @date Date : 2023年11月28日 17:00
  */
-public interface JyTenantJsfService {
+public interface JyConfigDictTenantJsfService {
     /**
      * 新增
      * @param insertData
      * @return
      */
-    Result<Boolean> insert(JyTenant insertData);
+    Result<Boolean> insert(JyConfigDictTenant insertData);
     /**
      * 根据id更新数据
      * @param updateData
      * @return
      */
-    Result<Boolean> updateById(JyTenant updateData);
+    Result<Boolean> updateById(JyConfigDictTenant updateData);
     /**
      * 根据id删除数据
      * @param deleteData
      * @return
      */
-    Result<Boolean> deleteById(JyTenant deleteData);
+    Result<Boolean> deleteById(JyConfigDictTenant deleteData);
 
     /**
      * 根据erp获取租户信息
      * @param erp
      * @return
      */
-    Result<JyTenant> getJyTenantByErp(String erp);
+    Result<JyConfigDictTenant> getJyTenantByErp(String erp);
     /**
      * 根据场地id获取租户信息
      * @param siteCode
      * @return
      */
-    Result<JyTenant> getJyTenantBySiteCode(Integer siteCode);
+    Result<JyConfigDictTenant> getJyTenantBySiteCode(Integer siteCode);
 }

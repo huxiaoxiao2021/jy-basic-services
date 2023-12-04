@@ -370,10 +370,10 @@
     </jsf:provider>
 
     <!--租户-->
-    <jsf:provider id="jyTenantServiceJsf"
-                  interface="com.jdl.basic.api.service.tenant.JyTenantJsfService"
+    <jsf:provider id="jyConfigDictTenantJsf"
+                  interface="com.jdl.basic.api.service.tenant.JyConfigDictTenantJsfService"
                   alias="${jsf.jy_basic.alias}"
-                  ref="jyTenantJsfServiceImpl"
+                  ref="jyConfigDictTenantJsfServiceImpl"
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>

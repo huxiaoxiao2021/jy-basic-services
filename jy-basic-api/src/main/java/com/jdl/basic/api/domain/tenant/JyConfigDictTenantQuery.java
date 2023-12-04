@@ -8,7 +8,7 @@ package com.jdl.basic.api.domain.tenant;
  * @Description:
  * @date Date : 2023年11月28日 18:34
  */
-public class JyTenantQuery {
+public class JyConfigDictTenantQuery {
     /**
      *
      */
