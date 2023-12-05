@@ -263,4 +263,9 @@ public class Constants {
      */
     public static final String CHINESE_COMMA = "、";
 
+    /**
+     * 场地人员数量限制
+     */
+    public static final int SITE_USER_COUNT_LIMIT =2000;
+
 }

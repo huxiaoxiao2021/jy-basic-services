@@ -51,4 +51,6 @@ public class JyUserQueryCondition implements Serializable {
     private Date createTime;
 
     private Date updateTime;
+
+    private List<String> positionNames;
 }

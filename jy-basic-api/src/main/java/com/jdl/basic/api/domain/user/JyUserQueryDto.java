@@ -3,6 +3,7 @@ package com.jdl.basic.api.domain.user;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class JyUserQueryDto {
@@ -36,4 +37,6 @@ public class JyUserQueryDto {
     private Date createTime;
 
     private Date updateTime;
+    
+    private List<String> positionNames;
 }
