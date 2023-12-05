@@ -10,41 +10,53 @@ package com.jdl.basic.api.domain.tenant;
  */
 public class JyConfigDictTenantQuery {
     /**
-     *
+     * 所属租户
      */
-    private Integer businessType;
+    private String belongTenantCode;
     /**
-     *
+     * 字典编码
      */
-    private String key;
+    private String dictCode;
     /**
-     *
+     * 字典项展示文本
      */
-    private String value;
+    private String dictItemText;
+    /**
+     * 字典项值
+     */
+    private String dictItemValue;
 
     //=========================
 
-    public Integer getBusinessType() {
-        return businessType;
+    public String getBelongTenantCode() {
+        return belongTenantCode;
     }
 
-    public void setBusinessType(Integer businessType) {
-        this.businessType = businessType;
+    public void setBelongTenantCode(String belongTenantCode) {
+        this.belongTenantCode = belongTenantCode;
     }
 
-    public String getKey() {
-        return key;
+    public String getDictCode() {
+        return dictCode;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setDictCode(String dictCode) {
+        this.dictCode = dictCode;
     }
 
-    public String getValue() {
-        return value;
+    public String getDictItemText() {
+        return dictItemText;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setDictItemText(String dictItemText) {
+        this.dictItemText = dictItemText;
+    }
+
+    public String getDictItemValue() {
+        return dictItemValue;
+    }
+
+    public void setDictItemValue(String dictItemValue) {
+        this.dictItemValue = dictItemValue;
     }
 }

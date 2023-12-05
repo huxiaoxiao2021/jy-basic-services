@@ -3,6 +3,8 @@ package com.jdl.basic.api.service.tenant;
 import com.jdl.basic.api.domain.tenant.JyConfigDictTenant;
 import com.jdl.basic.common.utils.Result;
 
+import java.util.List;
+
 /**
  * @author : caozhixing3
  * @version V1.0
@@ -43,4 +45,18 @@ public interface JyConfigDictTenantJsfService {
      * @return
      */
     Result<JyConfigDictTenant> getJyTenantBySiteCode(Integer siteCode);
+    /**
+     * 根据租户编码获取业务线列表
+     *
+     * @param tenantCode 租户编码
+     * @return 业务线列表的结果
+     */
+    Result<List<JyConfigDictTenant>> getBusinessLineByTenantCode(String tenantCode);
+    /**
+     * 根据租户代码获取站点类型
+     *
+     * @param tenantCode 租户代码
+     * @return 响应的站点类型列表
+     */
+    Result<List<JyConfigDictTenant>> getSiteTypeByTenantCode(String tenantCode);
 }

@@ -2,15 +2,23 @@ package com.jdl.basic.provider.core.provider.tenant;
 
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.tenant.JyConfigDictTenant;
+import com.jdl.basic.api.domain.tenant.JyConfigDictTenantQuery;
 import com.jdl.basic.api.domain.user.JyUser;
+import com.jdl.basic.api.enums.DictCodeEnum;
+import com.jdl.basic.api.enums.TenantEnum;
 import com.jdl.basic.api.service.tenant.JyConfigDictTenantJsfService;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
+import com.jdl.basic.provider.core.service.tenant.JyConfigDictTenantService;
 import com.jdl.basic.provider.core.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author : caozhixing3
@@ -28,6 +36,8 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
     private UserService userService;
     @Autowired
     private BaseMajorManager baseMajorManager;
+    @Resource
+    private JyConfigDictTenantService jyConfigDictTenantService;
 
     /**
      * 插入JyTenant数据
@@ -70,24 +80,28 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
      */
     @Override
     public Result<JyConfigDictTenant> getJyTenantByErp(String erp) {
+        log.info("根据erp查询租户信息 getJyTenantByErp 入参-{}", erp);
+        JyConfigDictTenant defaultJyConfigDictTenant = new JyConfigDictTenant();
+        defaultJyConfigDictTenant.setBelongTenantCode(TenantEnum.TENANT_JY.getCode());
         if(StringUtils.isEmpty(erp)){
-            return Result.fail("未查询到相关的用户信息");
+            return Result.success(defaultJyConfigDictTenant);
         }
         JyUser condition = new JyUser();
         condition.setUserErp(erp);
         JyUser exitUser = userService.queryUserInfo(condition);
         if(exitUser == null){
-            return Result.fail("未查询到相关的用户信息");
+            return Result.success(defaultJyConfigDictTenant);
         }
         if(exitUser.getSiteCode() != null){
             return this.getJyTenantBySiteCode(exitUser.getSiteCode());
         }else if(StringUtils.isNotEmpty(exitUser.getOrganizationCode())){
             //查询配置表
+            JyConfigDictTenant dataBaseTenant = this.getTenantByCodeAndValue(DictCodeEnum.BELONG_RZ_ORG_CODE.getCode(),exitUser.getOrganizationCode());
             //查询到就返回，查询不到返回拣运租户兜底逻辑
-            return null;
+            return dataBaseTenant != null ? Result.success(dataBaseTenant) : Result.success(defaultJyConfigDictTenant);
         }else{
             //返回拣运租户兜底逻辑
-            return null;
+            return Result.success(defaultJyConfigDictTenant);
         }
     }
 
@@ -99,15 +113,63 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
      */
     @Override
     public Result<JyConfigDictTenant> getJyTenantBySiteCode(Integer siteCode) {
+        log.info("根据场地id查询租户信息 getJyTenantBySiteCode 入参-{}", siteCode);
+        JyConfigDictTenant defaultJyConfigDictTenant = new JyConfigDictTenant();
+        defaultJyConfigDictTenant.setBelongTenantCode(TenantEnum.TENANT_JY.getCode());
         if(siteCode == null){
-            return Result.fail("未查询到相关的用户信息");
+            return Result.success(defaultJyConfigDictTenant);
         }
         BaseStaffSiteOrgDto baseSite = baseMajorManager.getBaseSiteBySiteId(siteCode);
         if(baseSite == null){
-            return Result.fail("未查询到相关的用户信息");
+            return Result.success(defaultJyConfigDictTenant);
         }
         //查询配置表
+        JyConfigDictTenant dataBaseTenant = this.getTenantByCodeAndValue(DictCodeEnum.BELONG_QL_SITE_TYPE.getCode(),String.valueOf(baseSite.getSortSubType()));
         //查询到就返回，查询不到返回拣运租户兜底逻辑
-        return null;
+        return dataBaseTenant != null ? Result.success(dataBaseTenant) : Result.success(defaultJyConfigDictTenant);
+    }
+
+    /**
+     * 根据字典编码和字典项值获取租户信息
+     *
+     * @param dictCode 字典编码
+     * @param dictItemValue 字典项值
+     * @return 响应的租户信息
+     */
+    private JyConfigDictTenant getTenantByCodeAndValue(String dictCode,String dictItemValue){
+        JyConfigDictTenantQuery query = new JyConfigDictTenantQuery();
+        query.setDictCode(dictCode);
+        query.setDictItemValue(dictItemValue);
+        return jyConfigDictTenantService.getTenantByDictCodeAndValue(query);
+    }
+
+    /**
+     * 根据租户编码获取业务线列表
+     *
+     * @param tenantCode 租户编码
+     * @return 业务线列表的结果
+     */
+    @Override
+    public Result<List<JyConfigDictTenant>> getBusinessLineByTenantCode(String tenantCode) {
+        log.info("根据租户查询业务条线 getBusinessLineByTenantCode 入参-{}", tenantCode);
+        if(StringUtils.isBlank(tenantCode)){
+            return Result.success(new ArrayList<>());
+        }
+        return Result.success(jyConfigDictTenantService.getJyConfigDictTenantByTenantCodeAndDictCode(DictCodeEnum.TENANT_BUSINESS_LINE.getCode(),tenantCode));
+    }
+
+    /**
+     * 根据租户代码获取站点类型
+     *
+     * @param tenantCode 租户代码
+     * @return 响应的站点类型列表
+     */
+    @Override
+    public Result<List<JyConfigDictTenant>> getSiteTypeByTenantCode(String tenantCode) {
+        log.info("根据租户查询场地类型 getSiteTypeByTenantCode 入参-{}", tenantCode);
+        if(StringUtils.isBlank(tenantCode)){
+            return Result.success(new ArrayList<>());
+        }
+        return Result.success(jyConfigDictTenantService.getJyConfigDictTenantByTenantCodeAndDictCode(DictCodeEnum.TENANT_SITE_TYPE.getCode(),tenantCode));
     }
 }
