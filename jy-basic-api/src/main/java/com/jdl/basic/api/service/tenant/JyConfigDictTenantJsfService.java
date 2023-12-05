@@ -38,13 +38,13 @@ public interface JyConfigDictTenantJsfService {
      * @param erp
      * @return
      */
-    Result<JyConfigDictTenant> getJyTenantByErp(String erp);
+    Result<JyConfigDictTenant> getTenantByErp(String erp);
     /**
      * 根据场地id获取租户信息
      * @param siteCode
      * @return
      */
-    Result<JyConfigDictTenant> getJyTenantBySiteCode(Integer siteCode);
+    Result<JyConfigDictTenant> getTenantBySiteCode(Integer siteCode);
     /**
      * 根据租户编码获取业务线列表
      *

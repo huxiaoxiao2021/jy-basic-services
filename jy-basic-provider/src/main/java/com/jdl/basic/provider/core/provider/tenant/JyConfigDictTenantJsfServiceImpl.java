@@ -79,8 +79,8 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
      * @return 响应的 Result 对象，包含 JyTenant 对象
      */
     @Override
-    public Result<JyConfigDictTenant> getJyTenantByErp(String erp) {
-        log.info("根据erp查询租户信息 getJyTenantByErp 入参-{}", erp);
+    public Result<JyConfigDictTenant> getTenantByErp(String erp) {
+        log.info("根据erp查询租户信息 getTenantByErp 入参-{}", erp);
         JyConfigDictTenant defaultJyConfigDictTenant = new JyConfigDictTenant();
         defaultJyConfigDictTenant.setBelongTenantCode(TenantEnum.TENANT_JY.getCode());
         if(StringUtils.isEmpty(erp)){
@@ -93,7 +93,7 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
             return Result.success(defaultJyConfigDictTenant);
         }
         if(exitUser.getSiteCode() != null){
-            return this.getJyTenantBySiteCode(exitUser.getSiteCode());
+            return this.getTenantBySiteCode(exitUser.getSiteCode());
         }else if(StringUtils.isNotEmpty(exitUser.getOrganizationCode())){
             //查询配置表
             JyConfigDictTenant dataBaseTenant = this.getTenantByCodeAndValue(DictCodeEnum.BELONG_RZ_ORG_CODE.getCode(),exitUser.getOrganizationCode());
@@ -112,8 +112,8 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
      * @return 返回JyTenant响应结果
      */
     @Override
-    public Result<JyConfigDictTenant> getJyTenantBySiteCode(Integer siteCode) {
-        log.info("根据场地id查询租户信息 getJyTenantBySiteCode 入参-{}", siteCode);
+    public Result<JyConfigDictTenant> getTenantBySiteCode(Integer siteCode) {
+        log.info("根据场地id查询租户信息 getTenantBySiteCode 入参-{}", siteCode);
         JyConfigDictTenant defaultJyConfigDictTenant = new JyConfigDictTenant();
         defaultJyConfigDictTenant.setBelongTenantCode(TenantEnum.TENANT_JY.getCode());
         if(siteCode == null){
