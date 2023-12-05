@@ -111,4 +111,9 @@ public class WorkStation implements Serializable {
 	 * 工种类型集合
 	 */
 	private List<Integer> jobTypes;
+	/**
+	 * 租户编码
+	 * todo 数据隔离区分条线,业务条线不是必填的，租户目前是入参获取的
+	 */
+	private String tenantCode;
 }

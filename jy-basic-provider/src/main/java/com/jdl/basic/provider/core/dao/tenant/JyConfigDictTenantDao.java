@@ -21,10 +21,10 @@ public interface JyConfigDictTenantDao {
      */
     JyConfigDictTenant getTenantByDictCodeAndValue(JyConfigDictTenantQuery query);
     /**
-     * 根据租户代码和业务代码获取业务线列表
+     * 根据租户代码和业务代码获取配置列表
      *
      * @param query
-     * @return 业务线列表
+     * @return 配置列表
      */
     List<JyConfigDictTenant> getBusinessLineByTenantCode(JyConfigDictTenantQuery query);
 }

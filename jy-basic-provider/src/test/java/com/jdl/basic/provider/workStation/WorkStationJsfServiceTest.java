@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import java.util.Arrays;
 
 /**
  * @Author: chenyaguo@jd.com
@@ -34,6 +35,19 @@ public class WorkStationJsfServiceTest {
     @Test
     public void queryWorkStationBybusinessKeyWithCacheTest(){
         Result<WorkStation> result = workStationJsfService.queryWorkStationBybusinessKeyWithCache("GX00000005006");
+        System.out.println(JSON.toJSONString(result));
+    }
+
+    @Test
+    public void importTest(){
+        WorkStation ws = new WorkStation();
+        ws.setAreaCode("4");
+        ws.setAreaName("4");
+        ws.setWorkCode("4");
+        ws.setWorkName("4");
+        ws.setTenantCode("CC");
+        ws.setBusinessLineCode("5");
+        Result<Boolean> result = workStationJsfService.importDatas(Arrays.asList(ws));
         System.out.println(JSON.toJSONString(result));
     }
 }

@@ -20,7 +20,7 @@ public enum WorkSiteTypeEnum {
     //冷链
     COLD_CHAIN_TYPE(4, "冷链转运", new ArrayList<Integer>(),Arrays.asList(12351),Arrays.asList(123515),new ArrayList<Integer>()),
     //冷链医药
-    COLD_CHAIN_MEDICINE_TYPE(5, "冷链医药转运", new ArrayList<Integer>(),Arrays.asList(12351),Arrays.asList(123516),new ArrayList<Integer>()),
+    COLD_CHAIN_MEDICINE_TYPE(5, "医药转运", new ArrayList<Integer>(),Arrays.asList(12351),Arrays.asList(123516),new ArrayList<Integer>()),
     //其他
 	OTHER(0, "其他", new ArrayList<Integer>(),new ArrayList<Integer>(),new ArrayList<Integer>(),new ArrayList<Integer>());
 	

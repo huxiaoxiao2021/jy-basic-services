@@ -34,7 +34,7 @@
         limit 1
     </select>
 
-    <!--查询租户对应的业务条线-->
+    <!--查询租户对应的配置-->
     <select id="getBusinessLineByTenantCode" parameterType="com.jdl.basic.api.domain.tenant.JyConfigDictTenantQuery" resultMap="BaseResultMap">
         select
             belong_tenant_code,dict_code,dict_item_text,dict_item_value

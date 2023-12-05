@@ -5,8 +5,10 @@ import com.google.common.collect.Lists;
 import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
+import com.jdl.basic.api.domain.tenant.JyConfigDictTenant;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.enums.BusinessLineTypeEnum;
+import com.jdl.basic.api.enums.DictCodeEnum;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.utils.CheckHelper;
@@ -17,6 +19,7 @@ import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationDao;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationJobTypeDao;
 import com.jdl.basic.provider.core.po.WorkStationJobTypePO;
+import com.jdl.basic.provider.core.service.tenant.JyConfigDictTenantService;
 import com.jdl.basic.provider.core.service.workStation.WorkAreaService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationService;
@@ -30,6 +33,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -60,6 +64,10 @@ public class WorkStationServiceImpl implements WorkStationService {
 	@Autowired
 	@Qualifier("workAreaService")
 	private WorkAreaService workAreaService;
+
+	@Resource
+	private JyConfigDictTenantService jyConfigDictTenantService;
+
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -145,7 +153,6 @@ public class WorkStationServiceImpl implements WorkStationService {
 			}else {
 				generateAndSetBusinessKey(data);
 			}
-			data.setBusinessLineName(BusinessLineTypeEnum.getNameByCode(data.getBusinessLineCode()));
 			//判断有无设置工种类型 并设置
 			if(CollectionUtils.isNotEmpty(data.getJobTypes())){
 				data.setHaveJobType(1);
@@ -199,10 +206,6 @@ public class WorkStationServiceImpl implements WorkStationService {
 			if(uniqueKeysRowNumMap.containsKey(uniqueKeysStr)) {
 				return result0.toFail(rowKey + "和第"+uniqueKeysRowNumMap.get(uniqueKeysStr)+"行数据重复！");
 			}
-			// todo 数据隔离区分业务条线
-			if(BusinessLineTypeEnum.getEnum(data.getBusinessLineCode()) == null){
-				return result0.toFail(rowKey + "的【业务条线ID】不符合要求！");
-			}
 			uniqueKeysRowNumMap.put(uniqueKeysStr, rowNum);
 			rowNum ++;
 		}
@@ -227,9 +230,6 @@ public class WorkStationServiceImpl implements WorkStationService {
 		String workName = data.getWorkName();
 		String areaCode = data.getAreaCode();
 		String areaName = data.getAreaName();
-		//todo 数据隔离区分条线
-		data.setBusinessLineName(BusinessLineTypeEnum.getNameByCode(data.getBusinessLineCode()));
-
 		if(!CheckHelper.checkStr("作业区ID", areaCode, 50, result).isSuccess()) {
 			return result;
 		}
@@ -242,6 +242,19 @@ public class WorkStationServiceImpl implements WorkStationService {
 		if(!CheckHelper.checkStr("工序名称", workName, 100, result).isSuccess()) {
 			return result;
 		}
+		//todo 数据隔离区分条线,业务条线不是必填的，租户目前是入参获取的
+		String businessLineCode = data.getBusinessLineCode();
+		if(StringUtils.isBlank(businessLineCode)){
+			result.toFail("业务条线不能为空");
+			return result;
+		}
+		List<JyConfigDictTenant> jyConfigDictList = jyConfigDictTenantService.getJyConfigDictTenantByTenantCodeAndDictCode(DictCodeEnum.TENANT_BUSINESS_LINE.getCode(), data.getTenantCode());
+		JyConfigDictTenant oneJyConfigDictTenant = jyConfigDictList.stream().filter(e -> businessLineCode.equals(e.getDictItemValue())).findFirst().get();
+		if (oneJyConfigDictTenant == null) {
+			result.toFail("业务条线不合法");
+			return result;
+		}
+		data.setBusinessLineName(oneJyConfigDictTenant.getDictItemText());
 		return result;
 	}
 	/**
@@ -261,7 +274,6 @@ public class WorkStationServiceImpl implements WorkStationService {
 		}
 		workStationDao.deleteById(updateData);
 		updateData.setId(null);
-		updateData.setBusinessLineName(BusinessLineTypeEnum.getNameByCode(updateData.getBusinessLineCode()));
 		//判断有无设置工种类型 并设置
 		if(CollectionUtils.isNotEmpty(updateData.getJobTypes())){
 			updateData.setHaveJobType(1);
