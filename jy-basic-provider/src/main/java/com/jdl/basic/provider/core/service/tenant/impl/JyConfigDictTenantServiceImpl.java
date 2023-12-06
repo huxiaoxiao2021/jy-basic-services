@@ -29,24 +29,24 @@ public class JyConfigDictTenantServiceImpl implements JyConfigDictTenantService 
     private JyConfigDictTenantDao jyConfigDictTenantDao;
 
     /**
-     * 根据字典编码和值获取租户信息
-     * @param query 查询条件
-     * @return 结果对象，包含租户信息
+     * 根据字典编码和字典项值获取租户信息
+     *
+     * @param dictCode 字典编码
+     * @param dictItemValue 字典项值
+     * @return JyConfigDictTenant 响应的租户信息
      */
     @Override
-    public JyConfigDictTenant getTenantByDictCodeAndValue(JyConfigDictTenantQuery query){
-        if (query == null){
-            log.warn("JyConfigDictTenantServiceImpl->getTenantByDictCodeAndValue参数如空，请检查");
+    public JyConfigDictTenant getTenantByDictCodeAndValue(String dictCode,String dictItemValue){
+        if(StringUtils.isBlank(dictCode) || StringUtils.isBlank(dictItemValue)){
             return null;
         }
-        if (DictCodeEnum.getDictCodeEnumByCode(query.getDictCode()) == null){
+        if (DictCodeEnum.getDictCodeEnumByCode(dictCode) == null){
             log.warn("JyConfigDictTenantServiceImpl->getTenantByDictCodeAndValue字典编码不合法，请检查");
             return null;
         }
-        if (StringUtils.isBlank(query.getDictItemValue())){
-            log.warn("JyConfigDictTenantServiceImpl->getTenantByDictCodeAndValue字典值为空，请检查");
-            return null;
-        }
+        JyConfigDictTenantQuery query = new JyConfigDictTenantQuery();
+        query.setDictCode(dictCode);
+        query.setDictItemValue(dictItemValue);
         return jyConfigDictTenantDao.getTenantByDictCodeAndValue(query);
     }
 
@@ -60,6 +60,10 @@ public class JyConfigDictTenantServiceImpl implements JyConfigDictTenantService 
     @Override
     public List<JyConfigDictTenant> getJyConfigDictTenantByTenantCodeAndDictCode(String dictCode, String tenantCode) {
         if(StringUtils.isBlank(dictCode) || StringUtils.isBlank(tenantCode)){
+            return new ArrayList<>(0);
+        }
+        if (DictCodeEnum.getDictCodeEnumByCode(dictCode) == null){
+            log.warn("JyConfigDictTenantServiceImpl->getJyConfigDictTenantByTenantCodeAndDictCode字典编码不合法，请检查");
             return new ArrayList<>(0);
         }
         JyConfigDictTenantQuery query = new JyConfigDictTenantQuery();

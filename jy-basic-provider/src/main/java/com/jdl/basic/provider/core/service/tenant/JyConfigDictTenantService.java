@@ -17,10 +17,11 @@ public interface JyConfigDictTenantService {
 
     /**
      * 根据字典编码和值获取租户信息
-     * @param query 查询条件
+     * @param dictCode 查询条件
+     * @param dictItemValue 查询条件
      * @return 结果对象，包含租户信息
      */
-    JyConfigDictTenant getTenantByDictCodeAndValue(JyConfigDictTenantQuery query);
+    JyConfigDictTenant getTenantByDictCodeAndValue(String dictCode,String dictItemValue);
     /**
      * 根据租户代码和业务代码获取业务线列表
      *

@@ -96,7 +96,7 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
             return this.getTenantBySiteCode(exitUser.getSiteCode());
         }else if(StringUtils.isNotEmpty(exitUser.getOrganizationCode())){
             //查询配置表
-            JyConfigDictTenant dataBaseTenant = this.getTenantByCodeAndValue(DictCodeEnum.BELONG_RZ_ORG_CODE.getCode(),exitUser.getOrganizationCode());
+            JyConfigDictTenant dataBaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.BELONG_RZ_ORG_CODE.getCode(),exitUser.getOrganizationCode());
             //查询到就返回，查询不到返回拣运租户兜底逻辑
             return dataBaseTenant != null ? Result.success(dataBaseTenant) : Result.success(defaultJyConfigDictTenant);
         }else{
@@ -124,23 +124,9 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
             return Result.success(defaultJyConfigDictTenant);
         }
         //查询配置表
-        JyConfigDictTenant dataBaseTenant = this.getTenantByCodeAndValue(DictCodeEnum.BELONG_QL_SITE_TYPE.getCode(),String.valueOf(baseSite.getSortSubType()));
+        JyConfigDictTenant dataBaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.BELONG_QL_SITE_TYPE.getCode(),String.valueOf(baseSite.getSortSubType()));
         //查询到就返回，查询不到返回拣运租户兜底逻辑
         return dataBaseTenant != null ? Result.success(dataBaseTenant) : Result.success(defaultJyConfigDictTenant);
-    }
-
-    /**
-     * 根据字典编码和字典项值获取租户信息
-     *
-     * @param dictCode 字典编码
-     * @param dictItemValue 字典项值
-     * @return 响应的租户信息
-     */
-    private JyConfigDictTenant getTenantByCodeAndValue(String dictCode,String dictItemValue){
-        JyConfigDictTenantQuery query = new JyConfigDictTenantQuery();
-        query.setDictCode(dictCode);
-        query.setDictItemValue(dictItemValue);
-        return jyConfigDictTenantService.getTenantByDictCodeAndValue(query);
     }
 
     /**

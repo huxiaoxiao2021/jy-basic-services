@@ -9,7 +9,9 @@ import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.machine.Machine;
 import com.jdl.basic.api.domain.machine.WorkStationGridMachine;
 import com.jdl.basic.api.domain.position.PositionRecord;
+import com.jdl.basic.api.domain.tenant.JyConfigDictTenant;
 import com.jdl.basic.api.domain.workStation.*;
+import com.jdl.basic.api.enums.DictCodeEnum;
 import com.jdl.basic.api.enums.WorkSiteTypeEnum;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
@@ -25,6 +27,7 @@ import com.jdl.basic.provider.core.dao.workStation.WorkStationGridDao;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.machine.WorkStationGridMachineService;
 import com.jdl.basic.provider.core.service.position.PositionRecordService;
+import com.jdl.basic.provider.core.service.tenant.JyConfigDictTenantService;
 import com.jdl.basic.provider.core.service.workStation.WorkAbnormalGridBindingService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
@@ -83,6 +86,10 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	private CacheService cacheService;
 	
 	private static boolean initDataFlag = false;
+
+	@Resource
+	private JyConfigDictTenantService jyConfigDictTenantService;
+
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -151,7 +158,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		WorkSiteTypeEnum siteType = null;
 		BaseStaffSiteOrgDto siteInfo = this.baseMajorManager.getBaseSiteBySiteId(workStationGrid.getSiteCode());
 		if(siteInfo != null) {
-			siteType = WorkSiteTypeEnum.getWorkingSiteTypeBySubType(siteInfo.getSubType());
+			siteType = WorkSiteTypeEnum.getWorkingSiteTypeByThird(siteInfo.getSortType(),siteInfo.getSortSubType(),siteInfo.getSortThirdType());
 		}
 		if(siteType == null) {
 			siteType = WorkSiteTypeEnum.OTHER;
@@ -251,6 +258,14 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		BaseStaffSiteOrgDto siteInfo = baseMajorManager.getBaseSiteBySiteId(siteCode);
 		if(siteInfo == null) {
 			return result.toFail("青龙ID在基础资料中不存在！");
+		}
+		//todo 数据隔离区分条线,业务条线不是必填的，租户目前是入参获取的
+		WorkSiteTypeEnum currWorkSiteTypeEnum = WorkSiteTypeEnum.getWorkingSiteTypeByThird(siteInfo.getSortType(),siteInfo.getSortSubType(),siteInfo.getSortThirdType());
+		if(currWorkSiteTypeEnum != null){
+			JyConfigDictTenant dataBaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.TENANT_SITE_TYPE.getCode(),String.valueOf(currWorkSiteTypeEnum.getCode()));
+			if(dataBaseTenant == null || !data.getTenantCode().equals(dataBaseTenant.getBelongTenantCode())){
+				return result.toFail("当前用户没有当前场地的操作权限！");
+			}
 		}
 		data.setOrgCode(siteInfo.getOrgId());
 		String orgName = AreaEnum.getAreaNameByCode(siteInfo.getOrgId());
