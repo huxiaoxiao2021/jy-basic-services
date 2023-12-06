@@ -1,5 +1,6 @@
 package com.jdl.basic.api.enums;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -13,8 +14,11 @@ public enum JyJobTypeEnum {
   HOUR_WORKER(5,"小时工", Arrays.asList("Q", "R")),
 
   // 工种6为支援工，暂时没有对应的人资工种
+  ASSIST_WORKER(6, "支援工", new ArrayList<String>()),
 
   LONG_TERM_WORKER(7,"长期联盟工", Arrays.asList("N", "O")),
+
+  DADA(8, "达达", new ArrayList<String>()),
   ;
   private static HashMap<Integer, JyJobTypeEnum> map;
   static {
