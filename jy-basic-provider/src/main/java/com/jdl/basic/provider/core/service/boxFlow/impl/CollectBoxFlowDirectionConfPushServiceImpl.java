@@ -134,7 +134,7 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
             conf.setUpdateTime(new Date());
 
             conf.setUpdateUserErp("大数据更新规则");
-            conf.setVersion(dto.getUpdateDate());
+            
             OrgEnum startOrgEnum = OrgEnum.getOrgEnum(dto.getStartOrgId());
             OrgEnum endOrgEnum = OrgEnum.getOrgEnum(dto.getEndOrgId());
 
@@ -142,6 +142,7 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
             conf.setEndOrgName(endOrgEnum == null ? "" : endOrgEnum.getOrgName());
 
             Result<CollectBoxFlowDirectionConf> verifyResult = verifyService.verifyBoxFlowDirectionConf(conf);
+            conf.setVersion(dto.getUpdateDate());
             //  1.看是否更新了可混包和成品包 指定可混包
             Integer originCollectClaim = verifyResult.getData() == null ? null : verifyResult.getData().getCollectClaim();
             Integer collectClaim = conf.getCollectClaim();

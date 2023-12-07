@@ -80,4 +80,6 @@ public interface UserJsfService {
     Result<Boolean> checkUserBelongToJy(JyUserQueryDto dto);
 
     JyUser queryUserInfo(JyUser condition);
+
+    Result<List<JyJobType>> getAllJobTypeList();
 }
