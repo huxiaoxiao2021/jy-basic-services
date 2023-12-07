@@ -249,6 +249,15 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
                 siteQuery.setSiteName(siteQueryCondition.getSearchStr());
             }
         }
+        if (Objects.nonNull(siteQueryCondition.getSortType())){
+            siteQuery.setSortType(siteQueryCondition.getSortType());
+        }
+        if (Objects.nonNull(siteQueryCondition.getSortSubType())){
+            siteQuery.setSortSubType(siteQueryCondition.getSortSubType());
+        }
+        if (Objects.nonNull(siteQueryCondition.getSortThirdType())){
+            siteQuery.setSortThirdType(siteQueryCondition.getSortThirdType());
+        }
         return siteQuery;
     }
 

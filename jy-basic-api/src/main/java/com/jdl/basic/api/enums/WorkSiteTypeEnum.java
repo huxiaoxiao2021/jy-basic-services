@@ -12,18 +12,20 @@ import java.util.*;
 
 public enum WorkSiteTypeEnum {
     //分拣中心：一级分拣中心 中转站 航空分拣中心 二级分拨 三级中转场 逆向退货组 云分拣
-    DMS_TYPE(1, "分拣中心", Arrays.asList(64, 256, 101, 6408, 6409, 6410, 101111),Arrays.asList(12351),Arrays.asList(123511),new ArrayList<Integer>()),
+    DMS_TYPE(1, "分拣中心", Arrays.asList(64, 256, 101, 6409, 6410, 101111),12351,123511,null),
     //拣运 ：企配仓 快运中心
-    DTS_TYPE(2, "转运中心", Arrays.asList(6450, 6420, 6460, 44079),Arrays.asList(12351),Arrays.asList(123513),new ArrayList<Integer>()),
+    DTS_TYPE(2, "转运中心", Arrays.asList(6450, 6420, 6460, 44079),12351,123513,null),
     //接货仓
-    RWMS_TYPE(3, "接货仓", Arrays.asList(6430),Arrays.asList(12352),new ArrayList<Integer>(),new ArrayList<Integer>()),
+    RWMS_TYPE(3, "接货仓", Arrays.asList(6430),12352,null,null),
+    //退货组
+    RETURN_CENTER(4, "退货组", Collections.singletonList(6408),12354,123541,null),
     //冷链
-    COLD_CHAIN_TYPE(4, "冷链转运", new ArrayList<Integer>(),Arrays.asList(12351),Arrays.asList(123515),new ArrayList<Integer>()),
+    COLD_CHAIN_TYPE(5, "冷链转运", new ArrayList<Integer>(),12351,123515,null),
     //冷链医药
-    COLD_CHAIN_MEDICINE_TYPE(5, "医药转运", new ArrayList<Integer>(),Arrays.asList(12351),Arrays.asList(123516),new ArrayList<Integer>()),
+    COLD_CHAIN_MEDICINE_TYPE(6, "医药转运", new ArrayList<Integer>(),12351,123516,null),
     //其他
-	OTHER(0, "其他", new ArrayList<Integer>(),new ArrayList<Integer>(),new ArrayList<Integer>(),new ArrayList<Integer>());
-	
+    OTHER(0, "其他", new ArrayList<Integer>(),null,null,null);
+
     private Integer code;
     private String name;
     private List<Integer> subTypes;
@@ -32,15 +34,15 @@ public enum WorkSiteTypeEnum {
     /**
      * 基础资料新三级类型对应的一级类型
      */
-    private List<Integer> firstTypesOfThird;
+    private Integer firstTypesOfThird;
     /**
      * 基础资料新三级类型对应的二级类型
      */
-    private List<Integer> secondTypesOfThird;
+    private Integer secondTypesOfThird;
     /**
      * 基础资料新三级类型对应的三级类型
      */
-    private List<Integer> thirdTypesOfThird;
+    private Integer thirdTypesOfThird;
 
     public Integer getCode() {
         return code;
@@ -67,31 +69,31 @@ public enum WorkSiteTypeEnum {
     }
 
 
-    public List<Integer> getFirstTypesOfThird() {
+    public Integer getFirstTypesOfThird() {
         return firstTypesOfThird;
     }
 
-    public void setFirstTypesOfThird(List<Integer> firstTypesOfThird) {
+    public void setFirstTypesOfThird(Integer firstTypesOfThird) {
         this.firstTypesOfThird = firstTypesOfThird;
     }
 
-    public List<Integer> getSecondTypesOfThird() {
+    public Integer getSecondTypesOfThird() {
         return secondTypesOfThird;
     }
 
-    public void setSecondTypesOfThird(List<Integer> secondTypesOfThird) {
+    public void setSecondTypesOfThird(Integer secondTypesOfThird) {
         this.secondTypesOfThird = secondTypesOfThird;
     }
 
-    public List<Integer> getThirdTypesOfThird() {
+    public Integer getThirdTypesOfThird() {
         return thirdTypesOfThird;
     }
 
-    public void setThirdTypesOfThird(List<Integer> thirdTypesOfThird) {
+    public void setThirdTypesOfThird(Integer thirdTypesOfThird) {
         this.thirdTypesOfThird = thirdTypesOfThird;
     }
 
-    WorkSiteTypeEnum(Integer code, String name,  List<Integer> subTypes, List<Integer> firstTypesOfThird,List<Integer> secondTypesOfThird,List<Integer> thirdTypesOfThird) {
+    WorkSiteTypeEnum(Integer code, String name, List<Integer> subTypes, Integer firstTypesOfThird, Integer secondTypesOfThird, Integer thirdTypesOfThird) {
         this.code = code;
         this.subTypes = subTypes;
         this.name = name;
@@ -113,32 +115,6 @@ public enum WorkSiteTypeEnum {
         }
         return null;
     }
-
-    private static Map<String,WorkSiteTypeEnum> thirdTypeMap = new HashMap<>();
-
-    private static String thirdTypeMapKeyFormat = "%s:%s:%s";
-
-    static {
-        for (WorkSiteTypeEnum typeEnum : WorkSiteTypeEnum.values()) {
-            for (Integer firstType : typeEnum.getFirstTypesOfThird()) {
-                if(typeEnum.getSecondTypesOfThird().isEmpty()){
-                    String mapKey = String.format(thirdTypeMapKeyFormat,firstType,"","");
-                    thirdTypeMap.put(mapKey,typeEnum);
-                }
-                for (Integer secondType : typeEnum.getSecondTypesOfThird()) {
-                    if(typeEnum.getThirdTypesOfThird().isEmpty()){
-                        String mapKey = String.format(thirdTypeMapKeyFormat,firstType,secondType,"");
-                        thirdTypeMap.put(mapKey,typeEnum);
-                    }
-                    for (Integer thirdType : typeEnum.getThirdTypesOfThird()) {
-                        String mapKey = String.format(thirdTypeMapKeyFormat,firstType,secondType,thirdType);
-                        thirdTypeMap.put(mapKey,typeEnum);
-                    }
-                }
-            }
-        }
-    }
-
     /**
      * 根据基础资料新的三级类型获取场地类型枚举
      * @param firstType
@@ -150,8 +126,11 @@ public enum WorkSiteTypeEnum {
         if (firstType == null && secondType == null && thirdType == null) {
             return null;
         }
-        return thirdTypeMap.get(String.format(thirdTypeMapKeyFormat,firstType,secondType,thirdType));
+        for (WorkSiteTypeEnum item : WorkSiteTypeEnum.values()){
+            if (Objects.equals(firstType,item.firstTypesOfThird) && Objects.equals(secondType,item.secondTypesOfThird) && Objects.equals(thirdType,item.thirdTypesOfThird)){
+                return item;
+            }
+        }
+        return null;
     }
-
-
 }

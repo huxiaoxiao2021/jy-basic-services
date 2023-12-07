@@ -1,5 +1,7 @@
 package com.jdl.basic.api.dto.site;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import java.util.List;
  * @author hujiping
  * @date 2021/2/24 3:04 下午
  */
+@Data
 public class SiteQueryCondition implements Serializable {
     
     private static final long serialVersionUID = -6610921180344795755L;
@@ -83,115 +86,16 @@ public class SiteQueryCondition implements Serializable {
      */
     private String searchStr;
 
-    public Integer getSiteCode() {
-        return siteCode;
-    }
-
-    public void setSiteCode(Integer siteCode) {
-        this.siteCode = siteCode;
-    }
-
-    public String getSiteName() {
-        return siteName;
-    }
-
-    public void setSiteName(String siteName) {
-        this.siteName = siteName;
-    }
-
-    public String getDmsCode() {
-        return dmsCode;
-    }
-
-    public void setDmsCode(String dmsCode) {
-        this.dmsCode = dmsCode;
-    }
-
-    public String getSiteNamePym() {
-        return siteNamePym;
-    }
-
-    public void setSiteNamePym(String siteNamePym) {
-        this.siteNamePym = siteNamePym;
-    }
-
-    public List<Integer> getSiteTypes() {
-        return siteTypes;
-    }
-
-    public void setSiteTypes(List<Integer> siteTypes) {
-        this.siteTypes = siteTypes;
-    }
-
-    public List<Integer> getSubTypes() {
-        return subTypes;
-    }
-
-    public void setSubTypes(List<Integer> subTypes) {
-        this.subTypes = subTypes;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Integer getOrgId() {
-        return orgId;
-    }
-
-    public void setOrgId(Integer orgId) {
-        this.orgId = orgId;
-    }
-
-    public String getProvinceAgencyCode() {
-        return provinceAgencyCode;
-    }
-
-    public void setProvinceAgencyCode(String provinceAgencyCode) {
-        this.provinceAgencyCode = provinceAgencyCode;
-    }
-
-    public String getAreaCode() {
-        return areaCode;
-    }
-
-    public void setAreaCode(String areaCode) {
-        this.areaCode = areaCode;
-    }
-
-    public Integer getProvinceId() {
-        return provinceId;
-    }
-
-    public void setProvinceId(Integer provinceId) {
-        this.provinceId = provinceId;
-    }
-
-    public Integer getCityId() {
-        return cityId;
-    }
-
-    public void setCityId(Integer cityId) {
-        this.cityId = cityId;
-    }
-
-    public Integer getCountryId() {
-        return countryId;
-    }
-
-    public void setCountryId(Integer countryId) {
-        this.countryId = countryId;
-    }
-
-    public String getSearchStr() {
-        return searchStr;
-    }
-
-    public void setSearchStr(String searchStr) {
-        this.searchStr = searchStr;
-    }
+    /**
+     * 分拣中心三级分类-一级
+     */
+    private Integer sortType;
+    /**
+     * 分拣中心三级分类-二级
+     */
+    private Integer sortSubType;
+    /**
+     * 分拣中心三级分类-三级
+     */
+    private Integer sortThirdType;
 }
