@@ -158,4 +158,9 @@ public interface WorkGridFlowDirectionDao {
 												@Param("flowDirectionType") Integer flowDirectionType,
 												@Param("flowSiteCode") Integer flowSiteCode);
 
+	/**
+	 * @param query
+	 * @return
+	 */
+	List<WorkGridFlowDirection> queryFlowByWorkGridKey(WorkGridFlowDirectionQuery query);
 }

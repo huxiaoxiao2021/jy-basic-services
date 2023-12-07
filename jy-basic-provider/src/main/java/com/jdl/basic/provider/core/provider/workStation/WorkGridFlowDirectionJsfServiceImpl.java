@@ -19,9 +19,6 @@ import com.jdl.basic.api.domain.workStation.WorkGridFlowDetailOfflineQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionVo;
-import com.jdl.basic.api.domain.workStation.WorkGridQuery;
-import com.jdl.basic.api.domain.workStation.WorkStationGrid;
-import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
 import com.jdl.basic.api.service.workStation.WorkGridFlowDirectionJsfService;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.utils.DateHelper;
@@ -247,5 +244,10 @@ public class WorkGridFlowDirectionJsfServiceImpl implements WorkGridFlowDirectio
 												Integer flowDirectionType, Integer flowSiteCode) {
 		return workGridFlowDirectionService.queryFlowDirectionByCondition(refWorkGridKeyList, lineTypeList, flowDirectionType,
 				flowSiteCode);
+	}
+
+	@Override
+	public Result<List<WorkGridFlowDirection>> queryFlowByPositionCode(WorkGridFlowDirectionQuery query) {
+		return workGridFlowDirectionService.queryFlowByPositionCode(query);
 	}
 }

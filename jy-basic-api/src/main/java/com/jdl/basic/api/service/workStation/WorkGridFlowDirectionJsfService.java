@@ -78,4 +78,11 @@ public interface WorkGridFlowDirectionJsfService {
 												List<Integer> lineTypeList,
 												Integer flowDirectionType,
 												Integer flowSiteCode);
+
+	/**
+	 * 根据岗位码 线路类型 流向类型查询流向
+	 *
+	 * @param query@return
+	 */
+	Result<List<WorkGridFlowDirection>> queryFlowByPositionCode(WorkGridFlowDirectionQuery query);
 }
