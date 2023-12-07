@@ -22,4 +22,8 @@ public interface WorkGridScheduleService {
     List<WorkGridSchedule> listWorkGridScheduleByKeys(BatchWorkGridScheduleQueryDto dto);
 
     WorkGridSchedule queryWorkGridScheduleByName(WorkGridScheduleRequest request);
+
+    Result<Boolean> cleanWorkGridScheduleOldTime(BatchCleanOldTimeRequest request);
+
+    Result<List<WorkGridSchedule>> queryTodayDeletedSiteSchedule(WorkGridScheduleRequest request);
 }
