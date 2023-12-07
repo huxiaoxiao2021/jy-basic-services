@@ -31,4 +31,9 @@ public class ThirdpartyUseServiceImpl implements ThirdpartyUseService {
     public List<JyThirdpartyUser> queryJyThirdpartyUserByTaskBizId(String taskBizId) {
         return null;
     }
+
+    @Override
+    public int add(JyThirdpartyUser jyThirdpartyUser) {
+        return jyThirdpartyUserDao.insert(jyThirdpartyUser);
+    }
 }

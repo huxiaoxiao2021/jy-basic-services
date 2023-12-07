@@ -198,6 +198,15 @@ public class UserJsfServiceImpl implements UserJsfService {
     }
 
     @Override
+    public Result addJyThirdpartyUserOne(JyThirdpartyUser jyThirdpartyUser) {
+        int rs =thirdpartyUseService.add(jyThirdpartyUser);
+        if (rs >0){
+            return Result.success();
+        }
+        return Result.fail("三方人员信息保存失败！");
+    }
+
+    @Override
     public Result<PageData<JyThirdpartyUser>> queryJyThirdpartyUserUnderTask(JyThirdpartyUserQueryDto dto) {
         checkJyThirdpartyUserQueryDto(dto);
         List<JyThirdpartyUser> jyThirdpartyUserList;

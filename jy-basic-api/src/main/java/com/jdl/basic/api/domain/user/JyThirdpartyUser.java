@@ -35,6 +35,8 @@ public class JyThirdpartyUser {
 
     private Date deadlineTime;
 
+    private Date presentDate;
+
     private String companyName;
 
     private String createUser;
@@ -53,6 +55,13 @@ public class JyThirdpartyUser {
 
     private Date ts;
 
+    public Date getPresentDate() {
+        return presentDate;
+    }
+
+    public void setPresentDate(Date presentDate) {
+        this.presentDate = presentDate;
+    }
     public Long getId() {
         return id;
     }

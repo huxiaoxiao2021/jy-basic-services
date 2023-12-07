@@ -89,6 +89,9 @@ public interface UserJsfService {
      */
     Result saveJyThirdpartyUser(JyThirdpartyUserSaveDto dto);
 
+
+    Result addJyThirdpartyUserOne(JyThirdpartyUser jyThirdpartyUser);
+
     /**
      * 查询任务/任务明细下的三方人员信息
      * @param dto

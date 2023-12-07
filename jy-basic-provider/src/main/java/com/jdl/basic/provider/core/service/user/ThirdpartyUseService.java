@@ -10,4 +10,6 @@ public interface ThirdpartyUseService {
     List<JyThirdpartyUser> queryJyThirdpartyUserByDetailBizId(String taskDetailBizId);
 
     List<JyThirdpartyUser> queryJyThirdpartyUserByTaskBizId(String taskBizId);
+
+    int add(JyThirdpartyUser jyThirdpartyUser);
 }
