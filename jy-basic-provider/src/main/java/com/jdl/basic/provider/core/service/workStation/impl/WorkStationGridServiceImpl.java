@@ -264,7 +264,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(currWorkSiteTypeEnum != null){
 			JyConfigDictTenant dataBaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.TENANT_SITE_TYPE.getCode(),String.valueOf(currWorkSiteTypeEnum.getCode()));
 			if(dataBaseTenant == null || !data.getTenantCode().equals(dataBaseTenant.getBelongTenantCode())){
-				return result.toFail("当前用户没有当前场地的操作权限！");
+				return result.toFail("当前用户没有" + siteInfo.getSiteName() + "的操作权限！");
 			}
 		}
 		data.setOrgCode(siteInfo.getOrgId());
