@@ -656,4 +656,16 @@
 		and flow_site_code = #{flowSiteCode,jdbcType=VARCHAR}
 		limit 1
 	</select>
+
+	<select id="queryFlowByWorkGridKey" resultMap="WorkGridFlowDirection">
+		select id,
+			   ref_work_grid_key,
+			   flow_site_name,
+			   flow_site_code
+		from work_grid_flow_direction
+		where yn = 1
+		  and ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
+		  and line_type = #{lineType,jdbcType=INTEGER}
+		  and flow_direction_type = #{flowDirectionType,jdbcType=INTEGER}
+	</select>
 </mapper>
