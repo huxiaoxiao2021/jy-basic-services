@@ -276,7 +276,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(siteInfo == null) {
 			return result.toFail("青龙ID在基础资料中不存在！");
 		}
-		//todo 数据隔离区分条线,业务条线不是必填的，租户目前是入参获取的
+		//todo 数据隔离区分场地类型，租户目前是入参获取的
 		WorkSiteTypeEnum currWorkSiteTypeEnum = WorkSiteTypeEnum.getWorkingSiteTypeByThird(siteInfo.getSortType(),siteInfo.getSortSubType(),siteInfo.getSortThirdType());
 		if(currWorkSiteTypeEnum != null){
 			JyConfigDictTenant dataBaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.TENANT_SITE_TYPE.getCode(),String.valueOf(currWorkSiteTypeEnum.getCode()));

@@ -248,13 +248,12 @@ public class WorkStationServiceImpl implements WorkStationService {
 			result.toFail("业务条线不能为空");
 			return result;
 		}
-		List<JyConfigDictTenant> jyConfigDictList = jyConfigDictTenantService.getJyConfigDictTenantByTenantCodeAndDictCode(DictCodeEnum.TENANT_BUSINESS_LINE.getCode(), data.getTenantCode());
-		JyConfigDictTenant oneJyConfigDictTenant = jyConfigDictList.stream().filter(e -> businessLineCode.equals(e.getDictItemValue())).findFirst().get();
-		if (oneJyConfigDictTenant == null) {
-			result.toFail("业务条线不合法");
+		JyConfigDictTenant dataBaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.TENANT_BUSINESS_LINE.getCode(), businessLineCode);
+		if(dataBaseTenant == null || !data.getTenantCode().equals(dataBaseTenant.getBelongTenantCode())){
+			result.toFail("当前用户没有" + businessLineCode + "业务条线的操作权限");
 			return result;
 		}
-		data.setBusinessLineName(oneJyConfigDictTenant.getDictItemText());
+		data.setBusinessLineName(dataBaseTenant.getDictItemText());
 		return result;
 	}
 	/**

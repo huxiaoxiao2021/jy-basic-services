@@ -1,5 +1,7 @@
 package com.jdl.basic.api.enums;
 
+import com.jdl.basic.common.utils.StringUtils;
+
 import java.util.*;
 
 /**
@@ -12,19 +14,19 @@ import java.util.*;
 
 public enum WorkSiteTypeEnum {
     //分拣中心：一级分拣中心 中转站 航空分拣中心 二级分拨 三级中转场 逆向退货组 云分拣
-    DMS_TYPE(1, "分拣中心", Arrays.asList(64, 256, 101, 6409, 6410, 101111),12351,123511,null),
+    DMS_TYPE(1, "分拣中心", Arrays.asList(64, 256, 101, 6409, 6410, 101111),12351,123511,null,"SORTING_CENTER"),
     //拣运 ：企配仓 快运中心
-    DTS_TYPE(2, "转运中心", Arrays.asList(6450, 6420, 6460, 44079),12351,123513,null),
+    DTS_TYPE(2, "转运中心", Arrays.asList(6450, 6420, 6460, 44079),12351,123513,null,"TRANSPORT_CENTER"),
     //接货仓
-    RWMS_TYPE(3, "接货仓", Arrays.asList(6430),12352,null,null),
+    RWMS_TYPE(3, "接货仓", Arrays.asList(6430),12352,null,null,"RECEIVING_WAREHOUSE"),
     //退货组
-    RETURN_CENTER(4, "退货组", Collections.singletonList(6408),12354,123541,null),
+    RETURN_CENTER(4, "退货组", Collections.singletonList(6408),12354,123541,null,"RETURN_CENTER"),
     //冷链
-    COLD_CHAIN_TYPE(5, "冷链转运", new ArrayList<Integer>(),12351,123515,null),
+    COLD_CHAIN_TYPE(5, "冷链转运", new ArrayList<Integer>(),12351,123515,null,"CODE_CENTER"),
     //冷链医药
-    COLD_CHAIN_MEDICINE_TYPE(6, "医药转运", new ArrayList<Integer>(),12351,123516,null),
+    COLD_CHAIN_MEDICINE_TYPE(6, "医药转运", new ArrayList<Integer>(),12351,123516,null,"MEDICINE_CENTER"),
     //其他
-    OTHER(0, "其他", new ArrayList<Integer>(),null,null,null);
+    OTHER(0, "其他", new ArrayList<Integer>(),null,null,null,null);
 
     private Integer code;
     private String name;
@@ -43,6 +45,10 @@ public enum WorkSiteTypeEnum {
      * 基础资料新三级类型对应的三级类型
      */
     private Integer thirdTypesOfThird;
+    /**
+     *
+     */
+    private String aliesCode;
 
     public Integer getCode() {
         return code;
@@ -93,13 +99,22 @@ public enum WorkSiteTypeEnum {
         this.thirdTypesOfThird = thirdTypesOfThird;
     }
 
-    WorkSiteTypeEnum(Integer code, String name, List<Integer> subTypes, Integer firstTypesOfThird, Integer secondTypesOfThird, Integer thirdTypesOfThird) {
+    public String getAliesCode() {
+        return aliesCode;
+    }
+
+    public void setAliesCode(String aliesCode) {
+        this.aliesCode = aliesCode;
+    }
+
+    WorkSiteTypeEnum(Integer code, String name, List<Integer> subTypes, Integer firstTypesOfThird, Integer secondTypesOfThird, Integer thirdTypesOfThird,String aliesCode) {
         this.code = code;
         this.subTypes = subTypes;
         this.name = name;
         this.firstTypesOfThird = firstTypesOfThird;
         this.secondTypesOfThird = secondTypesOfThird;
         this.thirdTypesOfThird =  thirdTypesOfThird;
+        this.aliesCode =  aliesCode;
     }
 
     public static WorkSiteTypeEnum getWorkingSiteTypeBySubType(Integer subType) {
@@ -128,6 +143,40 @@ public enum WorkSiteTypeEnum {
         }
         for (WorkSiteTypeEnum item : WorkSiteTypeEnum.values()){
             if (Objects.equals(firstType,item.firstTypesOfThird) && Objects.equals(secondType,item.secondTypesOfThird) && Objects.equals(thirdType,item.thirdTypesOfThird)){
+                return item;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 根据工作站点类型代码获取工作站点类型枚举
+     * @param code 工作站点类型代码
+     * @return 工作站点类型枚举
+     */
+    public static WorkSiteTypeEnum getWorkingSiteTypeByCode(Integer code) {
+        if (code == null) {
+            return null;
+        }
+        for (WorkSiteTypeEnum item : WorkSiteTypeEnum.values()){
+            if (Objects.equals(code,item.getCode())){
+                return item;
+            }
+        }
+        return null;
+    }
+    /**
+     * 根据别名代码获取工作站点类型。
+     *
+     * @param aliesCode 别名代码
+     * @return 工作站点类型
+     */
+    public static WorkSiteTypeEnum getWorkingSiteTypeByAliesCode(String aliesCode) {
+        if (StringUtils.isBlank(aliesCode)) {
+            return null;
+        }
+        for (WorkSiteTypeEnum item : WorkSiteTypeEnum.values()){
+            if (aliesCode.equals(item.getAliesCode())){
                 return item;
             }
         }

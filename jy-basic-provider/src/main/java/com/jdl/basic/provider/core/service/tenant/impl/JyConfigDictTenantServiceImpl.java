@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.core.service.tenant.impl;
 
+import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jdl.basic.api.domain.tenant.JyConfigDictTenant;
 import com.jdl.basic.api.domain.tenant.JyConfigDictTenantQuery;
 import com.jdl.basic.api.enums.DictCodeEnum;
@@ -36,6 +37,8 @@ public class JyConfigDictTenantServiceImpl implements JyConfigDictTenantService 
      * @return JyConfigDictTenant 响应的租户信息
      */
     @Override
+    @Cache(key = "JyConfigDictTenantService.getTenantByDictCodeAndValue@args0:@args1", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
     public JyConfigDictTenant getTenantByDictCodeAndValue(String dictCode,String dictItemValue){
         if(StringUtils.isBlank(dictCode) || StringUtils.isBlank(dictItemValue)){
             return null;
