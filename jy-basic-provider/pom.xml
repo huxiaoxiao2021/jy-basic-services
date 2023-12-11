@@ -337,7 +337,15 @@
             <groupId>com.jd.bd.dms.automatic</groupId>
             <artifactId>automatic-sdk</artifactId>
             <version>${version.automatic.automatic-sdk}</version>
-        </dependency>        
+        </dependency>
+        <dependency>
+            <groupId>com.jdl.sorting.tech</groupId>
+            <artifactId>tenant-jsf-filter-sdk</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jd</groupId>
+            <artifactId>muliti-tenant-plugin-mybatis</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
