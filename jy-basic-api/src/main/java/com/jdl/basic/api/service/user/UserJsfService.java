@@ -98,4 +98,10 @@ public interface UserJsfService {
      * @return
      */
     Result<PageData<JyThirdpartyUser>> queryJyThirdpartyUserUnderTask(JyThirdpartyUserQueryDto dto);
+
+
+    /**
+     * 查询某日某场地某工种的三方人员列表(查询条件 日期  场地 工种)
+     */
+    Result<List<JyThirdpartyUser>> queryJyThirdpartyUser(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
 }

@@ -229,6 +229,11 @@ public class UserJsfServiceImpl implements UserJsfService {
         return Result.success();
     }
 
+    @Override
+    public Result<List<JyThirdpartyUser>> queryJyThirdpartyUser(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto) {
+        return Result.success(userService.queryJyThirdpartyUser(jyTpUserScheduleQueryDto));
+    }
+
     private void checkJyThirdpartyUserQueryDto(JyThirdpartyUserQueryDto dto) {
     }
 }

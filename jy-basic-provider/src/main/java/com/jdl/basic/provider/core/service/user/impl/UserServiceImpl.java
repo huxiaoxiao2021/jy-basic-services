@@ -16,7 +16,7 @@ import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.JYBasicRpcException;
 import com.jdl.basic.provider.config.cache.CacheService;
 import com.jdl.basic.provider.config.ducc.DuccPropertyConfiguration;
-import com.jdl.basic.provider.core.dao.user.JyUserDao;
+import com.jdl.basic.provider.core.dao.user.*;
 import com.jdl.basic.provider.core.service.user.UserService;
 import com.jdl.basic.provider.core.service.user.model.JyUserQueryCondition;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +35,8 @@ public class UserServiceImpl implements UserService {
 
   @Autowired
   JyUserDao jyUserDao;
+  @Autowired
+  JyThirdpartyUserDao jyThirdpartyUserDao;
 
   @Autowired
   CacheService jimdbCacheService;
@@ -252,6 +254,18 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
       return jyUserDto;
     }
     return null;
+  }
+
+  @Override
+  public List<JyThirdpartyUser> queryJyThirdpartyUser(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto) {
+    if (ObjectHelper.isNotNull(jyTpUserScheduleQueryDto.getNature())){
+      if (jyTpUserScheduleQueryDto.getNature().equals(String.valueOf(JyJobTypeEnum.NO_FULL_TIME_LABORER.getJyJobTypeCode()))
+      || jyTpUserScheduleQueryDto.getNature().equals(String.valueOf(JyJobTypeEnum.HOUR_WORKER.getJyJobTypeCode()))
+      || jyTpUserScheduleQueryDto.getNature().equals(String.valueOf(JyJobTypeEnum.LONG_TERM_WORKER.getJyJobTypeCode())) ){
+        jyTpUserScheduleQueryDto.setNature(String.valueOf(JyJobTypeEnum.NO_FULL_TIME_LABORER.getJyJobTypeCode()));
+      }
+    }
+    return jyThirdpartyUserDao.queryJyThirdpartyUser(jyTpUserScheduleQueryDto);
   }
 
   private JyUserQueryCondition convertQuery(JyUserQueryDto dto) {

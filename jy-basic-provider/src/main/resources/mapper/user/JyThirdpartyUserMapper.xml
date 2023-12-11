@@ -452,4 +452,13 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="queryJyThirdpartyUser" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+        from jy_thirdparty_user
+        where site_code = #{siteCode}
+          and deadline_time >= #{scheduleDate}
+          and nature =#{nature}
+  </select>
 </mapper>
