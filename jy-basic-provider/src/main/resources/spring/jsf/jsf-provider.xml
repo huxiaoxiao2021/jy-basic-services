@@ -12,7 +12,7 @@
 
     <bean id="tenantProviderFilter" class="com.jdl.sorting.tech.jsf.filter.TenantJSFProviderFilter"/>
     <!-- 需要使用租户信息jsf过滤器，在providers中以逗号分隔追加 -->
-    <jsf:filter id="jsfTenantProviderFilter" ref="tenantProviderFilter" providers=""/>
+    <jsf:filter id="jsfTenantProviderFilter" ref="tenantProviderFilter" providers="workAreaJsfServiceServer,workStationJsfService,workStationGridJsfService,workGridJsfServiceServer"/>
 
     <!--  集箱包裹数量限制JSF服务   -->
     <jsf:provider id="boxlimitConfigJsfService"
