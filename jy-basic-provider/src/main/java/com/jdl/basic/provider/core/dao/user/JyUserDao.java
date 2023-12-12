@@ -1,11 +1,8 @@
 package com.jdl.basic.provider.core.dao.user;
 
-import com.jdl.basic.api.domain.user.JyUser;
-import com.jdl.basic.api.domain.user.JyUserBatchRequest;
-import com.jdl.basic.api.domain.user.JyUserQueryDto;
+import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.provider.core.service.user.model.JyUserQueryCondition;
 
-import com.jdl.basic.api.domain.user.UnDistributedUserQueryDto;
 import java.util.List;
 
 public interface JyUserDao {
@@ -73,4 +70,6 @@ public interface JyUserDao {
     List<JyUser> queryNatureUndistributedUsers(JyUserQueryCondition condition);
 
     JyUser queryByUserErp(JyUserQueryDto jyUserQueryDto);
+
+    List<JyUser> queryUserByPositionCode(RoleQueryDto roleQueryDto);
 }

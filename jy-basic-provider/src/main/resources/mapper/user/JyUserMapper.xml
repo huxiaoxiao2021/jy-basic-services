@@ -473,4 +473,8 @@
       AND ug.yn =1
     LIMIT 1
   </select>
+
+  <select id="querySiteLeader" resultMap="BaseResultMap">
+
+  </select>
 </mapper>
