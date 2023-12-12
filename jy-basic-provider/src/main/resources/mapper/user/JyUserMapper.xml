@@ -474,7 +474,11 @@
     LIMIT 1
   </select>
 
-  <select id="querySiteLeader" resultMap="BaseResultMap">
-
+  <select id="queryUserByPositionCode" parameterType="com.jdl.basic.api.domain.user.RoleQueryDto" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+        from jy_user
+        where site_code =#{siteCode}
+          and std_position_code=#{positionCode}
+          and yn=1
   </select>
 </mapper>
