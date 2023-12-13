@@ -36,4 +36,14 @@ public class ThirdpartyUseServiceImpl implements ThirdpartyUseService {
     public int add(JyThirdpartyUser jyThirdpartyUser) {
         return jyThirdpartyUserDao.insert(jyThirdpartyUser);
     }
+
+    @Override
+    public List<JyThirdpartyUser> queryJyThirdpartyUserByCondition(JyThirdpartyUser query) {
+        return jyThirdpartyUserDao.queryJyThirdpartyUserByCondition(query);
+    }
+
+    @Override
+    public int updateJyThirdpartyUserYn(JyThirdpartyUser query) {
+        return jyThirdpartyUserDao.updateJyThirdpartyUserYn(query);
+    }
 }

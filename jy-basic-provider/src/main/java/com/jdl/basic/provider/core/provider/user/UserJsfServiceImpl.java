@@ -234,6 +234,20 @@ public class UserJsfServiceImpl implements UserJsfService {
         return Result.success(userService.queryJyThirdpartyUser(jyTpUserScheduleQueryDto));
     }
 
+    @Override
+    public Result<List<JyThirdpartyUser>> queryJyThirdpartyUserByCondition(JyThirdpartyUser jyThirdpartyUser) {
+        return Result.success(thirdpartyUseService.queryJyThirdpartyUserByCondition(jyThirdpartyUser));
+    }
+
+    @Override
+    public Result updateJyThirdpartyUserYn(JyThirdpartyUser jyThirdpartyUser) {
+        int rs =thirdpartyUseService.updateJyThirdpartyUserYn(jyThirdpartyUser);
+        if (rs >0){
+            return Result.success();
+        }
+        return Result.fail("更新JyThirdpartyUser删除状态失败！");
+    }
+
     private void checkJyThirdpartyUserQueryDto(JyThirdpartyUserQueryDto dto) {
     }
 }

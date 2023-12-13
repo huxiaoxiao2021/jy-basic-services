@@ -104,4 +104,8 @@ public interface UserJsfService {
      * 查询某日某场地某工种的三方人员列表(查询条件 日期  场地 工种)
      */
     Result<List<JyThirdpartyUser>> queryJyThirdpartyUser(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
+
+    Result<List<JyThirdpartyUser>> queryJyThirdpartyUserByCondition(JyThirdpartyUser jyThirdpartyUser);
+
+    Result updateJyThirdpartyUserYn(JyThirdpartyUser jyThirdpartyUser);
 }

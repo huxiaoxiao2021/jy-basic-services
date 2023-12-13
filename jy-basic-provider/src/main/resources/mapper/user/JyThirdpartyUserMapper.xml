@@ -29,34 +29,6 @@
     nature, nature_desc, site_code, deadline_time,present_date,company_name, create_user, create_user_name,
     update_user, update_user_name, create_time, update_time, yn, ts
   </sql>
-  <!-- where条件 -->
-  <sql id="where">
-    <where>
-      <include refid="sql_if_not_null"/>
-    </where>
-  </sql>
-  <!-- 判断空值 -->
-  <sql id="sql_if_not_null">
-    yn = 1
-    <if test="id != null" >
-      and id = #{id,jdbcType=INTEGER}
-    </if>
-    <if test="taskBizId != null and taskBizId != ''" >
-      and task_biz_id = #{taskBizId,jdbcType=VARCHAR}
-    </if>
-    <if test="taskDetailBizId != null and taskDetailBizId != '' " >
-      and task_detail_biz_id = #{taskDetailBizId,jdbcType=VARCHAR}
-    </if>
-    <if test="userCode != null and userCode != '' " >
-      and user_code_index = #{userCode,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
-    </if>
-    <if test="userName != null and userName != '' " >
-      and user_name_index = #{userName,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
-    </if>
-    <if test="mobile != null and mobile != '' " >
-      and mobile_index = #{mobile,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
-    </if>
-  </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -461,4 +433,34 @@
           and deadline_time >= #{scheduleDate}
           and nature =#{nature}
   </select>
+  <select id="queryJyThirdpartyUserByCondition" parameterType="com.jdl.basic.api.domain.user.JyThirdpartyUser" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from jy_thirdparty_user where 1=1
+    <if test="userCode != null and userCode != '' " >
+      and user_code_index = #{userCode,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
+    </if>
+    <if test="siteCode != null" >
+      and site_code  = #{siteCode,jdbcType=TIMESTAMP}
+    </if>
+    <if test="presentDate != null" >
+      and present_date  = #{presentDate,jdbcType=TIMESTAMP}
+    </if>
+    order by create_time desc
+  </select>
+  <update id="updateJyThirdpartyUserYn">
+    update jy_thirdparty_user
+    <set>
+      <if test="yn != null">
+        yn = #{yn,jdbcType=TINYINT},
+      </if>
+    </set>
+    where 1=1
+    <if test="userCode != null and userCode != '' " >
+      and user_code_index = #{userCode,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
+    </if>
+    <if test="siteCode != null" >
+      and site_code  = #{siteCode,jdbcType=TIMESTAMP}
+    </if>
+  </update>
 </mapper>

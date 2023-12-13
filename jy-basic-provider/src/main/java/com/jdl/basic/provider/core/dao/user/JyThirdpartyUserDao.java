@@ -1,4 +1,6 @@
 package com.jdl.basic.provider.core.dao.user;
+import com.jdl.basic.api.domain.attBlackList.AttendanceBlackList;
+import com.jdl.basic.api.domain.attBlackList.AttendanceBlackListCondition;
 import com.jdl.basic.api.domain.user.JyThirdpartyUser;
 import com.jdl.basic.api.domain.user.JyTpUserScheduleQueryDto;
 
@@ -20,4 +22,7 @@ public interface JyThirdpartyUserDao {
     int batchInsert(List<JyThirdpartyUser> jyThirdpartyUserList);
 
     List<JyThirdpartyUser> queryJyThirdpartyUser(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
+    List<JyThirdpartyUser> queryJyThirdpartyUserByCondition(JyThirdpartyUser query);
+
+    int updateJyThirdpartyUserYn(JyThirdpartyUser query);
 }

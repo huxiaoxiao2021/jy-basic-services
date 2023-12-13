@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.attBlackList;
 
+import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.attBlackList.AttendanceBlackList;
 import com.jdl.basic.api.domain.attBlackList.AttendanceBlackListCondition;
 import com.jdl.basic.api.domain.user.JyThirdpartyUser;
@@ -8,7 +9,6 @@ import com.jdl.basic.api.service.attBlackList.AttendanceBlackListJsfService;
 import com.jdl.basic.api.service.user.UserJsfService;
 import com.jdl.basic.common.utils.DateUtil;
 import com.jdl.basic.common.utils.JsonHelper;
-import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.ApplicationLaunch;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -77,8 +77,13 @@ public class ThirdpartyJsfServiceTest {
     }
 
     @Test
-    public void query() {
-//        userJsfService.
+    public void query() {JyThirdpartyUser jyThirdpartyUser =new JyThirdpartyUser();
+        jyThirdpartyUser.setSiteCode(1);
+        Result<List<JyThirdpartyUser>> rs=userJsfService.queryJyThirdpartyUserByCondition(jyThirdpartyUser);
+        JyThirdpartyUser jyThirdpartyUser1 =new JyThirdpartyUser();
+        jyThirdpartyUser1.setSiteCode(1);
+        jyThirdpartyUser1.setYn(false);
+        userJsfService.updateJyThirdpartyUserYn(jyThirdpartyUser1);
     }
 
 }
