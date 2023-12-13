@@ -22,11 +22,14 @@ public enum WorkSiteTypeEnum {
     //退货组
     RETURN_CENTER(4, "退货组", Collections.singletonList(6408),12354,123541,null,"RETURN_CENTER"),
     // 站点: 0-快运终端 9601-配送运输-运输车队 9602-配送运输-直送车队 9605-配送运输-集配站 9607-配送运输-城配车队 9609-配送运输-冷链医药车队 4-营业部、11001-德邦门店、6580-德邦虚拟运作部
-    APPEAL_SITE(5, "申诉站点", Arrays.asList(0, 9601, 9602, 9605, 9607, 9609, 4, 11001, 6580),null,null,null,"SITE_CENTER"),
+    APPEAL_SITE(5, "申诉站点", Arrays.asList(0, 9601, 9602, 9605, 9607, 9609, 4, 11001, 6580),null,null,null,""),
+    //终端站点
+    TERMINAL_TYPE(7,"终端站点", Arrays.asList(18, 19, 9601, 9602, 9605, 9607, 9609, 4, 11001, 6580),null,null,null,""),
     //冷链
     COLD_CHAIN_TYPE(8, "冷链转运", new ArrayList<Integer>(),12351,123515,null,"CODE_CENTER"),
     //冷链医药
     COLD_CHAIN_MEDICINE_TYPE(9, "医药转运", new ArrayList<Integer>(),12351,123516,null,"MEDICINE_CENTER"),
+
     //其他
     OTHER(0, "其他", new ArrayList<Integer>(),null,null,null,null);
 
