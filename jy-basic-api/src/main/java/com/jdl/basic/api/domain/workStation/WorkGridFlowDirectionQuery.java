@@ -105,4 +105,9 @@ public class WorkGridFlowDirectionQuery extends BasePagerCondition implements Se
 	 */
 	private String dockCode;
 
+	/**
+	 * 网格工序key:关联场地网格工序业务主键
+	 */
+	private String workStationGridKey;
+
 }
