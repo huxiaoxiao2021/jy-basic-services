@@ -443,9 +443,7 @@
     <if test="siteCode != null" >
       and site_code  = #{siteCode,jdbcType=TIMESTAMP}
     </if>
-    <if test="presentDate != null" >
-      and present_date  = #{presentDate,jdbcType=TIMESTAMP}
-    </if>
+    and present_date <![CDATA[ > ]]>  current_date()
     order by create_time desc
   </select>
   <update id="updateJyThirdpartyUserYn">
@@ -462,5 +460,6 @@
     <if test="siteCode != null" >
       and site_code  = #{siteCode,jdbcType=TIMESTAMP}
     </if>
+    and present_date <![CDATA[ > ]]>  current_date()
   </update>
 </mapper>
