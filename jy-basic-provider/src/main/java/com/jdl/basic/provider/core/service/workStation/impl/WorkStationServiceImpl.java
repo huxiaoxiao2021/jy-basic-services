@@ -23,6 +23,7 @@ import com.jdl.basic.provider.core.service.tenant.JyConfigDictTenantService;
 import com.jdl.basic.provider.core.service.workStation.WorkAreaService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationService;
+import com.jdl.sorting.tech.tenant.core.context.TenantContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -249,7 +250,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 			return result;
 		}
 		JyConfigDictTenant dataBaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.TENANT_BUSINESS_LINE.getCode(), businessLineCode);
-		if(dataBaseTenant == null || !data.getTenantCode().equals(dataBaseTenant.getBelongTenantCode())){
+		if(dataBaseTenant == null || !Objects.equals(TenantContext.getTenantCode(),dataBaseTenant.getBelongTenantCode())){
 			result.toFail("当前用户没有" + businessLineCode + "业务条线的操作权限");
 			return result;
 		}

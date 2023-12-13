@@ -32,6 +32,7 @@ import com.jdl.basic.provider.core.service.workStation.WorkAbnormalGridBindingSe
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationService;
+import com.jdl.sorting.tech.tenant.core.context.TenantContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
@@ -280,7 +281,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		WorkSiteTypeEnum currWorkSiteTypeEnum = WorkSiteTypeEnum.getWorkingSiteTypeByThird(siteInfo.getSortType(),siteInfo.getSortSubType(),siteInfo.getSortThirdType());
 		if(currWorkSiteTypeEnum != null){
 			JyConfigDictTenant dataBaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.TENANT_SITE_TYPE.getCode(),String.valueOf(currWorkSiteTypeEnum.getCode()));
-			if(dataBaseTenant == null || !data.getTenantCode().equals(dataBaseTenant.getBelongTenantCode())){
+			if(dataBaseTenant == null || !Objects.equals(TenantContext.getTenantCode(),dataBaseTenant.getBelongTenantCode())){
 				return result.toFail("当前用户没有" + siteInfo.getSiteName() + "的操作权限！");
 			}
 		}

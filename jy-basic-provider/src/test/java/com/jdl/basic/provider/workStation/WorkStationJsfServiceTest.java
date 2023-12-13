@@ -45,7 +45,6 @@ public class WorkStationJsfServiceTest {
         ws.setAreaName("4");
         ws.setWorkCode("4");
         ws.setWorkName("4");
-        ws.setTenantCode("CC");
         ws.setBusinessLineCode("5");
         Result<Boolean> result = workStationJsfService.importDatas(Arrays.asList(ws));
         System.out.println(JSON.toJSONString(result));

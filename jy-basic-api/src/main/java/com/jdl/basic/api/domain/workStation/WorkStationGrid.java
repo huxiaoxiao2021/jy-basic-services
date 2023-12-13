@@ -190,9 +190,4 @@ public class WorkStationGrid implements Serializable {
 	 * 枢纽名称
 	 */
 	private String areaHubName;
-	/**
-	 * 租户编码
-	 * todo 数据隔离区分条线,业务条线不是必填的，租户目前是入参获取的
-	 */
-	private String tenantCode;
 }
