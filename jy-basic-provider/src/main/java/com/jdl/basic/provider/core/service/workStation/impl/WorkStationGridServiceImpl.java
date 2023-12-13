@@ -277,13 +277,15 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(siteInfo == null) {
 			return result.toFail("青龙ID在基础资料中不存在！");
 		}
-		//todo 数据隔离区分场地类型，租户目前是入参获取的
+		//根据新三级分类查询场地类型枚举信息
 		WorkSiteTypeEnum currWorkSiteTypeEnum = WorkSiteTypeEnum.getWorkingSiteTypeByThird(siteInfo.getSortType(),siteInfo.getSortSubType(),siteInfo.getSortThirdType());
-		if(currWorkSiteTypeEnum != null){
-			JyConfigDictTenant dataBaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.TENANT_SITE_TYPE.getCode(),String.valueOf(currWorkSiteTypeEnum.getCode()));
-			if(dataBaseTenant == null || !Objects.equals(TenantContext.getTenantCode(),dataBaseTenant.getBelongTenantCode())){
-				return result.toFail("当前用户没有" + siteInfo.getSiteName() + "的操作权限！");
-			}
+		if(currWorkSiteTypeEnum == null){
+			return result.toFail(siteInfo.getSiteName() + "场地的新三级分类未维护,请联系运维人员维护");
+		}
+		//根据code查询租户配置表信息
+		JyConfigDictTenant dataBaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.TENANT_SITE_TYPE.getCode(),String.valueOf(currWorkSiteTypeEnum.getCode()));
+		if(dataBaseTenant == null || !Objects.equals(TenantContext.getTenantCode(),dataBaseTenant.getBelongTenantCode())){
+			return result.toFail("当前用户没有" + siteInfo.getSiteName() + "的操作权限！");
 		}
 		fillSiteInfo(data, siteInfo);
 

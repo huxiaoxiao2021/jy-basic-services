@@ -18,6 +18,7 @@
 
     <!--获取站点，员工，机构等数据-->
     <jsf:consumer id="basicPrimaryWS" interface="com.jd.ql.basic.ws.BasicPrimaryWS" protocol="jsf"
+                  serialization="hessian"
                   alias="${basic.jsf.alias}" timeout="${basic.jsf.timeout}" retries="${jsf.retries}" lazy="${jsf.consumer.lazy}">
         <jsf:parameter key="token" value="${basic.jsf.token}" hide="true"/>
     </jsf:consumer>

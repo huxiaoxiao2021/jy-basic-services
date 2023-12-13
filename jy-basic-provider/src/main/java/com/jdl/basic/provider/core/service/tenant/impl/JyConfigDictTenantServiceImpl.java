@@ -61,6 +61,8 @@ public class JyConfigDictTenantServiceImpl implements JyConfigDictTenantService 
      * @return 业务线列表
      */
     @Override
+    @Cache(key = "JyConfigDictTenantService.getTenantByDictCodeAndValue@args0:@args1", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
     public List<JyConfigDictTenant> getJyConfigDictTenantByTenantCodeAndDictCode(String dictCode, String tenantCode) {
         if(StringUtils.isBlank(dictCode) || StringUtils.isBlank(tenantCode)){
             return new ArrayList<>(0);

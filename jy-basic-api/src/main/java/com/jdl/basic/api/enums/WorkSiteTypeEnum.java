@@ -51,7 +51,7 @@ public enum WorkSiteTypeEnum {
      */
     private Integer thirdTypesOfThird;
     /**
-     *
+     * 前端界面区分场地类型的扩展字段，等同于code字段，后抽出来的字段减少对前端的影响，与code对应
      */
     private String aliesCode;
 

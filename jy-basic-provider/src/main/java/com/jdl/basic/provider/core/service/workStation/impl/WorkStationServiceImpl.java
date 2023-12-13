@@ -243,18 +243,26 @@ public class WorkStationServiceImpl implements WorkStationService {
 		if(!CheckHelper.checkStr("工序名称", workName, 100, result).isSuccess()) {
 			return result;
 		}
-		//todo 数据隔离区分条线,业务条线不是必填的，租户目前是入参获取的
+		//业务条线必填
 		String businessLineCode = data.getBusinessLineCode();
 		if(StringUtils.isBlank(businessLineCode)){
 			result.toFail("业务条线不能为空");
 			return result;
 		}
-		JyConfigDictTenant dataBaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.TENANT_BUSINESS_LINE.getCode(), businessLineCode);
-		if(dataBaseTenant == null || !Objects.equals(TenantContext.getTenantCode(),dataBaseTenant.getBelongTenantCode())){
-			result.toFail("当前用户没有" + businessLineCode + "业务条线的操作权限");
+		//先校验业务条线枚举存不存在
+		BusinessLineTypeEnum currBusiEnum = BusinessLineTypeEnum.getEnum(businessLineCode);
+		if(currBusiEnum == null){
+			result.toFail("业务条线不合法");
 			return result;
 		}
-		data.setBusinessLineName(dataBaseTenant.getDictItemText());
+		//查询租户配置表，校验业务条线是否属于该租户权限
+		JyConfigDictTenant dataBaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.TENANT_BUSINESS_LINE.getCode(), businessLineCode);
+		if(dataBaseTenant == null || !Objects.equals(TenantContext.getTenantCode(),dataBaseTenant.getBelongTenantCode())){
+			result.toFail("当前用户没有" + currBusiEnum.getName() + "的操作权限");
+			return result;
+		}
+
+		data.setBusinessLineName(currBusiEnum.getName());
 		return result;
 	}
 	/**
