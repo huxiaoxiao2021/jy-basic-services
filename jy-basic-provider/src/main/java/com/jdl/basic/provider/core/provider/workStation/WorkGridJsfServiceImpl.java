@@ -1,23 +1,8 @@
 package com.jdl.basic.provider.core.provider.workStation;
 
 
-import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
-import com.jdl.basic.api.domain.workStation.*;
-import com.jdl.basic.common.utils.*;
-import com.jdl.basic.provider.JYBasicRpcException;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import com.jdl.basic.provider.core.manager.BaseMajorManager;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
+import com.jdl.basic.api.domain.workStation.BatchAreaWorkGridQuery;
 import com.jdl.basic.api.domain.workStation.DeleteRequest;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
 import com.jdl.basic.api.domain.workStation.WorkGridDeviceVo;
@@ -27,18 +12,30 @@ import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.api.domain.workStation.WorkGridVo;
 import com.jdl.basic.api.service.workStation.WorkGridJsfService;
 import com.jdl.basic.common.contants.CacheKeyConstants;
+import com.jdl.basic.common.utils.DateHelper;
+import com.jdl.basic.common.utils.ObjectHelper;
+import com.jdl.basic.common.utils.PageDto;
+import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.provider.JYBasicRpcException;
+import com.jdl.basic.provider.common.Jimdb.CacheService;
 import com.jdl.basic.provider.config.lock.LockService;
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.hander.ResultHandler;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 场地网格表--JsfService接口实现
  *
  * @author wuyoude
  * @date 2023年04月25日 00:18:56
- *
  */
 @Slf4j
 @Service("workGridJsfService")
@@ -54,6 +51,10 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 
 	@Autowired
 	private BaseMajorManager baseMajorManager;
+
+	@Resource
+	@Qualifier("JimdbCacheService")
+	private CacheService cacheService;
 
 	/**
 	 * 插入一条数据
@@ -162,27 +163,27 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 		return result;
 	}
 
-	@Override
-	public Result<List<WorkGrid>> queryFloorDictList(WorkGrid queryParams) {
-		return Result.success(workGridService.queryFloorDictList(queryParams));
-	}
+    @Override
+    public Result<List<WorkGrid>> queryFloorDictList(WorkGrid queryParams) {
+        return Result.success(workGridService.queryFloorDictList(queryParams));
+    }
 
-	@Override
-	public Result<List<WorkGrid>> queryAreaDictList(WorkGrid queryParams) {
-		return Result.success(workGridService.queryAreaDictList(queryParams));
-	}
+    @Override
+    public Result<List<WorkGrid>> queryAreaDictList(WorkGrid queryParams) {
+        return Result.success(workGridService.queryAreaDictList(queryParams));
+    }
 
-	@Override
-	public Result<List<WorkGrid>> queryWorkGrid(WorkGrid queryParams) {
-		return Result.success(workGridService.queryWorkGrid(queryParams));
-	}
+    @Override
+    public Result<List<WorkGrid>> queryWorkGrid(WorkGrid queryParams) {
+        return Result.success(workGridService.queryWorkGrid(queryParams));
+    }
 
-	@Override
-	public Result<WorkGrid> queryByWorkGridKey(String workGridKey) {
-		Result<WorkGrid> result = Result.success();
-		result.setData(workGridService.queryByWorkGridKey(workGridKey));
-		return result;
-	}
+    @Override
+    public Result<WorkGrid> queryByWorkGridKey(String workGridKey) {
+        Result<WorkGrid> result = Result.success();
+        result.setData(workGridService.queryByWorkGridKey(workGridKey));
+        return result;
+    }
 
 	@Override
 	public Result<List<WorkGrid>> batchQueryByWorkGridKey(List<String> workGridKeys) {
@@ -301,4 +302,17 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	public Result<PageDto<WorkGridDeviceVo>> queryMachineListData(WorkGridQuery query) {
 		return workGridService.queryMachineListData(query);
 	}
+
+    @Override
+    public Result<WorkGrid> queryByWorkGridKeyWithCache(String workGridKey) {
+        Result<WorkGrid> result = Result.success();
+		try {
+			result.setData(workGridService.queryByWorkGridKeyWithCache(workGridKey));
+		} catch (Exception e) {
+			log.error("WorkGridJsfServiceImpl.queryByWorkGridKeyWithCache db error:{}", e.getMessage());
+			result.toFail("查询网格异常:" + e.getMessage());
+		}
+        return result;
+    }
+
 }
