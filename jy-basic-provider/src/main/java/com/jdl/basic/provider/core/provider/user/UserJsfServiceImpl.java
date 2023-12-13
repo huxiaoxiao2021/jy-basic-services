@@ -235,6 +235,11 @@ public class UserJsfServiceImpl implements UserJsfService {
     }
 
     @Override
+    public Result<List<JyUserDto>> querySiteLeader(RoleQueryDto roleQueryDto) {
+        return Result.success(userService.queryUserByPositionCode(roleQueryDto));
+    }
+
+    @Override
     public Result<List<JyThirdpartyUser>> queryJyThirdpartyUserByCondition(JyThirdpartyUser jyThirdpartyUser) {
         return Result.success(thirdpartyUseService.queryJyThirdpartyUserByCondition(jyThirdpartyUser));
     }

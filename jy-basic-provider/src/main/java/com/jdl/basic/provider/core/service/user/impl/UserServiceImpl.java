@@ -289,4 +289,13 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
     condition.setPositionNames(dto.getPositionNames());
     return condition;
   }
+
+  @Override
+  public List<JyUserDto> queryUserByPositionCode(RoleQueryDto roleQueryDto) {
+    List<JyUser> jyUserList =jyUserDao.queryUserByPositionCode(roleQueryDto);
+    if (CollectionUtils.isNotEmpty(jyUserList)){
+      return BeanUtils.copy(jyUserList,JyUserDto.class);
+    }
+    return null;
+  }
 }

@@ -105,6 +105,14 @@ public interface UserJsfService {
      */
     Result<List<JyThirdpartyUser>> queryJyThirdpartyUser(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
 
+
+    /**
+     * 查询场地负责人
+     * @param roleQueryDto
+     * @return
+     */
+    Result<List<JyUserDto>> querySiteLeader(RoleQueryDto roleQueryDto);
+
     Result<List<JyThirdpartyUser>> queryJyThirdpartyUserByCondition(JyThirdpartyUser jyThirdpartyUser);
 
     Result updateJyThirdpartyUserYn(JyThirdpartyUser jyThirdpartyUser);
