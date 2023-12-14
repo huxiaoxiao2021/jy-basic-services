@@ -116,4 +116,7 @@ public interface UserJsfService {
     Result<List<JyThirdpartyUser>> queryJyThirdpartyUserByCondition(JyThirdpartyUser jyThirdpartyUser);
 
     Result updateJyThirdpartyUserYn(JyThirdpartyUser jyThirdpartyUser);
+
+
+    Result<Long> countTpUserGroupByTaskDetail(JyThirdpartyUser JyThirdpartyUser);
 }

@@ -253,6 +253,12 @@ public class UserJsfServiceImpl implements UserJsfService {
         return Result.fail("更新JyThirdpartyUser删除状态失败！");
     }
 
+    @Override
+    public Result<Long> countTpUserGroupByTaskDetail(JyThirdpartyUser JyThirdpartyUser) {
+        return null;
+    }
+
+
     private void checkJyThirdpartyUserQueryDto(JyThirdpartyUserQueryDto dto) {
     }
 }
