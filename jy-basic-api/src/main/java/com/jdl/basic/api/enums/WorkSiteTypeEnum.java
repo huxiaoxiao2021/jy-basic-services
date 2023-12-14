@@ -150,10 +150,14 @@ public enum WorkSiteTypeEnum {
             if (Objects.equals(firstType,item.firstTypesOfThird) && Objects.equals(secondType,item.secondTypesOfThird) && Objects.equals(thirdType,item.thirdTypesOfThird)){
                 return item;
             }
-            if (Objects.equals(firstType,item.firstTypesOfThird) && Objects.equals(secondType,item.secondTypesOfThird)){
+        }
+        for (WorkSiteTypeEnum item : WorkSiteTypeEnum.values()) {
+            if (Objects.equals(firstType, item.firstTypesOfThird) && Objects.equals(secondType, item.secondTypesOfThird)) {
                 return item;
             }
-            if (Objects.equals(firstType,item.firstTypesOfThird)){
+        }
+        for (WorkSiteTypeEnum item : WorkSiteTypeEnum.values()) {
+            if (Objects.equals(firstType, item.firstTypesOfThird)) {
                 return item;
             }
         }

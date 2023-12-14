@@ -5,6 +5,8 @@ import com.jd.mt.core.ts.TableNameFilter;
 import com.jd.mt.core.ts.TenantHandler;
 import com.jd.mt.core.ts.jsqlparser.TenantSqlTransform;
 import com.jd.mt.plugin.mybatis.TenantInterceptor;
+import com.jdl.basic.api.enums.TenantEnum;
+import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.sorting.tech.tenant.core.context.TenantContext;
 import org.apache.ibatis.plugin.Interceptor;
 import org.springframework.context.annotation.Bean;
@@ -35,7 +37,9 @@ public class MybatisConfig {
         TenantHandler<String> tenantHandler = new TenantHandler<String>() {
             @Override
             public String getTenantId(boolean where) {
-                return TenantContext.getTenantCode();
+                return StringUtils.isNotBlank(TenantContext.getTenantCode()) ?
+                        TenantContext.getTenantCode() :
+                        TenantEnum.TENANT_JY.getCode();
             }
 
             @Override
