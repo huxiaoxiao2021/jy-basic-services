@@ -55,6 +55,16 @@ public class JyThirdpartyUser {
 
     private Date ts;
 
+    private Integer taskType;
+
+    public Integer getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(Integer taskType) {
+        this.taskType = taskType;
+    }
+
     public Date getPresentDate() {
         return presentDate;
     }

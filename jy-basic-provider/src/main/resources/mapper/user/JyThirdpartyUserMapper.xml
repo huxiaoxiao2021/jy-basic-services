@@ -93,6 +93,9 @@
       <if test="updateUserName != null" >
         update_user_name,
       </if>
+      <if test="taskType != null" >
+      task_type,
+    </if>
       create_time,
       update_time,
       yn,
@@ -152,6 +155,9 @@
       <if test="updateUserName != null" >
         #{updateUserName,jdbcType=VARCHAR},
       </if>
+      <if test="taskType != null" >
+        #{taskType},
+    </if>
       now(),
       now(),
       1,
