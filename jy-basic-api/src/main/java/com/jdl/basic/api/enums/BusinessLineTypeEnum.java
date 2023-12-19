@@ -12,8 +12,8 @@ public enum BusinessLineTypeEnum {
     BUSINESS_ZY_CENTER("2", "转运中心"),
     BUSINESS_JHC("3", "接货仓"),
     BUSINESS_AIR_RAIL("4", "空铁"),
-    BUSINESS_COLD_CENTER("5", "冷链转运"),
-    BUSINESS_MEDICINE_CENTER("6", "医药转运"),
+    BUSINESS_COLD_CENTER("5", "冷链"),
+    BUSINESS_MEDICINE_CENTER("6", "医药"),
     ;
 
     BusinessLineTypeEnum(String code, String name) {
