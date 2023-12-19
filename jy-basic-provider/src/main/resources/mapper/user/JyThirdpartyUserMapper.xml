@@ -470,6 +470,6 @@
   </update>
 
   <select id="countTpUserGroupByTaskDetail" resultType="java.lang.Long" parameterType="com.jdl.basic.api.domain.user.JyThirdpartyUser">
-    select count(id)  from jy_thirdparty_user where task_detail_biz_id =#{taskDetailBizId} and yn=1
+    select count(id)  from jy_thirdparty_user where task_detail_biz_id =#{taskDetailBizId} and nature =#{nature}  and  yn=1
   </select>
 </mapper>
