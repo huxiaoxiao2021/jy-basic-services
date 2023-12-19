@@ -16,4 +16,6 @@ public interface ThirdpartyUseService {
     List<JyThirdpartyUser> queryJyThirdpartyUserByCondition(JyThirdpartyUser query);
 
     int updateJyThirdpartyUserYn(JyThirdpartyUser query);
+
+    Long countTpUserGroupByTaskDetail(JyThirdpartyUser jyThirdpartyUser);
 }

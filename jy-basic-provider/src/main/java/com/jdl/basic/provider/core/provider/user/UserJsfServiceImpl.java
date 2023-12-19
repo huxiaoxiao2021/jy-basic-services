@@ -254,8 +254,8 @@ public class UserJsfServiceImpl implements UserJsfService {
     }
 
     @Override
-    public Result<Long> countTpUserGroupByTaskDetail(JyThirdpartyUser JyThirdpartyUser) {
-        return null;
+    public Result<Long> countTpUserGroupByTaskDetail(JyThirdpartyUser jyThirdpartyUser) {
+        return Result.success(thirdpartyUseService.countTpUserGroupByTaskDetail(jyThirdpartyUser));
     }
 
 

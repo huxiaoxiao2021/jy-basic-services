@@ -46,4 +46,9 @@ public class ThirdpartyUseServiceImpl implements ThirdpartyUseService {
     public int updateJyThirdpartyUserYn(JyThirdpartyUser query) {
         return jyThirdpartyUserDao.updateJyThirdpartyUserYn(query);
     }
+
+    @Override
+    public Long countTpUserGroupByTaskDetail(JyThirdpartyUser jyThirdpartyUser) {
+        return jyThirdpartyUserDao.countTpUserGroupByTaskDetail(jyThirdpartyUser);
+    }
 }
