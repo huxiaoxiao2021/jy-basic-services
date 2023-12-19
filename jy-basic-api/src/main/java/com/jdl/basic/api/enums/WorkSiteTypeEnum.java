@@ -14,13 +14,13 @@ import java.util.*;
 
 public enum WorkSiteTypeEnum {
     //分拣中心：一级分拣中心 中转站 航空分拣中心 二级分拨 三级中转场 逆向退货组 云分拣
-    DMS_TYPE(1, "分拣中心", Arrays.asList(64, 256, 101, 6409, 6410, 101111),12351,123511,null,"SORTING_CENTER"),
+    DMS_TYPE(1, "分拣中心", Arrays.asList(64, 256, 101, 6408, 6409, 6410, 101111),12351,123511,null,"SORTING_CENTER"),
     //拣运 ：企配仓 快运中心
     DTS_TYPE(2, "转运中心", Arrays.asList(6450, 6420, 6460, 44079),12351,123513,null,"TRANSPORT_CENTER"),
     //接货仓
     RWMS_TYPE(3, "接货仓", Arrays.asList(6430),12352,null,null,"RECEIVING_WAREHOUSE"),
     //退货组
-    RETURN_CENTER(4, "退货组", Collections.singletonList(6408),12354,123541,null,"RETURN_CENTER"),
+    RETURN_CENTER(4, "退货组", Collections.singletonList(6049),12354,123541,null,"RETURN_CENTER"),
     //冷链
     COLD_CHAIN_TYPE(5, "冷链转运", new ArrayList<Integer>(),12351,123515,null,"COLD_CENTER"),
     //冷链医药
