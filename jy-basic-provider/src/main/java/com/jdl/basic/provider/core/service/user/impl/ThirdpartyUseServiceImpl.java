@@ -1,7 +1,8 @@
 package com.jdl.basic.provider.core.service.user.impl;
 
 import com.jdl.basic.api.domain.user.JyThirdpartyUser;
-import com.jdl.basic.api.domain.user.JyThirdpartyUserSaveDto;
+import com.jdl.basic.api.domain.user.ReserveTaskDetailAgg;
+import com.jdl.basic.api.domain.user.ReserveTaskDetailAggQuery;
 import com.jdl.basic.provider.core.dao.user.JyThirdpartyUserDao;
 import com.jdl.basic.provider.core.service.user.ThirdpartyUseService;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +49,12 @@ public class ThirdpartyUseServiceImpl implements ThirdpartyUseService {
     }
 
     @Override
-    public Long countTpUserGroupByTaskDetail(JyThirdpartyUser jyThirdpartyUser) {
-        return jyThirdpartyUserDao.countTpUserGroupByTaskDetail(jyThirdpartyUser);
+    public Long countTpUserByTaskDetail(JyThirdpartyUser jyThirdpartyUser) {
+        return jyThirdpartyUserDao.countTpUserByTaskDetail(jyThirdpartyUser);
+    }
+
+    @Override
+    public List<ReserveTaskDetailAgg> countTpUserGroupByNature(ReserveTaskDetailAggQuery query) {
+        return jyThirdpartyUserDao.countTpUserGroupByNature(query);
     }
 }

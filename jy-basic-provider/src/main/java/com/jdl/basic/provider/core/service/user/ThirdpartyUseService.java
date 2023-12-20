@@ -1,6 +1,8 @@
 package com.jdl.basic.provider.core.service.user;
 
 import com.jdl.basic.api.domain.user.JyThirdpartyUser;
+import com.jdl.basic.api.domain.user.ReserveTaskDetailAgg;
+import com.jdl.basic.api.domain.user.ReserveTaskDetailAggQuery;
 
 import java.util.List;
 
@@ -17,5 +19,7 @@ public interface ThirdpartyUseService {
 
     int updateJyThirdpartyUserYn(JyThirdpartyUser query);
 
-    Long countTpUserGroupByTaskDetail(JyThirdpartyUser jyThirdpartyUser);
+    Long countTpUserByTaskDetail(JyThirdpartyUser jyThirdpartyUser);
+
+    List<ReserveTaskDetailAgg> countTpUserGroupByNature(ReserveTaskDetailAggQuery query);
 }

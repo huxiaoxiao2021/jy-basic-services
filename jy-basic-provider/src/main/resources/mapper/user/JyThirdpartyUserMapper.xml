@@ -469,14 +469,24 @@
     and present_date <![CDATA[ > ]]>  current_date()
   </update>
 
-  <select id="countTpUserGroupByTaskDetail" resultType="java.lang.Long" parameterType="com.jdl.basic.api.domain.user.JyThirdpartyUser">
+  <select id="countTpUserByTaskDetail" resultType="java.lang.Long" parameterType="com.jdl.basic.api.domain.user.JyThirdpartyUser">
     select count(id)
     from jy_thirdparty_user
     where task_detail_biz_id =#{taskDetailBizId}
       and nature =#{nature}
-      <if test="presentDate!=null">
-      and present_date =#{presentDate}
-      </if>
       and  yn=1
+  </select>
+
+
+  <select id="countTpUserGroupByNature" resultType="com.jdl.basic.api.domain.user.ReserveTaskDetailAgg">
+    select task_detail_biz_id  taskDetailBizId,nature,count(id) count
+    from jy_thirdparty_user
+    where task_detail_biz_id
+    in
+    <foreach collection="taskDetailBizIdList" item="item" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+    and  yn=1
+    group by task_detail_biz_id,nature
   </select>
 </mapper>

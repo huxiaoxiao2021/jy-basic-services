@@ -254,10 +254,14 @@ public class UserJsfServiceImpl implements UserJsfService {
     }
 
     @Override
-    public Result<Long> countTpUserGroupByTaskDetail(JyThirdpartyUser jyThirdpartyUser) {
-        return Result.success(thirdpartyUseService.countTpUserGroupByTaskDetail(jyThirdpartyUser));
+    public Result<Long> countTpUserByTaskDetail(JyThirdpartyUser jyThirdpartyUser) {
+        return Result.success(thirdpartyUseService.countTpUserByTaskDetail(jyThirdpartyUser));
     }
 
+    @Override
+    public Result<List<ReserveTaskDetailAgg>> countTpUserGroupByNature(ReserveTaskDetailAggQuery query) {
+        return Result.success(thirdpartyUseService.countTpUserGroupByNature(query));
+    }
 
     private void checkJyThirdpartyUserQueryDto(JyThirdpartyUserQueryDto dto) {
     }

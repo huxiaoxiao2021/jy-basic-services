@@ -5,12 +5,15 @@ import com.jdl.basic.api.domain.attBlackList.AttendanceBlackList;
 import com.jdl.basic.api.domain.attBlackList.AttendanceBlackListCondition;
 import com.jdl.basic.api.domain.user.JyThirdpartyUser;
 import com.jdl.basic.api.domain.user.JyThirdpartyUserSaveDto;
+import com.jdl.basic.api.domain.user.ReserveTaskDetailAgg;
+import com.jdl.basic.api.domain.user.ReserveTaskDetailAggQuery;
 import com.jdl.basic.api.service.attBlackList.AttendanceBlackListJsfService;
 import com.jdl.basic.api.service.user.UserJsfService;
 import com.jdl.basic.common.utils.DateUtil;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.ApplicationLaunch;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -82,6 +86,17 @@ public class ThirdpartyJsfServiceTest {
         jyThirdpartyUser1.setSiteCode(1);
         jyThirdpartyUser1.setYn(false);
         userJsfService.updateJyThirdpartyUserYn(jyThirdpartyUser1);
+    }
+
+    @Test
+    public void queryA() {
+        ReserveTaskDetailAggQuery query =new ReserveTaskDetailAggQuery();
+        List<String> taskDetailBizIdList =new ArrayList<>();
+        taskDetailBizIdList.add("JTU1730177157730959366");
+        query.setTaskDetailBizIdList(taskDetailBizIdList);
+        Result<List<ReserveTaskDetailAgg>> rs=userJsfService.countTpUserGroupByNature(query);
+
+        System.out.println(JsonHelper.toJSONString(rs));
     }
 
 }

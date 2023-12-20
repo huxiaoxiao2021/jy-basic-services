@@ -118,5 +118,15 @@ public interface UserJsfService {
     Result updateJyThirdpartyUserYn(JyThirdpartyUser jyThirdpartyUser);
 
 
-    Result<Long> countTpUserGroupByTaskDetail(JyThirdpartyUser JyThirdpartyUser);
+    /**
+     * 查询某个场地储备任务的人员数量
+     * @param JyThirdpartyUser
+     * @return
+     */
+    Result<Long> countTpUserByTaskDetail(JyThirdpartyUser JyThirdpartyUser);
+
+
+    //查询多个 储备任务明细的 人员数量
+    Result<List<ReserveTaskDetailAgg>> countTpUserGroupByNature(ReserveTaskDetailAggQuery query);
+
 }
