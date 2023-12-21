@@ -31,4 +31,8 @@ public interface JyThirdpartyUserDao {
     Long countTpUserByTaskDetail(JyThirdpartyUser jyThirdpartyUser);
 
     List<ReserveTaskDetailAgg> countTpUserGroupByNature(ReserveTaskDetailAggQuery query);
+
+    List<JyThirdpartyUser> queryJyThirdpartyUserByDetailBizId(String taskDetailBizId);
+
+    List<JyThirdpartyUser> queryJyThirdpartyUserByTaskBizId(String taskBizId);
 }
