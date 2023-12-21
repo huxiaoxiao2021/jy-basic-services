@@ -26,6 +26,8 @@ public interface JyThirdpartyUserDao {
     List<JyThirdpartyUser> queryJyThirdpartyUser(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
     List<JyThirdpartyUser> queryJyThirdpartyUserByCondition(JyThirdpartyUser query);
 
+    List<JyThirdpartyUser> queryForRepeat(JyThirdpartyUser query);
+
     int updateJyThirdpartyUserYn(JyThirdpartyUser query);
 
     Long countTpUserByTaskDetail(JyThirdpartyUser jyThirdpartyUser);
