@@ -501,4 +501,18 @@
     and  yn=1
     group by task_detail_biz_id,nature
   </select>
+
+  <select id="queryJyThirdpartyUserByDetailBizId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from jy_thirdparty_user where
+    yn = 1 and task_detail_biz_id =#{taskDetailBizId}
+  </select>
+
+  <select id="queryJyThirdpartyUserByTaskBizId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from jy_thirdparty_user where
+    yn = 1 and task_biz_id =#{taskBizId}
+  </select>
 </mapper>
