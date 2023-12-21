@@ -66,9 +66,16 @@ public class ThirdpartyJsfServiceTest {
         jyThirdpartyUser1.setCreateUserName("lisi");
         jyThirdpartyUser1.setUpdateUser("wangwu");
         jyThirdpartyUser1.setUpdateUserName("zhangliu");
+        jyThirdpartyUser1.setTaskType(1);
 
-        userJsfService.addJyThirdpartyUserOne(jyThirdpartyUser);
+//        userJsfService.addJyThirdpartyUserOne(jyThirdpartyUser);
 
+        JyThirdpartyUserSaveDto dto=new JyThirdpartyUserSaveDto();
+        List<JyThirdpartyUser> list=new ArrayList<>();
+        list.add(jyThirdpartyUser1);
+        dto.setJyThirdpartyUserList(list);
+        userJsfService.saveJyThirdpartyUser(dto);
+        System.out.println("over");
     }
 
     @Test

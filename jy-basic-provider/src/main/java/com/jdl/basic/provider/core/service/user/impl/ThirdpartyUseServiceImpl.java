@@ -9,7 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -20,17 +22,40 @@ public class ThirdpartyUseServiceImpl implements ThirdpartyUseService {
 
     @Override
     public int batchInsert(List<JyThirdpartyUser> jyThirdpartyUserList) {
-        return jyThirdpartyUserDao.batchInsert(jyThirdpartyUserList);
+        List<JyThirdpartyUser> list=new ArrayList<>();
+        if(jyThirdpartyUserList !=null && jyThirdpartyUserList.size() >0){
+            for (JyThirdpartyUser jyThirdpartyUser : jyThirdpartyUserList) {
+                String userCode=jyThirdpartyUser.getUserCode();
+                String tbid=jyThirdpartyUser.getTaskDetailBizId();
+                JyThirdpartyUser query=new JyThirdpartyUser();
+                query.setUserCode(userCode);
+                query.setTaskDetailBizId(tbid);
+                List<JyThirdpartyUser> list1=jyThirdpartyUserDao.queryForRepeat(query);
+                list.addAll(list1);
+            }
+        }
+
+        List<JyThirdpartyUser> afterRemoveDuplicate = jyThirdpartyUserList.stream()
+                .filter(scheduleDetail -> {
+                    boolean flag = true;
+                    for (JyThirdpartyUser duplicate : list) {
+                        if (scheduleDetail.getUserCode().equals(duplicate.getUserCode()) && scheduleDetail.getTaskDetailBizId().equals(duplicate.getTaskDetailBizId()) ) {
+                            flag = false;
+                        }
+                    }
+                    return flag;
+                }).collect(Collectors.toList());
+        return jyThirdpartyUserDao.batchInsert(afterRemoveDuplicate);
     }
 
     @Override
     public List<JyThirdpartyUser> queryJyThirdpartyUserByDetailBizId(String taskDetailBizId) {
-        return null;
+        return jyThirdpartyUserDao.queryJyThirdpartyUserByDetailBizId(taskDetailBizId);
     }
 
     @Override
     public List<JyThirdpartyUser> queryJyThirdpartyUserByTaskBizId(String taskBizId) {
-        return null;
+        return jyThirdpartyUserDao.queryJyThirdpartyUserByTaskBizId(taskBizId);
     }
 
     @Override
