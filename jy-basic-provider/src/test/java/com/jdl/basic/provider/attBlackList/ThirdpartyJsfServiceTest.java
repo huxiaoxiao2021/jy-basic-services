@@ -1,19 +1,13 @@
 package com.jdl.basic.provider.attBlackList;
 
 import com.jd.dms.java.utils.sdk.base.Result;
-import com.jdl.basic.api.domain.attBlackList.AttendanceBlackList;
-import com.jdl.basic.api.domain.attBlackList.AttendanceBlackListCondition;
 import com.jdl.basic.api.domain.user.JyThirdpartyUser;
-import com.jdl.basic.api.domain.user.JyThirdpartyUserSaveDto;
 import com.jdl.basic.api.domain.user.ReserveTaskDetailAgg;
 import com.jdl.basic.api.domain.user.ReserveTaskDetailAggQuery;
-import com.jdl.basic.api.service.attBlackList.AttendanceBlackListJsfService;
 import com.jdl.basic.api.service.user.UserJsfService;
-import com.jdl.basic.common.utils.DateUtil;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.ApplicationLaunch;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
