@@ -515,4 +515,39 @@
     from jy_thirdparty_user where
     yn = 1 and task_biz_id =#{taskBizId}
   </select>
+  <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+    insert into jy_thirdparty_user
+    (task_biz_id, task_detail_biz_id,task_type,user_code_encrypt, user_code_index,
+    user_name_encrypt, user_name_index,mobile_encrypt, mobile_index,
+    nature, nature_desc, site_code, deadline_time,present_date,company_name, create_user, create_user_name,
+    update_user, update_user_name, create_time, update_time, yn, ts)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      <trim prefix=" (" suffix=")" suffixOverrides=",">
+        #{item.taskBizId,jdbcType=VARCHAR},
+        #{item.taskDetailBizId,jdbcType=VARCHAR},
+        #{item.taskType,jdbcType=INTEGER},
+        #{item.userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+        #{item.userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+        #{item.userName, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+        #{item.userName, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+        #{item.mobile, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+        #{item.mobile, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+        #{item.nature,jdbcType=VARCHAR},
+        #{item.natureDesc,jdbcType=VARCHAR},
+        #{item.siteCode,jdbcType=INTEGER},
+        #{item.deadlineTime,jdbcType=DATE},
+        #{item.presentDate,jdbcType=DATE},
+        #{item.companyName,jdbcType=VARCHAR},
+        #{item.createUser,jdbcType=VARCHAR},
+        #{item.createUserName,jdbcType=VARCHAR},
+        #{item.updateUser,jdbcType=VARCHAR},
+        #{item.updateUserName,jdbcType=VARCHAR},
+        now(),
+        now(),
+        1,
+        now()
+      </trim>
+    </foreach>
+  </insert>
 </mapper>
