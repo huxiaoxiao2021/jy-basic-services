@@ -523,31 +523,31 @@
     update_user, update_user_name, create_time, update_time, yn, ts)
     values
     <foreach collection="list" item="item" index="index" separator=",">
-      <trim prefix=" (" suffix=")" suffixOverrides=",">
-        #{item.taskBizId,jdbcType=VARCHAR},
-        #{item.taskDetailBizId,jdbcType=VARCHAR},
-        #{item.taskType,jdbcType=INTEGER},
-        #{item.userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
-        #{item.userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
-        #{item.userName, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
-        #{item.userName, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
-        #{item.mobile, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
-        #{item.mobile, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
-        #{item.nature,jdbcType=VARCHAR},
-        #{item.natureDesc,jdbcType=VARCHAR},
-        #{item.siteCode,jdbcType=INTEGER},
-        #{item.deadlineTime,jdbcType=DATE},
-        #{item.presentDate,jdbcType=DATE},
-        #{item.companyName,jdbcType=VARCHAR},
-        #{item.createUser,jdbcType=VARCHAR},
-        #{item.createUserName,jdbcType=VARCHAR},
-        #{item.updateUser,jdbcType=VARCHAR},
-        #{item.updateUserName,jdbcType=VARCHAR},
-        now(),
-        now(),
-        1,
-        now()
-      </trim>
+     (
+      #{item.taskBizId,jdbcType=VARCHAR},
+      #{item.taskDetailBizId,jdbcType=VARCHAR},
+      #{item.taskType,jdbcType=INTEGER},
+      #{item.userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+      #{item.userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+      #{item.userName, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+      #{item.userName, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+      #{item.mobile, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+      #{item.mobile, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+      #{item.nature,jdbcType=VARCHAR},
+      #{item.natureDesc,jdbcType=VARCHAR},
+      #{item.siteCode,jdbcType=INTEGER},
+      #{item.deadlineTime,jdbcType=DATE},
+      #{item.presentDate,jdbcType=DATE},
+      #{item.companyName,jdbcType=VARCHAR},
+      #{item.createUser,jdbcType=VARCHAR},
+      #{item.createUserName,jdbcType=VARCHAR},
+      #{item.updateUser,jdbcType=VARCHAR},
+      #{item.updateUserName,jdbcType=VARCHAR},
+      now(),
+      now(),
+      1,
+      now()
+      )
     </foreach>
   </insert>
 </mapper>
