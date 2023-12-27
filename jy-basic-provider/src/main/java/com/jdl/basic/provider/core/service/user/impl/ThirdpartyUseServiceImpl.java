@@ -8,6 +8,7 @@ import com.jdl.basic.provider.core.service.user.ThirdpartyUseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,9 @@ public class ThirdpartyUseServiceImpl implements ThirdpartyUseService {
                     }
                     return flag;
                 }).collect(Collectors.toList());
+        if(CollectionUtils.isEmpty(afterRemoveDuplicate)){
+            return  1;
+        }
         return jyThirdpartyUserDao.batchInsert(afterRemoveDuplicate);
     }
 
