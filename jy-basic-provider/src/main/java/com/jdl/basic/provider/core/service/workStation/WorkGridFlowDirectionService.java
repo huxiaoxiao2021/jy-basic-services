@@ -107,4 +107,6 @@ public interface WorkGridFlowDirectionService {
                                           List<Integer> lineTypeList,
                                           Integer flowDirectionType,
                                           Integer flowSiteCode);
+
+	Result<List<WorkGridFlowDirection>> queryFlowByPositionCode(WorkGridFlowDirectionQuery query);
 }

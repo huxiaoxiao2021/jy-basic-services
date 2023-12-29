@@ -1,9 +1,5 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
-import com.jd.etms.framework.utils.cache.annotation.Cache;
-import com.jd.ump.annotation.JProEnum;
-import com.jd.ump.annotation.JProfiler;
-
 import com.jd.jsf.gd.util.StringUtils;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.workStation.*;
@@ -17,8 +13,10 @@ import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.config.ducc.DuccPropertyConfiguration;
 import com.jdl.basic.provider.core.dao.workStation.WorkGridFlowDirectionDao;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
+import com.jdl.basic.provider.core.service.position.PositionRecordService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridFlowDirectionService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
+import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -57,6 +55,9 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 	
 	@Autowired
 	private DuccPropertyConfiguration duccPropertyConfiguration;
+
+	@Autowired
+	private WorkStationGridService workStationGridService;
 
 	/**
 	 * 插入一条数据
@@ -511,5 +512,29 @@ public class WorkGridFlowDirectionServiceImpl implements WorkGridFlowDirectionSe
 												 Integer flowSiteCode){
 		return workGridFlowDirectionDao.queryFlowDirectionByCondition(refWorkGridKeyList, lineTypeList,
 				flowDirectionType, flowSiteCode);
+	}
+
+	@Override
+	public Result<List<WorkGridFlowDirection>> queryFlowByPositionCode(WorkGridFlowDirectionQuery query) {
+		Result<List<WorkGridFlowDirection>> result = new Result<>();
+		if (StringUtils.isEmpty(query.getWorkStationGridKey()) || query.getLineType() == null || query.getFlowDirectionType() == null) {
+			result.toFail("参数错误！");
+			return result;
+		}
+
+		// 查询网格key
+		Result<WorkStationGrid> workStationGridResult = workStationGridService.queryWorkStationGridBybusinessKeyWithCache(query.getWorkStationGridKey());
+		if(!workStationGridResult.isSuccess()) {
+			result.toFail(workStationGridResult.getMessage());
+			return result;
+		}
+
+		if(Objects.isNull(workStationGridResult.getData()) || org.apache.commons.lang.StringUtils.isBlank(workStationGridResult.getData().getRefWorkGridKey())) {
+			result.toFail("未查到岗位码信息");
+			return result;
+		}
+
+		query.setRefWorkGridKey(workStationGridResult.getData().getRefWorkGridKey());
+		return result.setData(workGridFlowDirectionDao.queryFlowByWorkGridKey(query));
 	}
 }

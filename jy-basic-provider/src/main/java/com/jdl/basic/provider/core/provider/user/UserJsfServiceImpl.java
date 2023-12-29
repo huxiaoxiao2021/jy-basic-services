@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.jd.dms.java.utils.sdk.base.PageData;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.*;
+import com.jdl.basic.api.enums.JyJobTypeEnum;
 import com.jdl.basic.api.enums.UserJobTypeEnum;
 import com.jdl.basic.api.service.user.UserJsfService;
 import com.jdl.basic.common.contants.Constants;
@@ -186,6 +187,18 @@ public class UserJsfServiceImpl implements UserJsfService {
     @Override
     public JyUser queryUserInfo(JyUser condition) {
         return userService.queryUserInfo(condition);
+    }
+
+    @Override
+    public Result<List<JyJobType>> getAllJobTypeList() {
+        List<JyJobType> jobTypeList = new ArrayList<>();
+        for (JyJobTypeEnum jobTypeEnum : JyJobTypeEnum.values()) {
+            JyJobType jobType = new JyJobType();
+            jobType.setCode(jobTypeEnum.getJyJobTypeCode());
+            jobType.setName(jobTypeEnum.getJyJobTypeName());
+            jobTypeList.add(jobType);
+        }
+        return Result.success(jobTypeList);
     }
 
     @Override

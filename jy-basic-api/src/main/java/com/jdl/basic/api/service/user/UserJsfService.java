@@ -82,6 +82,8 @@ public interface UserJsfService {
 
     JyUser queryUserInfo(JyUser condition);
 
+    Result<List<JyJobType>> getAllJobTypeList();
+
     /**
      * 保存三方人员信息
      * @param dto

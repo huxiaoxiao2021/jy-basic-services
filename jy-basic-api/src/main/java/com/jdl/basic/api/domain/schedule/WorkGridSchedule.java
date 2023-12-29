@@ -41,6 +41,10 @@ public class WorkGridSchedule {
 
     private Date ts;
 
+    private String oldStartTime;
+
+    private String oldEndTime;
+
     public Long getId() {
         return id;
     }
@@ -191,5 +195,21 @@ public class WorkGridSchedule {
 
     public void setTs(Date ts) {
         this.ts = ts;
+    }
+
+    public String getOldStartTime() {
+        return oldStartTime;
+    }
+
+    public void setOldStartTime(String oldStartTime) {
+        this.oldStartTime = oldStartTime;
+    }
+
+    public String getOldEndTime() {
+        return oldEndTime;
+    }
+
+    public void setOldEndTime(String oldEndTime) {
+        this.oldEndTime = oldEndTime;
     }
 }

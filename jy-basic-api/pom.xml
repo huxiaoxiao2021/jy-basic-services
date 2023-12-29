@@ -12,7 +12,7 @@
 
     <groupId>com.jdl.basic</groupId>
     <artifactId>jy-basic-api</artifactId>
-    <version>1.5.8-SNAPSHOT</version>
+    <version>1.7.1-SNAPSHOT</version>
     <name>jy-basic-api</name>
     <description>基础信息服务api</description>
 
@@ -65,8 +65,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>8</source>
+                    <target>8</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>

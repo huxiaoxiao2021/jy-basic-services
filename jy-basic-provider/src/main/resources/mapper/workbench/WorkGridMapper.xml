@@ -759,5 +759,15 @@
           and g.site_code = #{siteCode,jdbcType=INTEGER}
           and g.area_code = #{areaCode,jdbcType=VARCHAR}
         limit 200
-    </select>	
+    </select>
+	<select id="queryByWorkGridKeyWithCache" parameterType="java.lang.String" resultMap="WorkGrid">
+		select
+		<include refid="Base_Column_List"/>
+		from
+		work_grid t
+		where t.yn = 1
+		and t.business_key = #{businessKey,jdbcType=VARCHAR}
+		order by t.id desc
+		limit 1
+	</select>
 </mapper>

@@ -167,4 +167,11 @@ public interface WorkGridJsfService {
 	 * @return
 	 */
 	Result<PageDto<WorkGridDeviceVo>> queryMachineListData(WorkGridQuery query);
+
+	/**
+	 * 根据网格主键查询单个网格-有缓存
+	 * @param workGridKey
+	 * @return
+	 */
+	Result<WorkGrid> queryByWorkGridKeyWithCache(String workGridKey);
 }
