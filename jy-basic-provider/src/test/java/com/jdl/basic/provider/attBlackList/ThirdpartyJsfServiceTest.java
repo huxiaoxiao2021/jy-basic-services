@@ -2,6 +2,7 @@ package com.jdl.basic.provider.attBlackList;
 
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.JyThirdpartyUser;
+import com.jdl.basic.api.domain.user.JyThirdpartyUserSaveDto;
 import com.jdl.basic.api.domain.user.ReserveTaskDetailAgg;
 import com.jdl.basic.api.domain.user.ReserveTaskDetailAggQuery;
 import com.jdl.basic.api.service.user.UserJsfService;
