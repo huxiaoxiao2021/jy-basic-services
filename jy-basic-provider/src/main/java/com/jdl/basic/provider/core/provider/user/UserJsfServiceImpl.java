@@ -278,4 +278,22 @@ public class UserJsfServiceImpl implements UserJsfService {
 
     private void checkJyThirdpartyUserQueryDto(JyThirdpartyUserQueryDto dto) {
     }
+
+    @Override
+    public Result<JyThirdpartyUser> queryTpUserByUserCode(JyThirdpartyUser jyThirdpartyUser) {
+        checkQueryTpUserByUserCodeDto(jyThirdpartyUser);
+        return Result.success(thirdpartyUseService.queryTpUserByUserCode(jyThirdpartyUser));
+    }
+
+    private void checkQueryTpUserByUserCodeDto(JyThirdpartyUser jyThirdpartyUser) {
+        if (ObjectHelper.isEmpty(jyThirdpartyUser.getUserCode())){
+            throw new JYBasicRpcException("参数错误：缺失身份证号码！");
+        }
+        if (ObjectHelper.isEmpty(jyThirdpartyUser.getSiteCode())){
+            throw new JYBasicRpcException("参数错误：缺失场地编码！");
+        }
+        if (ObjectHelper.isEmpty(jyThirdpartyUser.getDeadlineTime())){
+            throw new JYBasicRpcException("参数错误：缺失查询日期！");
+        }
+    }
 }

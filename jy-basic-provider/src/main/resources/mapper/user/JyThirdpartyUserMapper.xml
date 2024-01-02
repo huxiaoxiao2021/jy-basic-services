@@ -548,4 +548,13 @@
       )
     </foreach>
   </insert>
+
+  <select id="queryTpUserByUserCode" resultMap="BaseResultMap">
+    select
+        <include refid="Base_Column_List" />
+    from jy_thirdparty_user
+    where user_code_index  = #{userCode,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
+      and  site_code =  #{siteCode}
+           and deadline_time >= #{deadlineTime} limit 1
+  </select>
 </mapper>

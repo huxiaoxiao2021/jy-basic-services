@@ -37,4 +37,6 @@ public interface JyThirdpartyUserDao {
     List<JyThirdpartyUser> queryJyThirdpartyUserByDetailBizId(String taskDetailBizId);
 
     List<JyThirdpartyUser> queryJyThirdpartyUserByTaskBizId(String taskBizId);
+
+    JyThirdpartyUser queryTpUserByUserCode(JyThirdpartyUser jyThirdpartyUser);
 }

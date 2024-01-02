@@ -86,4 +86,9 @@ public class ThirdpartyUseServiceImpl implements ThirdpartyUseService {
     public List<ReserveTaskDetailAgg> countTpUserGroupByNature(ReserveTaskDetailAggQuery query) {
         return jyThirdpartyUserDao.countTpUserGroupByNature(query);
     }
+
+    @Override
+    public JyThirdpartyUser queryTpUserByUserCode(JyThirdpartyUser jyThirdpartyUser) {
+        return jyThirdpartyUserDao.queryTpUserByUserCode(jyThirdpartyUser);
+    }
 }

@@ -22,4 +22,6 @@ public interface ThirdpartyUseService {
     Long countTpUserByTaskDetail(JyThirdpartyUser jyThirdpartyUser);
 
     List<ReserveTaskDetailAgg> countTpUserGroupByNature(ReserveTaskDetailAggQuery query);
+
+    JyThirdpartyUser queryTpUserByUserCode(JyThirdpartyUser jyThirdpartyUser);
 }

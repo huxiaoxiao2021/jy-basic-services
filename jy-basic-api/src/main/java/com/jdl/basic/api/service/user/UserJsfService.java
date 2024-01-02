@@ -131,4 +131,7 @@ public interface UserJsfService {
     //查询多个 储备任务明细的 人员数量
     Result<List<ReserveTaskDetailAgg>> countTpUserGroupByNature(ReserveTaskDetailAggQuery query);
 
+
+    Result<JyThirdpartyUser> queryTpUserByUserCode(JyThirdpartyUser jyThirdpartyUser);
+
 }
