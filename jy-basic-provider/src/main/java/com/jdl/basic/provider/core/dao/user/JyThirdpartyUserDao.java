@@ -23,7 +23,6 @@ public interface JyThirdpartyUserDao {
 
     int batchInsert(List<JyThirdpartyUser> jyThirdpartyUserList);
 
-    List<JyThirdpartyUser> queryJyThirdpartyUser(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
     List<JyThirdpartyUser> queryJyThirdpartyUserByCondition(JyThirdpartyUser query);
 
     List<JyThirdpartyUser> queryForRepeat(JyThirdpartyUser query);
@@ -39,4 +38,8 @@ public interface JyThirdpartyUserDao {
     List<JyThirdpartyUser> queryJyThirdpartyUserByTaskBizId(String taskBizId);
 
     JyThirdpartyUser queryTpUserByUserCode(JyThirdpartyUser jyThirdpartyUser);
+
+    List<JyThirdpartyUser> queryJyThirdpartyUserUnderDacuTask(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
+
+    List<JyThirdpartyUser> queryJyThirdpartyUserUnderNormalTask(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
 }

@@ -265,7 +265,12 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
         jyTpUserScheduleQueryDto.setNature(String.valueOf(JyJobTypeEnum.NO_FULL_TIME_LABORER.getJyJobTypeCode()));
       }
     }
-    return jyThirdpartyUserDao.queryJyThirdpartyUser(jyTpUserScheduleQueryDto);
+    //大促
+    if (jyTpUserScheduleQueryDto.getTaskType().equals(1)){
+      return jyThirdpartyUserDao.queryJyThirdpartyUserUnderDacuTask(jyTpUserScheduleQueryDto);
+    }
+    //日常
+    return jyThirdpartyUserDao.queryJyThirdpartyUserUnderNormalTask(jyTpUserScheduleQueryDto);
   }
 
   private JyUserQueryCondition convertQuery(JyUserQueryDto dto) {
