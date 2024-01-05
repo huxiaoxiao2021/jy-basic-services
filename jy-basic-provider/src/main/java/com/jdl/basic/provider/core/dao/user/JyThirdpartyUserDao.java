@@ -42,4 +42,8 @@ public interface JyThirdpartyUserDao {
     List<JyThirdpartyUser> queryJyThirdpartyUserUnderDacuTask(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
 
     List<JyThirdpartyUser> queryJyThirdpartyUserUnderNormalTask(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
+
+    JyThirdpartyUser queryTpUserByUserCodeUnderDacuTask(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
+
+    JyThirdpartyUser queryTpUserByUserCodeUnderNormalTask(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
 }

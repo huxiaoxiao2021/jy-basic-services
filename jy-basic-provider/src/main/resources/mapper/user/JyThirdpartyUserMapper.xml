@@ -450,6 +450,26 @@
     and nature =#{nature}
     and task_type =2
   </select>
+
+  <select id="queryTpUserByUserCodeUnderDacuTask" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from jy_thirdparty_user
+    where site_code = #{siteCode}
+    and deadline_time >= #{scheduleDate}
+    and user_code_index = #{userCode,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
+    and task_type =1 and yn =1 limit 1
+  </select>
+
+  <select id="queryTpUserByUserCodeUnderNormalTask" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from jy_thirdparty_user
+    where site_code = #{siteCode}
+    and present_date = #{scheduleDate}
+    and user_code_index = #{userCode,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
+    and task_type =2 and yn =1 limit 1
+  </select>
   <select id="queryJyThirdpartyUserByCondition" parameterType="com.jdl.basic.api.domain.user.JyThirdpartyUser" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

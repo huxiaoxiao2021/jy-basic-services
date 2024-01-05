@@ -109,6 +109,15 @@ public interface UserJsfService {
 
 
     /**
+     * 查询某个人的三方人员信息
+     * @param jyTpUserScheduleQueryDto
+     * @return
+     */
+    Result<JyThirdpartyUser> queryTpUserByUserCode(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
+
+
+
+    /**
      * 查询场地负责人
      * @param roleQueryDto
      * @return

@@ -24,4 +24,6 @@ public class JyTpUserScheduleQueryDto implements Serializable {
     private String nature;
 
     private Integer taskType;
+
+    private String userCode;
 }
