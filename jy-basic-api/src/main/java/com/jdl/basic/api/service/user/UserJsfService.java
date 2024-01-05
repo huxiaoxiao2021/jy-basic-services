@@ -109,11 +109,11 @@ public interface UserJsfService {
 
 
     /**
-     * 查询某个人的三方人员信息
+     * 查询某个人的储备情况
      * @param jyTpUserScheduleQueryDto
      * @return
      */
-    Result<JyThirdpartyUser> queryTpUserByUserCode(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
+    Result<JyThirdpartyUser> queryTpUserReserveInfo(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
 
 
 

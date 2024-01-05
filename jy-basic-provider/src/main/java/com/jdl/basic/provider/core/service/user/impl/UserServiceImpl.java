@@ -303,13 +303,4 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
     }
     return null;
   }
-
-  @Override
-  public JyThirdpartyUser queryTpUserByUserCode(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto) {
-    if (jyTpUserScheduleQueryDto.getTaskType().equals(1)){
-      return jyThirdpartyUserDao.queryTpUserByUserCodeUnderDacuTask(jyTpUserScheduleQueryDto);
-    }
-    //日常
-    return jyThirdpartyUserDao.queryTpUserByUserCodeUnderNormalTask(jyTpUserScheduleQueryDto);
-  }
 }

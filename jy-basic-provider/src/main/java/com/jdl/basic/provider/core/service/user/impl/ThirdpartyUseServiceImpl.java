@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.service.user.impl;
 
 import com.jdl.basic.api.domain.user.JyThirdpartyUser;
+import com.jdl.basic.api.domain.user.JyTpUserScheduleQueryDto;
 import com.jdl.basic.api.domain.user.ReserveTaskDetailAgg;
 import com.jdl.basic.api.domain.user.ReserveTaskDetailAggQuery;
 import com.jdl.basic.provider.core.dao.user.JyThirdpartyUserDao;
@@ -90,5 +91,14 @@ public class ThirdpartyUseServiceImpl implements ThirdpartyUseService {
     @Override
     public JyThirdpartyUser queryTpUserByUserCode(JyThirdpartyUser jyThirdpartyUser) {
         return jyThirdpartyUserDao.queryTpUserByUserCode(jyThirdpartyUser);
+    }
+
+    @Override
+    public JyThirdpartyUser queryTpUserReserveInfo(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto) {
+        if (jyTpUserScheduleQueryDto.getTaskType().equals(1)){
+            return jyThirdpartyUserDao.queryTpUserByUserCodeUnderDacuTask(jyTpUserScheduleQueryDto);
+        }
+        //日常
+        return jyThirdpartyUserDao.queryTpUserByUserCodeUnderNormalTask(jyTpUserScheduleQueryDto);
     }
 }

@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.service.user;
 
 import com.jdl.basic.api.domain.user.JyThirdpartyUser;
+import com.jdl.basic.api.domain.user.JyTpUserScheduleQueryDto;
 import com.jdl.basic.api.domain.user.ReserveTaskDetailAgg;
 import com.jdl.basic.api.domain.user.ReserveTaskDetailAggQuery;
 
@@ -24,4 +25,7 @@ public interface ThirdpartyUseService {
     List<ReserveTaskDetailAgg> countTpUserGroupByNature(ReserveTaskDetailAggQuery query);
 
     JyThirdpartyUser queryTpUserByUserCode(JyThirdpartyUser jyThirdpartyUser);
+
+    JyThirdpartyUser queryTpUserReserveInfo(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
+
 }
