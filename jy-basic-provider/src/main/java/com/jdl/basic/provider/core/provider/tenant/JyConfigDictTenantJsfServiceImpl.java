@@ -128,23 +128,6 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
     }
 
     /**
-     * 根据站点编码获取租户信息，如果站点编码为空，则返回默认的租户信息
-     * @param siteCode 站点编码
-     * @return 租户信息
-     * @throws Exception 异常信息
-     */
-    private JyConfigDictTenant getTenantBySite(Integer siteCode){
-        if(siteCode == null){
-            return null;
-        }
-        BaseStaffSiteOrgDto baseSite = baseMajorManager.getBaseSiteBySiteId(siteCode);
-        if(baseSite == null){
-            return null;
-        }
-        //查询配置表
-        return jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.BELONG_QL_SITE_TYPE.getCode(),String.valueOf(baseSite.getSortSubType()));
-    }
-    /**
      * 根据站点编码获取JyTenant信息
      *
      * @param siteCode 站点编码
