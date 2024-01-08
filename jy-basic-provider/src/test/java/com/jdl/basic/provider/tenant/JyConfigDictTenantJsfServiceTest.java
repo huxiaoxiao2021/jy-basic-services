@@ -34,7 +34,7 @@ public class JyConfigDictTenantJsfServiceTest {
     @Test
     public void getTenantByErpTest() {
         //根据erp查询租户
-        for (String erp : Arrays.asList("wuyoude", "wangjikui", "wangjialin5")){
+        for (String erp : Arrays.asList("wuyoude", "wangjikui", "wangjialin5","caozhixing3","shenpengpeng")){
             Result<JyConfigDictTenant> result = jyConfigDictTenantJsfService.getTenantByErp(erp);
             log.info("getTenantByErp结果：{}", JSON.toJSONString(result));
         }
