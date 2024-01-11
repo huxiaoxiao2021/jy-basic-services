@@ -174,4 +174,6 @@ public interface WorkGridJsfService {
 	 * @return
 	 */
 	Result<WorkGrid> queryByWorkGridKeyWithCache(String workGridKey);
+
+	Result<List<WorkGrid>> queryAreaInfo(WorkGrid workGrid);
 }
