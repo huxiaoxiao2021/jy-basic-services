@@ -1,6 +1,6 @@
 package com.jdl.basic.common.enums;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -64,7 +64,7 @@ public enum BoxTypeEnum {
     }
 
     public static Map<String,String> getMap(){
-        Map<String,String> result = new HashMap<String, String>();
+        Map<String,String> result = new LinkedHashMap<>();
         for(BoxTypeEnum boxTypeEnum : BoxTypeEnum.values()){
             result.put(boxTypeEnum.getCode(),boxTypeEnum.getName());
         }
