@@ -87,17 +87,21 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
         if(StringUtils.isEmpty(erp)){
             return Result.success(defaultJyConfigDictTenant);
         }
-        JyUser condition = new JyUser();
-        condition.setUserErp(erp);
-        JyUser exitUser = userService.queryUserInfo(condition);
-        if(exitUser == null){
-            return Result.success(defaultJyConfigDictTenant);
-        }
-        //判断是否冷链租户
-        if(isColdTenant(exitUser)){
-            JyConfigDictTenant coldJyConfigDictTenant = new JyConfigDictTenant();
-            coldJyConfigDictTenant.setBelongTenantCode(TenantEnum.TENANT_COLD_MEDICINE.getCode());
-            return Result.success(coldJyConfigDictTenant);
+        try {
+            JyUser condition = new JyUser();
+            condition.setUserErp(erp);
+            JyUser exitUser = userService.queryUserInfo(condition);
+            if (exitUser == null) {
+                return Result.success(defaultJyConfigDictTenant);
+            }
+            //判断是否冷链租户
+            if (isColdTenant(exitUser)) {
+                JyConfigDictTenant coldJyConfigDictTenant = new JyConfigDictTenant();
+                coldJyConfigDictTenant.setBelongTenantCode(TenantEnum.TENANT_COLD_MEDICINE.getCode());
+                return Result.success(coldJyConfigDictTenant);
+            }
+        }catch (Exception e){
+            log.error("根据erp:{}查询租户信息异常", erp,e);
         }
         //返回拣运租户兜底逻辑
         return Result.success(defaultJyConfigDictTenant);
@@ -141,14 +145,18 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
         if(siteCode == null){
             Result.success(defaultJyConfigDictTenant);
         }
-        BaseStaffSiteOrgDto baseSite = baseMajorManager.getBaseSiteBySiteId(siteCode);
-        if(baseSite == null){
-            Result.success(defaultJyConfigDictTenant);
-        }
-        //查询配置表
-        JyConfigDictTenant databaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.BELONG_QL_SITE_TYPE.getCode(),String.valueOf(baseSite.getSortSubType()));
-        if(databaseTenant != null){
-            return Result.success(databaseTenant);
+        try {
+            BaseStaffSiteOrgDto baseSite = baseMajorManager.getBaseSiteBySiteId(siteCode);
+            if(baseSite == null){
+                Result.success(defaultJyConfigDictTenant);
+            }
+            //查询配置表
+            JyConfigDictTenant databaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.BELONG_QL_SITE_TYPE.getCode(), String.valueOf(baseSite.getSortSubType()));
+            if (databaseTenant != null) {
+                return Result.success(databaseTenant);
+            }
+        }catch (Exception e){
+            log.error("根据场地id:{}查询租户信息异常", siteCode,e);
         }
         return Result.success(defaultJyConfigDictTenant);
     }
