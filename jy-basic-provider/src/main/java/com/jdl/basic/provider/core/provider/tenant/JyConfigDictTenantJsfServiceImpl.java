@@ -117,12 +117,11 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
             return false;
         }
         BaseStaffSiteOrgDto baseSite = baseMajorManager.getBaseSiteBySiteId(exitUser.getSiteCode());
-        if(baseSite == null){
-            return false;
-        }
-        List<JyConfigDictTenant> qlDataList = jyConfigDictTenantService.getJyConfigDictTenantByTenantCodeAndDictCode(DictCodeEnum.BELONG_QL_SITE_TYPE.getCode(),TenantEnum.TENANT_COLD_MEDICINE.getCode());
-        if(CollectionUtils.isNotEmpty(qlDataList) && qlDataList.stream().anyMatch(e->StringUtils.isNotBlank(e.getDictItemValue()) && e.getDictItemValue().equals(String.valueOf(baseSite.getSortSubType())))){
-            return true;
+        if(baseSite != null) {
+            List<JyConfigDictTenant> qlDataList = jyConfigDictTenantService.getJyConfigDictTenantByTenantCodeAndDictCode(DictCodeEnum.BELONG_QL_SITE_TYPE.getCode(), TenantEnum.TENANT_COLD_MEDICINE.getCode());
+            if (CollectionUtils.isNotEmpty(qlDataList) && qlDataList.stream().anyMatch(e -> StringUtils.isNotBlank(e.getDictItemValue()) && e.getDictItemValue().equals(String.valueOf(baseSite.getSortSubType())))) {
+                return true;
+            }
         }
         List<JyConfigDictTenant> rzDataList = jyConfigDictTenantService.getJyConfigDictTenantByTenantCodeAndDictCode(DictCodeEnum.BELONG_RZ_ORG_CODE.getCode(),TenantEnum.TENANT_COLD_MEDICINE.getCode());
         if(CollectionUtils.isNotEmpty(rzDataList) && rzDataList.stream().anyMatch(e->StringUtils.isNotBlank(e.getDictItemValue()) && e.getDictItemValue().equals(String.valueOf(exitUser.getOrganizationCode())))){
