@@ -473,4 +473,12 @@
       AND ug.yn =1
     LIMIT 1
   </select>
+
+  <select id="queryUserByPositionCode" parameterType="com.jdl.basic.api.domain.user.RoleQueryDto" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+        from jy_user
+        where site_code =#{siteCode}
+          and std_position_code=#{positionCode}
+          and user_status = 1
+  </select>
 </mapper>

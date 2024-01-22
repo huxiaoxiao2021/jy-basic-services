@@ -16,7 +16,7 @@ import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.JYBasicRpcException;
 import com.jdl.basic.provider.config.cache.CacheService;
 import com.jdl.basic.provider.config.ducc.DuccPropertyConfiguration;
-import com.jdl.basic.provider.core.dao.user.JyUserDao;
+import com.jdl.basic.provider.core.dao.user.*;
 import com.jdl.basic.provider.core.service.user.UserService;
 import com.jdl.basic.provider.core.service.user.model.JyUserQueryCondition;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +35,8 @@ public class UserServiceImpl implements UserService {
 
   @Autowired
   JyUserDao jyUserDao;
+  @Autowired
+  JyThirdpartyUserDao jyThirdpartyUserDao;
 
   @Autowired
   CacheService jimdbCacheService;
@@ -254,6 +256,23 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
     return null;
   }
 
+  @Override
+  public List<JyThirdpartyUser> queryJyThirdpartyUser(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto) {
+    if (ObjectHelper.isNotNull(jyTpUserScheduleQueryDto.getNature())){
+      if (jyTpUserScheduleQueryDto.getNature().equals(String.valueOf(JyJobTypeEnum.NO_FULL_TIME_LABORER.getJyJobTypeCode()))
+      || jyTpUserScheduleQueryDto.getNature().equals(String.valueOf(JyJobTypeEnum.HOUR_WORKER.getJyJobTypeCode()))
+      || jyTpUserScheduleQueryDto.getNature().equals(String.valueOf(JyJobTypeEnum.LONG_TERM_WORKER.getJyJobTypeCode())) ){
+        jyTpUserScheduleQueryDto.setNature(String.valueOf(JyJobTypeEnum.NO_FULL_TIME_LABORER.getJyJobTypeCode()));
+      }
+    }
+    //大促
+    if (jyTpUserScheduleQueryDto.getTaskType().equals(1)){
+      return jyThirdpartyUserDao.queryJyThirdpartyUserUnderDacuTask(jyTpUserScheduleQueryDto);
+    }
+    //日常
+    return jyThirdpartyUserDao.queryJyThirdpartyUserUnderNormalTask(jyTpUserScheduleQueryDto);
+  }
+
   private JyUserQueryCondition convertQuery(JyUserQueryDto dto) {
     JyUserQueryCondition condition = new JyUserQueryCondition();
     condition.setId(dto.getId());
@@ -274,5 +293,14 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
     condition.setUpdateTime(dto.getUpdateTime());
     condition.setPositionNames(dto.getPositionNames());
     return condition;
+  }
+
+  @Override
+  public List<JyUserDto> queryUserByPositionCode(RoleQueryDto roleQueryDto) {
+    List<JyUser> jyUserList =jyUserDao.queryUserByPositionCode(roleQueryDto);
+    if (CollectionUtils.isNotEmpty(jyUserList)){
+      return BeanUtils.copy(jyUserList,JyUserDto.class);
+    }
+    return null;
   }
 }

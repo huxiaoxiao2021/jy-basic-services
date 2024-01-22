@@ -90,4 +90,9 @@ public interface UserService {
    */
   Result<Boolean> checkUserBelongToJy(JyUserQueryDto dto);
   JyUserDto queryByUserErp(JyUserQueryDto jyUserQueryDto);
+
+
+  List<JyThirdpartyUser> queryJyThirdpartyUser(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
+
+  List<JyUserDto> queryUserByPositionCode(RoleQueryDto roleQueryDto);
 }

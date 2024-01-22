@@ -1,5 +1,6 @@
 package com.jdl.basic.api.service.user;
 
+import com.jd.dms.java.utils.sdk.base.PageData;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.*;
 
@@ -82,4 +83,64 @@ public interface UserJsfService {
     JyUser queryUserInfo(JyUser condition);
 
     Result<List<JyJobType>> getAllJobTypeList();
+
+    /**
+     * 保存三方人员信息
+     * @param dto
+     * @return
+     */
+    Result saveJyThirdpartyUser(JyThirdpartyUserSaveDto dto);
+
+
+    Result addJyThirdpartyUserOne(JyThirdpartyUser jyThirdpartyUser);
+
+    /**
+     * 查询任务/任务明细下的三方人员信息
+     * @param dto
+     * @return
+     */
+    Result<PageData<JyThirdpartyUser>> queryJyThirdpartyUserUnderTask(JyThirdpartyUserQueryDto dto);
+
+
+    /**
+     * 查询某日某场地某工种的三方人员列表(查询条件 日期  场地 工种)
+     */
+    Result<List<JyThirdpartyUser>> queryJyThirdpartyUser(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
+
+
+    /**
+     * 查询某个人的储备情况
+     * @param jyTpUserScheduleQueryDto
+     * @return
+     */
+    Result<JyThirdpartyUser> queryTpUserReserveInfo(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
+
+
+
+    /**
+     * 查询场地负责人
+     * @param roleQueryDto
+     * @return
+     */
+    Result<List<JyUserDto>> querySiteLeader(RoleQueryDto roleQueryDto);
+
+    Result<List<JyThirdpartyUser>> queryJyThirdpartyUserByCondition(JyThirdpartyUser jyThirdpartyUser);
+
+    Result updateJyThirdpartyUserYn(JyThirdpartyUser jyThirdpartyUser);
+
+
+    /**
+     * 查询某个场地储备任务的人员数量
+     * @param JyThirdpartyUser
+     * @return
+     */
+    Result<Long> countTpUserByTaskDetail(JyThirdpartyUser JyThirdpartyUser);
+
+
+    //查询多个 储备任务明细的 人员数量
+    Result<List<ReserveTaskDetailAgg>> countTpUserGroupByNature(ReserveTaskDetailAggQuery query);
+
+
+    Result<JyThirdpartyUser> queryTpUserByUserCode(JyThirdpartyUser jyThirdpartyUser);
+
 }

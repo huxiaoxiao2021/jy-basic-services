@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jdl.basic.provider.core.dao.user.JyThirdpartyUserDao">
+  <resultMap id="BaseResultMap" type="com.jdl.basic.api.domain.user.JyThirdpartyUser">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_biz_id" jdbcType="VARCHAR" property="taskBizId" />
+    <result column="task_detail_biz_id" jdbcType="VARCHAR" property="taskDetailBizId" />
+    <result column="user_code_encrypt" property="userCode" typeHandler="com.jd.security.aces.mybatis.handle.AcesCipherTextHandle" />
+    <result column="user_name_encrypt" property="userName" typeHandler="com.jd.security.aces.mybatis.handle.AcesCipherTextHandle" />
+    <result column="mobile_encrypt"    property="mobile" typeHandler="com.jd.security.aces.mybatis.handle.AcesCipherTextHandle" />
+    <result column="nature" jdbcType="VARCHAR" property="nature" />
+    <result column="nature_desc" jdbcType="VARCHAR" property="natureDesc" />
+    <result column="site_code" jdbcType="INTEGER" property="siteCode" />
+    <result column="deadline_time" jdbcType="DATE" property="deadlineTime" />
+    <result column="present_date" jdbcType="DATE" property="presentDate" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="yn" jdbcType="TINYINT" property="yn" />
+    <result column="ts" jdbcType="TIMESTAMP" property="ts" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, task_biz_id, task_detail_biz_id, user_code, user_code_encrypt, user_code_index, 
+    user_name, user_name_encrypt, user_name_index, mobile, mobile_encrypt, mobile_index, 
+    nature, nature_desc, site_code, deadline_time,present_date,company_name, create_user, create_user_name,
+    update_user, update_user_name, create_time, update_time, yn, ts
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from jy_thirdparty_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from jy_thirdparty_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.jdl.basic.api.domain.user.JyThirdpartyUser">
+    insert into jy_thirdparty_user (
+    <trim suffixOverrides=",">
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="taskBizId != null" >
+        task_biz_id,
+      </if>
+      <if test="taskDetailBizId != null" >
+        task_detail_biz_id,
+      </if>
+      <if test="userCode != null" >
+        user_code_encrypt,
+        user_code_index,
+      </if>
+      <if test="userName != null" >
+        user_name_encrypt,
+        user_name_index,
+      </if>
+      <if test="mobile != null" >
+        mobile_encrypt,
+        mobile_index,
+      </if>
+      <if test="nature != null" >
+        nature,
+      </if>
+      <if test="natureDesc != null" >
+        nature_desc,
+      </if>
+      <if test="siteCode != null" >
+        site_code,
+      </if>
+      <if test="deadlineTime != null" >
+        deadline_time,
+      </if>
+      <if test="presentDate != null" >
+        present_date,
+      </if>
+      <if test="companyName != null" >
+        company_name,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createUserName != null" >
+        create_user_name,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateUserName != null" >
+        update_user_name,
+      </if>
+      <if test="taskType != null" >
+      task_type,
+    </if>
+      create_time,
+      update_time,
+      yn,
+      ts
+    </trim>
+    )
+    values (
+    <trim suffixOverrides=",">
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="taskBizId != null" >
+        #{taskBizId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskDetailBizId != null" >
+        #{taskDetailBizId,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null" >
+        #{userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+        #{userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+      </if>
+      <if test="userName != null" >
+        #{userName, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+        #{userName, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+      </if>
+      <if test="mobile != null" >
+        #{mobile, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+        #{mobile, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+      </if>
+      <if test="nature != null" >
+        #{nature,jdbcType=VARCHAR},
+      </if>
+      <if test="natureDesc != null" >
+        #{natureDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="siteCode != null" >
+        #{siteCode,jdbcType=INTEGER},
+      </if>
+      <if test="deadlineTime != null" >
+        #{deadlineTime,jdbcType=DATE},
+      </if>
+      <if test="presentDate != null" >
+        #{presentDate,jdbcType=DATE},
+      </if>
+      <if test="companyName != null" >
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserName != null" >
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserName != null" >
+        #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskType != null" >
+        #{taskType},
+    </if>
+      now(),
+      now(),
+      1,
+      now()
+    </trim>
+    )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jdl.basic.api.domain.user.JyThirdpartyUser">
+    insert into jy_thirdparty_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="taskBizId != null">
+        task_biz_id,
+      </if>
+      <if test="taskDetailBizId != null">
+        task_detail_biz_id,
+      </if>
+      <if test="userCode != null">
+        user_code_encrypt,
+        user_code_index,
+      </if>
+      <if test="userName != null">
+        user_name_encrypt,
+        user_name_index,
+      </if>
+      <if test="mobile != null">
+        mobile_encrypt,
+        mobile_index,
+      </if>
+      <if test="nature != null">
+        nature,
+      </if>
+      <if test="natureDesc != null">
+        nature_desc,
+      </if>
+      <if test="siteCode != null">
+        site_code,
+      </if>
+      <if test="deadlineTime != null">
+        deadline_time,
+      </if>
+      <if test="presentDate != null" >
+        present_date,
+      </if>
+      <if test="companyName != null">
+        company_name,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createUserName != null">
+        create_user_name,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateUserName != null">
+        update_user_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="yn != null">
+        yn,
+      </if>
+      <if test="ts != null">
+        ts,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="taskBizId != null">
+        #{taskBizId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskDetailBizId != null">
+        #{taskDetailBizId,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null">
+        #{userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+        #{userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+      </if>
+      <if test="userName != null">
+        #{userName, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+        #{userName, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+      </if>
+      <if test="mobile != null">
+        #{mobile, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+        #{mobile, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+      </if>
+      <if test="nature != null">
+        #{nature,jdbcType=VARCHAR},
+      </if>
+      <if test="natureDesc != null">
+        #{natureDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="siteCode != null">
+        #{siteCode,jdbcType=INTEGER},
+      </if>
+      <if test="deadlineTime != null">
+        #{deadlineTime,jdbcType=DATE},
+      </if>
+      <if test="presentDate != null">
+        #{presentDate,jdbcType=DATE},
+      </if>
+      <if test="companyName != null">
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserName != null">
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserName != null">
+        #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null">
+        #{yn,jdbcType=TINYINT},
+      </if>
+      <if test="ts != null">
+        #{ts,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jdl.basic.api.domain.user.JyThirdpartyUser">
+    update jy_thirdparty_user
+    <set>
+      <if test="taskBizId != null">
+        task_biz_id = #{taskBizId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskDetailBizId != null">
+        task_detail_biz_id = #{taskDetailBizId,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null">
+        user_code_encrypt = #{userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+        user_code_index = #{userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+      </if>
+      <if test="userName != null">
+        user_name_encrypt = #{userName, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+        user_name_index = #{userName, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+      </if>
+      <if test="mobile != null">
+        mobile = #{mobile, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+        mobile = #{mobile, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+      </if>
+      <if test="nature != null">
+        nature = #{nature,jdbcType=VARCHAR},
+      </if>
+      <if test="natureDesc != null">
+        nature_desc = #{natureDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="siteCode != null">
+        site_code = #{siteCode,jdbcType=INTEGER},
+      </if>
+      <if test="deadlineTime != null">
+        deadline_time = #{deadlineTime,jdbcType=DATE},
+      </if>
+      <if test="presentDate != null">
+        present_date = #{deadlineTime,jdbcType=DATE},
+      </if>
+      <if test="companyName != null">
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserName != null">
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserName != null">
+        update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null">
+        yn = #{yn,jdbcType=TINYINT},
+      </if>
+      <if test="ts != null">
+        ts = #{ts,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jdl.basic.api.domain.user.JyThirdpartyUser">
+    update jy_thirdparty_user
+    <set>
+      <if test="taskBizId != null">
+        task_biz_id = #{taskBizId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskDetailBizId != null">
+        task_detail_biz_id = #{taskDetailBizId,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null">
+        user_code_encrypt = #{userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+        user_code_index = #{userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+      </if>
+      <if test="userName != null">
+        user_name_encrypt = #{userName, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+        user_name_index = #{userName, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+      </if>
+      <if test="mobile != null">
+        mobile = #{mobile, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+        mobile = #{mobile, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+      </if>
+      <if test="nature != null">
+        nature = #{nature,jdbcType=VARCHAR},
+      </if>
+      <if test="natureDesc != null">
+        nature_desc = #{natureDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="siteCode != null">
+        site_code = #{siteCode,jdbcType=INTEGER},
+      </if>
+      <if test="deadlineTime != null">
+        deadline_time = #{deadlineTime,jdbcType=DATE},
+      </if>
+      <if test="presentDate != null">
+        present_date = #{deadlineTime,jdbcType=DATE},
+      </if>
+      <if test="companyName != null">
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserName != null">
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserName != null">
+        update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null">
+        yn = #{yn,jdbcType=TINYINT},
+      </if>
+      <if test="ts != null">
+        ts = #{ts,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="queryJyThirdpartyUserUnderDacuTask" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+        from jy_thirdparty_user
+        where site_code = #{siteCode}
+          and deadline_time >= #{scheduleDate}
+          and nature =#{nature}
+        and task_type =1
+  </select>
+
+  <select id="queryJyThirdpartyUserUnderNormalTask" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from jy_thirdparty_user
+    where site_code = #{siteCode}
+    and present_date = #{scheduleDate}
+    and nature =#{nature}
+    and task_type =2
+  </select>
+
+  <select id="queryTpUserByUserCodeUnderDacuTask" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from jy_thirdparty_user
+    where site_code = #{siteCode}
+    and deadline_time >= #{scheduleDate}
+    and user_code_index = #{userCode,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
+    and task_type =1 and yn =1 limit 1
+  </select>
+
+  <select id="queryTpUserByUserCodeUnderNormalTask" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from jy_thirdparty_user
+    where site_code = #{siteCode}
+    and present_date = #{scheduleDate}
+    and user_code_index = #{userCode,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
+    and task_type =2 and yn =1 limit 1
+  </select>
+  <select id="queryJyThirdpartyUserByCondition" parameterType="com.jdl.basic.api.domain.user.JyThirdpartyUser" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from jy_thirdparty_user where yn=1
+    <if test="userCode != null and userCode != '' " >
+      and user_code_index = #{userCode,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
+    </if>
+    <if test="siteCode != null" >
+      and site_code  = #{siteCode,jdbcType=TIMESTAMP}
+    </if>
+    and present_date <![CDATA[ > ]]>  current_date()
+    order by create_time desc
+  </select>
+  <select id="queryForRepeat" parameterType="com.jdl.basic.api.domain.user.JyThirdpartyUser" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from jy_thirdparty_user where 1=1
+    <if test="userCode != null and userCode != '' " >
+      and user_code_index = #{userCode,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
+    </if>
+    <if test="taskDetailBizId != null and userCode != '' " >
+      and task_detail_biz_id  = #{taskDetailBizId,jdbcType=TIMESTAMP}
+    </if>
+    order by create_time desc
+  </select>
+  <update id="updateJyThirdpartyUserYn">
+    update jy_thirdparty_user
+    <set>
+      <if test="yn != null">
+        yn = #{yn,jdbcType=TINYINT},
+      </if>
+    </set>
+    where 1=1
+    <if test="userCode != null and userCode != '' " >
+      and user_code_index = #{userCode,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
+    </if>
+    <if test="siteCode != null" >
+      and site_code  = #{siteCode,jdbcType=TIMESTAMP}
+    </if>
+    and present_date <![CDATA[ > ]]>  current_date()
+  </update>
+
+  <select id="countTpUserByTaskDetail" resultType="java.lang.Long" parameterType="com.jdl.basic.api.domain.user.JyThirdpartyUser">
+    select count(id)
+    from jy_thirdparty_user
+    where task_detail_biz_id =#{taskDetailBizId}
+      and nature =#{nature}
+      and  yn=1
+  </select>
+
+
+  <select id="countTpUserGroupByNature" resultType="com.jdl.basic.api.domain.user.ReserveTaskDetailAgg">
+    select task_detail_biz_id  taskDetailBizId,nature,count(id) count
+    from jy_thirdparty_user
+    where task_detail_biz_id
+    in
+    <foreach collection="taskDetailBizIdList" item="item" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+    and  yn=1
+    group by task_detail_biz_id,nature
+  </select>
+
+  <select id="queryJyThirdpartyUserByDetailBizId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from jy_thirdparty_user where
+    yn = 1 and task_detail_biz_id =#{taskDetailBizId}
+  </select>
+
+  <select id="queryJyThirdpartyUserByTaskBizId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from jy_thirdparty_user where
+    yn = 1 and task_biz_id =#{taskBizId}
+  </select>
+  <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+    insert into jy_thirdparty_user
+    (task_biz_id, task_detail_biz_id,task_type,user_code_encrypt, user_code_index,
+    user_name_encrypt, user_name_index,mobile_encrypt, mobile_index,
+    nature, nature_desc, site_code, deadline_time,present_date,company_name, create_user, create_user_name,
+    update_user, update_user_name, create_time, update_time)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+     (
+      #{item.taskBizId,jdbcType=VARCHAR},
+      #{item.taskDetailBizId,jdbcType=VARCHAR},
+      #{item.taskType,jdbcType=INTEGER},
+      #{item.userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+      #{item.userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+      #{item.userName, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+      #{item.userName, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+      #{item.mobile, typeHandler=com.jd.security.aces.mybatis.handle.AcesCipherTextHandle},
+      #{item.mobile, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle},
+      #{item.nature,jdbcType=VARCHAR},
+      #{item.natureDesc,jdbcType=VARCHAR},
+      #{item.siteCode,jdbcType=INTEGER},
+      #{item.deadlineTime,jdbcType=DATE},
+      #{item.presentDate,jdbcType=DATE},
+      #{item.companyName,jdbcType=VARCHAR},
+      #{item.createUser,jdbcType=VARCHAR},
+      #{item.createUserName,jdbcType=VARCHAR},
+      #{item.updateUser,jdbcType=VARCHAR},
+      #{item.updateUserName,jdbcType=VARCHAR},
+      now(),
+      now()
+      )
+    </foreach>
+  </insert>
+
+  <select id="queryTpUserByUserCode" resultMap="BaseResultMap">
+    select
+        <include refid="Base_Column_List" />
+    from jy_thirdparty_user
+    where user_code_index  = #{userCode,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
+      and  site_code =  #{siteCode}
+           and deadline_time >= #{deadlineTime} limit 1
+  </select>
+</mapper>

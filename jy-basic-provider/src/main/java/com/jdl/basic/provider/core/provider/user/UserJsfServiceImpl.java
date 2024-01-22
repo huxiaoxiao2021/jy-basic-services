@@ -1,5 +1,8 @@
 package com.jdl.basic.provider.core.provider.user;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.jd.dms.java.utils.sdk.base.PageData;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.api.enums.JyJobTypeEnum;
@@ -9,6 +12,7 @@ import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.JYBasicRpcException;
+import com.jdl.basic.provider.core.service.user.ThirdpartyUseService;
 import com.jdl.basic.provider.core.service.user.UserService;
 import java.util.Date;
 
@@ -31,6 +35,8 @@ public class UserJsfServiceImpl implements UserJsfService {
     private UserService userService;
     @Autowired
     UserWorkGridService userWorkGridService;
+    @Autowired
+    ThirdpartyUseService thirdpartyUseService;
     @Override
     public Result<List<JyUserDto>> searchUserBySiteCode(JyUserQueryDto dto) {
         return convertToResult(userService.searchUserBySiteCode(dto.getSiteCode()));
@@ -193,5 +199,106 @@ public class UserJsfServiceImpl implements UserJsfService {
             jobTypeList.add(jobType);
         }
         return Result.success(jobTypeList);
+    }
+
+    @Override
+    public Result saveJyThirdpartyUser(JyThirdpartyUserSaveDto dto) {
+        int rs =thirdpartyUseService.batchInsert(dto.getJyThirdpartyUserList());
+        if (rs >0){
+            return Result.success();
+        }
+        return Result.fail("三方人员信息保存失败！");
+    }
+
+    @Override
+    public Result addJyThirdpartyUserOne(JyThirdpartyUser jyThirdpartyUser) {
+        int rs =thirdpartyUseService.add(jyThirdpartyUser);
+        if (rs >0){
+            return Result.success();
+        }
+        return Result.fail("三方人员信息保存失败！");
+    }
+
+    @Override
+    public Result<PageData<JyThirdpartyUser>> queryJyThirdpartyUserUnderTask(JyThirdpartyUserQueryDto dto) {
+        checkJyThirdpartyUserQueryDto(dto);
+        List<JyThirdpartyUser> jyThirdpartyUserList;
+
+        Page page =PageHelper.startPage(dto.getPageNo(),dto.getPageSize());
+        if (ObjectHelper.isNotNull(dto.getTaskDetailBizId())){
+            jyThirdpartyUserList =thirdpartyUseService.queryJyThirdpartyUserByDetailBizId(dto.getTaskDetailBizId());
+        }else {
+            jyThirdpartyUserList =thirdpartyUseService.queryJyThirdpartyUserByTaskBizId(dto.getTaskBizId());
+        }
+
+        if (CollectionUtils.isNotEmpty(jyThirdpartyUserList)){
+            PageData pageData =new PageData();
+            pageData.setPageNumber(dto.getPageNo());
+            pageData.setPageSize(dto.getPageSize());
+            pageData.setTotal(page.getTotal());
+            pageData.setRecords(jyThirdpartyUserList);
+            return Result.success(pageData);
+        }
+        return Result.success();
+    }
+
+    @Override
+    public Result<List<JyThirdpartyUser>> queryJyThirdpartyUser(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto) {
+        return Result.success(userService.queryJyThirdpartyUser(jyTpUserScheduleQueryDto));
+    }
+
+    @Override
+    public Result<JyThirdpartyUser> queryTpUserReserveInfo(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto) {
+        return Result.success(thirdpartyUseService.queryTpUserReserveInfo(jyTpUserScheduleQueryDto));
+    }
+
+    @Override
+    public Result<List<JyUserDto>> querySiteLeader(RoleQueryDto roleQueryDto) {
+        return Result.success(userService.queryUserByPositionCode(roleQueryDto));
+    }
+
+    @Override
+    public Result<List<JyThirdpartyUser>> queryJyThirdpartyUserByCondition(JyThirdpartyUser jyThirdpartyUser) {
+        return Result.success(thirdpartyUseService.queryJyThirdpartyUserByCondition(jyThirdpartyUser));
+    }
+
+    @Override
+    public Result updateJyThirdpartyUserYn(JyThirdpartyUser jyThirdpartyUser) {
+        int rs =thirdpartyUseService.updateJyThirdpartyUserYn(jyThirdpartyUser);
+        if (rs >0){
+            return Result.success();
+        }
+        return Result.fail("更新JyThirdpartyUser删除状态失败！");
+    }
+
+    @Override
+    public Result<Long> countTpUserByTaskDetail(JyThirdpartyUser jyThirdpartyUser) {
+        return Result.success(thirdpartyUseService.countTpUserByTaskDetail(jyThirdpartyUser));
+    }
+
+    @Override
+    public Result<List<ReserveTaskDetailAgg>> countTpUserGroupByNature(ReserveTaskDetailAggQuery query) {
+        return Result.success(thirdpartyUseService.countTpUserGroupByNature(query));
+    }
+
+    private void checkJyThirdpartyUserQueryDto(JyThirdpartyUserQueryDto dto) {
+    }
+
+    @Override
+    public Result<JyThirdpartyUser> queryTpUserByUserCode(JyThirdpartyUser jyThirdpartyUser) {
+        checkQueryTpUserByUserCodeDto(jyThirdpartyUser);
+        return Result.success(thirdpartyUseService.queryTpUserByUserCode(jyThirdpartyUser));
+    }
+
+    private void checkQueryTpUserByUserCodeDto(JyThirdpartyUser jyThirdpartyUser) {
+        if (ObjectHelper.isEmpty(jyThirdpartyUser.getUserCode())){
+            throw new JYBasicRpcException("参数错误：缺失身份证号码！");
+        }
+        if (ObjectHelper.isEmpty(jyThirdpartyUser.getSiteCode())){
+            throw new JYBasicRpcException("参数错误：缺失场地编码！");
+        }
+        if (ObjectHelper.isEmpty(jyThirdpartyUser.getDeadlineTime())){
+            throw new JYBasicRpcException("参数错误：缺失查询日期！");
+        }
     }
 }
