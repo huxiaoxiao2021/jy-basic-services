@@ -56,4 +56,21 @@ public enum TenantEnum {
         }
         return TenantEnum.TENANT_JY;
     }
+
+    /**
+     * 判断输入的代码是否合法
+     * @param code 输入的代码
+     * @return 如果代码合法则返回true，否则返回false
+     */
+    public static boolean isLegal(String code){
+        if (StringUtils.isBlank(code)) {
+            return false;
+        }
+        for (TenantEnum currEnum : TenantEnum.values()) {
+            if (code.equals(currEnum.getCode())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

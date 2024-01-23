@@ -189,4 +189,27 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
         }
         return Result.success(jyConfigDictTenantService.getJyConfigDictTenantByTenantCodeAndDictCode(DictCodeEnum.TENANT_SITE_TYPE.getCode(),tenantCode));
     }
+
+
+    /**
+     * 获取呼叫接口别名
+     * @param tenantCode 租户编码
+     * @param dictCode 字典编码
+     * @return Result<String> 字符串类型的结果
+     */
+    @Override
+    public Result<String> getCallInterfaceAlies(String tenantCode, String dictCode) {
+        log.info("根据租户查询接口回调别名 getCallInterfaceAlies 租户:{},字典项:{}", tenantCode,dictCode);
+        if(!TenantEnum.isLegal(tenantCode)){
+            return Result.fail("租户不合法");
+        }
+        if(!DictCodeEnum.isLegalAliesDictCode(dictCode)){
+            return Result.fail("字典项不合法");
+        }
+        List<JyConfigDictTenant> list = jyConfigDictTenantService.getJyConfigDictTenantByTenantCodeAndDictCode(dictCode,tenantCode);
+        if(CollectionUtils.isEmpty(list)){
+            return Result.fail("回调别名未配置");
+        }
+        return Result.success(list.get(0).getDictItemValue());
+    }
 }
