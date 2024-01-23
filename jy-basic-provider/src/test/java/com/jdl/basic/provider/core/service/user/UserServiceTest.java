@@ -119,11 +119,4 @@ public class UserServiceTest {
         log.info("{}", JsonHelper.toJSONString(result));
     }
 
-    @Test
-    public void getUserByUserCode() {
-        JyUserQueryDto condition = new JyUserQueryDto();
-        condition.setUserCode();
-        Result<JyUserDto> result = userService.getUserByUserCode(condition);
-
-    }
 }

@@ -307,10 +307,11 @@ public class UserJsfServiceImpl implements UserJsfService {
     public Result<JyUserDto> getUserByUserCode(JyUserQueryDto queryDto) {
         if (JyUserUtils.isIdCard(queryDto.getUserCode())) {
             JyThirdpartyUser thirdpartyUser = thirdpartyUseService.getUserByUserCode(queryDto);
-            Result.success(convertJyUserDto(thirdpartyUser));
+            return Result.success(convertJyUserDto(thirdpartyUser));
         }
 
-        return Result.success(userService.queryByUserErp(queryDto));
+        queryDto.setUserErp(queryDto.getUserCode());
+        return Result.success(userService.getUserByUserErp(queryDto));
     }
 
     private JyUserDto convertJyUserDto(JyThirdpartyUser thirdpartyUser) {

@@ -95,4 +95,6 @@ public interface UserService {
   List<JyThirdpartyUser> queryJyThirdpartyUser(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
 
   List<JyUserDto> queryUserByPositionCode(RoleQueryDto roleQueryDto);
+
+  JyUserDto getUserByUserErp(JyUserQueryDto queryDto);
 }

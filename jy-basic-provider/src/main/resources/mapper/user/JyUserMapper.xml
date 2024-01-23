@@ -481,4 +481,11 @@
           and std_position_code=#{positionCode}
           and user_status = 1
   </select>
+
+  <select id="getUserByUserErp" resultMap="BaseResultMap">
+    select  <include refid="Base_Column_List"/>
+    from  jy_user
+    where user_status = 1
+    and user_erp = #{userErp}
+  </select>
 </mapper>

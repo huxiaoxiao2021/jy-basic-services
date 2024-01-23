@@ -303,4 +303,14 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
     }
     return null;
   }
+
+  @Override
+  public JyUserDto getUserByUserErp(JyUserQueryDto queryDto) {
+    JyUser user = jyUserDao.getUserByUserErp(queryDto);
+    if (user == null) {
+      return null;
+    }
+
+    return BeanUtils.copy(user, JyUserDto.class);
+  }
 }

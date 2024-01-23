@@ -594,6 +594,5 @@
     from        jy_thirdparty_user
     where       yn = 1
     and         user_code_index  = #{userCode,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
-    <if test=""
   </select>
 </mapper>
