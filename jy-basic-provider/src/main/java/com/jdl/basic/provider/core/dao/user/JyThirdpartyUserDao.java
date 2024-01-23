@@ -1,10 +1,7 @@
 package com.jdl.basic.provider.core.dao.user;
 import com.jdl.basic.api.domain.attBlackList.AttendanceBlackList;
 import com.jdl.basic.api.domain.attBlackList.AttendanceBlackListCondition;
-import com.jdl.basic.api.domain.user.JyThirdpartyUser;
-import com.jdl.basic.api.domain.user.JyTpUserScheduleQueryDto;
-import com.jdl.basic.api.domain.user.ReserveTaskDetailAgg;
-import com.jdl.basic.api.domain.user.ReserveTaskDetailAggQuery;
+import com.jdl.basic.api.domain.user.*;
 
 import java.util.List;
 
@@ -46,4 +43,6 @@ public interface JyThirdpartyUserDao {
     JyThirdpartyUser queryTpUserByUserCodeUnderDacuTask(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
 
     JyThirdpartyUser queryTpUserByUserCodeUnderNormalTask(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
+
+    JyThirdpartyUser getUserByUserCode(JyUserQueryDto queryDto);
 }

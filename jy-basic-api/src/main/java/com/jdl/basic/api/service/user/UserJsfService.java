@@ -143,4 +143,5 @@ public interface UserJsfService {
 
     Result<JyThirdpartyUser> queryTpUserByUserCode(JyThirdpartyUser jyThirdpartyUser);
 
+    Result<JyUserDto> getUserByUserCode(JyUserQueryDto queryDto);
 }

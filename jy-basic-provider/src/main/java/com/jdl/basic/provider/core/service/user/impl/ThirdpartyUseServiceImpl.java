@@ -1,9 +1,6 @@
 package com.jdl.basic.provider.core.service.user.impl;
 
-import com.jdl.basic.api.domain.user.JyThirdpartyUser;
-import com.jdl.basic.api.domain.user.JyTpUserScheduleQueryDto;
-import com.jdl.basic.api.domain.user.ReserveTaskDetailAgg;
-import com.jdl.basic.api.domain.user.ReserveTaskDetailAggQuery;
+import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.provider.core.dao.user.JyThirdpartyUserDao;
 import com.jdl.basic.provider.core.service.user.ThirdpartyUseService;
 import lombok.extern.slf4j.Slf4j;
@@ -100,5 +97,10 @@ public class ThirdpartyUseServiceImpl implements ThirdpartyUseService {
         }
         //日常
         return jyThirdpartyUserDao.queryTpUserByUserCodeUnderNormalTask(jyTpUserScheduleQueryDto);
+    }
+
+    @Override
+    public JyThirdpartyUser getUserByUserCode(JyUserQueryDto queryDto) {
+        return null;
     }
 }

@@ -26,6 +26,9 @@ public class JyUserQueryDto {
 
     private String quitActionDate;
 
+    /**
+     * @see com.jdl.basic.api.enums.JyJobTypeEnum
+     */
     private Integer jobType;
 
     private String positionCode;
@@ -39,4 +42,6 @@ public class JyUserQueryDto {
     private Date updateTime;
     
     private List<String> positionNames;
+
+    private String userCode;
 }

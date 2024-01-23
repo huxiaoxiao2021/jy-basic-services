@@ -8,6 +8,7 @@ import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.api.enums.JyJobTypeEnum;
 import com.jdl.basic.api.enums.UserJobTypeEnum;
 import com.jdl.basic.api.service.user.UserJsfService;
+import com.jdl.basic.api.utils.JyUserUtils;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
@@ -300,5 +301,27 @@ public class UserJsfServiceImpl implements UserJsfService {
         if (ObjectHelper.isEmpty(jyThirdpartyUser.getDeadlineTime())){
             throw new JYBasicRpcException("参数错误：缺失查询日期！");
         }
+    }
+
+    @Override
+    public Result<JyUserDto> getUserByUserCode(JyUserQueryDto queryDto) {
+        if (JyUserUtils.isIdCard(queryDto.getUserCode())) {
+            JyThirdpartyUser thirdpartyUser = thirdpartyUseService.getUserByUserCode(queryDto);
+            Result.success(convertJyUserDto(thirdpartyUser));
+        }
+
+        return Result.success(userService.queryByUserErp(queryDto));
+    }
+
+    private JyUserDto convertJyUserDto(JyThirdpartyUser thirdpartyUser) {
+        if (thirdpartyUser == null) {
+            return null;
+        }
+        JyUserDto dto = new JyUserDto();
+        dto.setUserCode(thirdpartyUser.getUserCode());
+        dto.setUserName(thirdpartyUser.getUserName());
+        dto.setNature(thirdpartyUser.getNature());
+        dto.setSiteCode(thirdpartyUser.getSiteCode());
+        return dto;
     }
 }
