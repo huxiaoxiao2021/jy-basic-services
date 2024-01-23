@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.service.site;
 
 import com.google.common.collect.Lists;
 import com.jd.etms.framework.utils.cache.annotation.Cache;
+import com.jd.jsf.gd.util.RpcContext;
 import com.jd.ql.basic.domain.BaseSite;
 import com.jd.ql.basic.domain.PsStoreInfo;
 import com.jd.ql.basic.dto.BaseSiteSimpleDto;
@@ -221,6 +222,8 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
             baseEntity.toFail("服务异常!");
             Profiler.functionError(info);
         }finally {
+            logger.info("BaseSiteQueryServiceImpl.querySiteByConditionFromBasicSite,ip:{}rep:{}",
+                    RpcContext.getContext().getRemoteHostName(),JsonHelper.toJSONString(siteQueryCondition));
             Profiler.registerInfoEnd(info);
         }
         return baseEntity;
@@ -503,6 +506,8 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
             baseEntity.toFail("服务异常!");
             Profiler.functionError(info);
         }finally {
+            logger.info("BaseSiteQueryServiceImpl.querySitePageByConditionFromBasicSite,ip:{}rep:{}",
+                    RpcContext.getContext().getRemoteHostName(),JsonHelper.toJSONString(siteQueryPager));
             Profiler.registerInfoEnd(info);
         }
         return baseEntity;
@@ -641,6 +646,8 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
 
     @Override
     public Result<Pager<BasicSiteVO>> queryJySiteByConditionFromBasicSite(Pager<SiteQueryCondition> siteQueryPager) {
+        logger.info("BaseSiteQueryServiceImpl.queryJySiteByConditionFromBasicSite,ip:{}rep:{}",
+                RpcContext.getContext().getRemoteHostName(),JsonHelper.toJSONString(siteQueryPager));
         checkSiteQueryPager(siteQueryPager);
         Result<Pager<BasicSiteVO>> result = assemblePageResult(siteQueryPager);
         if(checkIsQueryJySite(siteQueryPager.getSearchVo().getSubTypes())){
