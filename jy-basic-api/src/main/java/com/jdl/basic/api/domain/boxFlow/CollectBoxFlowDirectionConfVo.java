@@ -128,4 +128,30 @@ public class CollectBoxFlowDirectionConfVo {
      */
     private Integer routeErrorType;
 
+    /**
+     * 是否支持副流向
+     */
+    private Integer supportDeputyReceiveSite;
+
+    /**
+     * 是否支持副流向Str
+     */
+    private String supportDeputyReceiveSiteStr;
+
+
+    /**
+     * 副流向
+     */
+    private Integer deputyBoxReceiveId;
+
+    /**
+     * 副流向站点名字
+     */
+    private String deputyBoxReceiveName;
+
+    /**
+     * 副流向包牌名称
+     */
+    private String deputyBoxPkgName;
+
 }

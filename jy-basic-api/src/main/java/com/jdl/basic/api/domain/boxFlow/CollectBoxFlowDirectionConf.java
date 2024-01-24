@@ -179,4 +179,26 @@ public class CollectBoxFlowDirectionConf {
      * 路由错误, 1 无匹配路由 2 未经过拆包地 3 OD多路由
      */
     private Integer routeErrorType;
+
+    /**
+     * 是否支持副流向
+     */
+    private Integer supportDeputyReceiveSite;
+
+    /**
+     * 副流向
+     */
+    private Integer deputyBoxReceiveId;
+
+    /**
+     * 副流向包牌名称
+     */
+    private String deputyBoxPkgName;
+
+    /**
+     * 副流向站点名字
+     */
+    private String deputyBoxReceiveName;
+
+
 }

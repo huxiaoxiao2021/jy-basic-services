@@ -337,7 +337,7 @@
             <groupId>com.jd.bd.dms.automatic</groupId>
             <artifactId>automatic-sdk</artifactId>
             <version>${version.automatic.automatic-sdk}</version>
-        </dependency>        
+        </dependency>
     </dependencies>
 
     <build>
