@@ -4,11 +4,14 @@ import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.provider.core.dao.user.JyThirdpartyUserDao;
 import com.jdl.basic.provider.core.service.user.ThirdpartyUseService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -101,6 +104,17 @@ public class ThirdpartyUseServiceImpl implements ThirdpartyUseService {
 
     @Override
     public JyThirdpartyUser getUserByUserCode(JyUserQueryDto queryDto) {
+        queryDto.setScheduleDate(DateUtils.truncate(new Date(), Calendar.DATE));
+        // 优先查大促储备人员
+        JyThirdpartyUser dacuUser = jyThirdpartyUserDao.getDacuUserByUserCode(queryDto);
+        if (dacuUser != null) {
+            return dacuUser;
+        }
+        // 大促储备没有则查日常储备
+        JyThirdpartyUser normalUser = jyThirdpartyUserDao.getNormalTaskUserByUserCode(queryDto);
+        if (normalUser != null) {
+            return normalUser;
+        }
         return null;
     }
 }

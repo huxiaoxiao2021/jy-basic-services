@@ -44,5 +44,17 @@ public interface JyThirdpartyUserDao {
 
     JyThirdpartyUser queryTpUserByUserCodeUnderNormalTask(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
 
-    JyThirdpartyUser getUserByUserCode(JyUserQueryDto queryDto);
+    /**
+     * 查日常三方员工
+     * @param queryDto
+     * @return
+     */
+    JyThirdpartyUser getNormalTaskUserByUserCode(JyUserQueryDto queryDto);
+
+    /**
+     * 查大促三方员工
+     * @param queryDto
+     * @return
+     */
+    JyThirdpartyUser getDacuUserByUserCode(JyUserQueryDto queryDto);
 }

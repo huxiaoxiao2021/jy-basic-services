@@ -44,4 +44,6 @@ public class JyUserQueryDto {
     private List<String> positionNames;
 
     private String userCode;
+
+    private Date scheduleDate;
 }

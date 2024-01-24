@@ -4,6 +4,7 @@ import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.JyUserDto;
 import com.jdl.basic.api.domain.user.JyUserQueryDto;
 import com.jdl.basic.api.service.user.UserJsfService;
+import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.ApplicationLaunch;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -23,8 +24,8 @@ public class UserJsfServiceTest {
     @Test
     public void getUserByUserCode() {
         JyUserQueryDto condition = new JyUserQueryDto();
-        condition.setUserCode("liuduo8");
+        condition.setUserCode("130102196909025547");
         Result<JyUserDto> result = userJsfService.getUserByUserCode(condition);
-        log.info("result {}", result);
+        log.info("result {}", JsonHelper.toJSONString(result));
     }
 }
