@@ -25,6 +25,11 @@ public interface ThirdpartyUseService {
 
     JyThirdpartyUser queryTpUserReserveInfo(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
 
-    JyThirdpartyUser getUserByUserCode(JyUserQueryDto queryDto);
+    /**
+     * 根据身份证查询三方人员
+     * @param queryDto
+     * @return
+     */
+    JyThirdpartyUser getUserByIdCarNum(JyUserQueryDto queryDto);
 
 }

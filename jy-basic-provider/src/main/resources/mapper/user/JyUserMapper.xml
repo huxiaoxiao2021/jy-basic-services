@@ -460,6 +460,7 @@
     </foreach>
     limit 10000
   </select>
+  // todo
   <select id="queryByUserErp" resultMap="BaseResultMap">
     SELECT
       ju.*,ug.work_grid_key
@@ -480,12 +481,5 @@
         where site_code =#{siteCode}
           and std_position_code=#{positionCode}
           and user_status = 1
-  </select>
-
-  <select id="getUserByUserErp" resultMap="BaseResultMap">
-    select  <include refid="Base_Column_List"/>
-    from  jy_user
-    where user_status = 1
-    and user_erp = #{userErp}
   </select>
 </mapper>

@@ -96,5 +96,4 @@ public interface UserService {
 
   List<JyUserDto> queryUserByPositionCode(RoleQueryDto roleQueryDto);
 
-  JyUserDto getUserByUserErp(JyUserQueryDto queryDto);
 }

@@ -1,6 +1,4 @@
 package com.jdl.basic.provider.core.dao.user;
-import com.jdl.basic.api.domain.attBlackList.AttendanceBlackList;
-import com.jdl.basic.api.domain.attBlackList.AttendanceBlackListCondition;
 import com.jdl.basic.api.domain.user.*;
 
 import java.util.List;
@@ -49,12 +47,12 @@ public interface JyThirdpartyUserDao {
      * @param queryDto
      * @return
      */
-    JyThirdpartyUser getNormalTaskUserByUserCode(JyUserQueryDto queryDto);
+    JyThirdpartyUser getNormalTaskUserByByIdCarNum(JyUserQueryDto queryDto);
 
     /**
      * 查大促三方员工
      * @param queryDto
      * @return
      */
-    JyThirdpartyUser getDacuUserByUserCode(JyUserQueryDto queryDto);
+    JyThirdpartyUser getDacuUserByIdCarNum(JyUserQueryDto queryDto);
 }

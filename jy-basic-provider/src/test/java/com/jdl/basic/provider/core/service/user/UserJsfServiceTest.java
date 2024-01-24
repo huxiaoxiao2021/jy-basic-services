@@ -24,8 +24,8 @@ public class UserJsfServiceTest {
     @Test
     public void getUserByUserCode() {
         JyUserQueryDto condition = new JyUserQueryDto();
-        condition.setUserCode("130102196909025547");
-        Result<JyUserDto> result = userJsfService.getUserByUserCode(condition);
+        condition.setUserUniqueCode("130102196909025547");
+        Result<JyUserDto> result = userJsfService.getUserByErpOrIdNum(condition);
         log.info("result {}", JsonHelper.toJSONString(result));
     }
 }

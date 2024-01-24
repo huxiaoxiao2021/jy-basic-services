@@ -103,15 +103,15 @@ public class ThirdpartyUseServiceImpl implements ThirdpartyUseService {
     }
 
     @Override
-    public JyThirdpartyUser getUserByUserCode(JyUserQueryDto queryDto) {
+    public JyThirdpartyUser getUserByIdCarNum(JyUserQueryDto queryDto) {
         queryDto.setScheduleDate(DateUtils.truncate(new Date(), Calendar.DATE));
         // 优先查大促储备人员
-        JyThirdpartyUser dacuUser = jyThirdpartyUserDao.getDacuUserByUserCode(queryDto);
+        JyThirdpartyUser dacuUser = jyThirdpartyUserDao.getDacuUserByIdCarNum(queryDto);
         if (dacuUser != null) {
             return dacuUser;
         }
         // 大促储备没有则查日常储备
-        JyThirdpartyUser normalUser = jyThirdpartyUserDao.getNormalTaskUserByUserCode(queryDto);
+        JyThirdpartyUser normalUser = jyThirdpartyUserDao.getNormalTaskUserByByIdCarNum(queryDto);
         if (normalUser != null) {
             return normalUser;
         }

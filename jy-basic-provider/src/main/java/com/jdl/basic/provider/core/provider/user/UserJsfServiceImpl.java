@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.quartz.JobStoreType;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -304,14 +303,16 @@ public class UserJsfServiceImpl implements UserJsfService {
     }
 
     @Override
-    public Result<JyUserDto> getUserByUserCode(JyUserQueryDto queryDto) {
-        if (JyUserUtils.isIdCard(queryDto.getUserCode())) {
-            JyThirdpartyUser thirdpartyUser = thirdpartyUseService.getUserByUserCode(queryDto);
+    public Result<JyUserDto> getUserByErpOrIdNum(JyUserQueryDto queryDto) {
+        if (JyUserUtils.isIdCard(queryDto.getUserUniqueCode())) {
+            JyThirdpartyUser thirdpartyUser = thirdpartyUseService.getUserByIdCarNum(queryDto);
             return Result.success(convertJyUserDto(thirdpartyUser));
         }
 
-        queryDto.setUserErp(queryDto.getUserCode());
-        return Result.success(userService.getUserByUserErp(queryDto));
+        JyUser condition = new JyUser();
+        condition.setUserErp(queryDto.getUserUniqueCode());
+        JyUser user = userService.queryUserInfo(condition);
+        return Result.success(convertUserDto(user));
     }
 
     private JyUserDto convertJyUserDto(JyThirdpartyUser thirdpartyUser) {
