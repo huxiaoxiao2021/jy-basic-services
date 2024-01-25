@@ -206,10 +206,15 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
         if(!DictCodeEnum.isLegalAliesDictCode(dictCode)){
             return Result.fail("字典项不合法");
         }
-        List<JyConfigDictTenant> list = jyConfigDictTenantService.getJyConfigDictTenantByTenantCodeAndDictCode(dictCode,tenantCode);
-        if(CollectionUtils.isEmpty(list)){
-            return Result.fail("回调别名未配置");
+        try{
+            List<JyConfigDictTenant> list = jyConfigDictTenantService.getJyConfigDictTenantByTenantCodeAndDictCode(dictCode,tenantCode);
+            if(CollectionUtils.isEmpty(list)){
+                return Result.fail("回调别名未配置");
+            }
+            return Result.success(list.get(0).getDictItemValue());
+        }catch (Exception e){
+            log.error("租户查询回调别名信息异常", tenantCode,e);
+            return Result.fail("租户查询回调别名信息异常");
         }
-        return Result.success(list.get(0).getDictItemValue());
     }
 }
