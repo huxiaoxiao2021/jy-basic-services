@@ -868,17 +868,17 @@
                 <if test="item.endAreaHubName != null and item.endAreaHubName != ''" >
                     end_area_hub_name = #{item.endAreaHubName,jdbcType=VARCHAR},
                 </if>
-                <if test="supportDeputyReceiveSite != null">
-                    and support_deputy_receive_site = #{supportDeputyReceiveSite,jdbcType=INTEGER}
+                <if test="item.supportDeputyReceiveSite != null">
+                    and support_deputy_receive_site = #{item.supportDeputyReceiveSite,jdbcType=INTEGER}
                 </if>
-                <if test="deputyBoxReceiveId != null">
-                    and deputy_box_receive_id = #{deputyBoxReceiveId,jdbcType=INTEGER}
+                <if test="item.deputyBoxReceiveId != null">
+                    and deputy_box_receive_id = #{item.deputyBoxReceiveId,jdbcType=INTEGER}
                 </if>
-                <if test="deputyBoxReceiveName != null">
-                    and deputy_box_receive_name = #{deputyBoxReceiveName,jdbcType=VARCHAR}
+                <if test="item.deputyBoxReceiveName != null">
+                    and deputy_box_receive_name = #{item.deputyBoxReceiveName,jdbcType=VARCHAR}
                 </if>
-                <if test="deputyBoxPkgName != null">
-                    and deputy_box_pkg_name = #{deputyBoxPkgName,jdbcType=VARCHAR}
+                <if test="item.deputyBoxPkgName != null">
+                    and deputy_box_pkg_name = #{item.deputyBoxPkgName,jdbcType=VARCHAR}
                 </if>
                 update_time = now()
             </set>
