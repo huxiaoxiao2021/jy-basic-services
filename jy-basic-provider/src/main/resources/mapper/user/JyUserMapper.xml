@@ -460,6 +460,7 @@
     </foreach>
     limit 10000
   </select>
+
   <select id="queryByUserErp" resultMap="BaseResultMap">
     SELECT
       ju.*,ug.work_grid_key
