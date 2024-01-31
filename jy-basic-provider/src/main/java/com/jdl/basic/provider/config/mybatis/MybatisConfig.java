@@ -4,9 +4,8 @@ import com.jd.mt.core.ts.ITableFilter;
 import com.jd.mt.core.ts.TableNameFilter;
 import com.jd.mt.core.ts.TenantHandler;
 import com.jd.mt.core.ts.jsqlparser.TenantSqlTransform;
+import com.jd.mt.plugin.mybatis.NoTenantValueFilter;
 import com.jd.mt.plugin.mybatis.TenantInterceptor;
-import com.jdl.basic.api.enums.TenantEnum;
-import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.sorting.tech.tenant.core.context.TenantContext;
 import org.apache.ibatis.plugin.Interceptor;
 import org.springframework.context.annotation.Bean;
@@ -37,9 +36,7 @@ public class MybatisConfig {
         TenantHandler<String> tenantHandler = new TenantHandler<String>() {
             @Override
             public String getTenantId(boolean where) {
-                return StringUtils.isNotBlank(TenantContext.getTenantCode()) ?
-                        TenantContext.getTenantCode() :
-                        TenantEnum.TENANT_JY.getCode();
+                return TenantContext.getTenantCode();
             }
 
             @Override
@@ -64,7 +61,9 @@ public class MybatisConfig {
         transform.setTableFilter(filter);
 
         tenantInterceptor.setTransform(transform);
-
+        //租户上下文里租户为空时，则跳过租户字段拼接
+        NoTenantValueFilter noTenantValueFilter = new NoTenantValueFilter(tenantHandler);
+        tenantInterceptor.setFilter(noTenantValueFilter);
         return tenantInterceptor;
     }
 
