@@ -211,7 +211,9 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
             if(CollectionUtils.isEmpty(list)){
                 return Result.fail("回调别名未配置");
             }
-            return Result.success(list.get(0).getDictItemValue());
+            Result<String> result = Result.success();
+            result.setData(list.get(0).getDictItemValue());
+            return result;
         }catch (Exception e){
             log.error("租户查询回调别名信息异常", tenantCode,e);
             return Result.fail("租户查询回调别名信息异常");
