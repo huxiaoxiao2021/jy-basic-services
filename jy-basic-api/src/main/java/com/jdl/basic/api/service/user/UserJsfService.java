@@ -143,4 +143,10 @@ public interface UserJsfService {
 
     Result<JyThirdpartyUser> queryTpUserByUserCode(JyThirdpartyUser jyThirdpartyUser);
 
+    /**
+     * 通过身份证/erp查询员工
+     * @param queryDto
+     * @return
+     */
+    Result<JyUserDto> getUserByErpOrIdNum(JyUserQueryDto queryDto);
 }

@@ -588,4 +588,22 @@
       and  site_code =  #{siteCode}
            and deadline_time >= #{deadlineTime} limit 1
   </select>
+
+  <select id="getDacuUserByIdCarNum" resultMap="BaseResultMap">
+    select      <include refid="Base_Column_List" />
+    from        jy_thirdparty_user
+    where       yn = 1
+    and         user_code_index  = #{userUniqueCode,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
+    and         deadline_time >= #{scheduleDate}
+    and         task_type =1
+  </select>
+
+  <select id="getNormalTaskUserByByIdCarNum" resultMap="BaseResultMap">
+    select      <include refid="Base_Column_List" />
+    from        jy_thirdparty_user
+    where       yn = 1
+    and         user_code_index  = #{userUniqueCode,typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
+    and         present_date = #{scheduleDate}
+    and         task_type =2
+  </select>
 </mapper>

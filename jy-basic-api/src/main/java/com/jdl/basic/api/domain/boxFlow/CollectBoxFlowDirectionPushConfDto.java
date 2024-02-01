@@ -1,6 +1,10 @@
 package com.jdl.basic.api.domain.boxFlow;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import lombok.Data;
+
+import java.util.concurrent.*;
 
 /**
  * 集包规则配置表
@@ -117,5 +121,47 @@ public class CollectBoxFlowDirectionPushConfDto {
      * 目的枢纽名称
      */
     private String endAreaHubName;
+
+    /**
+     * 是否支持副流向
+     */
+    private Integer supportDeputyReceiveSite;
+
+    /**
+     * 副流向
+     */
+    private Integer deputyBoxReceiveId;
+
+    /**
+     * 副流向站点名字
+     */
+    private String deputyBoxReceiveName;
+
+    /**
+     * 副流向包牌名称
+     */
+    private String deputyBoxPkgName;
+
+    public static void main(String[] args) {
+        CollectBoxFlowDirectionPushConfDto dto = new CollectBoxFlowDirectionPushConfDto();
+        dto.setStartOrgId(6);
+        dto.setStartSiteId(482);
+        dto.setStartSiteName("startName");
+        dto.setEndOrgId(6);
+        dto.setEndSiteId(1868);
+        dto.setEndSiteName("endName");
+        dto.setBoxReceiveId(910);
+        dto.setBoxReceiveName("目的地名");
+        dto.setBoxPkgName("主包牌名");
+        dto.setTransportType(1);
+        dto.setFlowType(2);
+        dto.setCollectClaim(1);
+        dto.setUpdateDate("2023-10-10");
+        dto.setSupportDeputyReceiveSite(1);
+        dto.setDeputyBoxReceiveId(910);
+        dto.setDeputyBoxPkgName("包牌名称");
+//        System.out.println(JSONObject.toJSONString(dto, SerializerFeature.PrettyFormat));
+
+    }
     
 }
