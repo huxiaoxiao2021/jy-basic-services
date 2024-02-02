@@ -1,10 +1,15 @@
 package com.jdl.basic.provider.core.service.schedule.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.schedule.*;
+import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.common.utils.DateHelper;
+import com.jdl.basic.provider.config.cache.CacheService;
 import com.jdl.basic.provider.core.dao.schedule.WorkGridScheduleDao;
 import com.jdl.basic.provider.core.service.schedule.WorkGridScheduleService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -23,6 +32,9 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
 
     @Autowired
     private WorkGridScheduleDao workGridScheduleDao;
+
+    @Autowired
+    CacheService jimdbCacheService;
 
 
     @Override
@@ -88,7 +100,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
 
         if (CollectionUtils.isNotEmpty(request.getDeleteWorkGridSchedule())) {
             WorkGridScheduleBatchRequest deleteRequest = buildScheduleBatchRequest(request, request.getDeleteWorkGridSchedule());
-            Result<Boolean> deleteResult = batchDeleteByWorkGridKey(deleteRequest);
+            Result<Boolean> deleteResult = batchDeleteByScheduleKey(deleteRequest);
             if (deleteResult.isFail()) {
                 log.warn("batchUpdateWorkGridSchedule 批量删除失败！" + deleteResult.getMessage());
             }
@@ -173,5 +185,127 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         }
         List<WorkGridSchedule> deletedWorkGridSchedule = workGridScheduleDao.queryTodayDeletedSiteSchedule(request);
         return result.setData(deletedWorkGridSchedule);
+    }
+
+    @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridScheduleServiceImpl.batchDeleteByScheduleKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<Boolean> batchDeleteByScheduleKey(WorkGridScheduleBatchRequest request) {
+        Result<Boolean> result = Result.success();
+        if (CollectionUtils.isEmpty(request.getWorkGridSchedules())) {
+            return result.toFail("班次key不能为空！");
+        }
+        if (StringUtils.isEmpty(request.getUpdateUserErp())) {
+            return result.toFail("修改人erp不能为空！");
+        }
+        if (request.getUpdateTime() == null) {
+            return result.toFail("修改时间不能为空！");
+        }
+
+        setInvalidTime(request.getWorkGridSchedules());
+
+        Boolean deleteResult = workGridScheduleDao.batchDeleteByScheduleKey(request);
+        if (!deleteResult) {
+            log.warn("WorkGridScheduleServiceImpl batchDeleteByScheduleKey 执行失败！");
+        }
+        return result.setData(deleteResult);
+    }
+
+    /**
+     * 设置被删除班次的失效时间
+     * @param deleteSchedules 被删除的班次
+     */
+    private void setInvalidTime(List<WorkGridSchedule> deleteSchedules) {
+        for (WorkGridSchedule deleteSchedule : deleteSchedules) {
+            // 是否立即生效
+            boolean immediatelyFlag = isImmediatelyValid(deleteSchedule);
+            if (immediatelyFlag) {
+                deleteSchedule.setInvalidTime(getValidOrInvalidTime(new Date(), deleteSchedule.getEndTime(), true));
+            } else {
+                deleteSchedule.setInvalidTime(getValidOrInvalidTime(new Date(), deleteSchedule.getEndTime(), false));
+            }
+        }
+    }
+
+    /**
+     * 是否立即生效
+     * 当前时间加1小时是否在班次开始时间之前，之前则立即生效
+     * @param updateWorkGridSchedule
+     * @return
+     */
+    private boolean isImmediatelyValid(WorkGridSchedule updateWorkGridSchedule) {
+        Date effectiveStartTime = DateUtils.addHours(DateHelper.parseDate(DateHelper.getDateOfHH_mm(new Date()), DateHelper.DATE_FORMAT_TIME_HH_mm), 1);
+        Date scheduleStartTime = DateHelper.parseDate(updateWorkGridSchedule.getStartTime(), DateHelper.DATE_FORMAT_TIME_HH_mm);
+        return effectiveStartTime.before(scheduleStartTime);
+    }
+
+    /**
+     * 获取班次的有效或失效时间（计算方式一样）
+     * @param now 当前时间
+     * @param scheduleTime 排班时间
+     * @param validImmediatelyFlag 是否立即生效
+     * @return
+     */
+    private Date getValidOrInvalidTime(Date now, String scheduleTime, boolean validImmediatelyFlag) {
+        // 立即生效是当天
+        // 不是立即生效是明天
+        Date validDay = validImmediatelyFlag ? DateUtils.truncate(now, Calendar.DATE) : DateUtils.truncate(DateUtils.addDays(now, 1), Calendar.DATE);
+
+        String hourStr = scheduleTime.split(Constants.COLON)[0];
+        String minStr = scheduleTime.split(Constants.COLON)[1];
+        int hour = Integer.parseInt(hourStr);
+        int min = Integer.parseInt(minStr);
+
+        return DateUtils.addMinutes(DateUtils.addHours(validDay, hour), min);
+    }
+
+    @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridScheduleServiceImpl.listValidWorkGridScheduleByTime", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<List<WorkGridSchedule>> listValidWorkGridScheduleByTime(ValidWorkGridScheduleRequest request) {
+        Result<List<WorkGridSchedule>> result = new Result<>();
+        if (request.getWorkGridKey() == null) {
+            return result.toFail("网格key不能为空！");
+        }
+        if (request.getValidTime() == null) {
+            return result.toFail("有效时间不能为空！");
+        }
+        if (request.getInvalidTime() == null) {
+            return result.toFail("失效时间不能为空！");
+        }
+        if (request.getValidTime().after(request.getInvalidTime())) {
+            return result.toFail("有效时间不能小于失效时间！");
+        }
+
+        List<WorkGridSchedule> validList;
+        String cacheKey = String.format(CacheKeyConstants.CACHE_KEY_VALID_WORK_GRID_SCHEDULE, request.getWorkGridKey(),
+                DateHelper.getDateOfyyMMddHHmmss(request.getValidTime()), DateHelper.getDateOfyyMMddHHmmss(request.getInvalidTime()));
+        String json = jimdbCacheService.get(cacheKey);
+        log.info("listValidWorkGridScheduleByTime 缓存key={}", cacheKey);
+        if (StringUtils.isNotEmpty(json)) {
+            validList = JSON.parseObject(json, new TypeReference<List<WorkGridSchedule>>(){});
+        } else {
+            validList = new ArrayList<>();
+            List<WorkGridSchedule> gridAllSchedule = workGridScheduleDao.listAllScheduleIgnoreYn(request);
+            // 过滤生效过的班次
+            for (WorkGridSchedule workGridSchedule : gridAllSchedule) {
+                // yn = 1的直接是有效的
+                if (workGridSchedule.getYn().intValue() == Constants.CONSTANT_NUMBER_ONE) {
+                    validList.add(workGridSchedule);
+                    continue;
+                }
+
+                // 以下yn = 0的
+                // 生效失效时间为空的不用管
+                if (workGridSchedule.getValidTime() == null || workGridSchedule.getInvalidTime() == null) {
+                    continue;
+                }
+
+                // 删除时间不在班次有效开始时间之前  证明该班次生效过
+                if (!workGridSchedule.getUpdateTime().before(workGridSchedule.getValidTime())) {
+                    validList.add(workGridSchedule);
+                }
+            }
+            jimdbCacheService.setEx(cacheKey, validList, 30L, TimeUnit.MINUTES);
+        }
+        return result.setData(validList);
     }
 }

@@ -64,4 +64,9 @@ public class WorkGridScheduleJsfServiceImpl implements WorkGridScheduleJsfServic
     public Result<List<WorkGridSchedule>> queryTodayDeletedSiteSchedule(WorkGridScheduleRequest request) {
         return workGridScheduleService.queryTodayDeletedSiteSchedule(request);
     }
+
+    @Override
+    public Result<List<WorkGridSchedule>> listValidWorkGridScheduleByTime(ValidWorkGridScheduleRequest request) {
+        return workGridScheduleService.listValidWorkGridScheduleByTime(request);
+    }
 }

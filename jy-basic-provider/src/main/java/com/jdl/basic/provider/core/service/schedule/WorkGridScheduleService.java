@@ -26,4 +26,18 @@ public interface WorkGridScheduleService {
     Result<Boolean> cleanWorkGridScheduleOldTime(BatchCleanOldTimeRequest request);
 
     Result<List<WorkGridSchedule>> queryTodayDeletedSiteSchedule(WorkGridScheduleRequest request);
+
+    /**
+     * 根据班次key删除班次并设置班次失效时间
+     * @param request
+     * @return
+     */
+    Result<Boolean> batchDeleteByScheduleKey(WorkGridScheduleBatchRequest request);
+
+    /**
+     * 查询给定时间内的有效班次
+     * @param request
+     * @return
+     */
+    Result<List<WorkGridSchedule>> listValidWorkGridScheduleByTime(ValidWorkGridScheduleRequest request);
 }

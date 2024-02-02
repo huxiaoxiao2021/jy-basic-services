@@ -247,6 +247,24 @@
     </foreach>
   </update>
 
+  <update id="batchDeleteByScheduleKey">
+    update      work_grid_schedule
+    set         yn = 0,
+                update_user_erp = #{updateUserErp},
+                update_user_name = #{updateUserName},
+                update_time = #{updateTime},
+    <trim prefix="invalid_time = case schedule_key" suffix="end">
+      <foreach collection="workGridSchedules" item="item">
+        when #{item.scheduleKey} then #{item.invalidTime}
+      </foreach>
+    </trim>
+    where       yn = 1
+    and         schedule_key in
+    <foreach collection="workGridSchedules" item="item" separator="," open="(" close=")">
+      #{item.scheduleKey}
+    </foreach>
+  </update>
+
   <insert id="batchInsert">
     insert into work_grid_schedule
     (
@@ -381,5 +399,17 @@
     and
         update_time <![CDATA[ >= ]]> #{updateTime}
     order by create_time asc
+  </select>
+
+  <select id="listAllScheduleIgnoreYn" resultMap="BaseResultMap">
+    select  <include refid="Base_Column_List"/>
+    from    work_grid_schedule
+    where   work_grid_key = #{workGridKey}
+
+    and     (valid_time <![CDATA[ >= ]]> #{validTime}
+    and     valid_time <![CDATA[ <= ]]> #{invalidTime})
+
+    or      (invalid_time <![CDATA[ >= ]]> #{validTime}
+    and     invalid_time <![CDATA[ <= ]]> #{validTime})
   </select>
 </mapper>

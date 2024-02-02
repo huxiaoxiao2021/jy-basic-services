@@ -1,9 +1,7 @@
 package com.jdl.basic.provider.core.service.schedule;
 
 import com.jd.dms.java.utils.sdk.base.Result;
-import com.jdl.basic.api.domain.schedule.BatchCleanOldTimeRequest;
-import com.jdl.basic.api.domain.schedule.WorkGridSchedule;
-import com.jdl.basic.api.domain.schedule.WorkGridScheduleRequest;
+import com.jdl.basic.api.domain.schedule.*;
 import com.jdl.basic.api.enums.ScheduleTypeEnum;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.JsonHelper;
@@ -15,7 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -54,6 +56,24 @@ public class WorkGridScheduleServiceTest {
         request.setOldStartTime(Constants.EMPTY_FILL);
         request.setOldEndTime(Constants.EMPTY_FILL);
         Result<Boolean> result = workGridScheduleService.cleanWorkGridScheduleOldTime(request);
+        log.info("result {}",result);
+    }
+
+    @Test
+    public void batchDeleteByScheduleKey() throws ParseException {
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        Date invalidTime = sdf.parse("2024-02-02 04:00:00");
+        WorkGridSchedule schedule = new WorkGridSchedule();
+        schedule.setScheduleKey("CDWG00000022056-1-1");
+//        schedule.setInvalidTime(invalidTime);
+        schedule.setStartTime("02:00");
+        schedule.setEndTime("04:00");
+        WorkGridScheduleBatchRequest request = new WorkGridScheduleBatchRequest();
+        request.setUpdateUserErp("zhangsan");
+        request.setUpdateUserName("张三");
+        request.setUpdateTime(new Date());
+        request.setWorkGridSchedules(Collections.singletonList(schedule));
+        Result<Boolean> result = workGridScheduleService.batchDeleteByScheduleKey(request);
         log.info("result {}",result);
     }
 }

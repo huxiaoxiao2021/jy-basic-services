@@ -34,4 +34,8 @@ public interface WorkGridScheduleDao {
     boolean cleanWorkGridScheduleOldTime(BatchCleanOldTimeRequest request);
 
     List<WorkGridSchedule> queryTodayDeletedSiteSchedule(WorkGridScheduleRequest request);
+
+    List<WorkGridSchedule> listAllScheduleIgnoreYn(ValidWorkGridScheduleRequest request);
+
+    boolean batchDeleteByScheduleKey(WorkGridScheduleBatchRequest request);
 }

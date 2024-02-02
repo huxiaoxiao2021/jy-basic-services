@@ -270,4 +270,6 @@ public class Constants {
     
     public static final String QUERY_BY_WORKGRID_KEY_CACHE_KEY="WorkGridService.queryByWorkGridKeyWithCache";
 
+    public static final String COLON = ":";
+
 }
