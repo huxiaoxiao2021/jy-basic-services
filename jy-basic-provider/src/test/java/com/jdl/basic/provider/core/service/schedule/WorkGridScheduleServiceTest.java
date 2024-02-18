@@ -76,4 +76,14 @@ public class WorkGridScheduleServiceTest {
         Result<Boolean> result = workGridScheduleService.batchDeleteByScheduleKey(request);
         log.info("result {}",result);
     }
+
+    @Test
+    public void listValidWorkGridScheduleByTime() {
+//        ValidWorkGridScheduleRequest request = new ValidWorkGridScheduleRequest();
+//        request.setWorkGridKey();
+//        request.setValidTime();
+//        request.setInvalidTime();
+//        Result<List<WorkGridSchedule>> result = workGridScheduleService.listValidWorkGridScheduleByTime(request);
+//        log.info("result {}",result);
+    }
 }
