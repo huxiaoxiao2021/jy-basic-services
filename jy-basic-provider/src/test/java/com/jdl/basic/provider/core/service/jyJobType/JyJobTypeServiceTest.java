@@ -42,6 +42,9 @@ public class JyJobTypeServiceTest {
     private JyJobTypeService jyJobTypeService;
 
 
+    /**
+     * 测试方法
+     */
     @Test
     public void test(){
 
