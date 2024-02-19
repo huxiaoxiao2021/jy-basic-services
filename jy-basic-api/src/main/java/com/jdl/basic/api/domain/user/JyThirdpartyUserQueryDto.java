@@ -11,4 +11,5 @@ public class JyThirdpartyUserQueryDto implements Serializable {
     private String taskDetailBizId;
     private Integer pageNo;
     private Integer pageSize;
+    private String userCode;
 }

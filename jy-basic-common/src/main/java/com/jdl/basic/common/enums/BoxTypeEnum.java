@@ -1,6 +1,6 @@
 package com.jdl.basic.common.enums;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -29,7 +29,10 @@ public enum BoxTypeEnum {
     TYPE_ZQ("ZQ", "其他混包"),
     TYPE_ZS("ZS", "售后件"),
     RECYCLE_BASKET("AK", "周转筐"),
-    TYPE_MS("MS", "医药直发")
+    TYPE_MS("MS", "医药直发"),
+    TYPE_TA("TA","特安"),
+    TYPE_LL("LL","笼车/围板箱"),
+    TYPE_WMS("BW","仓储")
     ;
 
     private String code;
@@ -62,7 +65,7 @@ public enum BoxTypeEnum {
     }
 
     public static Map<String,String> getMap(){
-        Map<String,String> result = new HashMap<String, String>();
+        Map<String,String> result = new LinkedHashMap<>();
         for(BoxTypeEnum boxTypeEnum : BoxTypeEnum.values()){
             result.put(boxTypeEnum.getCode(),boxTypeEnum.getName());
         }

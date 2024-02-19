@@ -72,4 +72,5 @@ public interface JyUserDao {
     JyUser queryByUserErp(JyUserQueryDto jyUserQueryDto);
 
     List<JyUser> queryUserByPositionCode(RoleQueryDto roleQueryDto);
+
 }
