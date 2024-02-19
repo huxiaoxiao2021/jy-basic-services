@@ -1,12 +1,15 @@
 package com.jdl.basic.provider.core.provider.tenant;
 
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.tenant.JyConfigDictTenant;
 import com.jdl.basic.api.domain.tenant.JyConfigDictTenantQuery;
 import com.jdl.basic.api.domain.user.JyUser;
 import com.jdl.basic.api.enums.DictCodeEnum;
 import com.jdl.basic.api.enums.TenantEnum;
 import com.jdl.basic.api.service.tenant.JyConfigDictTenantJsfService;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
@@ -80,6 +83,7 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
      * @return 响应的 Result 对象，包含 JyTenant 对象
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyConfigDictTenantJsfServiceImpl.getTenantByErp", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<JyConfigDictTenant> getTenantByErp(String erp) {
         log.info("根据erp查询租户信息 getTenantByErp 入参-{}", erp);
         JyConfigDictTenant defaultJyConfigDictTenant = new JyConfigDictTenant();
@@ -137,6 +141,7 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
      * @return 返回JyTenant响应结果
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyConfigDictTenantJsfServiceImpl.getTenantBySiteCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<JyConfigDictTenant> getTenantBySiteCode(Integer siteCode) {
         log.info("根据场地id查询租户信息 getTenantBySiteCode 入参-{}", siteCode);
         JyConfigDictTenant defaultJyConfigDictTenant = new JyConfigDictTenant();
@@ -167,6 +172,7 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
      * @return 业务线列表的结果
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyConfigDictTenantJsfServiceImpl.getBusinessLineByTenantCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<List<JyConfigDictTenant>> getBusinessLineByTenantCode(String tenantCode) {
         log.info("根据租户查询业务条线 getBusinessLineByTenantCode 入参-{}", tenantCode);
         if(StringUtils.isBlank(tenantCode)){
@@ -182,6 +188,7 @@ public class JyConfigDictTenantJsfServiceImpl implements JyConfigDictTenantJsfSe
      * @return 响应的站点类型列表
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyConfigDictTenantJsfServiceImpl.getSiteTypeByTenantCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<List<JyConfigDictTenant>> getSiteTypeByTenantCode(String tenantCode) {
         log.info("根据租户查询场地类型 getSiteTypeByTenantCode 入参-{}", tenantCode);
         if(StringUtils.isBlank(tenantCode)){

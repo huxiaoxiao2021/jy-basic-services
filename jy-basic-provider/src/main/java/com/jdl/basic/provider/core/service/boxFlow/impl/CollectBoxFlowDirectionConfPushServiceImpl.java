@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.*;
 
+import static com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionPushConfDto.COLLECT_CLAIM_FINISHED_BOX;
 import static com.jdl.basic.common.enums.CollectBoxFlowInfoOperateTypeEnum.ACTIVATE;
 import static com.jdl.basic.common.enums.CollectBoxFlowInfoOperateTypeEnum.ADD;
 import static com.jdl.basic.common.enums.CollectBoxFlowInfoStatusEnum.HISTORY;
@@ -100,10 +101,28 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
                     dto.getTransportType() == null ||
                     dto.getFlowType() == null ||
                     dto.getCollectClaim() == null ||
-                    StringUtils.isEmpty(dto.getUpdateDate())) {
+                    StringUtils.isEmpty(dto.getUpdateDate()) ||
+                    dto.getSupportDeputyReceiveSite() == null) {
                 result.setCode(2);
                 result.setMessage("参数不能为空");
                 return result;
+            }
+            if (Objects.equals(dto.getSupportDeputyReceiveSite(), 1)) {
+                if (dto.getDeputyBoxReceiveId() == null) {
+                    result.setCode(2);
+                    result.setMessage("支持副流向时，副流向id不能为空");
+                    return result;
+                }
+                if (StringUtils.isEmpty(dto.getDeputyBoxPkgName())) {
+                    result.setCode(2);
+                    result.setMessage("支持副流向时，副流向包牌名称不能为空");
+                    return result;
+                }
+                if (Objects.equals(dto.getCollectClaim(), COLLECT_CLAIM_FINISHED_BOX)) {
+                    result.setCode(2);
+                    result.setMessage("参数错误，成品包不支持副流向");
+                    return result;
+                }
             }
             if (dto.getStartOrgId() == null) {
                 BaseStaffSiteOrgDto baseSiteBySiteId = basicPrimaryWS.getBaseSiteBySiteId(dto.getStartSiteId());
@@ -123,6 +142,12 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
                     dto.setEndProvinceAgencyName(baseSiteBySiteId.getProvinceAgencyName());
                     dto.setEndAreaHubCode(baseSiteBySiteId.getAreaCode());
                     dto.setEndAreaHubName(baseSiteBySiteId.getAreaName());
+                }
+            }
+            if (StringUtils.isEmpty(dto.getDeputyBoxReceiveName())) {
+                BaseStaffSiteOrgDto deputyBoxReceive = basicPrimaryWS.getBaseSiteBySiteId(dto.getDeputyBoxReceiveId());
+                if (deputyBoxReceive != null) {
+                    dto.setDeputyBoxReceiveName(deputyBoxReceive.getSiteName());
                 }
             }
             //删除老版本数据

@@ -13,5 +13,8 @@
 /jy-basic-api/.project
 /jy-basic-common/.project
 /jy-basic-provider/.project
+/jy-basic-rpc/target
 *.iml
 *.DS_Store
+
+rebel.xml

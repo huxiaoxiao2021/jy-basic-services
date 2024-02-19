@@ -8,6 +8,7 @@ import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.api.enums.JyJobTypeEnum;
 import com.jdl.basic.api.enums.UserJobTypeEnum;
 import com.jdl.basic.api.service.user.UserJsfService;
+import com.jdl.basic.api.utils.JyUserUtils;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
@@ -21,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.quartz.JobStoreType;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -300,5 +300,30 @@ public class UserJsfServiceImpl implements UserJsfService {
         if (ObjectHelper.isEmpty(jyThirdpartyUser.getDeadlineTime())){
             throw new JYBasicRpcException("参数错误：缺失查询日期！");
         }
+    }
+
+    @Override
+    public Result<JyUserDto> getUserByErpOrIdNum(JyUserQueryDto queryDto) {
+        if (JyUserUtils.isIdCard(queryDto.getUserUniqueCode())) {
+            JyThirdpartyUser thirdpartyUser = thirdpartyUseService.getUserByIdCarNum(queryDto);
+            return Result.success(convertJyUserDto(thirdpartyUser));
+        }
+
+        JyUser condition = new JyUser();
+        condition.setUserErp(queryDto.getUserUniqueCode());
+        JyUser user = userService.queryUserInfo(condition);
+        return Result.success(convertUserDto(user));
+    }
+
+    private JyUserDto convertJyUserDto(JyThirdpartyUser thirdpartyUser) {
+        if (thirdpartyUser == null) {
+            return null;
+        }
+        JyUserDto dto = new JyUserDto();
+        dto.setUserCode(thirdpartyUser.getUserCode());
+        dto.setUserName(thirdpartyUser.getUserName());
+        dto.setNature(thirdpartyUser.getNature());
+        dto.setSiteCode(thirdpartyUser.getSiteCode());
+        return dto;
     }
 }

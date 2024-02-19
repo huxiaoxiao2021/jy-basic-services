@@ -36,6 +36,10 @@
         <result column="if_change_since_last_update" jdbcType="INTEGER" property="ifChangeSinceLastUpdate"/>
         <result column="version" jdbcType="VARCHAR" property="version"/>
         <result column="route_error_type" jdbcType="INTEGER" property="routeErrorType"/>
+        <result column="support_deputy_receive_site" jdbcType="INTEGER" property="supportDeputyReceiveSite"/>
+        <result column="deputy_box_receive_id" jdbcType="INTEGER" property="deputyBoxReceiveId"/>
+        <result column="deputy_box_receive_name" jdbcType="VARCHAR" property="deputyBoxReceiveName"/>
+        <result column="deputy_box_pkg_name" jdbcType="VARCHAR" property="deputyBoxPkgName"/>
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
@@ -45,7 +49,9 @@
         start_site_id, start_site_name, end_org_id, end_org_name,
         end_site_id, end_site_name, box_receive_id, box_receive_name, box_pkg_name, transport_type,
         flow_type, create_user_erp, update_user_erp, create_time, update_time, ts, yn, collect_claim, 
-            if_change_since_last_update,version,route_error_type
+            if_change_since_last_update,version,route_error_type,
+        support_deputy_receive_site,deputy_box_receive_id,
+        deputy_box_receive_name,deputy_box_pkg_name
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         <!--@mbg.generated-->
@@ -71,7 +77,9 @@
                                                      box_receive_name, box_pkg_name, transport_type,
                                                      flow_type, create_user_erp, update_user_erp,
                                                      create_time, update_time, ts,
-                                                     yn,collect_claim,if_change_since_last_update,route_error_type)
+                                                     yn,collect_claim,if_change_since_last_update,route_error_type,
+                                                    support_deputy_receive_site,deputy_box_receive_id,
+                                                    deputy_box_receive_name,deputy_box_pkg_name)
         values (#{startOrgId,jdbcType=INTEGER}, #{startOrgName,jdbcType=VARCHAR}, #{startSiteId,jdbcType=INTEGER},
                 #{startSiteName,jdbcType=VARCHAR}, #{endOrgId,jdbcType=INTEGER}, #{endOrgName,jdbcType=VARCHAR},
                 #{startProvinceAgencyCode,jdbcType=VARCHAR},#{startProvinceAgencyName,jdbcType=VARCHAR},#{startAreaHubCode,jdbcType=VARCHAR},#{startAreaHubName,jdbcType=VARCHAR},
@@ -81,7 +89,9 @@
                 #{flowType,jdbcType=INTEGER}, #{createUserErp,jdbcType=VARCHAR}, #{updateUserErp,jdbcType=VARCHAR},
                 #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{ts,jdbcType=TIMESTAMP},
                 #{yn,jdbcType=BOOLEAN},#{collectClaim,jdbcType=INTEGER},#{ifChangeSinceLastUpdate,jdbcType=INTEGER},
-        #{routeErrorType,jdbcType=INTEGER})
+        #{routeErrorType,jdbcType=INTEGER},
+        #{supportDeputyReceiveSite,jdbcType=INTEGER},#{deputyBoxReceiveId,jdbcType=INTEGER},
+        #{deputyBoxReceiveName,jdbcType=VARCHAR},#{deputyBoxPkgName,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id"
             parameterType="com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf" useGeneratedKeys="true">
@@ -179,8 +189,21 @@
                 version,
             </if>
             <if test="routeErrorType != null">
-                route_error_type
+                route_error_type,
             </if>
+            <if test="supportDeputyReceiveSite != null">
+                support_deputy_receive_site,
+            </if>
+            <if test="deputyBoxReceiveId != null">
+                deputy_box_receive_id,
+            </if>
+            <if test="deputyBoxReceiveName != null">
+                deputy_box_receive_name,
+            </if>
+            <if test="deputyBoxPkgName != null">
+                deputy_box_pkg_name
+            </if>
+
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="startOrgId != null">
@@ -274,7 +297,19 @@
                 #{version,jdbcType=VARCHAR},
             </if>
             <if test="routeErrorType != null">
-                #{routeErrorType,jdbcType=INTEGER}
+                #{routeErrorType,jdbcType=INTEGER},
+            </if>
+            <if test="supportDeputyReceiveSite != null">
+                #{supportDeputyReceiveSite,jdbcType=INTEGER},
+            </if>
+            <if test="deputyBoxReceiveId != null">
+                #{deputyBoxReceiveId,jdbcType=VARCHAR},
+            </if>
+            <if test="deputyBoxReceiveName != null">
+                #{deputyBoxReceiveName,jdbcType=VARCHAR},
+            </if>
+            <if test="deputyBoxPkgName != null">
+                #{deputyBoxPkgName,jdbcType=VARCHAR}
             </if>
         </trim>
     </insert>
@@ -374,7 +409,19 @@
                 version = #{version,jdbcType=VARCHAR},
             </if>
             <if test="routeErrorType != null">
-                route_error_type = #{routeErrorType,jdbcType=INTEGER}
+                route_error_type = #{routeErrorType,jdbcType=INTEGER},
+            </if>
+            <if test="supportDeputyReceiveSite != null">
+                support_deputy_receive_site = #{supportDeputyReceiveSite,jdbcType=INTEGER},
+            </if>
+            <if test="deputyBoxReceiveId != null">
+                deputy_box_receive_id = #{deputyBoxReceiveId,jdbcType=INTEGER},
+            </if>
+            <if test="deputyBoxReceiveName != null">
+                deputy_box_receive_name = #{deputyBoxReceiveName,jdbcType=VARCHAR},
+            </if>
+            <if test="deputyBoxPkgName != null">
+                deputy_box_pkg_name = #{deputyBoxPkgName,jdbcType=VARCHAR}
             </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
@@ -411,7 +458,11 @@
             yn               = #{yn,jdbcType=BOOLEAN},
             collect_claim    = #{collectClaim,jdbcType=INTEGER},
             if_change_since_last_update = #{ifChangeSinceLastUpdate,jdbcType=INTEGER},
-             route_error_type = #{routeErrorType,jdbcType=INTEGER}
+             route_error_type = #{routeErrorType,jdbcType=INTEGER},
+        support_deputy_receive_site = #{supportDeputyReceiveSite,jdbcType=INTEGER},
+        deputy_box_receive_id = #{deputyBoxReceiveId,jdbcType=INTEGER},
+        deputy_box_receive_name = #{deputyBoxReceiveName,jdbcType=VARCHAR},
+        deputy_box_pkg_name = #{deputyBoxPkgName,jdbcType=VARCHAR}
         where id = #{id,jdbcType=BIGINT}
     </update>
 
@@ -477,6 +528,18 @@
         <if test="version != null">
             and (version = #{version,jdbcType=VARCHAR} or version is null)
         </if>
+        <if test="supportDeputyReceiveSite != null">
+            and support_deputy_receive_site = #{supportDeputyReceiveSite,jdbcType=INTEGER}
+        </if>
+        <if test="deputyBoxReceiveId != null">
+            and deputy_box_receive_id = #{deputyBoxReceiveId,jdbcType=INTEGER}
+        </if>
+        <if test="deputyBoxReceiveName != null">
+            and deputy_box_receive_name = #{deputyBoxReceiveName,jdbcType=VARCHAR}
+        </if>
+        <if test="deputyBoxPkgName != null">
+            and deputy_box_pkg_name = #{deputyBoxPkgName,jdbcType=VARCHAR}
+        </if>
     </select>
 
     <select id="select" resultMap="BaseResultMap">
@@ -539,6 +602,18 @@
         </if>
         <if test="version != null">
             and (version = #{version,jdbcType=VARCHAR} or version is null)
+        </if>
+        <if test="supportDeputyReceiveSite != null">
+            and support_deputy_receive_site = #{supportDeputyReceiveSite,jdbcType=INTEGER}
+        </if>
+        <if test="deputyBoxReceiveId != null">
+            and deputy_box_receive_id = #{deputyBoxReceiveId,jdbcType=INTEGER}
+        </if>
+        <if test="deputyBoxReceiveName != null">
+            and deputy_box_receive_name = #{deputyBoxReceiveName,jdbcType=VARCHAR}
+        </if>
+        <if test="deputyBoxPkgName != null">
+            and deputy_box_pkg_name = #{deputyBoxPkgName,jdbcType=VARCHAR}
         </if>
     </select>
 
@@ -638,7 +713,18 @@
         <if test="conf.version != null">
             and (version = #{conf.version,jdbcType=VARCHAR} or version is null)
         </if>
-        
+        <if test="conf.supportDeputyReceiveSite != null">
+            and support_deputy_receive_site = #{conf.supportDeputyReceiveSite,jdbcType=INTEGER}
+        </if>
+        <if test="conf.deputyBoxReceiveId != null">
+            and deputy_box_receive_id = #{conf.deputyBoxReceiveId,jdbcType=INTEGER}
+        </if>
+        <if test="conf.deputyBoxReceiveName != null">
+            and deputy_box_receive_name = #{conf.deputyBoxReceiveName,jdbcType=VARCHAR}
+        </if>
+        <if test="conf.deputyBoxPkgName != null">
+            and deputy_box_pkg_name = #{conf.deputyBoxPkgName,jdbcType=VARCHAR}
+        </if>
     </select>
 
     <select id="selectByStartSiteIdAndEndSiteIds" resultMap="BaseResultMap">
@@ -708,6 +794,18 @@
         <if test="version != null">
             and (version = #{version,jdbcType=VARCHAR} or version is null)
         </if>
+        <if test="supportDeputyReceiveSite != null">
+            and support_deputy_receive_site = #{supportDeputyReceiveSite,jdbcType=INTEGER}
+        </if>
+        <if test="deputyBoxReceiveId != null">
+            and deputy_box_receive_id = #{deputyBoxReceiveId,jdbcType=INTEGER}
+        </if>
+        <if test="deputyBoxReceiveName != null">
+            and deputy_box_receive_name = #{deputyBoxReceiveName,jdbcType=VARCHAR}
+        </if>
+        <if test="deputyBoxPkgName != null">
+            and deputy_box_pkg_name = #{deputyBoxPkgName,jdbcType=VARCHAR}
+        </if>
     </select>
     <select id="selectPageById" resultMap="BaseResultMap">
         select
@@ -769,6 +867,18 @@
                 </if>
                 <if test="item.endAreaHubName != null and item.endAreaHubName != ''" >
                     end_area_hub_name = #{item.endAreaHubName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.supportDeputyReceiveSite != null">
+                    and support_deputy_receive_site = #{item.supportDeputyReceiveSite,jdbcType=INTEGER}
+                </if>
+                <if test="item.deputyBoxReceiveId != null">
+                    and deputy_box_receive_id = #{item.deputyBoxReceiveId,jdbcType=INTEGER}
+                </if>
+                <if test="item.deputyBoxReceiveName != null">
+                    and deputy_box_receive_name = #{item.deputyBoxReceiveName,jdbcType=VARCHAR}
+                </if>
+                <if test="item.deputyBoxPkgName != null">
+                    and deputy_box_pkg_name = #{item.deputyBoxPkgName,jdbcType=VARCHAR}
                 </if>
                 update_time = now()
             </set>

@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.service.site;
 
 import com.google.common.collect.Lists;
 import com.jd.etms.framework.utils.cache.annotation.Cache;
+import com.jd.jsf.gd.util.RpcContext;
 import com.jd.ql.basic.domain.BaseSite;
 import com.jd.ql.basic.domain.PsStoreInfo;
 import com.jd.ql.basic.dto.BaseSiteSimpleDto;
@@ -190,6 +191,8 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
      */
     @Override
     public Result<List<BasicSiteVO>> querySiteByConditionFromBasicSite(SiteQueryCondition siteQueryCondition, Integer limit) {
+        logger.info("BaseSiteQueryServiceImpl.querySiteByConditionFromBasicSite,ip:{},rep:{}",
+                RpcContext.getContext().getRemoteHostName(),JsonHelper.toJSONString(siteQueryCondition));
         Result<List<BasicSiteVO>> baseEntity = new Result<List<BasicSiteVO>>();
         baseEntity.setData(Lists.newArrayList());
         CallerInfo info = Profiler.registerInfo("com.jdl.basic.api.service.site.SiteQueryService.querySiteFromBasic",
@@ -465,6 +468,8 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
      */
     @Override
     public Result<Pager<BasicSiteVO>> querySitePageByConditionFromBasicSite(Pager<SiteQueryCondition> siteQueryPager) {
+        logger.info("BaseSiteQueryServiceImpl.querySitePageByConditionFromBasicSite,ip:{},rep:{}",
+                RpcContext.getContext().getRemoteHostName(),JsonHelper.toJSONString(siteQueryPager));
         CallerInfo info = Profiler.registerInfo("com.jdl.basic.api.service.site.SiteQueryService.queryPageSiteFromExternal",
                 false, true);
         Result<Pager<BasicSiteVO>> result = new Result<Pager<BasicSiteVO>>();
@@ -641,6 +646,8 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
 
     @Override
     public Result<Pager<BasicSiteVO>> queryJySiteByConditionFromBasicSite(Pager<SiteQueryCondition> siteQueryPager) {
+        logger.info("BaseSiteQueryServiceImpl.queryJySiteByConditionFromBasicSite,ip:{},rep:{}",
+                RpcContext.getContext().getRemoteHostName(),JsonHelper.toJSONString(siteQueryPager));
         checkSiteQueryPager(siteQueryPager);
         Result<Pager<BasicSiteVO>> result = assemblePageResult(siteQueryPager);
         if(checkIsQueryJySite(siteQueryPager.getSearchVo().getSubTypes())){

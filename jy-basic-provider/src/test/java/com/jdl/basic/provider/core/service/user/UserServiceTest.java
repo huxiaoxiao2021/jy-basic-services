@@ -3,10 +3,7 @@ package com.jdl.basic.provider.core.service.user;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.jd.dms.java.utils.sdk.base.Result;
-import com.jdl.basic.api.domain.user.JyUser;
-import com.jdl.basic.api.domain.user.JyUserBatchRequest;
-import com.jdl.basic.api.domain.user.JyUserQueryDto;
-import com.jdl.basic.api.domain.user.UserChangeDto;
+import com.jdl.basic.api.domain.user.*;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.provider.config.cache.CacheService;
 import com.jdl.basic.provider.core.service.user.model.JyUserQueryCondition;
@@ -121,4 +118,5 @@ public class UserServiceTest {
         Result<List<JyUser>> result = userService.queryNatureUndistributedUsers(condition);
         log.info("{}", JsonHelper.toJSONString(result));
     }
+
 }
