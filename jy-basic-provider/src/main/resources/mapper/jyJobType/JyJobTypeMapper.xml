@@ -222,7 +222,9 @@
             <if test="code != null">
                 AND code = #{code,jdbcType=TINYINT}
             </if>
+            <if test="id != null">
+                AND id != #{id,jdbcType=TINYINT}
+            </if>
         </where>
-        and id != #{id,jdbcType=BIGINT}
     </select>
 </mapper>
