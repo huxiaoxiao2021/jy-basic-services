@@ -66,7 +66,7 @@ public class WorkGridScheduleJsfServiceImpl implements WorkGridScheduleJsfServic
     }
 
     @Override
-    public Result<List<WorkGridSchedule>> listValidWorkGridScheduleByTime(ValidWorkGridScheduleRequest request) {
+    public Result<List<ScheduleValidTimeDto>> listValidWorkGridScheduleByTime(ValidWorkGridScheduleRequest request) {
         return workGridScheduleService.listValidWorkGridScheduleByTime(request);
     }
 }

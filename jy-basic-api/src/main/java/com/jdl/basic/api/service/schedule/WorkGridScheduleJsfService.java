@@ -82,5 +82,5 @@ public interface WorkGridScheduleJsfService {
      * @param request
      * @return
      */
-    Result<List<WorkGridSchedule>> listValidWorkGridScheduleByTime(ValidWorkGridScheduleRequest request);
+    Result<List<ScheduleValidTimeDto>> listValidWorkGridScheduleByTime(ValidWorkGridScheduleRequest request);
 }

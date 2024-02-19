@@ -4,6 +4,7 @@ import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.schedule.*;
 import com.jdl.basic.api.enums.ScheduleTypeEnum;
 import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.ApplicationLaunch;
 import lombok.extern.slf4j.Slf4j;
@@ -79,11 +80,13 @@ public class WorkGridScheduleServiceTest {
 
     @Test
     public void listValidWorkGridScheduleByTime() {
-//        ValidWorkGridScheduleRequest request = new ValidWorkGridScheduleRequest();
-//        request.setWorkGridKey();
-//        request.setValidTime();
-//        request.setInvalidTime();
-//        Result<List<WorkGridSchedule>> result = workGridScheduleService.listValidWorkGridScheduleByTime(request);
-//        log.info("result {}",result);
+        ValidWorkGridScheduleRequest request = new ValidWorkGridScheduleRequest();
+        request.setWorkGridKey("CDWG00000038006");
+        Date validTime = DateHelper.parseDate("2024-02-18 00:00:00", DateHelper.DATE_FORMAT);
+        Date invalidTime = DateHelper.parseDate("2024-02-19 00:00:00", DateHelper.DATE_FORMAT);
+        request.setValidTime(validTime);
+        request.setInvalidTime(invalidTime);
+        Result<List<ScheduleValidTimeDto>> result = workGridScheduleService.listValidWorkGridScheduleByTime(request);
+        log.info("result {}",result);
     }
 }

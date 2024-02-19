@@ -39,5 +39,5 @@ public interface WorkGridScheduleService {
      * @param request
      * @return
      */
-    Result<List<WorkGridSchedule>> listValidWorkGridScheduleByTime(ValidWorkGridScheduleRequest request);
+    Result<List<ScheduleValidTimeDto>> listValidWorkGridScheduleByTime(ValidWorkGridScheduleRequest request);
 }

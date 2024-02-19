@@ -23,11 +23,13 @@
     <result column="ts" jdbcType="TIMESTAMP" property="ts" />
     <result column="old_start_time" jdbcType="VARCHAR" property="oldStartTime" />
     <result column="old_end_time" jdbcType="VARCHAR" property="oldEndTime" />
+    <result column="valid_time" jdbcType="TIMESTAMP" property="validTime"/>
+    <result column="invalid_time" jdbcType="TIMESTAMP" property="invalidTime"/>
   </resultMap>
   <sql id="Base_Column_List">
     id, work_grid_key, schedule_no, schedule_key, schedule_name, start_time, end_time,
     schedule_type, source_type, site_code, area_code, yn, create_time, update_time, create_user_erp, create_user_name, update_user_erp,
-    update_user_name, ts, old_start_time, old_end_time
+    update_user_name, ts, old_start_time, old_end_time, valid_time, invalid_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
