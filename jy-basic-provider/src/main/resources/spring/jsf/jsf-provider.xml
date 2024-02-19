@@ -368,5 +368,13 @@
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
+    <!-- 拣运工种配置 -->
+    <jsf:provider id="jyJobTypeJsf"
+                  timeout="1000000"
+                  interface="com.jdl.basic.api.service.jyJobType.JyJobTypeJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="jyJobTypeJsfService"
+                  server="jsf">
+    </jsf:provider>
 </beans>
 
