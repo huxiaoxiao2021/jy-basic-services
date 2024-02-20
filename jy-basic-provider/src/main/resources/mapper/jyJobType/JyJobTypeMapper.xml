@@ -185,6 +185,7 @@
         from
         jy_job_type t
         <include refid="queryCondition"/>
+        order by id
         limit #{offset}, #{limit}
     </select>
 
@@ -194,6 +195,7 @@
         from
         jy_job_type t
         <include refid="queryCondition"/>
+        order by id
     </select>
 
     <sql id="queryCondition">
@@ -226,5 +228,17 @@
                 AND id != #{id,jdbcType=TINYINT}
             </if>
         </where>
+        order by id
+    </select>
+
+    <select id="queryALlList" resultMap="JobType">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        jy_job_type t
+        <where>
+            yn = 1
+        </where>
+        order by id
     </select>
 </mapper>

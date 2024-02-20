@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -124,6 +125,17 @@ public class JyJobTypeServiceImpl implements JyJobTypeService {
             result.toSuccess();
         } catch (Exception e) {
             result.setMessage("查询拣运工种异常！");
+            log.error("查询拣运工种异常,异常信息:【{}】", e.getMessage(), e);
+        }
+        return result;
+    }
+
+    @Override
+    public List<JyJobType> queryALlList() {
+        List<JyJobType> result = new ArrayList<>();
+        try {
+            result = jyJobTypeDao.queryALlList();
+        } catch (Exception e) {
             log.error("查询拣运工种异常,异常信息:【{}】", e.getMessage(), e);
         }
         return result;

@@ -67,4 +67,9 @@ public interface JyJobTypeDao {
      */
     List<JyJobType> queryListByCondition(JyJobType query);
 
+    /**
+     * 查询所有JyJobType列表
+     * @return JyJobType列表
+     */
+    List<JyJobType> queryALlList();
 }

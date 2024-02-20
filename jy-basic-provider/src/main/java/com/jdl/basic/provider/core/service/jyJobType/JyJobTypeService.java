@@ -44,4 +44,11 @@ public interface JyJobTypeService {
      * @return 符合条件的JyJobType列表
      */
     Result<List<JyJobType>> queryListByCondition(JyJobType query);
+
+    /**
+     * 查询所有JyJobType列表
+     * @return JyJobType列表
+     */
+    List<JyJobType> queryALlList();
+
 }
