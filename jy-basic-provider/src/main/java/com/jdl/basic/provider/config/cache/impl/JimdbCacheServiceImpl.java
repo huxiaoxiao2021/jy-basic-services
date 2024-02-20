@@ -318,14 +318,6 @@ public class JimdbCacheServiceImpl implements CacheService {
 	}
 
 	@Override
-	public KeyScanResult<String> scan(String cursor, ScanOptions options) {
-		if (StringUtils.isEmpty(cursor) || options == null) {
-			return null;
-		}
-		return jimdbClient.scan(cursor, options);
-	}
-
-	@Override
 	public boolean del(String... keys) {
 		if (keys == null || keys.length == 0) {
 			return true;
