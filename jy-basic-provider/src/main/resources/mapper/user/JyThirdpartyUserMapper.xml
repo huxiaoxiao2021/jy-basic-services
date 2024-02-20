@@ -439,6 +439,9 @@
           and deadline_time >= #{scheduleDate}
           and nature =#{nature}
         and task_type =1
+        <if test="userCode != null">
+          and user_code_index = #{userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
+        </if>
   </select>
 
   <select id="queryJyThirdpartyUserUnderNormalTask" resultMap="BaseResultMap">
@@ -449,6 +452,9 @@
     and present_date = #{scheduleDate}
     and nature =#{nature}
     and task_type =2
+    <if test="userCode != null">
+      and user_code_index = #{userCode, typeHandler=com.jd.security.aces.mybatis.handle.AcesIndexHandle}
+    </if>
   </select>
 
   <select id="queryTpUserByUserCodeUnderDacuTask" resultMap="BaseResultMap">
@@ -606,4 +612,5 @@
     and         present_date = #{scheduleDate}
     and         task_type =2
   </select>
+  
 </mapper>

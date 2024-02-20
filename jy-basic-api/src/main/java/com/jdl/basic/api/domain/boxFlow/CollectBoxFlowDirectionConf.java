@@ -200,5 +200,6 @@ public class CollectBoxFlowDirectionConf {
      */
     private String deputyBoxReceiveName;
 
+    
 
 }
