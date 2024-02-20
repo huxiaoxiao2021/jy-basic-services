@@ -272,4 +272,8 @@ public class Constants {
 
     public static final String COLON = ":";
 
+    /**
+     * 班次开始时间前n个小时班次即开始生效
+     */
+    public static final Integer SCHEDULE_VALID_BEFORE_HOUR = 1;
 }

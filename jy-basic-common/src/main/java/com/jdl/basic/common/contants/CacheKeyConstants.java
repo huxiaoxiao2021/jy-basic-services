@@ -305,8 +305,8 @@ public class CacheKeyConstants {
     public static final String CACHE_KEY_SEARCH_SITE_USER = "k_search_site_users:%s";
 
     /**
-     * 网格某天有效的班次key
-     * 3个%s分别对应网格、开始时间、结束时间
+     * 网格所有设置过的班次
+     * %s对应网格
      */
-    public static final String CACHE_KEY_VALID_WORK_GRID_SCHEDULE = "work_grid_schedule_%s_%s_%s";
+    public static final String CACHE_KEY_ALL_VALID_WORK_GRID_SCHEDULE_IGNORE_YN = "all_valid_work_grid_schedule:%s";
 }

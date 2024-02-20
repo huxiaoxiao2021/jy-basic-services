@@ -19,6 +19,7 @@ public interface WorkGridScheduleDao {
 
     List<WorkGridSchedule> batchQueryByWorkGridKey(WorkGridScheduleBatchRequest request);
 
+    @Deprecated
     boolean batchDeleteByWorkGridKey(WorkGridScheduleBatchRequest request);
 
     boolean batchInsert(WorkGridScheduleBatchRequest request);

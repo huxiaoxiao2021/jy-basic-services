@@ -19,6 +19,7 @@ public interface WorkGridScheduleJsfService {
      * @param request
      * @return
      */
+    @Deprecated
     Result<Boolean> batchDeleteByWorkGridKey(WorkGridScheduleBatchRequest request);
 
     /**
@@ -82,5 +83,5 @@ public interface WorkGridScheduleJsfService {
      * @param request
      * @return
      */
-    Result<List<ScheduleValidTimeDto>> listValidWorkGridScheduleByTime(ValidWorkGridScheduleRequest request);
+    Result<List<ScheduleValidTimeDto>> listValidCutWorkGridScheduleByTime(ValidWorkGridScheduleRequest request);
 }

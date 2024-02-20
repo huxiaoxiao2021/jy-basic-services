@@ -407,11 +407,5 @@
     select  <include refid="Base_Column_List"/>
     from    work_grid_schedule
     where   work_grid_key = #{workGridKey}
-
-    and     (valid_time <![CDATA[ >= ]]> #{validTime}
-    and     valid_time <![CDATA[ <= ]]> #{invalidTime})
-
-    or      (invalid_time <![CDATA[ >= ]]> #{validTime}
-    and     invalid_time <![CDATA[ <= ]]> #{validTime})
   </select>
 </mapper>

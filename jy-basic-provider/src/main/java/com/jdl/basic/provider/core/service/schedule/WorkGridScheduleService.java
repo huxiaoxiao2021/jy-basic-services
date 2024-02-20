@@ -9,6 +9,7 @@ public interface WorkGridScheduleService {
 
     Result<List<WorkGridSchedule>> batchQueryByWorkGridKey(WorkGridScheduleBatchRequest request);
 
+    @Deprecated
     Result<Boolean> batchDeleteByWorkGridKey(WorkGridScheduleBatchRequest request);
 
     Result<Boolean> batchInsert(WorkGridScheduleBatchRequest request);
@@ -39,5 +40,5 @@ public interface WorkGridScheduleService {
      * @param request
      * @return
      */
-    Result<List<ScheduleValidTimeDto>> listValidWorkGridScheduleByTime(ValidWorkGridScheduleRequest request);
+    Result<List<ScheduleValidTimeDto>> listValidCutWorkGridScheduleByTime(ValidWorkGridScheduleRequest request);
 }

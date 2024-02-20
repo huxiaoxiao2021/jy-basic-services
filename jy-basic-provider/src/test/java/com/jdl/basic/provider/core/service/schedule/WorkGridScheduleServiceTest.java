@@ -1,13 +1,18 @@
 package com.jdl.basic.provider.core.service.schedule;
 
 import com.jd.dms.java.utils.sdk.base.Result;
+import com.jd.jim.cli.driver.types.KeyScanResult;
+import com.jd.jim.cli.driver.types.ScanOptions;
 import com.jdl.basic.api.domain.schedule.*;
 import com.jdl.basic.api.enums.ScheduleTypeEnum;
+import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.ApplicationLaunch;
+import com.jdl.basic.provider.config.cache.CacheService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @RunWith(SpringRunner.class)
@@ -28,6 +29,9 @@ public class WorkGridScheduleServiceTest {
 
     @Autowired
     private WorkGridScheduleService workGridScheduleService;
+
+    @Autowired
+    CacheService jimdbCacheService;
 
     public void batchInsert() {
 
@@ -86,7 +90,7 @@ public class WorkGridScheduleServiceTest {
         Date invalidTime = DateHelper.parseDate("2024-02-19 00:00:00", DateHelper.DATE_FORMAT);
         request.setValidTime(validTime);
         request.setInvalidTime(invalidTime);
-        Result<List<ScheduleValidTimeDto>> result = workGridScheduleService.listValidWorkGridScheduleByTime(request);
+        Result<List<ScheduleValidTimeDto>> result = workGridScheduleService.listValidCutWorkGridScheduleByTime(request);
         log.info("result {}",result);
     }
 }
