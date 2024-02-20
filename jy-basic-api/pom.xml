@@ -12,7 +12,7 @@
 
     <groupId>com.jdl.basic</groupId>
     <artifactId>jy-basic-api</artifactId>
-    <version>1.7.5-SNAPSHOT</version>
+    <version>1.7.6-SNAPSHOT</version>
     <name>jy-basic-api</name>
     <description>基础信息服务api</description>
 
@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.jdl.basic</groupId>
             <artifactId>jy-basic-common</artifactId>
-            <version>1.5.3-SNAPSHOT</version>
+            <version>1.5.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
