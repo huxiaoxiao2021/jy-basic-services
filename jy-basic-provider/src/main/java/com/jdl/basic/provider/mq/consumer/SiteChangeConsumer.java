@@ -84,7 +84,7 @@ public class SiteChangeConsumer {
         } catch (BlockException e) {
             // 发生限流/熔断事件时，触发BlockException
             log.warn("消费站点变更消息时触发限流,{}",JsonHelper.toJSONString(mq), e);
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException("消费站点变更消息时触发限流");
         } finally {
             if (entry != null) {
                 // 清理API，用于清理资源和采集访问时延，为监控和熔断等服务提供数据
