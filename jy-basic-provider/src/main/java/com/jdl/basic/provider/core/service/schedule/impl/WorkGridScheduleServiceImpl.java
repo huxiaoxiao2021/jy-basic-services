@@ -95,7 +95,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
                 //设置有效开始时间
                 insertSchedule.setValidTime(getScheduleDateTimeOfSpecifiedDate(new Date(), insertSchedule.getStartTime(), true));
             } else {
-                insertSchedule.setValidTime(getScheduleDateTimeOfSpecifiedDate(new Date(), insertSchedule.getEndTime(), false));
+                insertSchedule.setValidTime(getScheduleDateTimeOfSpecifiedDate(new Date(), insertSchedule.getStartTime(), false));
             }
         }
     }
