@@ -256,12 +256,13 @@ public class WorkStationServiceImpl implements WorkStationService {
 			return result;
 		}
 		//查询租户配置表，校验业务条线是否属于该租户权限
-		JyConfigDictTenant dataBaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.TENANT_BUSINESS_LINE.getCode(), businessLineCode);
-		if(dataBaseTenant == null || !Objects.equals(TenantContext.getTenantCode(),dataBaseTenant.getBelongTenantCode())){
-			result.toFail("当前用户没有" + currBusiEnum.getName() + "的操作权限");
-			return result;
+		if(StringUtils.isNotBlank(TenantContext.getTenantCode())){
+			JyConfigDictTenant dataBaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.TENANT_BUSINESS_LINE.getCode(), businessLineCode);
+			if(dataBaseTenant == null || !Objects.equals(TenantContext.getTenantCode(),dataBaseTenant.getBelongTenantCode())){
+				result.toFail("当前用户没有" + currBusiEnum.getName() + "的操作权限");
+				return result;
+			}
 		}
-
 		data.setBusinessLineName(currBusiEnum.getName());
 		return result;
 	}

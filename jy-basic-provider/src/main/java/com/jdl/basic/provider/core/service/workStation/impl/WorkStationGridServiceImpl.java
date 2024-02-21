@@ -283,9 +283,11 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			return result.toFail(siteInfo.getSiteName() + "场地的新三级分类未维护,请联系运维人员维护");
 		}
 		//根据code查询租户配置表信息
-		JyConfigDictTenant dataBaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.TENANT_SITE_TYPE.getCode(),String.valueOf(currWorkSiteTypeEnum.getCode()));
-		if(dataBaseTenant == null || !Objects.equals(TenantContext.getTenantCode(),dataBaseTenant.getBelongTenantCode())){
-			return result.toFail("当前用户没有" + siteInfo.getSiteName() + "的操作权限！");
+		if(StringUtils.isNotBlank(TenantContext.getTenantCode())) {
+			JyConfigDictTenant dataBaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.TENANT_SITE_TYPE.getCode(), String.valueOf(currWorkSiteTypeEnum.getCode()));
+			if (dataBaseTenant == null || !Objects.equals(TenantContext.getTenantCode(), dataBaseTenant.getBelongTenantCode())) {
+				return result.toFail("当前用户没有" + siteInfo.getSiteName() + "的操作权限！");
+			}
 		}
 		fillSiteInfo(data, siteInfo);
 
