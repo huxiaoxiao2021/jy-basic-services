@@ -96,5 +96,15 @@ public class PositionData implements Serializable {
 	/**
 	 * 关联场地网格key:work_grid
 	 */
-	private String refWorkGridKey;    
+	private String refWorkGridKey;
+
+    /**
+     * 业务条线编码
+     */
+    private String businessLineCode;
+
+    /**
+     * 业务条线名称
+     */
+    private String businessLineName;
 }

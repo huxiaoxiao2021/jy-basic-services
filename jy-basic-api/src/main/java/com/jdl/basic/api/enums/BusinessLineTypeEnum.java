@@ -14,6 +14,7 @@ public enum BusinessLineTypeEnum {
     BUSINESS_AIR_RAIL("4", "空铁"),
     BUSINESS_COLD_CENTER("5", "冷链"),
     BUSINESS_MEDICINE_CENTER("6", "医药"),
+    BUSINESS_REVERSE("7", "逆向"),
     ;
 
     BusinessLineTypeEnum(String code, String name) {
