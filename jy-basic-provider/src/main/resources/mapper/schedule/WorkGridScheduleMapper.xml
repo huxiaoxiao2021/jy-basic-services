@@ -288,8 +288,7 @@
         update_user_name,
         old_start_time,
         old_end_time,
-        valid_time,
-        invalid_time
+        valid_time
     )
     values
     <foreach collection="workGridSchedules" item="item" separator=",">
@@ -312,8 +311,7 @@
         #{item.updateUserName},
         #{item.oldStartTime},
         #{item.oldEndTime},
-        #{item.validTime},
-        #{item.invalidTime}
+        #{item.validTime}
       )
     </foreach>
   </insert>
