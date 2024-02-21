@@ -242,7 +242,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
                 Date invalidTime = getScheduleDateTimeOfSpecifiedDate(new Date(), deleteSchedule.getEndTime(), crossDayFlag);
                 deleteSchedule.setInvalidTime(invalidTime);
             } else {
-                deleteSchedule.setInvalidTime(new Date());
+                deleteSchedule.setInvalidTime(getScheduleDateTimeOfSpecifiedDate(new Date(), deleteSchedule.getEndTime(), false));
             }
         }
     }
