@@ -412,7 +412,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
 
                 // 以下yn = 0的
                 // 删除时间不在班次有效开始时间之前  证明该班次生效过
-                if (!item.getUpdateTime().before(item.getValidTime())) {
+                if (item.getYn().intValue() != Constants.CONSTANT_NUMBER_ONE &&!item.getUpdateTime().before(item.getValidTime())) {
                     return true;
                 }
                 return false;
@@ -436,7 +436,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
             Date dateTimeOfStartTime = DateUtils.addMinutes(DateUtils.addHours(DateUtils.truncate(request.getValidTime(), Calendar.DATE), hour), minute);
             // 查询开始时间在班次的时间范围内  或者  查询结束时间在班次的时间范围内
             // 且班次当天开始时间不在班次失效时间之前
-            if ((validFlag || invalidFlag) && !workGridSchedule.getInvalidTime().before(dateTimeOfStartTime)){
+            if (validFlag || invalidFlag){
                 ScheduleValidTimeDto validTimeDto = getValidTimeDto(workGridSchedule, request);
                 retList.add(validTimeDto);
             }
