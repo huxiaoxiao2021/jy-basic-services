@@ -21,10 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -76,7 +73,6 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         if (CollectionUtils.isEmpty(request.getWorkGridSchedules())) {
             return result.toFail("班次时间插入记录不能为空！");
         }
-        setValidTime(request.getWorkGridSchedules());
         Boolean insertResult = workGridScheduleDao.batchInsert(request);
         if (!insertResult) {
             log.warn("WorkGridScheduleServiceImpl batchInsert 执行失败！");
@@ -87,15 +83,49 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         return result.setData(insertResult);
     }
 
+    /**
+     * 班次是否立即生效
+     * @param updateWorkGridSchedule
+     * @return
+     */
+    private boolean isImmediatelyValid(WorkGridSchedule updateWorkGridSchedule) {
+        Date effectiveStartTime = DateUtils.addHours(DateHelper.parseDate(DateHelper.getDateOfHH_mm(new Date()), DateHelper.DATE_FORMAT_TIME_HH_mm), Constants.SCHEDULE_VALID_BEFORE_HOUR);
+        Date scheduleStartTime = DateHelper.parseDate(updateWorkGridSchedule.getStartTime(), DateHelper.DATE_FORMAT_TIME_HH_mm);
+        return effectiveStartTime.before(scheduleStartTime);
+    }
+
     private void setValidTime(List<WorkGridSchedule> insertSchedules) {
+        if (CollectionUtils.isEmpty(insertSchedules)) {
+            return;
+        }
+        List<String> scheduleKeys = insertSchedules.stream().map(WorkGridSchedule::getScheduleKey).distinct().collect(Collectors.toList());
+        BatchWorkGridScheduleQueryDto queryDto = new BatchWorkGridScheduleQueryDto();
+        queryDto.setScheduleKeyList(scheduleKeys);
+        List<WorkGridSchedule> currentSchedules = workGridScheduleDao.listWorkGridScheduleByKeys(queryDto);
+        Map<String, WorkGridSchedule> currentSchedulesMap = currentSchedules.stream().collect(Collectors.toMap(WorkGridSchedule::getScheduleKey, item -> item, (first, second) -> first));
         for (WorkGridSchedule insertSchedule : insertSchedules) {
-            // 班次未开始，立即生效
-            boolean immediatelyFlag = isScheduleNotBegin(insertSchedule);
-            if (immediatelyFlag) {
-                //设置有效开始时间
-                insertSchedule.setValidTime(getScheduleDateTimeOfSpecifiedDate(new Date(), insertSchedule.getStartTime(), 0));
+            WorkGridSchedule workGridSchedule = currentSchedulesMap.get(insertSchedule.getScheduleKey());
+            // 插入的班次是否立即生效
+            Date now = new Date();
+            boolean insertImmediatelyFlag = isImmediatelyValid(insertSchedule);
+            // workGridSchedule == null说明班次是新增的
+            if (workGridSchedule == null) {
+                // 新插入的且立即生效
+                if (insertImmediatelyFlag) {
+                    insertSchedule.setValidTime(getScheduleDateTimeOfSpecifiedDate(now, insertSchedule.getStartTime(), 0));
+                    // 新插入的且不立即生效
+                } else {
+                    insertSchedule.setValidTime(getScheduleDateTimeOfSpecifiedDate(now, insertSchedule.getStartTime(), 1));
+                }
+                // 不是新增的
             } else {
-                insertSchedule.setValidTime(getScheduleDateTimeOfSpecifiedDate(new Date(), insertSchedule.getStartTime(), 1));
+                // 班次正在生效中的
+                if (isScheduleWorking(workGridSchedule)) {
+                    insertSchedule.setValidTime(getScheduleDateTimeOfSpecifiedDate(now, insertSchedule.getStartTime(), 1));
+                // 没有在生效的
+                } else {
+                    insertSchedule.setValidTime(getScheduleDateTimeOfSpecifiedDate(now, insertSchedule.getStartTime(), 0));
+                }
             }
         }
     }
@@ -115,6 +145,8 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         if (request.getUpdateTime() == null) {
             return result.toFail("修改时间不能为空！");
         }
+
+        setValidTime(request.getAddWorkGridSchedule());
 
         if (CollectionUtils.isNotEmpty(request.getDeleteWorkGridSchedule())) {
             WorkGridScheduleBatchRequest deleteRequest = buildScheduleBatchRequest(request, request.getDeleteWorkGridSchedule());
