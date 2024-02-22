@@ -86,10 +86,12 @@ public class WorkGridScheduleServiceTest {
     public void listValidWorkGridScheduleByTime() {
         ValidWorkGridScheduleRequest request = new ValidWorkGridScheduleRequest();
         request.setWorkGridKey("CDWG00000038006");
-        Date validTime = DateHelper.parseDate("2024-02-18 00:00:00", DateHelper.DATE_FORMAT);
-        Date invalidTime = DateHelper.parseDate("2024-02-19 00:00:00", DateHelper.DATE_FORMAT);
+        Date validTime = DateHelper.parseDate("2024-02-17 00:00:00", DateHelper.DATE_FORMAT);
+        Date invalidTime = DateHelper.parseDate("2024-02-18 00:00:00", DateHelper.DATE_FORMAT);
         request.setValidTime(validTime);
         request.setInvalidTime(invalidTime);
+        String cacheKey = String.format(CacheKeyConstants.CACHE_KEY_ALL_VALID_WORK_GRID_SCHEDULE_IGNORE_YN, request.getWorkGridKey());
+        jimdbCacheService.del(cacheKey);
         Result<List<ScheduleValidTimeDto>> result = workGridScheduleService.listValidCutWorkGridScheduleByTime(request);
         log.info("result {}",result);
     }

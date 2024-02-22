@@ -397,7 +397,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         if (StringUtils.isNotEmpty(json)) {
             validList = JSON.parseObject(json, new TypeReference<List<WorkGridSchedule>>(){});
         } else {
-
+            Date now = new Date();
             List<WorkGridSchedule> gridAllSchedule = workGridScheduleDao.listAllScheduleIgnoreYn(request);
             validList = gridAllSchedule.stream().filter(item -> {
                 if (item.getValidTime() == null || item.getInvalidTime() == null) {
@@ -405,8 +405,8 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
                 }
 
                 // 开始过滤生效过的班次
-                // yn = 1的直接是有效的
-                if (item.getYn().intValue() == Constants.CONSTANT_NUMBER_ONE) {
+                // yn = 1的且当前时间在生效时间之后是有效的
+                if (item.getYn().intValue() == Constants.CONSTANT_NUMBER_ONE && !now.before(item.getValidTime())) {
                     return true;
                 }
 

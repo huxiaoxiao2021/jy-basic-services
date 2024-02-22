@@ -8,6 +8,7 @@ import com.jd.ump.profiler.proxy.Profiler;
 import com.jdl.basic.api.domain.schedule.UserScheduleUpdateMQ;
 import com.jdl.basic.api.domain.schedule.WorkGridSchedule;
 import com.jdl.basic.api.domain.schedule.WorkGridScheduleBatchRequest;
+import com.jdl.basic.api.domain.schedule.WorkGridScheduleBatchUpdateRequest;
 import com.jdl.basic.api.domain.user.UserWorkGrid;
 import com.jdl.basic.api.domain.user.UserWorkGridBatchUpdateRequest;
 import com.jdl.basic.api.domain.user.UserWorkGridRequest;
@@ -128,13 +129,13 @@ public class WorkGridModifyConsumer {
             if (result != null && CollectionUtils.isNotEmpty(result.getData())) {
                 List<WorkGridSchedule> deleteWorkGridSchedules = result.getData();
 
-                WorkGridScheduleBatchRequest deleteRequest = new WorkGridScheduleBatchRequest();
-                deleteRequest.setWorkGridSchedules(deleteWorkGridSchedules);
+                WorkGridScheduleBatchUpdateRequest deleteRequest = new WorkGridScheduleBatchUpdateRequest();
+                deleteRequest.setDeleteWorkGridSchedule(deleteWorkGridSchedules);
                 deleteRequest.setSiteCode(siteCode);
                 deleteRequest.setUpdateUserErp(DELETE_WORK_GRID_RELEASE_RESOURCE);
                 deleteRequest.setUpdateUserName(DELETE_WORK_GRID_RELEASE_RESOURCE);
                 deleteRequest.setUpdateTime(mq.getOperateTime());
-                workGridScheduleService.batchDeleteByScheduleKey(deleteRequest);
+                workGridScheduleService.batchUpdateWorkGridSchedule(deleteRequest);
 
                 produceDeleteUserScheduleMessage(deleteWorkGridSchedules);
             }
