@@ -297,7 +297,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
     private Date getScheduleDateTimeOfSpecifiedDate(Date date, String scheduleTime, boolean addOneDayFlag) {
         // 立即生效是当天
         // 不是立即生效是明天
-        Date scheduleDateTime = addOneDayFlag ? DateUtils.truncate(date, Calendar.DATE) : DateUtils.truncate(DateUtils.addDays(date, 1), Calendar.DATE);
+        Date scheduleDateTime = addOneDayFlag ? DateUtils.truncate(DateUtils.addDays(date, 1), Calendar.DATE) : DateUtils.truncate(date, Calendar.DATE);
 
         String hourStr = scheduleTime.split(Constants.COLON)[0];
         String minStr = scheduleTime.split(Constants.COLON)[1];
