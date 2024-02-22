@@ -438,7 +438,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
             // 且班次当天开始时间不在班次失效时间之前
             if ((validFlag || invalidFlag) && !workGridSchedule.getInvalidTime().before(dateTimeOfStartTime)){
                 ScheduleValidTimeDto validTimeDto = getValidTimeDto(workGridSchedule, request);
-                validList.add(validTimeDto);
+                retList.add(validTimeDto);
             }
 
         }
