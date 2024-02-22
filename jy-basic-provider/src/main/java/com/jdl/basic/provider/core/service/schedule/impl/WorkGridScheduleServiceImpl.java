@@ -89,13 +89,13 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
 
     private void setValidTime(List<WorkGridSchedule> insertSchedules) {
         for (WorkGridSchedule insertSchedule : insertSchedules) {
-            // 班次未开始立即生效
+            // 班次未开始，立即生效
             boolean immediatelyFlag = isScheduleNotBegin(insertSchedule);
             if (immediatelyFlag) {
                 //设置有效开始时间
-                insertSchedule.setValidTime(getScheduleDateTimeOfSpecifiedDate(new Date(), insertSchedule.getStartTime(), true));
+                insertSchedule.setValidTime(getScheduleDateTimeOfSpecifiedDate(new Date(), insertSchedule.getStartTime(), 0));
             } else {
-                insertSchedule.setValidTime(getScheduleDateTimeOfSpecifiedDate(new Date(), insertSchedule.getStartTime(), false));
+                insertSchedule.setValidTime(getScheduleDateTimeOfSpecifiedDate(new Date(), insertSchedule.getStartTime(), 1));
             }
         }
     }
@@ -237,12 +237,37 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         for (WorkGridSchedule deleteSchedule : deleteSchedules) {
             // 是否跨夜
             boolean crossDayFlag = isCrossDay(deleteSchedule);
+            Date now = new Date();
+
             // 班次生效中
             if (isScheduleWorking(deleteSchedule)) {
-                Date invalidTime = getScheduleDateTimeOfSpecifiedDate(new Date(), deleteSchedule.getEndTime(), crossDayFlag);
-                deleteSchedule.setInvalidTime(invalidTime);
+                Date invalidTime = getScheduleDateTimeOfSpecifiedDate(now, deleteSchedule.getEndTime(), 0);
+                // 跨夜场景
+                if (crossDayFlag) {
+                    // 后半夜 所以失效时间是当天
+                    if (!now.after(invalidTime)) {
+                        deleteSchedule.setInvalidTime(invalidTime);
+                        // 前半夜  失效时间需要加1天
+                    } else {
+                        deleteSchedule.setInvalidTime(DateUtils.addDays(invalidTime, 1));
+                    }
+                    // 非跨夜场景
+                } else {
+                    deleteSchedule.setInvalidTime(invalidTime);
+                }
+                // 班次不是生效中
             } else {
-                deleteSchedule.setInvalidTime(getScheduleDateTimeOfSpecifiedDate(new Date(), deleteSchedule.getEndTime(), false));
+                Date invalidTime = getScheduleDateTimeOfSpecifiedDate(now, deleteSchedule.getEndTime(), 0);
+                // 跨夜场景
+                if (crossDayFlag) {
+                    deleteSchedule.setInvalidTime(invalidTime);
+                } else {
+                    if (!now.before(invalidTime)) {
+                        deleteSchedule.setInvalidTime(invalidTime);
+                    } else {
+                        deleteSchedule.setInvalidTime(getScheduleDateTimeOfSpecifiedDate(now, deleteSchedule.getEndTime(), -1));
+                    }
+                }
             }
         }
     }
@@ -262,6 +287,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
 
     /**
      * 班次是否正在生效中
+     * 跨天场景  当前时间在班次结束后n个小时内 或者  班次开始前n个小时内  班次正在生效
      * @param workGridSchedule
      * @return
      */
@@ -269,11 +295,16 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         boolean crossDayFlag = isCrossDay(workGridSchedule);
 
         Date now = new Date();
+        Date scheduleStartDateTime = getScheduleDateTimeOfSpecifiedDate(now, workGridSchedule.getStartTime(), 0);
+        Date scheduleEndDateTime = getScheduleDateTimeOfSpecifiedDate(now, workGridSchedule.getEndTime(), 0);
 
-        Date scheduleStartDateTime = getScheduleDateTimeOfSpecifiedDate(now, workGridSchedule.getStartTime(), false);
-        Date scheduleEndDateTime = getScheduleDateTimeOfSpecifiedDate(now, workGridSchedule.getEndTime(), crossDayFlag);
-
-        return !now.before(scheduleStartDateTime) && !now.after(scheduleEndDateTime);
+        if (crossDayFlag) {
+            // 跨天场景  当前时间在班次结束后n个小时内 或者  班次开始前n个小时内  班次正在生效
+            return !now.after(DateUtils.addHours(scheduleEndDateTime, Constants.SCHEDULE_VALID_BEFORE_HOUR)) || !now.before(DateUtils.addHours(scheduleStartDateTime, -Constants.SCHEDULE_VALID_BEFORE_HOUR));
+        } else {
+            // 非跨天场景  当前时间在班次开始时间前n个小时 或者  在结束时间后n小时内  班次正在生效
+            return !now.before(DateUtils.addHours(scheduleStartDateTime, -Constants.SCHEDULE_VALID_BEFORE_HOUR)) && !now.after(DateUtils.addHours(scheduleEndDateTime, Constants.SCHEDULE_VALID_BEFORE_HOUR));
+        }
     }
 
     /**
@@ -291,13 +322,13 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
      * 入参是结束时间  则返回的是结束时间的date对象
      * @param date 指定的时间
      * @param scheduleTime 开始时间或者结束时间
-     * @param addOneDayFlag 是否需要加一天
+     * @param addCount 需要增加(减少)的天数
      * @return
      */
-    private Date getScheduleDateTimeOfSpecifiedDate(Date date, String scheduleTime, boolean addOneDayFlag) {
+    private Date getScheduleDateTimeOfSpecifiedDate(Date date, String scheduleTime, int addCount) {
         // 立即生效是当天
         // 不是立即生效是明天
-        Date scheduleDateTime = addOneDayFlag ? DateUtils.truncate(DateUtils.addDays(date, 1), Calendar.DATE) : DateUtils.truncate(date, Calendar.DATE);
+        Date scheduleDateTime = DateUtils.truncate(DateUtils.addDays(date, addCount), Calendar.DATE);
 
         String hourStr = scheduleTime.split(Constants.COLON)[0];
         String minStr = scheduleTime.split(Constants.COLON)[1];
