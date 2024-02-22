@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jdl.basic.provider.core.dao.videoTraceCamera.VideoTraceCameraConfigDao">
+  <resultMap id="BaseResultMap" type="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="camera_id" jdbcType="INTEGER" property="cameraId" />
+    <result column="ref_work_grid_key" jdbcType="VARCHAR" property="refWorkGridKey" />
+    <result column="ref_grid_key" jdbcType="VARCHAR" property="refGridKey" />
+    <result column="machine_code" jdbcType="VARCHAR" property="machineCode" />
+    <result column="chute_code" jdbcType="VARCHAR" property="chuteCode" />
+    <result column="supply_dws_code" jdbcType="VARCHAR" property="supplyDwsCode" />
+    <result column="master_camera" jdbcType="TINYINT" property="masterCamera" />
+    <result column="create_erp" jdbcType="VARCHAR" property="createErp" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_erp" jdbcType="VARCHAR" property="updateErp" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="yn" jdbcType="TINYINT" property="yn" />
+    <result column="ts" jdbcType="TIMESTAMP" property="ts" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, camera_id, ref_work_grid_key, ref_grid_key, machine_code, chute_code, supply_dws_code, 
+    master_camera, create_erp, create_time, update_erp, update_time, yn, ts
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from video_trace_camera_config
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from video_trace_camera_config
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig">
+    insert into video_trace_camera_config (id, camera_id, ref_work_grid_key, 
+      ref_grid_key, machine_code, chute_code, 
+      supply_dws_code, master_camera, create_erp, 
+      create_time, update_erp, update_time, 
+      yn, ts)
+    values (#{id,jdbcType=INTEGER}, #{cameraId,jdbcType=INTEGER}, #{refWorkGridKey,jdbcType=VARCHAR}, 
+      #{refGridKey,jdbcType=VARCHAR}, #{machineCode,jdbcType=VARCHAR}, #{chuteCode,jdbcType=VARCHAR}, 
+      #{supplyDwsCode,jdbcType=VARCHAR}, #{masterCamera,jdbcType=TINYINT}, #{createErp,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateErp,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{yn,jdbcType=TINYINT}, #{ts,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig">
+    insert into video_trace_camera_config
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="cameraId != null">
+        camera_id,
+      </if>
+      <if test="refWorkGridKey != null">
+        ref_work_grid_key,
+      </if>
+      <if test="refGridKey != null">
+        ref_grid_key,
+      </if>
+      <if test="machineCode != null">
+        machine_code,
+      </if>
+      <if test="chuteCode != null">
+        chute_code,
+      </if>
+      <if test="supplyDwsCode != null">
+        supply_dws_code,
+      </if>
+      <if test="masterCamera != null">
+        master_camera,
+      </if>
+      <if test="createErp != null">
+        create_erp,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateErp != null">
+        update_erp,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="yn != null">
+        yn,
+      </if>
+      <if test="ts != null">
+        ts,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cameraId != null">
+        #{cameraId,jdbcType=INTEGER},
+      </if>
+      <if test="refWorkGridKey != null">
+        #{refWorkGridKey,jdbcType=VARCHAR},
+      </if>
+      <if test="refGridKey != null">
+        #{refGridKey,jdbcType=VARCHAR},
+      </if>
+      <if test="machineCode != null">
+        #{machineCode,jdbcType=VARCHAR},
+      </if>
+      <if test="chuteCode != null">
+        #{chuteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplyDwsCode != null">
+        #{supplyDwsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="masterCamera != null">
+        #{masterCamera,jdbcType=TINYINT},
+      </if>
+      <if test="createErp != null">
+        #{createErp,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateErp != null">
+        #{updateErp,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null">
+        #{yn,jdbcType=TINYINT},
+      </if>
+      <if test="ts != null">
+        #{ts,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig">
+    update video_trace_camera_config
+    <set>
+      <if test="cameraId != null">
+        camera_id = #{cameraId,jdbcType=INTEGER},
+      </if>
+      <if test="refWorkGridKey != null">
+        ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR},
+      </if>
+      <if test="refGridKey != null">
+        ref_grid_key = #{refGridKey,jdbcType=VARCHAR},
+      </if>
+      <if test="machineCode != null">
+        machine_code = #{machineCode,jdbcType=VARCHAR},
+      </if>
+      <if test="chuteCode != null">
+        chute_code = #{chuteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplyDwsCode != null">
+        supply_dws_code = #{supplyDwsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="masterCamera != null">
+        master_camera = #{masterCamera,jdbcType=TINYINT},
+      </if>
+      <if test="createErp != null">
+        create_erp = #{createErp,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateErp != null">
+        update_erp = #{updateErp,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null">
+        yn = #{yn,jdbcType=TINYINT},
+      </if>
+      <if test="ts != null">
+        ts = #{ts,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig">
+    update video_trace_camera_config
+    set camera_id = #{cameraId,jdbcType=INTEGER},
+      ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR},
+      ref_grid_key = #{refGridKey,jdbcType=VARCHAR},
+      machine_code = #{machineCode,jdbcType=VARCHAR},
+      chute_code = #{chuteCode,jdbcType=VARCHAR},
+      supply_dws_code = #{supplyDwsCode,jdbcType=VARCHAR},
+      master_camera = #{masterCamera,jdbcType=TINYINT},
+      create_erp = #{createErp,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_erp = #{updateErp,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      yn = #{yn,jdbcType=TINYINT},
+      ts = #{ts,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
