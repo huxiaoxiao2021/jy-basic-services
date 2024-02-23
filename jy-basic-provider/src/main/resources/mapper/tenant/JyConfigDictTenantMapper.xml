@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jdl.basic.provider.core.dao.tenant.JyConfigDictTenantDao">
+    <resultMap id="BaseResultMap" type="com.jdl.basic.api.domain.tenant.JyConfigDictTenant">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="belong_tenant_code" jdbcType="VARCHAR" property="belongTenantCode"/>
+        <result column="dict_code" jdbcType="VARCHAR" property="dictCode"/>
+        <result column="dict_item_text" jdbcType="VARCHAR" property="dictItemText"/>
+        <result column="dict_item_value" jdbcType="VARCHAR" property="dictItemValue"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName"/>
+        <result column="create_time" jdbcType="VARCHAR" property="createTime"/>
+        <result column="update_time" jdbcType="VARCHAR" property="updateTime"/>
+        <result column="yn" property="yn"  jdbcType="TINYINT" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, belong_tenant_code, dict_code, dict_item_text, dict_item_value,
+        create_user,create_user_name,update_user,update_user_name,
+		create_time,update_time,yn
+    </sql>
+
+    <!--查询所属租户-->
+    <select id="getTenantByDictCodeAndValue" parameterType="com.jdl.basic.api.domain.tenant.JyConfigDictTenantQuery" resultMap="BaseResultMap">
+        select
+            belong_tenant_code,dict_code,dict_item_text,dict_item_value
+        from jy_config_dict_tenant
+        where dict_code = #{dictCode}
+        and dict_item_value = #{dictItemValue}
+        and yn = 1
+        order by id desc
+        limit 1
+    </select>
+
+    <!--查询租户对应的配置-->
+    <select id="getBusinessLineByTenantCode" parameterType="com.jdl.basic.api.domain.tenant.JyConfigDictTenantQuery" resultMap="BaseResultMap">
+        select
+            belong_tenant_code,dict_code,dict_item_text,dict_item_value
+        from jy_config_dict_tenant
+        where belong_tenant_code = #{belongTenantCode}
+          and dict_code = #{dictCode}
+          and yn = 1
+    </select>
+</mapper>

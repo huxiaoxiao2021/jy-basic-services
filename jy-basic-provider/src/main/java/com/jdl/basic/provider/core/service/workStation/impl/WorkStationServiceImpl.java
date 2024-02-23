@@ -5,8 +5,10 @@ import com.google.common.collect.Lists;
 import com.jd.etms.framework.utils.cache.annotation.Cache;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
+import com.jdl.basic.api.domain.tenant.JyConfigDictTenant;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.enums.BusinessLineTypeEnum;
+import com.jdl.basic.api.enums.DictCodeEnum;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.utils.CheckHelper;
@@ -17,9 +19,11 @@ import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationDao;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationJobTypeDao;
 import com.jdl.basic.provider.core.po.WorkStationJobTypePO;
+import com.jdl.basic.provider.core.service.tenant.JyConfigDictTenantService;
 import com.jdl.basic.provider.core.service.workStation.WorkAreaService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationService;
+import com.jdl.sorting.tech.tenant.core.context.TenantContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -30,6 +34,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -60,6 +65,10 @@ public class WorkStationServiceImpl implements WorkStationService {
 	@Autowired
 	@Qualifier("workAreaService")
 	private WorkAreaService workAreaService;
+
+	@Resource
+	private JyConfigDictTenantService jyConfigDictTenantService;
+
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -145,7 +154,6 @@ public class WorkStationServiceImpl implements WorkStationService {
 			}else {
 				generateAndSetBusinessKey(data);
 			}
-			data.setBusinessLineName(BusinessLineTypeEnum.getNameByCode(data.getBusinessLineCode()));
 			//判断有无设置工种类型 并设置
 			if(CollectionUtils.isNotEmpty(data.getJobTypes())){
 				data.setHaveJobType(1);
@@ -199,9 +207,6 @@ public class WorkStationServiceImpl implements WorkStationService {
 			if(uniqueKeysRowNumMap.containsKey(uniqueKeysStr)) {
 				return result0.toFail(rowKey + "和第"+uniqueKeysRowNumMap.get(uniqueKeysStr)+"行数据重复！");
 			}
-			if(BusinessLineTypeEnum.getEnum(data.getBusinessLineCode()) == null){
-				return result0.toFail(rowKey + "的【业务条线ID】不符合要求！");
-			}
 			uniqueKeysRowNumMap.put(uniqueKeysStr, rowNum);
 			rowNum ++;
 		}
@@ -226,8 +231,6 @@ public class WorkStationServiceImpl implements WorkStationService {
 		String workName = data.getWorkName();
 		String areaCode = data.getAreaCode();
 		String areaName = data.getAreaName();
-		data.setBusinessLineName(BusinessLineTypeEnum.getNameByCode(data.getBusinessLineCode()));
-
 		if(!CheckHelper.checkStr("作业区ID", areaCode, 50, result).isSuccess()) {
 			return result;
 		}
@@ -240,6 +243,27 @@ public class WorkStationServiceImpl implements WorkStationService {
 		if(!CheckHelper.checkStr("工序名称", workName, 100, result).isSuccess()) {
 			return result;
 		}
+		//业务条线必填
+		String businessLineCode = data.getBusinessLineCode();
+		if(StringUtils.isBlank(businessLineCode)){
+			result.toFail("业务条线不能为空");
+			return result;
+		}
+		//先校验业务条线枚举存不存在
+		BusinessLineTypeEnum currBusiEnum = BusinessLineTypeEnum.getEnum(businessLineCode);
+		if(currBusiEnum == null){
+			result.toFail("业务条线不合法");
+			return result;
+		}
+		//查询租户配置表，校验业务条线是否属于该租户权限
+		if(StringUtils.isNotBlank(TenantContext.getTenantCode())){
+			JyConfigDictTenant dataBaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.TENANT_BUSINESS_LINE.getCode(), businessLineCode);
+			if(dataBaseTenant == null || !Objects.equals(TenantContext.getTenantCode(),dataBaseTenant.getBelongTenantCode())){
+				result.toFail("当前用户没有" + currBusiEnum.getName() + "的操作权限");
+				return result;
+			}
+		}
+		data.setBusinessLineName(currBusiEnum.getName());
 		return result;
 	}
 	/**
@@ -259,7 +283,6 @@ public class WorkStationServiceImpl implements WorkStationService {
 		}
 		workStationDao.deleteById(updateData);
 		updateData.setId(null);
-		updateData.setBusinessLineName(BusinessLineTypeEnum.getNameByCode(updateData.getBusinessLineCode()));
 		//判断有无设置工种类型 并设置
 		if(CollectionUtils.isNotEmpty(updateData.getJobTypes())){
 			updateData.setHaveJobType(1);

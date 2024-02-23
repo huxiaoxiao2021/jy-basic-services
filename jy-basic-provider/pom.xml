@@ -338,6 +338,14 @@
             <artifactId>automatic-sdk</artifactId>
             <version>${version.automatic.automatic-sdk}</version>
         </dependency>
+        <dependency>
+            <groupId>com.jdl.sorting.tech</groupId>
+            <artifactId>tenant-jsf-filter-sdk</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jd</groupId>
+            <artifactId>muliti-tenant-plugin-mybatis</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

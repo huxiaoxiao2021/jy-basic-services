@@ -199,7 +199,9 @@ public class CollectBoxFlowDirectionConf {
      * 副流向站点名字
      */
     private String deputyBoxReceiveName;
-
     
-
+    /**
+     * 新增类型： 1用户页面新增 2大数据推送
+     */
+    private Integer addType;
 }
