@@ -57,6 +57,8 @@ public class JyThirdpartyUser {
 
     private Integer taskType;
 
+    private String companyId;
+
     public Integer getTaskType() {
         return taskType;
     }
@@ -270,5 +272,13 @@ public class JyThirdpartyUser {
 
     public void setTs(Date ts) {
         this.ts = ts;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 }

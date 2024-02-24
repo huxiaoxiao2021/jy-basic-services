@@ -14,6 +14,7 @@
     <result column="deadline_time" jdbcType="DATE" property="deadlineTime" />
     <result column="present_date" jdbcType="DATE" property="presentDate" />
     <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="company_id" jdbcType="VARCHAR" property="companyId" />
     <result column="create_user" jdbcType="VARCHAR" property="createUser" />
     <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
     <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
@@ -26,7 +27,7 @@
   <sql id="Base_Column_List">
     id, task_biz_id, task_detail_biz_id, user_code, user_code_encrypt, user_code_index, 
     user_name, user_name_encrypt, user_name_index, mobile, mobile_encrypt, mobile_index, 
-    nature, nature_desc, site_code, deadline_time,present_date,company_name, create_user, create_user_name,
+    nature, nature_desc, site_code, deadline_time,present_date,company_name,company_id, create_user, create_user_name,
     update_user, update_user_name, create_time, update_time, yn, ts
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -556,7 +557,7 @@
     insert into jy_thirdparty_user
     (task_biz_id, task_detail_biz_id,task_type,user_code_encrypt, user_code_index,
     user_name_encrypt, user_name_index,mobile_encrypt, mobile_index,
-    nature, nature_desc, site_code, deadline_time,present_date,company_name, create_user, create_user_name,
+    nature, nature_desc, site_code, deadline_time,present_date,company_name,company_id, create_user, create_user_name,
     update_user, update_user_name, create_time, update_time)
     values
     <foreach collection="list" item="item" index="index" separator=",">
@@ -576,6 +577,7 @@
       #{item.deadlineTime,jdbcType=DATE},
       #{item.presentDate,jdbcType=DATE},
       #{item.companyName,jdbcType=VARCHAR},
+      #{item.companyId,jdbcType=VARCHAR},
       #{item.createUser,jdbcType=VARCHAR},
       #{item.createUserName,jdbcType=VARCHAR},
       #{item.updateUser,jdbcType=VARCHAR},
