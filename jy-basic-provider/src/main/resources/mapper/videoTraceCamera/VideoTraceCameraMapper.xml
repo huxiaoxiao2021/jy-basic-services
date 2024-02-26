@@ -5,8 +5,8 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="camera_code" jdbcType="VARCHAR" property="cameraCode" />
     <result column="camera_name" jdbcType="VARCHAR" property="cameraName" />
-    <result column="video_recorder_code" jdbcType="VARCHAR" property="videoRecorderCode" />
-    <result column="video_recorder_name" jdbcType="VARCHAR" property="videoRecorderName" />
+    <result column="national_channel_code" jdbcType="VARCHAR" property="nationalChannelCode" />
+    <result column="national_channel_name" jdbcType="VARCHAR" property="nationalChannelName" />
     <result column="site_code" jdbcType="INTEGER" property="siteCode" />
     <result column="site_name" jdbcType="VARCHAR" property="siteName" />
     <result column="province_agency_code" jdbcType="VARCHAR" property="provinceAgencyCode" />
@@ -22,7 +22,7 @@
     <result column="ts" jdbcType="TIMESTAMP" property="ts" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, camera_code, camera_name, video_recorder_code, video_recorder_name, site_code, 
+    id, camera_code, camera_name, national_channel_code, national_channel_name, site_code,
     site_name, province_agency_code, province_agency_name, area_hub_code, area_hub_name, 
     create_erp, create_time, update_erp, update_time, config_status, status, ts
   </sql>
@@ -30,45 +30,127 @@
     select 
     <include refid="Base_Column_List" />
     from video_trace_camera
-    where id = #{id,jdbcType=INTEGER}
+    where status=1 and id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from video_trace_camera
+
+  <select id="queryPageList" resultType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera" resultMap="BaseResultMap">
+    select
+      <include refid="Base_Column_List"/>
+    from
+      video_trace_camera
+    <where>
+      status = 1
+      <if test="cameraCode != null and cameraCode != ''" >
+        and camera_code = #{cameraCode,jdbcType=VARCHAR}
+      </if>
+      <if test="nationalChannelCode != null and nationalChannelCode != ''" >
+        and national_channel_code = #{nationalChannelCode,jdbcType=VARCHAR}
+      </if>
+      <if test="siteCode != null and siteCode != ''" >
+        and site_code = #{siteCode,jdbcType=INTEGER}
+      </if>
+      <if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
+        and province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR}
+      </if>
+      <if test="areaHubCode != null and areaHubCode != ''" >
+        and area_hub_code = #{areaHubCode,jdbcType=VARCHAR}
+      </if>
+      <if test="cameraCode != null and cameraCode != ''" >
+        and camera_code = #{cameraCode,jdbcType=VARCHAR}
+      </if>
+      <if test="configStatus != null" >
+        and config_status = #{configStatus,jdbcType=TINYINT}
+      </if>
+    </where>
+    limit #{offset}, #{limit}
+  </select>
+  <select id="queryCount" resultType="java.lang.Long">
+    select
+      count(1)
+    from
+      video_trace_camera
+    <where>
+      status = 1
+      <if test="cameraCode != null and cameraCode != ''" >
+        and camera_code = #{cameraCode,jdbcType=VARCHAR}
+      </if>
+      <if test="nationalChannelCode != null and nationalChannelCode != ''" >
+        and national_channel_code = #{nationalChannelCode,jdbcType=VARCHAR}
+      </if>
+      <if test="siteCode != null and siteCode != ''" >
+        and site_code = #{siteCode,jdbcType=INTEGER}
+      </if>
+      <if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
+        and province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR}
+      </if>
+      <if test="areaHubCode != null and areaHubCode != ''" >
+        and area_hub_code = #{areaHubCode,jdbcType=VARCHAR}
+      </if>
+      <if test="cameraCode != null and cameraCode != ''" >
+        and camera_code = #{cameraCode,jdbcType=VARCHAR}
+      </if>
+      <if test="configStatus != null" >
+        and config_status = #{configStatus,jdbcType=TINYINT}
+      </if>
+    </where>
+  </select>
+  <select id="queryByCondition" resultType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera" resultMap="BaseResultMap">
+    select
+      <include refid="Base_Column_List"/>
+    from
+      video_trace_camera
+    <where>
+      status = 1
+      <if test="cameraCode != null and cameraCode != ''" >
+        and camera_code = #{cameraCode,jdbcType=VARCHAR}
+      </if>
+      <if test="nationalChannelCode != null and nationalChannelCode != ''" >
+        and national_channel_code = #{nationalChannelCode,jdbcType=VARCHAR}
+      </if>
+      <if test="siteCode != null and siteCode != ''" >
+        and site_code = #{siteCode,jdbcType=INTEGER}
+      </if>
+      <if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
+        and province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR}
+      </if>
+      <if test="areaHubCode != null and areaHubCode != ''" >
+        and area_hub_code = #{areaHubCode,jdbcType=VARCHAR}
+      </if>
+      <if test="cameraCode != null and cameraCode != ''" >
+        and camera_code = #{cameraCode,jdbcType=VARCHAR}
+      </if>
+      <if test="configStatus != null" >
+        and config_status = #{configStatus,jdbcType=TINYINT}
+      </if>
+    </where>
+  </select>
+
+  <update id="deleteById">
+    update
+    video_trace_camera
+    set
+    <if test="updateErp != null">
+      update_erp = #{updateErp,jdbcType=VARCHAR},
+    </if>
+    update_time = now(),
+    status=0
     where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera">
-    insert into video_trace_camera (id, camera_code, camera_name, 
-      video_recorder_code, video_recorder_name, site_code, 
-      site_name, province_agency_code, province_agency_name, 
-      area_hub_code, area_hub_name, create_erp, 
-      create_time, update_erp, update_time, 
-      config_status, status, ts
-      )
-    values (#{id,jdbcType=INTEGER}, #{cameraCode,jdbcType=VARCHAR}, #{cameraName,jdbcType=VARCHAR}, 
-      #{videoRecorderCode,jdbcType=VARCHAR}, #{videoRecorderName,jdbcType=VARCHAR}, #{siteCode,jdbcType=INTEGER}, 
-      #{siteName,jdbcType=VARCHAR}, #{provinceAgencyCode,jdbcType=VARCHAR}, #{provinceAgencyName,jdbcType=VARCHAR}, 
-      #{areaHubCode,jdbcType=VARCHAR}, #{areaHubName,jdbcType=VARCHAR}, #{createErp,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateErp,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{configStatus,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{ts,jdbcType=TIMESTAMP}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera">
+  </update>
+
+  <insert id="insert" parameterType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera" useGeneratedKeys="true" keyProperty="id">
     insert into video_trace_camera
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="cameraCode != null">
         camera_code,
       </if>
       <if test="cameraName != null">
         camera_name,
       </if>
-      <if test="videoRecorderCode != null">
-        video_recorder_code,
+      <if test="nationalChannelCode != null">
+        national_channel_code,
       </if>
-      <if test="videoRecorderName != null">
-        video_recorder_name,
+      <if test="nationalChannelName != null">
+        national_channel_name,
       </if>
       <if test="siteCode != null">
         site_code,
@@ -91,40 +173,24 @@
       <if test="createErp != null">
         create_erp,
       </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="updateErp != null">
-        update_erp,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
       <if test="configStatus != null">
         config_status,
       </if>
-      <if test="status != null">
-        status,
-      </if>
-      <if test="ts != null">
-        ts,
-      </if>
+      create_time,
+      status
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="cameraCode != null">
         #{cameraCode,jdbcType=VARCHAR},
       </if>
       <if test="cameraName != null">
         #{cameraName,jdbcType=VARCHAR},
       </if>
-      <if test="videoRecorderCode != null">
-        #{videoRecorderCode,jdbcType=VARCHAR},
+      <if test="nationalChannelCode != null">
+        #{nationalChannelCode,jdbcType=VARCHAR},
       </if>
-      <if test="videoRecorderName != null">
-        #{videoRecorderName,jdbcType=VARCHAR},
+      <if test="nationalChannelName != null">
+        #{nationalChannelName,jdbcType=VARCHAR},
       </if>
       <if test="siteCode != null">
         #{siteCode,jdbcType=INTEGER},
@@ -147,27 +213,14 @@
       <if test="createErp != null">
         #{createErp,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateErp != null">
-        #{updateErp,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="configStatus != null">
         #{configStatus,jdbcType=TINYINT},
       </if>
-      <if test="status != null">
-        #{status,jdbcType=TINYINT},
-      </if>
-      <if test="ts != null">
-        #{ts,jdbcType=TIMESTAMP},
-      </if>
+      now(),
+      1
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera">
+  <update id="updateById" parameterType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera">
     update video_trace_camera
     <set>
       <if test="cameraCode != null">
@@ -176,11 +229,11 @@
       <if test="cameraName != null">
         camera_name = #{cameraName,jdbcType=VARCHAR},
       </if>
-      <if test="videoRecorderCode != null">
-        video_recorder_code = #{videoRecorderCode,jdbcType=VARCHAR},
+      <if test="nationalChannelCode != null">
+        national_channel_code = #{nationalChannelCode,jdbcType=VARCHAR},
       </if>
-      <if test="videoRecorderName != null">
-        video_recorder_name = #{videoRecorderName,jdbcType=VARCHAR},
+      <if test="nationalChannelName != null">
+        national_channel_name = #{nationalChannelName,jdbcType=VARCHAR},
       </if>
       <if test="siteCode != null">
         site_code = #{siteCode,jdbcType=INTEGER},
@@ -222,27 +275,6 @@
         ts = #{ts,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera">
-    update video_trace_camera
-    set camera_code = #{cameraCode,jdbcType=VARCHAR},
-      camera_name = #{cameraName,jdbcType=VARCHAR},
-      video_recorder_code = #{videoRecorderCode,jdbcType=VARCHAR},
-      video_recorder_name = #{videoRecorderName,jdbcType=VARCHAR},
-      site_code = #{siteCode,jdbcType=INTEGER},
-      site_name = #{siteName,jdbcType=VARCHAR},
-      province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR},
-      province_agency_name = #{provinceAgencyName,jdbcType=VARCHAR},
-      area_hub_code = #{areaHubCode,jdbcType=VARCHAR},
-      area_hub_name = #{areaHubName,jdbcType=VARCHAR},
-      create_erp = #{createErp,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_erp = #{updateErp,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      config_status = #{configStatus,jdbcType=TINYINT},
-      status = #{status,jdbcType=TINYINT},
-      ts = #{ts,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

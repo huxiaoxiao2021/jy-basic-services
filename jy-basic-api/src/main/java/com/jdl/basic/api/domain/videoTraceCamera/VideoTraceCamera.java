@@ -9,9 +9,9 @@ public class VideoTraceCamera {
 
     private String cameraName;
 
-    private String videoRecorderCode;
+    private String nationalChannelCode ;
 
-    private String videoRecorderName;
+    private String nationalChannelName;
 
     private Integer siteCode;
 
@@ -63,20 +63,20 @@ public class VideoTraceCamera {
         this.cameraName = cameraName;
     }
 
-    public String getVideoRecorderCode() {
-        return videoRecorderCode;
+    public String getNationalChannelCode() {
+        return nationalChannelCode;
     }
 
-    public void setVideoRecorderCode(String videoRecorderCode) {
-        this.videoRecorderCode = videoRecorderCode;
+    public void setNationalChannelCode(String nationalChannelCode) {
+        this.nationalChannelCode = nationalChannelCode;
     }
 
-    public String getVideoRecorderName() {
-        return videoRecorderName;
+    public String getNationalChannelName() {
+        return nationalChannelName;
     }
 
-    public void setVideoRecorderName(String videoRecorderName) {
-        this.videoRecorderName = videoRecorderName;
+    public void setNationalChannelName(String nationalChannelName) {
+        this.nationalChannelName = nationalChannelName;
     }
 
     public Integer getSiteCode() {
