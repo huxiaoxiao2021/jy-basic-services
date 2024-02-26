@@ -44,4 +44,17 @@ public interface JyJobTypeJsfService {
      * @return 符合条件的JyJobType列表
      */
     Result<List<JyJobType>> queryListByCondition(JyJobType query);
+
+    /**
+     * 查询所有JyJobType列表
+     * @return 返回JyJobType列表
+     */
+    List<JyJobType> queryAllList();
+
+    /**
+     * 查询所有可用的JyJobType列表
+     * @return 可用的JyJobType列表
+     */
+    List<JyJobType> queryAllAvailableList();
+
 }

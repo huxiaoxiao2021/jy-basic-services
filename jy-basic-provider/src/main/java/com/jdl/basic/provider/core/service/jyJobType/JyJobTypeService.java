@@ -51,4 +51,9 @@ public interface JyJobTypeService {
      */
     List<JyJobType> queryALlList();
 
+    /**
+     * 查询所有可用的JyJobType列表
+     * @return 可用的JyJobType列表
+     */
+    List<JyJobType> queryAllAvailableList();
 }

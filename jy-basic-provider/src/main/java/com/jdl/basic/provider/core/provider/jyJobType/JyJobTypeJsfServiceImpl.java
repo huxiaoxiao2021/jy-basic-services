@@ -69,4 +69,22 @@ public class JyJobTypeJsfServiceImpl implements JyJobTypeJsfService {
     public Result<List<JyJobType>> queryListByCondition(JyJobType query) {
         return jyJobTypeService.queryListByCondition(query);
     }
+
+    /**
+     * 查询所有职位类型列表
+     * @return 职位类型列表
+     */
+    @Override
+    public List<JyJobType> queryAllList() {
+        return jyJobTypeService.queryALlList();
+    }
+
+    /**
+     * 查询所有可用职位类型列表
+     * @return 可用职位类型列表
+     */
+    @Override
+    public List<JyJobType> queryAllAvailableList() {
+        return jyJobTypeService.queryAllAvailableList();
+    }
 }

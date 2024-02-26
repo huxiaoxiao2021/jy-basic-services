@@ -42,6 +42,10 @@ public class JyJobType implements Serializable {
      * */
     private Integer autoSignOutHour;
     /**
+     * 工种排序字段，默认0
+     * */
+    private Integer sort;
+    /**
      * 创建人ERP
      * */
     private String createUser;

@@ -72,4 +72,10 @@ public interface JyJobTypeDao {
      * @return JyJobType列表
      */
     List<JyJobType> queryALlList();
+
+    /**
+     * 查询所有可用的职位类型列表
+     * @return 可用的职位类型列表
+     */
+    List<JyJobType> queryAllAvailableList();
 }

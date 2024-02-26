@@ -1,7 +1,10 @@
 package com.jdl.basic.provider.core.service.jyJobType.impl;
 
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.jyJobType.JyJobType;
 import com.jdl.basic.api.domain.jyJobType.JyJobTypeQuery;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
@@ -32,6 +35,8 @@ public class JyJobTypeServiceImpl implements JyJobTypeService {
     private JyJobTypeDao jyJobTypeDao;
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyJobTypeServiceImpl.insert", jAppName=Constants.UMP_APP_NAME, mState={
+        JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> insert(JyJobType insertData) {
         Result<Boolean> result = Result.success();
         result.toFail();
@@ -49,7 +54,7 @@ public class JyJobTypeServiceImpl implements JyJobTypeService {
             }
         } catch (Exception e) {
             result.setMessage("新增拣运工种异常！");
-            log.error("新增拣运工种异常,异常信息:【{}】", e.getMessage(), e);
+            log.error("JyJobTypeServiceImpl.insert新增拣运工种异常,异常信息:【{}】", e.getMessage(), e);
         }
         return result;
     }
@@ -61,6 +66,8 @@ public class JyJobTypeServiceImpl implements JyJobTypeService {
      * @return 更新操作结果
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyJobTypeServiceImpl.updateById", jAppName=Constants.UMP_APP_NAME, mState={
+        JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> updateById(JyJobType updateData) {
         Result<Boolean> result = Result.success();
         result.toFail();
@@ -78,7 +85,7 @@ public class JyJobTypeServiceImpl implements JyJobTypeService {
             }
         } catch (Exception e) {
             result.setMessage("更新拣运工种异常！");
-            log.error("更新拣运工种异常,异常信息:【{}】", e.getMessage(), e);
+            log.error("JyJobTypeServiceImpl.updateById更新拣运工种异常,异常信息:【{}】", e.getMessage(), e);
         }
         return result;
     }
@@ -90,6 +97,8 @@ public class JyJobTypeServiceImpl implements JyJobTypeService {
      * @return 分页列表结果
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyJobTypeServiceImpl.queryPageList", jAppName=Constants.UMP_APP_NAME, mState={
+        JProEnum.TP,JProEnum.FunctionError})
     public Result<PageDto<JyJobType>> queryPageList(JyJobTypeQuery query) {
         Result<PageDto<JyJobType>> result = Result.success();
         Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
@@ -115,6 +124,8 @@ public class JyJobTypeServiceImpl implements JyJobTypeService {
      * @return 职位类型列表
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyJobTypeServiceImpl.queryListByCondition", jAppName=Constants.UMP_APP_NAME, mState={
+        JProEnum.TP,JProEnum.FunctionError})
     public Result<List<JyJobType>> queryListByCondition(JyJobType query) {
         Result<List<JyJobType>> result = Result.success();
         result.toFail();
@@ -125,18 +136,37 @@ public class JyJobTypeServiceImpl implements JyJobTypeService {
             result.toSuccess();
         } catch (Exception e) {
             result.setMessage("查询拣运工种异常！");
-            log.error("查询拣运工种异常,异常信息:【{}】", e.getMessage(), e);
+            log.error("JyJobTypeServiceImpl.queryListByCondition查询拣运工种异常,异常信息:【{}】", e.getMessage(), e);
         }
         return result;
     }
 
+    /**
+     * 查询所有状态启用的拣运工种列表
+     * @return 返回拣运工种列表
+     */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyJobTypeServiceImpl.queryALlList", jAppName=Constants.UMP_APP_NAME, mState={
+        JProEnum.TP,JProEnum.FunctionError})
     public List<JyJobType> queryALlList() {
         List<JyJobType> result = new ArrayList<>();
         try {
             result = jyJobTypeDao.queryALlList();
         } catch (Exception e) {
-            log.error("查询拣运工种异常,异常信息:【{}】", e.getMessage(), e);
+            log.error("JyJobTypeServiceImpl.queryALlList查询拣运工种异常,异常信息:【{}】", e.getMessage(), e);
+        }
+        return result;
+    }
+
+    @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyJobTypeServiceImpl.queryAllAvailableList", jAppName=Constants.UMP_APP_NAME, mState={
+        JProEnum.TP,JProEnum.FunctionError})
+    public List<JyJobType> queryAllAvailableList() {
+        List<JyJobType> result = new ArrayList<>();
+        try {
+            result = jyJobTypeDao.queryAllAvailableList();
+        } catch (Exception e) {
+            log.error("JyJobTypeServiceImpl.queryAllAvailableList查询拣运工种异常,异常信息:【{}】", e.getMessage(), e);
         }
         return result;
     }
@@ -172,9 +202,9 @@ public class JyJobTypeServiceImpl implements JyJobTypeService {
             result.setMessage("拣运工种类型已存在，请勿重复添加!");
             return result;
         }
-        jyJobType.setCode(insertData.getCode());
-        jyJobType.setName(null);
-        List<JyJobType> jyJobTypes1 = jyJobTypeDao.queryListByCondition(jyJobType);
+        JyJobType jyJobType1 = new JyJobType();
+        jyJobType1.setCode(insertData.getCode());
+        List<JyJobType> jyJobTypes1 = jyJobTypeDao.queryListByCondition(jyJobType1);
         if (CollectionUtils.isNotEmpty(jyJobTypes1)) {
             result.setMessage("拣运工种编码已存在，请勿重复添加!");
             return result;
@@ -229,9 +259,10 @@ public class JyJobTypeServiceImpl implements JyJobTypeService {
             result.setMessage("拣运工种类型已存在，请勿重复添加!");
             return result;
         }
-        jyJobType.setCode(updateData.getCode());
-        jyJobType.setName(null);
-        List<JyJobType> jyJobTypes1 = jyJobTypeDao.queryListByCondition(jyJobType);
+        JyJobType jyJobType1 = new JyJobType();
+        jyJobType1.setId(updateData.getId());
+        jyJobType1.setCode(updateData.getCode());
+        List<JyJobType> jyJobTypes1 = jyJobTypeDao.queryListByCondition(jyJobType1);
         if (CollectionUtils.isNotEmpty(jyJobTypes1)) {
             result.setMessage("拣运工种编码已存在，请勿重复添加!");
             return result;

@@ -383,7 +383,7 @@
     </jsf:provider>
     <!-- 拣运工种配置 -->
     <jsf:provider id="jyJobTypeJsf"
-                  timeout="1000000"
+                  timeout="${jsf.automatic.timeout}"
                   interface="com.jdl.basic.api.service.jyJobType.JyJobTypeJsfService"
                   alias="${jsf.jy_basic.alias}"
                   ref="jyJobTypeJsfService"
