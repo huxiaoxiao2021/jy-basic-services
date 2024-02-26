@@ -18,25 +18,30 @@
 
     <!--获取站点，员工，机构等数据-->
     <jsf:consumer id="basicPrimaryWS" interface="com.jd.ql.basic.ws.BasicPrimaryWS" protocol="jsf"
+                  serialization="hessian"
                   alias="${basic.jsf.alias}" timeout="${basic.jsf.timeout}" retries="${jsf.retries}" lazy="${jsf.consumer.lazy}">
         <jsf:parameter key="token" value="${basic.jsf.token}" hide="true"/>
     </jsf:consumer>
 
     <jsf:consumer id="basicTraderAPI" interface="com.jd.ldop.basic.api.BasicTraderAPI" protocol="jsf"
+                  serialization="hessian"
                   alias="${ldop.basic.jsf.alias}" timeout="${ldop.basic.jsf.timeout}" retries="${jsf.retries}">
     </jsf:consumer>
 
     <jsf:consumer id="basicSiteQueryWS" interface="com.jd.ql.basic.ws.BasicSiteQueryWS" alias="${basic.jsf.alias}" protocol="jsf"
+                  serialization="hessian"
                   lazy="${jsf.consumer.lazy}" timeout="${basic.jsf.timeout}" retries="${jsf.retries}">
         <jsf:parameter key="token" value="${basic.jsf.token}" hide="true" />
     </jsf:consumer>
     
     <jsf:consumer id="basicOrganStructWS" interface="com.jd.ql.basic.ws.BasicOrganStructWS" alias="${basic.jsf.alias}" protocol="jsf"
+                  serialization="hessian"
                   lazy="${jsf.consumer.lazy}" timeout="${basic.jsf.timeout}" retries="${jsf.retries}">
         <jsf:parameter key="token" value="${basic.jsf.token}" hide="true" />
     </jsf:consumer>
 
     <jsf:consumer id="basicWareHouseWS" interface="com.jd.ql.basic.ws.BasicWareHouseWS" alias="${basic.jsf.alias}" protocol="jsf"
+                  serialization="hessian"
                   lazy="${jsf.consumer.lazy}" timeout="${basic.jsf.timeout}" retries="${jsf.retries}">
         <jsf:parameter key="token" value="${basic.jsf.token}" hide="true" />
     </jsf:consumer>
@@ -52,6 +57,7 @@
         <jsf:parameter key="token" value="${jsf.sortWorkbenchBusiness.token}" hide="true" />
     </jsf:consumer>
     <jsf:consumer id="deviceConfigInfoJsfService" interface="com.jd.bd.dms.automatic.sdk.modules.device.DeviceConfigInfoJsfService"
+                  serialization="hessian"
                   protocol="jsf" alias="${jsf.automatic.alias}" timeout="${jsf.automatic.timeout}" retries="${jsf.retries}" lazy="${jsf.consumer.lazy}">
         <jsf:parameter key="token" value="${jsf.automatic.token}" hide="true"/>
     </jsf:consumer>    

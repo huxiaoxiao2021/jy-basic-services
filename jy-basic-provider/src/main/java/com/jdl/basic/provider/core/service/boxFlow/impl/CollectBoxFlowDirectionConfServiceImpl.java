@@ -11,6 +11,7 @@ import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConfChangeLog;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowInfo;
 import com.jdl.basic.api.domain.boxFlow.dto.CollectBoxFlowNoticDto;
 import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.common.enums.CollectBoxFlowAddTypeEnum;
 import com.jdl.basic.common.enums.CollectBoxFlowNoticTypeEnum;
 import com.jdl.basic.common.utils.*;
 import com.jdl.basic.provider.config.jdq.JDQ4Producer;
@@ -114,7 +115,10 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
             if (conf.getCreateTime() == null) {
                 conf.setCreateTime(new Date());
             }
-
+            //人工添加保存时删除version
+            if(CollectBoxFlowAddTypeEnum.USER_ADD.getCode().equals(conf.getAddType())){
+                conf.setVersion(null);
+            }
             int i = collectBoxFlowDirectionConfMapper.insertSelective(conf);
             if (i != 1) {
                 log.info("新增配置失败，参数：{}", JSONObject.toJSONString(conf));

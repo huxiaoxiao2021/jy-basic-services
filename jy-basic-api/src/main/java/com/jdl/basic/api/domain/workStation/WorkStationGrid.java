@@ -190,5 +190,5 @@ public class WorkStationGrid implements Serializable {
 	 * 枢纽名称
 	 */
 	private String areaHubName;
-	
+
 }

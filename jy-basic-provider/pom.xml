@@ -28,7 +28,7 @@
         <dependency>
             <groupId>com.jdl.basic</groupId>
             <artifactId>jy-basic-api</artifactId>
-            <version>1.7.4-SNAPSHOT</version>
+            <version>1.7.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -337,6 +337,14 @@
             <groupId>com.jd.bd.dms.automatic</groupId>
             <artifactId>automatic-sdk</artifactId>
             <version>${version.automatic.automatic-sdk}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jdl.sorting.tech</groupId>
+            <artifactId>tenant-jsf-filter-sdk</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jd</groupId>
+            <artifactId>muliti-tenant-plugin-mybatis</artifactId>
         </dependency>
     </dependencies>
 

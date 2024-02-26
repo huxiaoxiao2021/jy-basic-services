@@ -42,6 +42,8 @@
         <dms-component-sdk.version>1.0.2-SNAPSHOT</dms-component-sdk.version>
         <jdmeta-project-outer-api-sort.version>1.0-SNAPSHOT</jdmeta-project-outer-api-sort.version>
         <aces.version>3.0.1-SNAPSHOT</aces.version>
+        <muliti-tenant-plugin-mybatis.version>1.0.1-SORTING-RELEASE</muliti-tenant-plugin-mybatis.version>
+        <tenant-jsf-filter-sdk.version>1.0.1-SORTING-RELEASE</tenant-jsf-filter-sdk.version>
     </properties>
 
     <!--配置环境的profile-->
@@ -324,6 +326,18 @@
                 <groupId>com.jd</groupId>
                 <artifactId>wormhole-manager</artifactId>
                 <version>1.2.2-SNAPSHOT</version>
+            </dependency>
+                <!-- 多租户mybatis插件 -->
+            <dependency>
+                <groupId>com.jd</groupId>
+                <artifactId>muliti-tenant-plugin-mybatis</artifactId>
+                <version>${muliti-tenant-plugin-mybatis.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.jdl.sorting.tech</groupId>
+                <artifactId>tenant-jsf-filter-sdk</artifactId>
+                <version>${tenant-jsf-filter-sdk.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

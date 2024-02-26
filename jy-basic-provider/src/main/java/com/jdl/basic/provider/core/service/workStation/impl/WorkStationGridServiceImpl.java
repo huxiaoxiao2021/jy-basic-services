@@ -9,7 +9,9 @@ import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.machine.Machine;
 import com.jdl.basic.api.domain.machine.WorkStationGridMachine;
 import com.jdl.basic.api.domain.position.PositionRecord;
+import com.jdl.basic.api.domain.tenant.JyConfigDictTenant;
 import com.jdl.basic.api.domain.workStation.*;
+import com.jdl.basic.api.enums.DictCodeEnum;
 import com.jdl.basic.api.enums.WorkSiteTypeEnum;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.contants.DmsConstants;
@@ -25,10 +27,12 @@ import com.jdl.basic.provider.core.dao.workStation.WorkStationGridDao;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.machine.WorkStationGridMachineService;
 import com.jdl.basic.provider.core.service.position.PositionRecordService;
+import com.jdl.basic.provider.core.service.tenant.JyConfigDictTenantService;
 import com.jdl.basic.provider.core.service.workStation.WorkAbnormalGridBindingService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationService;
+import com.jdl.sorting.tech.tenant.core.context.TenantContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
@@ -83,6 +87,10 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	private CacheService cacheService;
 	
 	private static boolean initDataFlag = false;
+
+	@Resource
+	private JyConfigDictTenantService jyConfigDictTenantService;
+
 	/**
 	 * 插入一条数据
 	 * @param insertData
@@ -151,7 +159,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		WorkSiteTypeEnum siteType = null;
 		BaseStaffSiteOrgDto siteInfo = this.baseMajorManager.getBaseSiteBySiteId(workStationGrid.getSiteCode());
 		if(siteInfo != null) {
-			siteType = WorkSiteTypeEnum.getWorkingSiteTypeBySubType(siteInfo.getSubType());
+			siteType = WorkSiteTypeEnum.getWorkingSiteTypeByThird(siteInfo.getSortType(),siteInfo.getSortSubType(),siteInfo.getSortThirdType());
 		}
 		if(siteType == null) {
 			siteType = WorkSiteTypeEnum.OTHER;
@@ -187,7 +195,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(orgName == null) {
 			orgName = siteInfo.getOrgName();
 		}
-		workGrid.setOrgName(orgName);		
+		workGrid.setOrgName(orgName);
 		workGrid.setProvinceAgencyCode(siteInfo == null ? Constants.EMPTY_FILL : siteInfo.getProvinceAgencyCode());
 		workGrid.setProvinceAgencyName(siteInfo == null ? Constants.EMPTY_FILL : siteInfo.getProvinceAgencyName());
 		workGrid.setAreaHubCode(siteInfo == null ? Constants.EMPTY_FILL : siteInfo.getAreaCode());
@@ -268,6 +276,18 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		BaseStaffSiteOrgDto siteInfo = baseMajorManager.getBaseSiteBySiteId(siteCode);
 		if(siteInfo == null) {
 			return result.toFail("青龙ID在基础资料中不存在！");
+		}
+		//根据新三级分类查询场地类型枚举信息
+		WorkSiteTypeEnum currWorkSiteTypeEnum = WorkSiteTypeEnum.getWorkingSiteTypeByThird(siteInfo.getSortType(),siteInfo.getSortSubType(),siteInfo.getSortThirdType());
+		if(currWorkSiteTypeEnum == null){
+			return result.toFail(siteInfo.getSiteName() + "场地的新三级分类未维护,请联系运维人员维护");
+		}
+		//根据code查询租户配置表信息
+		if(StringUtils.isNotBlank(TenantContext.getTenantCode())) {
+			JyConfigDictTenant dataBaseTenant = jyConfigDictTenantService.getTenantByDictCodeAndValue(DictCodeEnum.TENANT_SITE_TYPE.getCode(), String.valueOf(currWorkSiteTypeEnum.getCode()));
+			if (dataBaseTenant == null || !Objects.equals(TenantContext.getTenantCode(), dataBaseTenant.getBelongTenantCode())) {
+				return result.toFail("当前用户没有" + siteInfo.getSiteName() + "的操作权限！");
+			}
 		}
 		fillSiteInfo(data, siteInfo);
 
