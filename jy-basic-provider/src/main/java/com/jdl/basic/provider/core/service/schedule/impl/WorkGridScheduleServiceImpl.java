@@ -29,6 +29,9 @@ import java.util.stream.Collectors;
 @Service
 public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
 
+    // 凌晨12点
+    private final String midNight = "00:00";
+
     @Autowired
     private WorkGridScheduleDao workGridScheduleDao;
 
@@ -437,24 +440,62 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
             // 查询开始时间在班次的时间范围内  或者  查询结束时间在班次的时间范围内
             // 且班次当天开始时间不在班次失效时间之前
             if (validFlag || invalidFlag){
-                ScheduleValidTimeDto validTimeDto = getValidTimeDto(workGridSchedule, request);
-                retList.add(validTimeDto);
+                retList.addAll(getValidTimeDto(workGridSchedule, request));
             }
 
         }
         return result.setData(retList);
     }
 
-    private ScheduleValidTimeDto getValidTimeDto(WorkGridSchedule workGridSchedule, ValidWorkGridScheduleRequest request) {
-        ScheduleValidTimeDto validTimeDto = new ScheduleValidTimeDto();
-        BeanUtils.copyProperties(workGridSchedule, validTimeDto);
+    private List<ScheduleValidTimeDto> getValidTimeDto(WorkGridSchedule workGridSchedule, ValidWorkGridScheduleRequest request) {
+        List<ScheduleValidTimeDto> retList = new ArrayList<>();
 
         String validStartTime = DateHelper.getDateOfHH_mm(request.getValidTime());
         String validEndTime = DateHelper.getDateOfHH_mm(request.getInvalidTime());
-        validTimeDto.setValidStartTime(workGridSchedule.getStartTime().compareTo(validStartTime) < 0 ? validStartTime : workGridSchedule.getStartTime());
-        validTimeDto.setValidEndTime(workGridSchedule.getEndTime().compareTo(validEndTime) > 0 ? validEndTime : workGridSchedule.getEndTime());
+        boolean crossDayFlag = isCrossDay(workGridSchedule);
+        // 非跨夜 一段时间
+        if (!crossDayFlag) {
+            ScheduleValidTimeDto validTimeDto = new ScheduleValidTimeDto();
+            BeanUtils.copyProperties(workGridSchedule, validTimeDto);
+            validTimeDto.setValidStartTime(workGridSchedule.getStartTime().compareTo(validStartTime) < 0 ? validStartTime : workGridSchedule.getStartTime());
+            validTimeDto.setValidEndTime(workGridSchedule.getEndTime().compareTo(validEndTime) > 0 ? validEndTime : workGridSchedule.getEndTime());
+            retList.add(validTimeDto);
+        } else {    // 跨夜  可能有两段时间
 
-        return validTimeDto;
+            Date searchDateStart = DateUtils.truncate(request.getValidTime(), Calendar.DATE);
+            Date searchDateEnd = DateUtils.truncate(request.getInvalidTime(), Calendar.DATE);
+            // 查询当天跟开始生效时间一样  只有下半段
+            if (searchDateStart.equals(DateUtils.truncate(workGridSchedule.getValidTime(), Calendar.DATE))) {
+                ScheduleValidTimeDto validTimeDto = new ScheduleValidTimeDto();
+                BeanUtils.copyProperties(workGridSchedule, validTimeDto);
+                validTimeDto.setStartTime(validStartTime);
+                validTimeDto.setEndTime(midNight);
+                retList.add(validTimeDto);
+                // 查询当天跟失效时间一样  只有上半段
+            } else if (searchDateEnd.equals(DateUtils.truncate(workGridSchedule.getInvalidTime(), Calendar.DATE))) {
+                ScheduleValidTimeDto validTimeDto = new ScheduleValidTimeDto();
+                BeanUtils.copyProperties(workGridSchedule, validTimeDto);
+                validTimeDto.setValidStartTime(midNight);
+                validTimeDto.setEndTime(validEndTime);
+                retList.add(validTimeDto);
+                // 生效时间包含查询时间  有上半段和下半段
+            } else {
+                ScheduleValidTimeDto validTimeDto1 = new ScheduleValidTimeDto();
+                BeanUtils.copyProperties(workGridSchedule, validTimeDto1);
+                validTimeDto1.setValidStartTime(midNight);
+                validTimeDto1.setEndTime(validEndTime);
+
+                ScheduleValidTimeDto validTimeDto2 = new ScheduleValidTimeDto();
+                BeanUtils.copyProperties(workGridSchedule, validTimeDto2);
+                validTimeDto2.setStartTime(validStartTime);
+                validTimeDto2.setEndTime(midNight);
+
+                retList.add(validTimeDto1);
+                retList.add(validTimeDto2);
+            }
+        }
+
+        return retList;
     }
 
     /**
