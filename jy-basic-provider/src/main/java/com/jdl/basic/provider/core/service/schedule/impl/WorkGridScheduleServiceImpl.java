@@ -448,17 +448,11 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
     private ScheduleValidTimeDto getValidTimeDto(WorkGridSchedule workGridSchedule, ValidWorkGridScheduleRequest request) {
         ScheduleValidTimeDto validTimeDto = new ScheduleValidTimeDto();
         BeanUtils.copyProperties(workGridSchedule, validTimeDto);
-        if (workGridSchedule.getValidTime().getTime() <= request.getValidTime().getTime()) {
-            validTimeDto.setValidStartTime(DateHelper.getDateOfHH_mm(request.getValidTime()));
-        } else {
-            validTimeDto.setValidStartTime(workGridSchedule.getStartTime());
-        }
 
-        if (workGridSchedule.getInvalidTime().getTime() >= request.getInvalidTime().getTime()) {
-            validTimeDto.setValidEndTime(DateHelper.getDateOfHH_mm(request.getInvalidTime()));
-        } else {
-            validTimeDto.setValidEndTime(workGridSchedule.getEndTime());
-        }
+        String validStartTime = DateHelper.getDateOfHH_mm(request.getValidTime());
+        String validEndTime = DateHelper.getDateOfHH_mm(request.getInvalidTime());
+        validTimeDto.setValidStartTime(workGridSchedule.getStartTime().compareTo(validStartTime) < 0 ? validStartTime : workGridSchedule.getStartTime());
+        validTimeDto.setValidStartTime(workGridSchedule.getEndTime().compareTo(validEndTime) > 0 ? validEndTime : workGridSchedule.getEndTime());
 
         return validTimeDto;
     }
