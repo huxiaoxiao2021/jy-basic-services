@@ -468,7 +468,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
             if (searchDateStart.equals(DateUtils.truncate(workGridSchedule.getValidTime(), Calendar.DATE))) {
                 ScheduleValidTimeDto validTimeDto = new ScheduleValidTimeDto();
                 BeanUtils.copyProperties(workGridSchedule, validTimeDto);
-                validTimeDto.setValidStartTime(validStartTime);
+                validTimeDto.setValidStartTime(workGridSchedule.getStartTime());
                 validTimeDto.setValidEndTime(midNight);
                 retList.add(validTimeDto);
                 // 查询当天跟失效时间一样  只有上半段
@@ -476,18 +476,18 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
                 ScheduleValidTimeDto validTimeDto = new ScheduleValidTimeDto();
                 BeanUtils.copyProperties(workGridSchedule, validTimeDto);
                 validTimeDto.setValidStartTime(midNight);
-                validTimeDto.setValidEndTime(validEndTime);
+                validTimeDto.setValidEndTime(workGridSchedule.getEndTime());
                 retList.add(validTimeDto);
                 // 生效时间包含查询时间  有上半段和下半段
             } else {
                 ScheduleValidTimeDto validTimeDto1 = new ScheduleValidTimeDto();
                 BeanUtils.copyProperties(workGridSchedule, validTimeDto1);
                 validTimeDto1.setValidStartTime(midNight);
-                validTimeDto1.setValidEndTime(validEndTime);
+                validTimeDto1.setValidEndTime(workGridSchedule.getEndTime());
 
                 ScheduleValidTimeDto validTimeDto2 = new ScheduleValidTimeDto();
                 BeanUtils.copyProperties(workGridSchedule, validTimeDto2);
-                validTimeDto2.setValidStartTime(validStartTime);
+                validTimeDto2.setValidStartTime(workGridSchedule.getStartTime());
                 validTimeDto2.setValidEndTime(midNight);
 
                 retList.add(validTimeDto1);
