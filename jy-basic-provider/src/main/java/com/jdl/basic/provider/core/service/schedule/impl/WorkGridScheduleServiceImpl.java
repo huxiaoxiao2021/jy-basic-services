@@ -452,7 +452,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         String validStartTime = DateHelper.getDateOfHH_mm(request.getValidTime());
         String validEndTime = DateHelper.getDateOfHH_mm(request.getInvalidTime());
         validTimeDto.setValidStartTime(workGridSchedule.getStartTime().compareTo(validStartTime) < 0 ? validStartTime : workGridSchedule.getStartTime());
-        validTimeDto.setValidStartTime(workGridSchedule.getEndTime().compareTo(validEndTime) > 0 ? validEndTime : workGridSchedule.getEndTime());
+        validTimeDto.setValidEndTime(workGridSchedule.getEndTime().compareTo(validEndTime) > 0 ? validEndTime : workGridSchedule.getEndTime());
 
         return validTimeDto;
     }
