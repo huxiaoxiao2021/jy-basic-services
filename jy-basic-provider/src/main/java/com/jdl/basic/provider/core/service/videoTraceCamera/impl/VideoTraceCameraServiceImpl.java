@@ -52,9 +52,12 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     @Override
     public Result<List<VideoTraceCameraConfig>> queryVideoTraceCameraConfig(VideoTraceCameraQuery query) {
         Result<List<VideoTraceCameraConfig>> result = Result.success();
-        if (StringUtils.isBlank(query.getCameraCode()) || StringUtils.isBlank(query.getVideoRecorderCode())){
-            return Result.fail("参数错误，摄像头编码或摄像机编码为空");
+        if ((StringUtils.isBlank(query.getCameraCode()) || StringUtils.isBlank(query.getNationalChannelCode()))
+                || query.getId()<0){
+            return Result.fail("参数错误，摄像头编码、通道号存在空值");
+
         }
+        int i;
         VideoTraceCamera videoTraceCamera = videoTraceCameraDao.queryByCondition(query);
         if (videoTraceCamera == null){
             return Result.fail("摄像头信息不存在");
@@ -74,7 +77,20 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         VideoTraceCameraConfig condition = new VideoTraceCameraConfig();
         condition.setCameraId(videoTraceCamera.getId());
         List<VideoTraceCameraConfig> oldList = videoTraceCameraConfigDao.queryByCameraId(condition);
+        if (CollectionUtils.isNotEmpty(oldList)){
+            VideoTraceCamera update = new VideoTraceCamera();
+            update.setId(videoTraceCamera.getId());
+            update.setConfigStatus((byte) 1);
+            videoTraceCameraDao.updateById(update);
+        }
         List<VideoTraceCameraConfig> newList = videoTraceCameraVo.getVideoTraceCameraConfigList();
+        if (CollectionUtils.isNotEmpty(newList)){
+            //清空绑定关系后，修改摄像头配置状态
+            VideoTraceCamera update = new VideoTraceCamera();
+            update.setId(videoTraceCamera.getId());
+            update.setConfigStatus((byte) 0);
+            videoTraceCameraDao.updateById(update);
+        }
         List<VideoTraceCameraConfig> delList = oldList.stream().filter(a -> newList.stream().noneMatch(b -> compare(a, b))).collect(Collectors.toList());
         List<VideoTraceCameraConfig> addList = newList.stream().filter(a -> oldList.stream().noneMatch(b -> compare(a, b))).collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(addList)){

@@ -19,4 +19,6 @@ public interface VideoTraceCameraJsfService {
     //获取网格主摄像头
     Result<List<VideoTraceCameraConfig>> getWorkMasterCamera(String workGridKey);
 
+    int cancelVideoTraceCameraConfig(VideoTraceCameraConfig videoTraceCameraConfig);
+
 }

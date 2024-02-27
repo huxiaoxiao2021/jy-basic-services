@@ -9,7 +9,7 @@ public class VideoTraceCamera {
 
     private String cameraName;
 
-    private String nationalChannelCode ;
+    private String nationalChannelCode;
 
     private String nationalChannelName;
 
