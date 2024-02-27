@@ -234,6 +234,9 @@
             <if test="code != null">
                 AND code = #{code,jdbcType=TINYINT}
             </if>
+            <if test="status != null">
+                AND status = #{status,jdbcType=TINYINT}
+            </if>
             <if test="id != null">
                 AND id != #{id,jdbcType=TINYINT}
             </if>

@@ -1,8 +1,11 @@
 package com.jdl.basic.provider.core.provider.jyJobType;
 
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.jyJobType.JyJobType;
 import com.jdl.basic.api.domain.jyJobType.JyJobTypeQuery;
 import com.jdl.basic.api.service.jyJobType.JyJobTypeJsfService;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.service.jyJobType.JyJobTypeService;
@@ -33,6 +36,8 @@ public class JyJobTypeJsfServiceImpl implements JyJobTypeJsfService {
      * @return 插入操作的结果，返回布尔值
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyJobTypeJsfServiceImpl.insert", jAppName=Constants.UMP_APP_NAME, mState={
+        JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> insert(JyJobType insertData) {
         return jyJobTypeService.insert(insertData);
     }
@@ -44,6 +49,8 @@ public class JyJobTypeJsfServiceImpl implements JyJobTypeJsfService {
      * @return 更新是否成功的结果
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyJobTypeJsfServiceImpl.updateById", jAppName=Constants.UMP_APP_NAME, mState={
+        JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> updateById(JyJobType updateData) {
         return jyJobTypeService.updateById(updateData);
     }
@@ -55,6 +62,8 @@ public class JyJobTypeJsfServiceImpl implements JyJobTypeJsfService {
      * @return 分页列表结果
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyJobTypeJsfServiceImpl.queryPageList", jAppName=Constants.UMP_APP_NAME, mState={
+        JProEnum.TP,JProEnum.FunctionError})
     public Result<PageDto<JyJobType>> queryPageList(JyJobTypeQuery query) {
         return jyJobTypeService.queryPageList(query);
     }
@@ -66,6 +75,8 @@ public class JyJobTypeJsfServiceImpl implements JyJobTypeJsfService {
      * @return 任务类型列表
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyJobTypeJsfServiceImpl.queryListByCondition", jAppName=Constants.UMP_APP_NAME, mState={
+        JProEnum.TP,JProEnum.FunctionError})
     public Result<List<JyJobType>> queryListByCondition(JyJobType query) {
         return jyJobTypeService.queryListByCondition(query);
     }
@@ -75,6 +86,8 @@ public class JyJobTypeJsfServiceImpl implements JyJobTypeJsfService {
      * @return 职位类型列表
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyJobTypeJsfServiceImpl.queryAllList", jAppName=Constants.UMP_APP_NAME, mState={
+        JProEnum.TP,JProEnum.FunctionError})
     public List<JyJobType> queryAllList() {
         return jyJobTypeService.queryALlList();
     }
@@ -84,6 +97,8 @@ public class JyJobTypeJsfServiceImpl implements JyJobTypeJsfService {
      * @return 可用职位类型列表
      */
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".JyJobTypeJsfServiceImpl.queryAllAvailableList", jAppName=Constants.UMP_APP_NAME, mState={
+        JProEnum.TP,JProEnum.FunctionError})
     public List<JyJobType> queryAllAvailableList() {
         return jyJobTypeService.queryAllAvailableList();
     }
