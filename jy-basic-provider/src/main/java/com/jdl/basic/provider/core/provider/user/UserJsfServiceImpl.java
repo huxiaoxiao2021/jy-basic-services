@@ -194,7 +194,7 @@ public class UserJsfServiceImpl implements UserJsfService {
     @Override
     public Result<List<JyJobType>> getAllJobTypeList() {
         List<JyJobType> jobTypeList = new ArrayList<>();
-        for (com.jdl.basic.api.domain.jyJobType.JyJobType jyJobType : jyJobTypeService.queryALlList()) {
+        for (com.jdl.basic.api.domain.jyJobType.JyJobType jyJobType : jyJobTypeService.queryAllAvailableList()) {
             JyJobType jobType = new JyJobType();
             jobType.setCode(jyJobType.getCode());
             jobType.setName(jyJobType.getName());
