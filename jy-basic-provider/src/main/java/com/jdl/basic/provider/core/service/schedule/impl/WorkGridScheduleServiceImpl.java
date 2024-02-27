@@ -468,27 +468,27 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
             if (searchDateStart.equals(DateUtils.truncate(workGridSchedule.getValidTime(), Calendar.DATE))) {
                 ScheduleValidTimeDto validTimeDto = new ScheduleValidTimeDto();
                 BeanUtils.copyProperties(workGridSchedule, validTimeDto);
-                validTimeDto.setStartTime(validStartTime);
-                validTimeDto.setEndTime(midNight);
+                validTimeDto.setValidStartTime(validStartTime);
+                validTimeDto.setValidEndTime(midNight);
                 retList.add(validTimeDto);
                 // 查询当天跟失效时间一样  只有上半段
             } else if (searchDateEnd.equals(DateUtils.truncate(workGridSchedule.getInvalidTime(), Calendar.DATE))) {
                 ScheduleValidTimeDto validTimeDto = new ScheduleValidTimeDto();
                 BeanUtils.copyProperties(workGridSchedule, validTimeDto);
                 validTimeDto.setValidStartTime(midNight);
-                validTimeDto.setEndTime(validEndTime);
+                validTimeDto.setValidEndTime(validEndTime);
                 retList.add(validTimeDto);
                 // 生效时间包含查询时间  有上半段和下半段
             } else {
                 ScheduleValidTimeDto validTimeDto1 = new ScheduleValidTimeDto();
                 BeanUtils.copyProperties(workGridSchedule, validTimeDto1);
                 validTimeDto1.setValidStartTime(midNight);
-                validTimeDto1.setEndTime(validEndTime);
+                validTimeDto1.setValidEndTime(validEndTime);
 
                 ScheduleValidTimeDto validTimeDto2 = new ScheduleValidTimeDto();
                 BeanUtils.copyProperties(workGridSchedule, validTimeDto2);
-                validTimeDto2.setStartTime(validStartTime);
-                validTimeDto2.setEndTime(midNight);
+                validTimeDto2.setValidStartTime(validStartTime);
+                validTimeDto2.setValidEndTime(midNight);
 
                 retList.add(validTimeDto1);
                 retList.add(validTimeDto2);
