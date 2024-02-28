@@ -104,6 +104,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         List<String> scheduleKeys = insertSchedules.stream().map(WorkGridSchedule::getScheduleKey).distinct().collect(Collectors.toList());
         BatchWorkGridScheduleQueryDto queryDto = new BatchWorkGridScheduleQueryDto();
         queryDto.setScheduleKeyList(scheduleKeys);
+        // TODO 后续上线切换至request参数里获取 避免与center重复查询
         List<WorkGridSchedule> currentSchedules = workGridScheduleDao.listWorkGridScheduleByKeys(queryDto);
         Map<String, WorkGridSchedule> currentSchedulesMap = currentSchedules.stream().collect(Collectors.toMap(WorkGridSchedule::getScheduleKey, item -> item, (first, second) -> first));
         for (WorkGridSchedule insertSchedule : insertSchedules) {
