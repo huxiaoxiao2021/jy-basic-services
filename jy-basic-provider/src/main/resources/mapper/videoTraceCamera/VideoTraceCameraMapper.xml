@@ -64,7 +64,7 @@
     </where>
     limit #{offset}, #{limit}
   </select>
-  <select id="queryCount" resultType="java.lang.Long">
+  <select id="queryCount" resultType="java.lang.Integer">
     select
       count(1)
     from
@@ -100,7 +100,9 @@
     from
       video_trace_camera
     <where>
-      status = 1
+      <if test="status != 0 " >
+        and status = 1
+      </if>
       <if test="cameraCode != null and cameraCode != ''" >
         and camera_code = #{cameraCode,jdbcType=VARCHAR}
       </if>

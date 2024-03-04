@@ -1,8 +1,6 @@
 package com.jdl.basic.provider.core.service.videoTraceCamera;
 
 import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
 
 public interface VideoTraceCameraConfigService {

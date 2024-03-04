@@ -11,4 +11,9 @@ public class VideoTraceCameraVo extends VideoTraceCamera{
     private List<VideoTraceCameraConfig> videoTraceCameraConfigList;
 
     private String gridBusinessKey;
+
+    /**
+     * 主摄像头 1是 0否
+     */
+    private Byte masterCamera;
 }

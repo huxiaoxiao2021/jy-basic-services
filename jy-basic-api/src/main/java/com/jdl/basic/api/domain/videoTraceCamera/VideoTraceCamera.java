@@ -5,24 +5,45 @@ import java.util.Date;
 public class VideoTraceCamera {
     private Integer id;
 
+    /**
+     * 摄像头编码
+     */
     private String cameraCode;
-
+    /**
+     * 摄像头名称
+     */
     private String cameraName;
-
+    /**
+     * 通道号
+     */
     private String nationalChannelCode;
-
+    /**
+     * 通道名称
+     */
     private String nationalChannelName;
-
+    /**
+     * 场地编码
+     */
     private Integer siteCode;
-
+    /**
+     * 场地名称
+     */
     private String siteName;
-
+    /**
+     * 省区编码
+     */
     private String provinceAgencyCode;
-
+    /**
+     * 省区名称
+     */
     private String provinceAgencyName;
-
+    /**
+     * 枢纽编码
+     */
     private String areaHubCode;
-
+    /**
+     * 枢纽名称
+     */
     private String areaHubName;
 
     private String createErp;
@@ -32,9 +53,13 @@ public class VideoTraceCamera {
     private String updateErp;
 
     private Date updateTime;
-
+    /**
+     * 配置状态 1已配置 0未配置
+     */
     private Byte configStatus;
-
+    /**
+     * 逻辑删除标志位 0删除 1正常
+     */
     private Byte status;
 
     private Date ts;

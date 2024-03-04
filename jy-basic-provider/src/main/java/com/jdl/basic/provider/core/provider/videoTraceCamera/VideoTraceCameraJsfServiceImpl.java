@@ -16,11 +16,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Service("videoTraceCameraJsfService")
+@Service("videoTraceCameraJsfServiceImpl")
 public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfService {
     @Autowired
     private VideoTraceCameraService videoTraceCameraService;
@@ -58,7 +59,7 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
     @Override
     public int cancelVideoTraceCameraConfig(VideoTraceCameraConfig videoTraceCameraConfig) {
 
-        if (StringUtils.isBlank(videoTraceCameraConfig.getRefGridKey())){
+        if (StringUtils.isBlank(videoTraceCameraConfig.getRefWorkGridKey())){
             throw new RuntimeException("网格业务主键不能为空");
         }
         List<VideoTraceCameraConfig> list = videoTraceCameraConfigService.queryByCondition(videoTraceCameraConfig);
@@ -66,5 +67,36 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
             return videoTraceCameraConfigService.batchDelete(list.stream().map(VideoTraceCameraConfig::getId).collect(Collectors.toList()),"sys");
         }
         return 0;
+    }
+
+    @Override
+    public Result<Boolean> changeMasterCameraConfig(VideoTraceCameraVo videoTraceCameraVo) {
+
+        Result<Boolean> result = Result.success();
+        VideoTraceCameraConfig videoTraceCameraConfig = new VideoTraceCameraConfig();
+        videoTraceCameraConfig.setMasterCamera(videoTraceCameraVo.getMasterCamera());
+        videoTraceCameraConfig.setRefWorkGridKey(videoTraceCameraVo.getGridBusinessKey());
+        //根据网格查主摄像头
+        List<VideoTraceCameraConfig> list = videoTraceCameraConfigService.queryByCondition(videoTraceCameraConfig);
+        // 删除网格原主摄像头绑定数据
+        if (!list.isEmpty()){
+             videoTraceCameraConfigService.batchDelete(list.stream().map(VideoTraceCameraConfig::getId).collect(Collectors.toList()), videoTraceCameraVo.getUpdateErp());
+        }
+        List<VideoTraceCameraConfig> addList = new ArrayList<>(videoTraceCameraVo.getVideoTraceCameraConfigList());
+        for (VideoTraceCameraConfig item : list) {
+            VideoTraceCameraConfig add = new VideoTraceCameraConfig();
+            add.setCameraId(item.getCameraId());
+            add.setRefWorkGridKey(item.getRefWorkGridKey());
+            add.setMasterCamera((byte) 0);
+            add.setCreateErp(videoTraceCameraVo.getUpdateErp());
+            addList.add(add);
+        }
+        videoTraceCameraConfigService.batchSave(addList);
+        return result.setData(true);
+    }
+
+    @Override
+    public Result<Integer> getCount(VideoTraceCameraQuery query) {
+        return Result.success(videoTraceCameraService.queryCount(query));
     }
 }

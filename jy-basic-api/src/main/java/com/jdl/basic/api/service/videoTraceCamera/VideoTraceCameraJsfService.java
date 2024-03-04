@@ -21,4 +21,7 @@ public interface VideoTraceCameraJsfService {
 
     int cancelVideoTraceCameraConfig(VideoTraceCameraConfig videoTraceCameraConfig);
 
+    Result<Boolean> changeMasterCameraConfig(VideoTraceCameraVo videoTraceCameraVo);
+    Result<Integer> getCount(VideoTraceCameraQuery query);
+
 }

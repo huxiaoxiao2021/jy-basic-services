@@ -4,7 +4,7 @@ import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera;
 import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig;
 import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraQuery;
 import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraVo;
-import com.jdl.basic.common.utils.JsonHelper;
+import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.videoTraceCamera.VideoTraceCameraConfigDao;
@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -38,9 +39,9 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         if(query.getPageNumber() > 0) {
             query.setOffset((query.getPageNumber() - 1) * query.getLimit());
         };
-        Long totalCount = videoTraceCameraDao.queryCount(query);
+        int totalCount = videoTraceCameraDao.queryCount(query);
         PageDto<VideoTraceCamera> pageDto = new PageDto<>(query.getPageNumber(), query.getLimit());
-        pageDto.setTotalRow(totalCount.intValue());
+        pageDto.setTotalRow(totalCount);
         if(totalCount > 0){
             List<VideoTraceCamera> videoTraceCameraList = videoTraceCameraDao.queryPageList(query);
             pageDto.setResult(videoTraceCameraList);
@@ -53,19 +54,36 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     public Result<List<VideoTraceCameraConfig>> queryVideoTraceCameraConfig(VideoTraceCameraQuery query) {
         Result<List<VideoTraceCameraConfig>> result = Result.success();
         if ((StringUtils.isBlank(query.getCameraCode()) || StringUtils.isBlank(query.getNationalChannelCode()))
-                || query.getId()<0){
+                && query.getId()<0){
             return Result.fail("参数错误，摄像头编码、通道号存在空值");
-
         }
-        int i;
-        VideoTraceCamera videoTraceCamera = videoTraceCameraDao.queryByCondition(query);
-        if (videoTraceCamera == null){
+
+        List<VideoTraceCamera> videoTraceCameras = videoTraceCameraDao.queryByCondition(query);
+        if (CollectionUtils.isEmpty(videoTraceCameras)){
             return Result.fail("摄像头信息不存在");
         }
-        VideoTraceCameraConfig condition = new VideoTraceCameraConfig();
-        condition.setCameraId(videoTraceCamera.getId());
 
-        return result.setData(videoTraceCameraConfigDao.queryByCameraId(condition));
+        List<Integer> cameraIds = videoTraceCameras.stream().filter(x -> filter(x.getCreateTime(), x.getUpdateTime(), x.getStatus(), query)).map(VideoTraceCamera::getId).collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(cameraIds)) {
+            VideoTraceCameraConfig condition = new VideoTraceCameraConfig();
+            condition.setCameraIds(cameraIds);
+            condition.setYn(query.getStatus()==null ? null:query.getStatus().byteValue());
+            List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigDao.queryByCondition(condition);
+            result.setData(videoTraceCameraConfigs.stream().filter(x->filter(x.getCreateTime(),x.getUpdateTime(), x.getYn(), query)).collect(Collectors.toList()));
+        }
+        return result;
+    }
+
+    private static boolean filter(Date createTime, Date updateTime, int yn, VideoTraceCameraQuery query) {
+        if (StringUtils.isBlank(query.getStartTimeStr()) || StringUtils.isBlank(query.getEndTimeStr())){
+            return true;
+        }
+        Date startTime = DateHelper.parse(query.getStartTimeStr());
+        Date endTime = DateHelper.parse(query.getEndTimeStr());
+        if (startTime == null || endTime == null || query.getStatus() ==null ||query.getStatus() !=0){
+            return true;
+        }
+        return endTime.compareTo(createTime) >= 0 && (yn==1 || startTime.compareTo(updateTime) <=0);
     }
 
     @Override
@@ -123,12 +141,12 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     }
 
     @Override
-    public long queryCount(VideoTraceCameraQuery videoTraceCameraQuery) {
+    public int queryCount(VideoTraceCameraQuery videoTraceCameraQuery) {
         return videoTraceCameraDao.queryCount(videoTraceCameraQuery);
     }
 
     @Override
-    public VideoTraceCamera queryByCondition(VideoTraceCameraQuery query) {
+    public List<VideoTraceCamera> queryByCondition(VideoTraceCameraQuery query) {
         return videoTraceCameraDao.queryByCondition(query);
     }
 
@@ -137,8 +155,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         && Objects.equals(v1.getRefGridKey(),v2.getRefGridKey())
         && Objects.equals(v1.getMachineCode(),v2.getMachineCode())
         && Objects.equals(v1.getChuteCode(),v2.getChuteCode())
-        && Objects.equals(v1.getSupplyDwsCode(),v2.getSupplyDwsCode())
-        && Objects.equals(v1.getMasterCamera(), v2.getMasterCamera());
+        && Objects.equals(v1.getSupplyDwsCode(),v2.getSupplyDwsCode());
 }
 
 }

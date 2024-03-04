@@ -1,10 +1,12 @@
 package com.jdl.basic.api.domain.videoTraceCamera;
 
 import com.jdl.basic.api.domain.BasePagerCondition;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Setter
 @Getter
@@ -39,6 +41,15 @@ public class VideoTraceCameraQuery extends BasePagerCondition implements Seriali
      * 配置状态
      */
     private Byte configStatus;
+
+    private String endTimeStr;
+
+    private String startTimeStr;
+
+    /**
+     * 为0时会查已失效的摄像头信息
+     */
+    private Integer status;
 
     private int id;
 

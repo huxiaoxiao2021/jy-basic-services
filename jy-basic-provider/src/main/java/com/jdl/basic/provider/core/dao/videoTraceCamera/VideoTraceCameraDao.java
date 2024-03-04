@@ -16,7 +16,7 @@ public interface VideoTraceCameraDao {
 
     List<VideoTraceCamera> queryPageList(VideoTraceCameraQuery videoTraceCameraQuery);
 
-    long queryCount(VideoTraceCameraQuery videoTraceCameraQuery);
+    int queryCount(VideoTraceCameraQuery videoTraceCameraQuery);
 
-    VideoTraceCamera queryByCondition(VideoTraceCameraQuery query);
+    List<VideoTraceCamera>  queryByCondition(VideoTraceCameraQuery query);
 }

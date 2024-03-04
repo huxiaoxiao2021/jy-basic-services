@@ -24,8 +24,7 @@ public interface VideoTraceCameraService {
 
     int updateById(VideoTraceCamera record);
 
-    long queryCount(VideoTraceCameraQuery videoTraceCameraQuery);
+    int queryCount(VideoTraceCameraQuery videoTraceCameraQuery);
 
-
-    VideoTraceCamera queryByCondition(VideoTraceCameraQuery query);
+    List<VideoTraceCamera> queryByCondition(VideoTraceCameraQuery query);
 }
