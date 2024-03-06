@@ -100,8 +100,8 @@
     from
       video_trace_camera
     <where>
-      <if test="status != 0 " >
-        and status = 1
+      <if test="status != null" >
+        and status = #{status,jdbcType=TINYINT}
       </if>
       <if test="cameraCode != null and cameraCode != ''" >
         and camera_code = #{cameraCode,jdbcType=VARCHAR}
@@ -125,6 +125,17 @@
         and config_status = #{configStatus,jdbcType=TINYINT}
       </if>
     </where>
+  </select>
+  <select id="getByIds" resultType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera" resultMap="BaseResultMap">
+    select
+      <include refid="Base_Column_List"/>
+    from
+      video_trace_camera
+    where and status =1
+      and id in
+    <foreach collection="ids" item="id" open="(" separator="," close=")">
+      #{id,jdbcType=INTEGER}
+    </foreach>
   </select>
 
   <update id="deleteById">

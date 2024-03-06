@@ -37,10 +37,11 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     public Result<PageDto<VideoTraceCamera>> queryPageList(VideoTraceCameraQuery query) {
         Result<PageDto<VideoTraceCamera>> result = Result.success();
         if(query.getPageNumber() > 0) {
-            query.setOffset((query.getPageNumber() - 1) * query.getLimit());
+            query.setLimit(query.getPageSize());
+            query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
         };
         int totalCount = videoTraceCameraDao.queryCount(query);
-        PageDto<VideoTraceCamera> pageDto = new PageDto<>(query.getPageNumber(), query.getLimit());
+        PageDto<VideoTraceCamera> pageDto = new PageDto<>(query.getPageNumber(), query.getPageSize());
         pageDto.setTotalRow(totalCount);
         if(totalCount > 0){
             List<VideoTraceCamera> videoTraceCameraList = videoTraceCameraDao.queryPageList(query);
@@ -63,7 +64,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             return Result.fail("摄像头信息不存在");
         }
 
-        List<Integer> cameraIds = videoTraceCameras.stream().filter(x -> filter(x.getCreateTime(), x.getUpdateTime(), x.getStatus(), query)).map(VideoTraceCamera::getId).collect(Collectors.toList());
+        List<Integer> cameraIds = videoTraceCameras.stream().map(VideoTraceCamera::getId).collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(cameraIds)) {
             VideoTraceCameraConfig condition = new VideoTraceCameraConfig();
             condition.setCameraIds(cameraIds);
@@ -74,13 +75,16 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         return result;
     }
 
+    /**
+     * 筛选指定时间内有效的摄像头配置信息
+     */
     private static boolean filter(Date createTime, Date updateTime, int yn, VideoTraceCameraQuery query) {
         if (StringUtils.isBlank(query.getStartTimeStr()) || StringUtils.isBlank(query.getEndTimeStr())){
             return true;
         }
         Date startTime = DateHelper.parse(query.getStartTimeStr());
         Date endTime = DateHelper.parse(query.getEndTimeStr());
-        if (startTime == null || endTime == null || query.getStatus() ==null ||query.getStatus() !=0){
+        if (startTime == null || endTime == null){
             return true;
         }
         return endTime.compareTo(createTime) >= 0 && (yn==1 || startTime.compareTo(updateTime) <=0);
@@ -95,14 +99,14 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         VideoTraceCameraConfig condition = new VideoTraceCameraConfig();
         condition.setCameraId(videoTraceCamera.getId());
         List<VideoTraceCameraConfig> oldList = videoTraceCameraConfigDao.queryByCameraId(condition);
-        if (CollectionUtils.isNotEmpty(oldList)){
+        if (CollectionUtils.isEmpty(oldList)){
             VideoTraceCamera update = new VideoTraceCamera();
             update.setId(videoTraceCamera.getId());
             update.setConfigStatus((byte) 1);
             videoTraceCameraDao.updateById(update);
         }
         List<VideoTraceCameraConfig> newList = videoTraceCameraVo.getVideoTraceCameraConfigList();
-        if (CollectionUtils.isNotEmpty(newList)){
+        if (CollectionUtils.isEmpty(newList)){
             //清空绑定关系后，修改摄像头配置状态
             VideoTraceCamera update = new VideoTraceCamera();
             update.setId(videoTraceCamera.getId());
@@ -110,11 +114,11 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             videoTraceCameraDao.updateById(update);
         }
         List<VideoTraceCameraConfig> delList = oldList.stream().filter(a -> newList.stream().noneMatch(b -> compare(a, b))).collect(Collectors.toList());
-        List<VideoTraceCameraConfig> addList = newList.stream().filter(a -> oldList.stream().noneMatch(b -> compare(a, b))).collect(Collectors.toList());
+        List<VideoTraceCameraConfig> addList = newList.stream().filter(a -> oldList.stream().noneMatch(b -> compare(a, b))).peek(x-> x.setMasterCamera((byte) 0)).collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(addList)){
             videoTraceCameraConfigDao.batchSave(addList);
         }
-        if (CollectionUtils.isNotEmpty(addList)){
+        if (CollectionUtils.isNotEmpty(delList)){
             videoTraceCameraConfigDao.batchDelete(delList.stream().map(VideoTraceCameraConfig::getId).collect(Collectors.toList()),videoTraceCameraVo.getUpdateErp());
         }
         return Result.success();
@@ -148,6 +152,11 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     @Override
     public List<VideoTraceCamera> queryByCondition(VideoTraceCameraQuery query) {
         return videoTraceCameraDao.queryByCondition(query);
+    }
+
+    @Override
+    public List<VideoTraceCamera> getByIds(List<Integer> ids) {
+        return videoTraceCameraDao.getByIds(ids);
     }
 
     private boolean compare(VideoTraceCameraConfig v1, VideoTraceCameraConfig v2) {

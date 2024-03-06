@@ -13,4 +13,8 @@ public interface VideoTraceCameraConfigService {
     int batchSave(List<VideoTraceCameraConfig> addList);
     int batchDelete(List<Integer> ids, String updateErp);
     List<VideoTraceCameraConfig> queryByCondition(VideoTraceCameraConfig videoTraceCameraConfig);
+
+    List<VideoTraceCameraConfig> queryByDevice(VideoTraceCameraConfig videoTraceCameraConfig);
+
+    List<VideoTraceCameraConfig> queryByGrid(VideoTraceCameraConfig videoTraceCameraConfig);
 }

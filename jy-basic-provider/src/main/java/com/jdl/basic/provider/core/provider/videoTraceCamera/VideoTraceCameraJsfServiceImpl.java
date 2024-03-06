@@ -1,11 +1,11 @@
 package com.jdl.basic.provider.core.provider.videoTraceCamera;
 
-import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera;
-import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig;
-import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraQuery;
-import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraVo;
+import com.jd.etms.framework.utils.cache.annotation.Cache;
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
+import com.jdl.basic.api.domain.videoTraceCamera.*;
 import com.jdl.basic.api.service.videoTraceCamera.VideoTraceCameraJsfService;
-
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringUtils;
@@ -35,6 +35,7 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + "videoTraceCameraJsfServiceImpl.queryVideoTraceCameraConfig", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<List<VideoTraceCameraConfig>> queryVideoTraceCameraConfig(VideoTraceCameraQuery query) {
         return videoTraceCameraService.queryVideoTraceCameraConfig(query) ;
     }
@@ -96,7 +97,64 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + "videoTraceCameraJsfService.queryCamera", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    @Cache(key = "videoTraceCameraJsfService.queryCamera@args0", memoryEnable = true, memoryExpiredTime = 2 * 60 * 1000
+            ,redisEnable = true, redisExpiredTime = 2 * 60 * 1000)
+    public Result<List<VideoTraceCamera>> queryCamera(VideoTraceCameraConfigQuery query) {
+        if (StringUtils.isNotBlank(query.getChuteCode())){
+            return Result.fail("网格业务主键不能为空");
+        }
+        //网格、格口、DWS、工序查配置信息
+        if (StringUtils.isNotBlank(query.getChuteCode()) || StringUtils.isNotBlank(query.getSupplyDwsCode()) || StringUtils.isNotBlank(query.getWorkStationKey())){
+            VideoTraceCameraConfig videoTraceCameraConfig =new VideoTraceCameraConfig();
+            videoTraceCameraConfig.setRefGridKey(query.getWorkStationKey());
+            videoTraceCameraConfig.setRefWorkGridKey(query.getWorkGridKey());
+            videoTraceCameraConfig.setMachineCode(query.getMachineCode());
+            videoTraceCameraConfig.setSupplyDwsCode(query.getSupplyDwsCode());
+            videoTraceCameraConfig.setChuteCode(query.getChuteCode());
+            videoTraceCameraConfig.setYn((byte) 1);
+            List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigService.queryByCondition(videoTraceCameraConfig);
+            if (CollectionUtils.isNotEmpty(videoTraceCameraConfigs)){
+                return Result.success(videoTraceCameraService.getByIds(videoTraceCameraConfigs.stream().map(VideoTraceCameraConfig::getCameraId).distinct().collect(Collectors.toList())));
+            }
+        }
+        //网格、设备编码查配置信息
+        if (StringUtils.isNotBlank(query.getMachineCode())){
+            VideoTraceCameraConfig videoTraceCameraConfig =new VideoTraceCameraConfig();
+            videoTraceCameraConfig.setRefWorkGridKey(query.getWorkGridKey());
+            videoTraceCameraConfig.setMachineCode(query.getMachineCode());
+            List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigService.queryByDevice(videoTraceCameraConfig);
+            if (CollectionUtils.isNotEmpty(videoTraceCameraConfigs)){
+                return Result.success(videoTraceCameraService.getByIds(videoTraceCameraConfigs.stream().map(VideoTraceCameraConfig::getCameraId).distinct().collect(Collectors.toList())));
+            }
+        }
+        //网格查配置信息
+        VideoTraceCameraConfig videoTraceCameraConfig =new VideoTraceCameraConfig();
+        videoTraceCameraConfig.setRefWorkGridKey(query.getWorkGridKey());
+        List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigService.queryByGrid(videoTraceCameraConfig);
+        if (CollectionUtils.isNotEmpty(videoTraceCameraConfigs)){
+            return Result.success(videoTraceCameraService.getByIds(videoTraceCameraConfigs.stream().map(VideoTraceCameraConfig::getCameraId).distinct().collect(Collectors.toList())));
+        }
+        return Result.success("未查到摄像头信息");
+    }
+
+    @Override
     public Result<Integer> getCount(VideoTraceCameraQuery query) {
         return Result.success(videoTraceCameraService.queryCount(query));
     }
+
+    @Override
+    public Result<List<VideoTraceCameraConfig>> queryCameraConfigByCameraId(int id) {
+        Result<List<VideoTraceCameraConfig>> result = Result.success();
+        VideoTraceCamera videoTraceCameras = videoTraceCameraService.selectByPrimaryKey(id);
+        if (videoTraceCameras==null){
+            return Result.fail("摄像头信息不存在");
+        }
+        VideoTraceCameraConfig condition = new VideoTraceCameraConfig();
+        condition.setCameraId(id);
+        List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigService.queryByCameraId(condition);
+        result.setData(videoTraceCameraConfigs);
+        return result;
+    }
+
 }

@@ -43,8 +43,8 @@
     from video_trace_camera_config
     where
     1=1
-    <if test="yn != 0">
-      and yn = 1
+    <if test="yn != null">
+      and yn = #{yn,jdbcType=INTEGER}
     </if>
     <if test="refWorkGridKey != null and refWorkGridKey != ''" >
       and ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
@@ -78,7 +78,30 @@
     </if>
   </select>
 
-  <update id="deleteById">
+  <select id="queryByDevice" resultType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from video_trace_camera_config
+    where
+      yn = 1
+      and ref_grid_key = #{refGridKey,jdbcType=VARCHAR}
+      and machine_code = #{cameraCode,jdbcType=VARCHAR}
+      and (chute_code is null or chute_code = '')
+      and (supply_dws_code is null or supply_dws_code = '')
+  </select>
+
+  <select id="queryByGrid" resultType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from video_trace_camera_config
+    where
+    yn = 1
+    and ref_grid_key = #{refGridKey,jdbcType=VARCHAR}
+    and (machine_code is null or machine_code = '')
+    and (ref_work_grid_key is null or ref_work_grid_key = '')
+  </select>
+
+    <update id="deleteById">
     update
     video_trace_camera_config
     set

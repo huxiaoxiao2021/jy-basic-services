@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.dao.videoTraceCamera;
 
 import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera;
 import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraQuery;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface VideoTraceCameraDao {
     int queryCount(VideoTraceCameraQuery videoTraceCameraQuery);
 
     List<VideoTraceCamera>  queryByCondition(VideoTraceCameraQuery query);
+
+    List<VideoTraceCamera> getByIds(@Param("ids")List<Integer> ids);
 }

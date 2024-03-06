@@ -55,4 +55,14 @@ public class VideoTraceCameraConfigServiceImpl implements VideoTraceCameraConfig
     public List<VideoTraceCameraConfig> queryByCondition(VideoTraceCameraConfig videoTraceCameraConfig) {
         return videoTraceCameraConfigDao.queryByCondition(videoTraceCameraConfig);
     }
+
+    @Override
+    public List<VideoTraceCameraConfig> queryByDevice(VideoTraceCameraConfig videoTraceCameraConfig) {
+        return videoTraceCameraConfigDao.queryByDevice(videoTraceCameraConfig);
+    }
+
+    @Override
+    public List<VideoTraceCameraConfig> queryByGrid(VideoTraceCameraConfig videoTraceCameraConfig) {
+        return videoTraceCameraConfigDao.queryByGrid(videoTraceCameraConfig);
+    }
 }

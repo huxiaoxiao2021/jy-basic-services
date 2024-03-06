@@ -14,4 +14,8 @@ public interface VideoTraceCameraConfigDao {
     int batchSave(@Param("list") List<VideoTraceCameraConfig> addList);
     int batchDelete(@Param("ids")List<Integer> ids, @Param("updateErp") String updateErp);
     List<VideoTraceCameraConfig> queryByCondition(VideoTraceCameraConfig videoTraceCameraConfig);
+
+    List<VideoTraceCameraConfig> queryByDevice(VideoTraceCameraConfig videoTraceCameraConfig);
+
+    List<VideoTraceCameraConfig> queryByGrid(VideoTraceCameraConfig videoTraceCameraConfig);
 }
