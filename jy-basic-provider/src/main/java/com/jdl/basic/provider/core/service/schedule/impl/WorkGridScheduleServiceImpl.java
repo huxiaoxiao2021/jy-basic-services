@@ -451,15 +451,18 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
     private List<ScheduleValidTimeDto> getValidTimeDto(WorkGridSchedule workGridSchedule, ValidWorkGridScheduleRequest request) {
         List<ScheduleValidTimeDto> retList = new ArrayList<>();
 
-        String validStartTime = DateHelper.getDateOfHH_mm(request.getValidTime());
-        String validEndTime = DateHelper.getDateOfHH_mm(request.getInvalidTime());
         boolean crossDayFlag = isCrossDay(workGridSchedule);
         // 非跨夜 一段时间
         if (!crossDayFlag) {
+            Date now = new Date();
+            Date scheduleStartTime = getScheduleDateTimeOfSpecifiedDate(now, workGridSchedule.getStartTime(), 0);
+            Date scheduleEndTime = getScheduleDateTimeOfSpecifiedDate(now, workGridSchedule.getEndTime(), 0);
             ScheduleValidTimeDto validTimeDto = new ScheduleValidTimeDto();
             BeanUtils.copyProperties(workGridSchedule, validTimeDto);
-            validTimeDto.setValidStartTime(workGridSchedule.getStartTime().compareTo(validStartTime) < 0 ? validStartTime : workGridSchedule.getStartTime());
-            validTimeDto.setValidEndTime(workGridSchedule.getEndTime().compareTo(validEndTime) > 0 ? validEndTime : workGridSchedule.getEndTime());
+            String validStartTime = request.getValidTime().before(scheduleStartTime) ? DateHelper.getDateOfHH_mm(scheduleStartTime) : DateHelper.getDateOfHH_mm(request.getValidTime());
+            String validEndTime = request.getInvalidTime().after(scheduleEndTime) ? DateHelper.getDateOfHH_mm(scheduleEndTime) : DateHelper.getDateOfHH_mm(request.getInvalidTime());
+            validTimeDto.setValidStartTime(validStartTime);
+            validTimeDto.setValidEndTime(validEndTime);
             retList.add(validTimeDto);
         } else {    // 跨夜  可能有两段时间
 
