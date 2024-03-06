@@ -454,9 +454,9 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         boolean crossDayFlag = isCrossDay(workGridSchedule);
         // 非跨夜 一段时间
         if (!crossDayFlag) {
-            Date now = new Date();
-            Date scheduleStartTime = getScheduleDateTimeOfSpecifiedDate(now, workGridSchedule.getStartTime(), 0);
-            Date scheduleEndTime = getScheduleDateTimeOfSpecifiedDate(now, workGridSchedule.getEndTime(), 0);
+            Date date = DateUtils.truncate(request.getValidTime(), Calendar.DATE);
+            Date scheduleStartTime = getScheduleDateTimeOfSpecifiedDate(date, workGridSchedule.getStartTime(), 0);
+            Date scheduleEndTime = getScheduleDateTimeOfSpecifiedDate(date, workGridSchedule.getEndTime(), 0);
             ScheduleValidTimeDto validTimeDto = new ScheduleValidTimeDto();
             BeanUtils.copyProperties(workGridSchedule, validTimeDto);
             String validStartTime = request.getValidTime().before(scheduleStartTime) ? DateHelper.getDateOfHH_mm(scheduleStartTime) : DateHelper.getDateOfHH_mm(request.getValidTime());
