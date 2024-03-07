@@ -277,7 +277,8 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
 
             // 班次生效中
             if (isScheduleWorking(deleteSchedule)) {
-                Date invalidTime = getScheduleDateTimeOfSpecifiedDate(now, deleteSchedule.getEndTime(), 0);
+                int addCount = deleteSchedule.getEndTime().equals(midNight) ? 1 : 0;
+                Date invalidTime = getScheduleDateTimeOfSpecifiedDate(now, deleteSchedule.getEndTime(), addCount);
                 // 跨夜场景
                 if (crossDayFlag) {
                     // 后半夜 所以失效时间是当天
@@ -481,20 +482,25 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
                 BeanUtils.copyProperties(workGridSchedule, validTimeDto);
                 validTimeDto.setValidStartTime(midNight);
                 validTimeDto.setValidEndTime(workGridSchedule.getEndTime());
-                retList.add(validTimeDto);
+                if (!midNight.equals(workGridSchedule.getEndTime())) {
+                    retList.add(validTimeDto);
+                }
                 // 生效时间包含查询时间  有上半段和下半段
             } else {
                 ScheduleValidTimeDto validTimeDto1 = new ScheduleValidTimeDto();
                 BeanUtils.copyProperties(workGridSchedule, validTimeDto1);
                 validTimeDto1.setValidStartTime(midNight);
                 validTimeDto1.setValidEndTime(workGridSchedule.getEndTime());
+                // 跨夜且结束时间不是00:00
+                if (!midNight.equals(workGridSchedule.getEndTime())) {
+                    retList.add(validTimeDto1);
+                }
 
                 ScheduleValidTimeDto validTimeDto2 = new ScheduleValidTimeDto();
                 BeanUtils.copyProperties(workGridSchedule, validTimeDto2);
                 validTimeDto2.setValidStartTime(workGridSchedule.getStartTime());
                 validTimeDto2.setValidEndTime(midNight);
 
-                retList.add(validTimeDto1);
                 retList.add(validTimeDto2);
             }
         }
