@@ -5,7 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="camera_id" jdbcType="INTEGER" property="cameraId" />
     <result column="ref_work_grid_key" jdbcType="VARCHAR" property="refWorkGridKey" />
-    <result column="ref_grid_key" jdbcType="VARCHAR" property="refGridKey" />
+    <result column="ref_work_station_key" jdbcType="VARCHAR" property="refWorkStationKey" />
     <result column="machine_code" jdbcType="VARCHAR" property="machineCode" />
     <result column="chute_code" jdbcType="VARCHAR" property="chuteCode" />
     <result column="supply_dws_code" jdbcType="VARCHAR" property="supplyDwsCode" />
@@ -18,7 +18,7 @@
     <result column="ts" jdbcType="TIMESTAMP" property="ts" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, camera_id, ref_work_grid_key, ref_grid_key, machine_code, chute_code, supply_dws_code, 
+    id, camera_id, ref_work_grid_key, ref_work_station_key, machine_code, chute_code, supply_dws_code,
     master_camera, create_erp, create_time, update_erp, update_time, yn, ts
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -49,8 +49,8 @@
     <if test="refWorkGridKey != null and refWorkGridKey != ''" >
       and ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
     </if>
-    <if test="refGridKey != null and refGridKey != ''" >
-      and ref_grid_key = #{refGridKey,jdbcType=VARCHAR}
+    <if test="refWorkStationKey != null and refWorkStationKey != ''" >
+      and ref_work_station_key = #{refWorkStationKey,jdbcType=VARCHAR}
     </if>
     <if test="machineCode != null and machineCode != ''" >
       and machine_code = #{cameraCode,jdbcType=VARCHAR}
@@ -84,7 +84,7 @@
     from video_trace_camera_config
     where
       yn = 1
-      and ref_grid_key = #{refGridKey,jdbcType=VARCHAR}
+      and ref_work_station_key = #{refWorkStationKey,jdbcType=VARCHAR}
       and machine_code = #{cameraCode,jdbcType=VARCHAR}
       and (chute_code is null or chute_code = '')
       and (supply_dws_code is null or supply_dws_code = '')
@@ -96,7 +96,7 @@
     from video_trace_camera_config
     where
     yn = 1
-    and ref_grid_key = #{refGridKey,jdbcType=VARCHAR}
+    and ref_work_station_key = #{refWorkStationKey,jdbcType=VARCHAR}
     and (machine_code is null or machine_code = '')
     and (ref_work_grid_key is null or ref_work_grid_key = '')
   </select>
@@ -123,8 +123,8 @@
       <if test="refWorkGridKey != null">
         ref_work_grid_key,
       </if>
-      <if test="refGridKey != null">
-        ref_grid_key,
+      <if test="refWorkStationKey != null">
+        ref_work_station_key,
       </if>
       <if test="machineCode != null">
         machine_code,
@@ -151,8 +151,8 @@
       <if test="refWorkGridKey != null">
         #{refWorkGridKey,jdbcType=VARCHAR},
       </if>
-      <if test="refGridKey != null">
-        #{refGridKey,jdbcType=VARCHAR},
+      <if test="refWorkStationKey != null">
+        #{refWorkStationKey,jdbcType=VARCHAR},
       </if>
       <if test="machineCode != null">
         #{machineCode,jdbcType=VARCHAR},
@@ -177,13 +177,13 @@
   <insert id="batchSave" keyColumn="id" keyProperty="id"
           parameterType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig" useGeneratedKeys="true">
     insert into video_trace_camera_config (camera_id, ref_work_grid_key,
-    ref_grid_key, machine_code, chute_code,
+    ref_work_station_key, machine_code, chute_code,
     supply_dws_code, master_camera, create_erp,
     create_time, yn)
     values
     <foreach collection="list" separator="," item="item">
     (#{item.cameraId,jdbcType=INTEGER}, #{item.refWorkGridKey,jdbcType=VARCHAR},
-    #{item.refGridKey,jdbcType=VARCHAR}, #{item.machineCode,jdbcType=VARCHAR}, #{item.chuteCode,jdbcType=VARCHAR},
+    #{item.refWorkStationKey,jdbcType=VARCHAR}, #{item.machineCode,jdbcType=VARCHAR}, #{item.chuteCode,jdbcType=VARCHAR},
     #{item.supplyDwsCode,jdbcType=VARCHAR}, #{item.masterCamera,jdbcType=TINYINT}, #{item.createErp,jdbcType=VARCHAR}, now(), 1)
     </foreach>
   </insert>
@@ -208,8 +208,8 @@
       <if test="refWorkGridKey != null">
         ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR},
       </if>
-      <if test="refGridKey != null">
-        ref_grid_key = #{refGridKey,jdbcType=VARCHAR},
+      <if test="refWorkStationKey != null">
+        ref_work_station_key = #{refWorkStationKey,jdbcType=VARCHAR},
       </if>
       <if test="machineCode != null">
         machine_code = #{machineCode,jdbcType=VARCHAR},

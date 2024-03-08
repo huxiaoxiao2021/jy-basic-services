@@ -67,7 +67,7 @@ public class VideoTraceCameraJsfServiceTest {
     @Test
     public void getWorkMasterCameraTest(){
         String workGridKey="xx5";
-        Result<List<VideoTraceCameraConfig>> result = videoTraceCameraConfigService.getWorkMasterCamera(workGridKey);
+        Result<VideoTraceCamera> result = videoTraceCameraConfigService.getWorkMasterCamera(workGridKey);
         System.out.println(JsonHelper.toJSONString(result));
     }
 

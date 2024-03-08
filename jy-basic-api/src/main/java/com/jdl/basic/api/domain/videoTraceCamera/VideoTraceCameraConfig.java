@@ -18,9 +18,9 @@ public class VideoTraceCameraConfig {
      */
     private String refWorkGridKey;
     /**
-     * 关联工序ref：work_station_grid业务主键
+     * 关联工序ref：work_station业务主键
      */
-    private String refGridKey;
+    private String refWorkStationKey;
     /**
      * 自动化设备编码
      */

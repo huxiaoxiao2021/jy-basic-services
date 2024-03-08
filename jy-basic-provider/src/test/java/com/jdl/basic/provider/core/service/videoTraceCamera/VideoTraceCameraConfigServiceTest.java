@@ -1,6 +1,5 @@
 package com.jdl.basic.provider.core.service.videoTraceCamera;
 
-import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera;
 import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.ApplicationLaunch;
@@ -13,7 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ApplicationLaunch.class)
@@ -28,7 +26,7 @@ public class VideoTraceCameraConfigServiceTest {
             VideoTraceCameraConfig videoTraceCameraConfig = new VideoTraceCameraConfig();
             videoTraceCameraConfig.setCameraId(4);
             videoTraceCameraConfig.setRefWorkGridKey("xx123");
-            videoTraceCameraConfig.setRefGridKey("111");
+            videoTraceCameraConfig.setRefWorkStationKey("111");
             videoTraceCameraConfig.setMachineCode("111");
 //            videoTraceCameraConfig.setChuteCode();
 //            videoTraceCameraConfig.setSupplyDwsCode();

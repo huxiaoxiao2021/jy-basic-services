@@ -161,7 +161,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
 
     private boolean compare(VideoTraceCameraConfig v1, VideoTraceCameraConfig v2) {
     return Objects.equals(v1.getRefWorkGridKey(),v2.getRefWorkGridKey())
-        && Objects.equals(v1.getRefGridKey(),v2.getRefGridKey())
+        && Objects.equals(v1.getRefWorkStationKey(),v2.getRefWorkStationKey())
         && Objects.equals(v1.getMachineCode(),v2.getMachineCode())
         && Objects.equals(v1.getChuteCode(),v2.getChuteCode())
         && Objects.equals(v1.getSupplyDwsCode(),v2.getSupplyDwsCode());

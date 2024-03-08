@@ -22,7 +22,7 @@ public interface VideoTraceCameraJsfService {
     /**
      * 获取网格主摄像头
      */
-    Result<List<VideoTraceCameraConfig>> getWorkMasterCamera(String workGridKey);
+    Result<VideoTraceCamera> getWorkMasterCamera(String workGridKey);
 
     /**
      * 根据网格、设备、工序删除摄像头绑定消息
