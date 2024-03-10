@@ -1,7 +1,10 @@
 package com.jdl.basic.provider.core.service.workStation;
 
 
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.workStation.*;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 
@@ -207,4 +210,6 @@ public interface WorkStationGridService {
 	 * @return
 	 */
 	int syncWorkGridInfo(WorkGrid gridData);
+	
+    List<String> queryBusinessKeyByRefWorkGridKeys(List<String> refWorkGridKeys);
 }

@@ -824,5 +824,15 @@
         and dock_code = #{dockCode,jdbcType=VARCHAR}
         limit #{offset}, #{limit}
     </select>
+	<select id="queryBusinessKeyByRefWorkGridKeys" resultType="java.lang.String">
+		select
+			business_key
+		from work_station_grid
+		where yn=1
+		and ref_work_grid_key in
+		<foreach collection="refWorkGridKeys" item="item" open="(" close=")" separator=",">
+			#{item,jdbcType=VARCHAR}
+		</foreach> 
+	</select>
 
 </mapper>

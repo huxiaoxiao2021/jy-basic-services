@@ -7,6 +7,7 @@ import com.jdl.basic.api.domain.workStation.WorkStationGrid;
 import com.jdl.basic.api.domain.workStation.WorkStationGridCountVo;
 import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
 import com.jdl.basic.api.domain.workStation.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -234,4 +235,6 @@ public interface WorkStationGridDao {
     List<WorkStationGrid> getGridInfoBySiteCodes(List<String> siteCodes);
 	
 	int syncWorkGridInfo(WorkStationGrid updateData);
+
+	List<String> queryBusinessKeyByRefWorkGridKeys(@Param("refWorkGridKeys") List<String> refWorkGridKeys);
 }
