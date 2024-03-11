@@ -131,7 +131,7 @@
       <include refid="Base_Column_List"/>
     from
       video_trace_camera
-    where and status =1
+    where  status =1
       and id in
     <foreach collection="ids" item="id" open="(" separator="," close=")">
       #{id,jdbcType=INTEGER}

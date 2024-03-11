@@ -1,14 +1,17 @@
 package com.jdl.basic.provider.core.service.videoTraceCamera.impl;
 
+import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera;
 import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig;
 import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraQuery;
 import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraVo;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.videoTraceCamera.VideoTraceCameraConfigDao;
 import com.jdl.basic.provider.core.dao.videoTraceCamera.VideoTraceCameraDao;
+import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -33,6 +36,10 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     @Autowired
     @Qualifier("videoTraceCameraConfigDao")
     private VideoTraceCameraConfigDao videoTraceCameraConfigDao;
+
+    @Autowired
+    private BaseMajorManager baseMajorManager;
+
     @Override
     public Result<PageDto<VideoTraceCamera>> queryPageList(VideoTraceCameraQuery query) {
         Result<PageDto<VideoTraceCamera>> result = Result.success();
@@ -126,12 +133,39 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
 
     @Override
     public int deleteById(VideoTraceCamera record) {
-        return videoTraceCameraDao.deleteById(record);
+        VideoTraceCameraQuery condition = new VideoTraceCameraQuery();
+        condition.setNationalChannelCode(record.getNationalChannelCode());
+        condition.setCameraCode(record.getCameraCode());
+        List<VideoTraceCamera> videoTraceCameras = videoTraceCameraDao.queryByCondition(condition);
+        if (videoTraceCameras.size()==1){
+            return videoTraceCameraDao.deleteById(videoTraceCameras.get(0));
+        }
+        return 0;
     }
 
     @Override
     public int insert(VideoTraceCamera record) {
+        VideoTraceCameraQuery condition = new VideoTraceCameraQuery();
+        condition.setNationalChannelCode(record.getNationalChannelCode());
+        condition.setCameraCode(record.getCameraCode());
+        List<VideoTraceCamera> videoTraceCameras = videoTraceCameraDao.queryByCondition(condition);
+        if (CollectionUtils.isNotEmpty(videoTraceCameras)){
+            throw new RuntimeException("摄像头信息已存在！");
+        }
+        BaseStaffSiteOrgDto siteInfo = baseMajorManager.getBaseSiteBySiteId(record.getSiteCode());
+        if(siteInfo == null) {
+            throw new RuntimeException("所属站点在基础资料中不存在！");
+        }
+        fillSiteInfo(record, siteInfo);
         return videoTraceCameraDao.insert(record);
+    }
+
+    private void fillSiteInfo(VideoTraceCamera record, BaseStaffSiteOrgDto siteInfo) {
+        record.setSiteName(siteInfo.getSiteName());
+        record.setProvinceAgencyCode( siteInfo.getProvinceAgencyCode());
+        record.setProvinceAgencyName( siteInfo.getProvinceAgencyName());
+        record.setAreaHubCode(siteInfo.getAreaCode());
+        record.setAreaHubName(siteInfo.getAreaName());
     }
 
     @Override

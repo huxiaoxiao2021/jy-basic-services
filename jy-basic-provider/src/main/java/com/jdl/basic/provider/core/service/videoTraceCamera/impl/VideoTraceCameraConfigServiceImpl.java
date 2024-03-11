@@ -3,6 +3,7 @@ package com.jdl.basic.provider.core.service.videoTraceCamera.impl;
 import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig;
 import com.jdl.basic.provider.core.dao.videoTraceCamera.VideoTraceCameraConfigDao;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraConfigService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,9 @@ public class VideoTraceCameraConfigServiceImpl implements VideoTraceCameraConfig
 
     @Override
     public int batchDelete(List<Integer> ids, String updateErp) {
+        if (CollectionUtils.isEmpty(ids)){
+            return 0;
+        }
         return videoTraceCameraConfigDao.batchDelete(ids,updateErp);
     }
 

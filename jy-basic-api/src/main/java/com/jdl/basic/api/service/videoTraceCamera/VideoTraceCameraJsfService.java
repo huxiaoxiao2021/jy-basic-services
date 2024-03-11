@@ -50,4 +50,7 @@ public interface VideoTraceCameraJsfService {
      */
     Result<List<VideoTraceCameraConfig>> queryCameraConfigByCameraId(int id);
 
+    int insert(VideoTraceCamera VideoTraceCamera);
+    int delete(VideoTraceCamera VideoTraceCamera);
+
 }

@@ -1,10 +1,7 @@
 package com.jdl.basic.provider.core.provider.videoTraceCamera;
 
 
-import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera;
-import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig;
-import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraQuery;
-import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraVo;
+import com.jdl.basic.api.domain.videoTraceCamera.*;
 import com.jdl.basic.api.service.videoTraceCamera.VideoTraceCameraJsfService;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
@@ -23,13 +20,14 @@ import java.util.List;
 @SpringBootTest(classes = ApplicationLaunch.class)
 public class VideoTraceCameraJsfServiceTest {
     @Autowired
-    private VideoTraceCameraJsfService videoTraceCameraConfigService;
+    private VideoTraceCameraJsfService videoTraceCameraJsfService;
 
 
     @Test
     public void  queryPageListTest(){
         VideoTraceCameraQuery videoTraceCameraQuery = new VideoTraceCameraQuery();
-        Result<PageDto<VideoTraceCamera>> result = videoTraceCameraConfigService.queryPageList(videoTraceCameraQuery);
+        Result<Integer> count = videoTraceCameraJsfService.getCount(videoTraceCameraQuery);
+        Result<PageDto<VideoTraceCamera>> result = videoTraceCameraJsfService.queryPageList(videoTraceCameraQuery);
         System.out.println(result);
     }
     @Test
@@ -40,7 +38,7 @@ public class VideoTraceCameraJsfServiceTest {
         videoTraceCameraQuery.setStatus(0);
         videoTraceCameraQuery.setStartTimeStr("2024-02-23 16:37:47");
         videoTraceCameraQuery.setEndTimeStr("2024-02-24 16:37:47");
-        Result<List<VideoTraceCameraConfig>> result = videoTraceCameraConfigService.queryVideoTraceCameraConfig(videoTraceCameraQuery);
+        Result<List<VideoTraceCameraConfig>> result = videoTraceCameraJsfService.queryVideoTraceCameraConfig(videoTraceCameraQuery);
         System.out.println(JsonHelper.toJSONString(result));
     }
 
@@ -60,14 +58,57 @@ public class VideoTraceCameraJsfServiceTest {
             list.add(videoTraceCameraConfig);
         }
         videoTraceCameraVo.setVideoTraceCameraConfigList(list);
-        Result<Boolean> result = videoTraceCameraConfigService.editCameraConfig(videoTraceCameraVo);
+        Result<Boolean> result = videoTraceCameraJsfService.editCameraConfig(videoTraceCameraVo);
         System.out.println(result);
 
     }
     @Test
     public void getWorkMasterCameraTest(){
         String workGridKey="xx5";
-        Result<VideoTraceCamera> result = videoTraceCameraConfigService.getWorkMasterCamera(workGridKey);
+        Result<VideoTraceCamera> result = videoTraceCameraJsfService.getWorkMasterCamera(workGridKey);
+        System.out.println(JsonHelper.toJSONString(result));
+    }
+    @Test
+    public void cancelVideoTraceCameraConfigTest(){
+        VideoTraceCameraConfig videoTraceCameraConfig = new VideoTraceCameraConfig();
+        videoTraceCameraConfig.setRefWorkGridKey("xx123");
+        int result = videoTraceCameraJsfService.cancelVideoTraceCameraConfig(videoTraceCameraConfig);
+        System.out.println(JsonHelper.toJSONString(result));
+    }
+
+
+    @Test
+    public void changeMasterCameraConfigTest(){
+        VideoTraceCameraVo videoTraceCameraVo = new VideoTraceCameraVo();
+        videoTraceCameraVo.setId(5);
+        videoTraceCameraVo.setGridBusinessKey("xx5");
+        videoTraceCameraVo.setMasterCamera((byte) 1);
+        ArrayList<VideoTraceCameraConfig> list = new ArrayList<>();
+        VideoTraceCameraConfig videoTraceCameraConfig = new VideoTraceCameraConfig();
+        videoTraceCameraConfig.setCameraId(5);
+        videoTraceCameraConfig.setMasterCamera((byte) 1);
+        videoTraceCameraConfig.setRefWorkGridKey("xx5");
+        videoTraceCameraConfig.setCreateErp("sjm");
+        list.add(videoTraceCameraConfig);
+        videoTraceCameraVo.setVideoTraceCameraConfigList(list);
+        Result<Boolean> result = videoTraceCameraJsfService.changeMasterCameraConfig(videoTraceCameraVo);
+        System.out.println(JsonHelper.toJSONString(result));
+    }
+
+    @Test
+    public void queryCameraTest(){
+
+        VideoTraceCameraConfigQuery videoTraceCameraQuery = new VideoTraceCameraConfigQuery();
+        videoTraceCameraQuery.setChuteCode("12");
+        videoTraceCameraQuery.setMachineCode("32");
+        videoTraceCameraQuery.setWorkGridKey("xx5");
+        Result<List<VideoTraceCamera>> result = videoTraceCameraJsfService.queryCamera(videoTraceCameraQuery);
+        System.out.println(JsonHelper.toJSONString(result));
+    }
+
+    @Test
+    public void queryCameraConfigByCameraIdTest(){
+        Result<List<VideoTraceCameraConfig>> result = videoTraceCameraJsfService.queryCameraConfigByCameraId(5);
         System.out.println(JsonHelper.toJSONString(result));
     }
 

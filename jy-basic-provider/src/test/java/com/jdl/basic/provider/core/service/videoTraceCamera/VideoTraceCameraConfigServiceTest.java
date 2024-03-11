@@ -96,4 +96,20 @@ public class VideoTraceCameraConfigServiceTest {
         List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigService.queryByCondition(videoTraceCameraConfig);
         System.out.println(JsonHelper.toJSONString(videoTraceCameraConfigs));
     }
+
+    @Test
+    public void queryByDeviceTest() {
+        VideoTraceCameraConfig videoTraceCameraConfig = new VideoTraceCameraConfig();
+        videoTraceCameraConfig.setRefWorkGridKey("CDWG00000022170");
+        videoTraceCameraConfig.setMachineCode("MMJJQQ");
+        List<VideoTraceCameraConfig>  videoTraceCameraConfigs = videoTraceCameraConfigService.queryByDevice( videoTraceCameraConfig);
+        System.out.println(JsonHelper.toJSONString(videoTraceCameraConfigs));
+    }
+    @Test
+    public void queryByGridTest() {
+        VideoTraceCameraConfig videoTraceCameraConfig = new VideoTraceCameraConfig();
+        videoTraceCameraConfig.setRefWorkGridKey("xx123");
+        List<VideoTraceCameraConfig>  videoTraceCameraConfigs = videoTraceCameraConfigService.queryByGrid( videoTraceCameraConfig);
+        System.out.println(JsonHelper.toJSONString(videoTraceCameraConfigs));
+    }
 }

@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.service.videoTraceCamera;
 
 import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera;
+import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig;
 import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraQuery;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
@@ -10,6 +11,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ApplicationLaunch.class)
@@ -81,5 +84,19 @@ public class VideoTraceCameraServiceTest {
         System.out.println(pageDtoResult.getData());
     }
 
+    @Test
+    public void queryByConditionTest() {
+        VideoTraceCameraQuery query = new VideoTraceCameraQuery();
+        List<VideoTraceCamera> result = videoTraceCameraService.queryByCondition(query);
+        System.out.println(result);
+    }
+
+
+    @Test
+    public void queryVideoTraceCameraConfigTest() {
+        VideoTraceCameraQuery videoTraceCameraQuery = new VideoTraceCameraQuery();
+        Result<List<VideoTraceCameraConfig>> result = videoTraceCameraService.queryVideoTraceCameraConfig(videoTraceCameraQuery);
+        System.out.println(result.getData());
+    }
 
 }
