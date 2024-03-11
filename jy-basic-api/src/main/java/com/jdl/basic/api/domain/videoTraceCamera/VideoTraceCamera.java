@@ -58,9 +58,13 @@ public class VideoTraceCamera {
      */
     private Byte configStatus;
     /**
-     * 逻辑删除标志位 0删除 1正常
+     *
      */
     private Byte status;
+    /**
+     * 逻辑删除标志位 0删除 1正常
+     */
+    private Byte yn;
 
     private Date ts;
 
@@ -198,6 +202,14 @@ public class VideoTraceCamera {
 
     public void setStatus(Byte status) {
         this.status = status;
+    }
+
+    public Byte getYn() {
+        return yn;
+    }
+
+    public void setYn(Byte yn) {
+        this.yn = yn;
     }
 
     public Date getTs() {

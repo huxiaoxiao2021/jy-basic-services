@@ -58,6 +58,8 @@ public class VideoTraceCameraQuery extends BasePagerCondition implements Seriali
      */
     private Integer status;
 
+    private Integer yn;
+
     private int id;
 
     private int pageSize;

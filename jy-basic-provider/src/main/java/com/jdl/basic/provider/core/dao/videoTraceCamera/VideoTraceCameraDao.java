@@ -20,6 +20,7 @@ public interface VideoTraceCameraDao {
     int queryCount(VideoTraceCameraQuery videoTraceCameraQuery);
 
     List<VideoTraceCamera>  queryByCondition(VideoTraceCameraQuery query);
+    List<VideoTraceCamera>  queryByConditionAndYn(VideoTraceCameraQuery query);
 
     List<VideoTraceCamera> getByIds(@Param("ids")List<Integer> ids);
 }

@@ -65,8 +65,11 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
                 && query.getId()<0){
             return Result.fail("参数错误，摄像头编码、通道号存在空值");
         }
-
-        List<VideoTraceCamera> videoTraceCameras = videoTraceCameraDao.queryByCondition(query);
+        VideoTraceCameraQuery videoTraceCameraQuery = new VideoTraceCameraQuery();
+        videoTraceCameraQuery.setCameraCode(query.getCameraCode());
+        videoTraceCameraQuery.setNationalChannelCode(query.getNationalChannelCode());
+        videoTraceCameraQuery.setYn(query.getStatus());
+        List<VideoTraceCamera> videoTraceCameras = videoTraceCameraDao.queryByConditionAndYn(videoTraceCameraQuery);
         if (CollectionUtils.isEmpty(videoTraceCameras)){
             return Result.fail("摄像头信息不存在");
         }
