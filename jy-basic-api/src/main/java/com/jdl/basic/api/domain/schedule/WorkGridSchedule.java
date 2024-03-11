@@ -4,25 +4,45 @@ import java.util.Date;
 
 public class WorkGridSchedule {
     private Long id;
-
+    /**
+     * 网格唯一标识
+     */
     private String workGridKey;
-
+    /**
+     * 班次序号
+     */
     private Integer scheduleNo;
-
+    /**
+     * 班次唯一标识
+     */
     private String scheduleKey;
-
+    /**
+     * 班次名称
+     */
     private String scheduleName;
-
+    /**
+     * 班次开始时间
+     */
     private String startTime;
-
+    /**
+     * 班次结束时间
+     */
     private String endTime;
-
+    /**
+     * 班次类型
+     */
     private Integer scheduleType;
-
+    /**
+     * 班次维护维度 1-场地 2-作业区 3-网格
+     */
     private Integer sourceType;
-
+    /**
+     * 场地id
+     */
     private Integer siteCode;
-
+    /**
+     * 作业区编码
+     */
     private String areaCode;
 
     private Byte yn;
@@ -40,10 +60,22 @@ public class WorkGridSchedule {
     private String updateUserName;
 
     private Date ts;
-
+    /**
+     * 该班次上一次的班次开始时间
+     */
     private String oldStartTime;
-
+    /**
+     * 该班次上一次班次的结束时间
+     */
     private String oldEndTime;
+    /**
+     * 班次生效开始时间
+     */
+    private Date validTime;
+    /**
+     * 班次生效结束时间
+     */
+    private Date invalidTime;
 
     public Long getId() {
         return id;
@@ -211,5 +243,21 @@ public class WorkGridSchedule {
 
     public void setOldEndTime(String oldEndTime) {
         this.oldEndTime = oldEndTime;
+    }
+
+    public Date getValidTime() {
+        return validTime;
+    }
+
+    public void setValidTime(Date validTime) {
+        this.validTime = validTime;
+    }
+
+    public Date getInvalidTime() {
+        return invalidTime;
+    }
+
+    public void setInvalidTime(Date invalidTime) {
+        this.invalidTime = invalidTime;
     }
 }

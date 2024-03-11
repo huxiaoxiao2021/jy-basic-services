@@ -21,6 +21,7 @@ public class WorkGridScheduleJsfServiceImpl implements WorkGridScheduleJsfServic
     }
 
     @Override
+    @Deprecated
     public Result<Boolean> batchDeleteByWorkGridKey(WorkGridScheduleBatchRequest request) {
         return workGridScheduleService.batchDeleteByWorkGridKey(request);
     }
@@ -63,5 +64,10 @@ public class WorkGridScheduleJsfServiceImpl implements WorkGridScheduleJsfServic
     @Override
     public Result<List<WorkGridSchedule>> queryTodayDeletedSiteSchedule(WorkGridScheduleRequest request) {
         return workGridScheduleService.queryTodayDeletedSiteSchedule(request);
+    }
+
+    @Override
+    public Result<List<ScheduleValidTimeDto>> listValidCutWorkGridScheduleByTime(ValidWorkGridScheduleRequest request) {
+        return workGridScheduleService.listValidCutWorkGridScheduleByTime(request);
     }
 }

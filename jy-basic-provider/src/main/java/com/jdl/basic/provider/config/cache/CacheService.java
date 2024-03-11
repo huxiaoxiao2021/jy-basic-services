@@ -1,5 +1,8 @@
 package com.jdl.basic.provider.config.cache;
 
+import com.jd.jim.cli.driver.types.KeyScanResult;
+import com.jd.jim.cli.driver.types.ScanOptions;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -129,4 +132,10 @@ public interface CacheService {
 	List<String> hMGet(String key, String... fields);
 
 
+	/**
+	 * 删除多个key
+	 * @param keys
+	 * @return
+	 */
+	boolean del(String... keys);
 }

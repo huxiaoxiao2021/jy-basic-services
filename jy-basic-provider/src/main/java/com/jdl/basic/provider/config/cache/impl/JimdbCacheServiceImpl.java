@@ -3,9 +3,12 @@ package com.jdl.basic.provider.config.cache.impl;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.jd.jim.cli.Cluster;
+import com.jd.jim.cli.driver.types.KeyScanResult;
+import com.jd.jim.cli.driver.types.ScanOptions;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.config.cache.CacheService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.type.JavaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -312,5 +315,13 @@ public class JimdbCacheServiceImpl implements CacheService {
 			return jimdbClient.hMGet(key, fields);
 		}
 		return null;
+	}
+
+	@Override
+	public boolean del(String... keys) {
+		if (keys == null || keys.length == 0) {
+			return true;
+		}
+		return jimdbClient.del(keys) > 0;
 	}
 }
