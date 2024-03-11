@@ -42,7 +42,7 @@
     <where>
       yn=1
       <if test="status != null" >
-        status = #{status,jdbcType=TINYINT}
+        and status = #{status,jdbcType=TINYINT}
       </if>
       <if test="cameraCode != null and cameraCode != ''" >
         and camera_code = #{cameraCode,jdbcType=VARCHAR}
@@ -75,6 +75,9 @@
       video_trace_camera
     <where>
       yn = 1
+      <if test="status != null" >
+        and status = #{status,jdbcType=TINYINT}
+      </if>
       <if test="cameraCode != null and cameraCode != ''" >
         and camera_code = #{cameraCode,jdbcType=VARCHAR}
       </if>
