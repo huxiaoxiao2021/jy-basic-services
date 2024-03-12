@@ -107,8 +107,10 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
             add.setRefWorkGridKey(item.getRefWorkGridKey());
             add.setMasterCamera((byte) 0);
             add.setCreateErp(videoTraceCameraVo.getUpdateErp());
+            add.setStatus(item.getStatus());
             addList.add(add);
         }
+        addList.forEach(x->x.setCreateErp(videoTraceCameraVo.getUpdateErp()));
         videoTraceCameraConfigService.batchSave(addList);
         return result.setData(true);
     }

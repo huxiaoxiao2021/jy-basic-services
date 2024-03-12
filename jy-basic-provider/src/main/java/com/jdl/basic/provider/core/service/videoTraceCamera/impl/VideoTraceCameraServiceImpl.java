@@ -132,6 +132,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
                 .peek(x -> {
                     x.setMasterCamera((byte) 0);
                     x.setCreateErp(videoTraceCameraVo.getCreateErp());
+                    x.setStatus(videoTraceCamera.getStatus());
                 })
                 .collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(addList)){
@@ -221,7 +222,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         }
         if (!Objects.equals(videoTraceCameras.get(0).getStatus(), videoTraceCamera.getStatus())){
             VideoTraceCamera update = new VideoTraceCamera();
-            update.setId(videoTraceCamera.getId());
+            update.setId(videoTraceCameras.get(0).getId());
             update.setStatus(videoTraceCamera.getStatus());
             videoTraceCameraDao.updateById(update);
 
@@ -235,6 +236,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
                     x.setUpdateErp(videoTraceCamera.getUpdateErp());
                     x.setCreateTime(null);
                     x.setUpdateTime(null);
+                    x.setStatus(videoTraceCamera.getStatus());
                 }).collect(Collectors.toList());
                 videoTraceCameraConfigDao.batchSave(addList);
             }

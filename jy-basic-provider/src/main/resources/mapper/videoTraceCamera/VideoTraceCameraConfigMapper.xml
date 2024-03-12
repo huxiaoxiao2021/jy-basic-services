@@ -220,7 +220,7 @@
     <foreach collection="list" separator="," item="item">
     (#{item.cameraId,jdbcType=INTEGER}, #{item.refWorkGridKey,jdbcType=VARCHAR},
     #{item.refWorkStationKey,jdbcType=VARCHAR}, #{item.machineCode,jdbcType=VARCHAR}, #{item.chuteCode,jdbcType=VARCHAR},
-    #{item.supplyDwsCode,jdbcType=VARCHAR}, #{item.masterCamera,jdbcType=TINYINT}, #{item.createErp,jdbcType=VARCHAR}, now(), 1,1)
+    #{item.supplyDwsCode,jdbcType=VARCHAR}, #{item.masterCamera,jdbcType=TINYINT}, #{item.createErp,jdbcType=VARCHAR}, now(), 1,#{item.status,jdbcType=TINYINT})
     </foreach>
   </insert>
   <update id="batchDelete">

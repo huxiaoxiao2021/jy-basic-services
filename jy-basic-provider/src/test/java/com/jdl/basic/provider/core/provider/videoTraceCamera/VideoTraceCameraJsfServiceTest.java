@@ -112,4 +112,16 @@ public class VideoTraceCameraJsfServiceTest {
         System.out.println(JsonHelper.toJSONString(result));
     }
 
+    @Test
+    public void saveOrUpdateCameraStatusTest() {
+        VideoTraceCamera videoTraceCamera = new VideoTraceCamera();
+        videoTraceCamera.setSiteCode(910);
+        videoTraceCamera.setCameraName("device_code_02");
+        videoTraceCamera.setCameraCode("device_name_02");
+        videoTraceCamera.setNationalChannelCode("channel_code_02");
+        videoTraceCamera.setNationalChannelName("channel_code_02");
+        videoTraceCamera.setStatus((byte) 2);
+        videoTraceCameraJsfService.saveOrUpdateCameraStatus(videoTraceCamera);
+    }
+
 }
