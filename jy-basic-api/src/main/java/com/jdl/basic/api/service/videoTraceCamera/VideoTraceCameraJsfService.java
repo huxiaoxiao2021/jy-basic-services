@@ -53,4 +53,8 @@ public interface VideoTraceCameraJsfService {
     int insert(VideoTraceCamera VideoTraceCamera);
     int delete(VideoTraceCamera VideoTraceCamera);
 
+    int saveOrUpdateCameraStatus(VideoTraceCamera VideoTraceCamera);
+
+
+    Result<Boolean> importDatas(List<VideoTraceCameraImport> list);
 }

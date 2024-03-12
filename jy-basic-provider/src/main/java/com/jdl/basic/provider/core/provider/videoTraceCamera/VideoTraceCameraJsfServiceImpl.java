@@ -63,15 +63,8 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
     @Override
     public int cancelVideoTraceCameraConfig(VideoTraceCameraConfig videoTraceCameraConfig) {
 
-        if (StringUtils.isBlank(videoTraceCameraConfig.getRefWorkGridKey())){
-            throw new RuntimeException("网格业务主键不能为空");
-        }
-        videoTraceCameraConfig.setYn((byte) 1);
-        List<VideoTraceCameraConfig> list = videoTraceCameraConfigService.queryByCondition(videoTraceCameraConfig);
-        if (CollectionUtils.isNotEmpty(list)){
-            return videoTraceCameraConfigService.batchDelete(list.stream().map(VideoTraceCameraConfig::getId).collect(Collectors.toList()),"sys");
-        }
-        return 0;
+        return videoTraceCameraConfigService.cancelVideoTraceCameraConfig( videoTraceCameraConfig);
+
     }
 
     @Override
@@ -83,15 +76,22 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
         videoTraceCameraConfig.setRefWorkGridKey(videoTraceCameraVo.getGridBusinessKey());
         videoTraceCameraConfig.setYn((byte) 1);
         //根据网格查主摄像头
-        List<VideoTraceCameraConfig> list = videoTraceCameraConfigService.queryByCondition(videoTraceCameraConfig);
+        List<VideoTraceCameraConfig> masterCamera = videoTraceCameraConfigService.queryByCondition(videoTraceCameraConfig);
         // 删除网格原主摄像头绑定数据
-        if (!list.isEmpty()){
-            //要保存的主摄像头，与原主摄像头一致时，直接返回
-            if (list.get(0).getCameraId().equals(videoTraceCameraVo.getVideoTraceCameraConfigList().get(0).getCameraId())){
-                return result;
-            }
-            delIds.addAll(list.stream().map(VideoTraceCameraConfig::getId).collect(Collectors.toList()));
+        if (!masterCamera.isEmpty()){
+            delIds.addAll(masterCamera.stream().map(VideoTraceCameraConfig::getId).collect(Collectors.toList()));
         }
+
+        VideoTraceCameraConfig query = new VideoTraceCameraConfig();
+        query.setCameraId(videoTraceCameraVo.getId());
+        List<VideoTraceCameraConfig> list = videoTraceCameraConfigService.queryByCameraId(query);
+        if (CollectionUtils.isEmpty(list)){
+            VideoTraceCamera update = new VideoTraceCamera();
+            update.setId(videoTraceCameraVo.getId());
+            update.setConfigStatus((byte) 1);
+            videoTraceCameraService.updateById(update);
+        }
+
         //绑定的主摄像头，原已存在绑定关系，先删除再绑定
         VideoTraceCameraConfig condition = new VideoTraceCameraConfig();
         condition.setRefWorkGridKey(videoTraceCameraVo.getGridBusinessKey());
@@ -101,7 +101,7 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
         videoTraceCameraConfigService.batchDelete(delIds, videoTraceCameraVo.getUpdateErp());
 
         List<VideoTraceCameraConfig> addList = new ArrayList<>(videoTraceCameraVo.getVideoTraceCameraConfigList());
-        for (VideoTraceCameraConfig item : list) {
+        for (VideoTraceCameraConfig item : masterCamera) {
             VideoTraceCameraConfig add = new VideoTraceCameraConfig();
             add.setCameraId(item.getCameraId());
             add.setRefWorkGridKey(item.getRefWorkGridKey());
@@ -180,6 +180,17 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
     @Override
     public int delete(VideoTraceCamera VideoTraceCamera) {
         return videoTraceCameraService.deleteById(VideoTraceCamera);
+    }
+
+    @Override
+    public int saveOrUpdateCameraStatus(VideoTraceCamera VideoTraceCamera) {
+        return videoTraceCameraService.saveOrUpdateCameraStatus(VideoTraceCamera);
+    }
+
+    @Override
+    public Result<Boolean> importDatas(List<VideoTraceCameraImport> list) {
+        videoTraceCameraService.importDatas(list);
+        return null;
     }
 
 }

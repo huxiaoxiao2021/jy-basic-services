@@ -17,4 +17,6 @@ public interface VideoTraceCameraConfigService {
     List<VideoTraceCameraConfig> queryByDevice(VideoTraceCameraConfig videoTraceCameraConfig);
 
     List<VideoTraceCameraConfig> queryByGrid(VideoTraceCameraConfig videoTraceCameraConfig);
+
+    int cancelVideoTraceCameraConfig(VideoTraceCameraConfig videoTraceCameraConfig);
 }

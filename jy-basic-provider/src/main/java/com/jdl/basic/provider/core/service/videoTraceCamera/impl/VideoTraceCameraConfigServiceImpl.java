@@ -1,6 +1,7 @@
 package com.jdl.basic.provider.core.service.videoTraceCamera.impl;
 
 import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig;
+import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.basic.provider.core.dao.videoTraceCamera.VideoTraceCameraConfigDao;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraConfigService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("videoTraceCameraConfigService")
 public class VideoTraceCameraConfigServiceImpl implements VideoTraceCameraConfigService {
@@ -68,5 +70,18 @@ public class VideoTraceCameraConfigServiceImpl implements VideoTraceCameraConfig
     @Override
     public List<VideoTraceCameraConfig> queryByGrid(VideoTraceCameraConfig videoTraceCameraConfig) {
         return videoTraceCameraConfigDao.queryByGrid(videoTraceCameraConfig);
+    }
+
+    @Override
+    public int cancelVideoTraceCameraConfig(VideoTraceCameraConfig videoTraceCameraConfig) {
+        if (StringUtils.isBlank(videoTraceCameraConfig.getRefWorkGridKey())){
+            throw new RuntimeException("网格业务主键不能为空");
+        }
+        videoTraceCameraConfig.setYn((byte) 1);
+        List<VideoTraceCameraConfig> list = videoTraceCameraConfigDao.queryByCondition(videoTraceCameraConfig);
+        if (CollectionUtils.isNotEmpty(list)){
+            return videoTraceCameraConfigDao.batchDelete(list.stream().map(VideoTraceCameraConfig::getId).collect(Collectors.toList()),"sys");
+        }
+        return 0;
     }
 }

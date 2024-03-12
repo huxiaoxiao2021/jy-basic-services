@@ -66,6 +66,7 @@
         and config_status = #{configStatus,jdbcType=TINYINT}
       </if>
     </where>
+    order by config_status desc
     limit #{offset}, #{limit}
   </select>
   <select id="queryCount" resultType="java.lang.Integer">
@@ -234,6 +235,15 @@
       <if test="status != null">
         status,
       </if>
+      <if test="updateErp != null">
+        update_erp,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="ts != null">
+        ts,
+      </if>
       create_time,
       yn
     </trim>
@@ -277,9 +287,63 @@
       <if test="status != null">
         #{status,jdbcType=TINYINT},
       </if>
-      now(),
+      <if test="updateErp != null">
+        #{updateErp,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ts != null">
+         #{ts,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime == null">
+        now(),
+      </if>
       1
     </trim>
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+    insert into video_trace_camera
+    (
+      camera_code,
+      camera_name,
+      national_channel_code,
+      national_channel_name,
+      site_code,
+      site_name,
+      province_agency_code,
+      province_agency_name,
+      area_hub_code,
+      area_hub_name,
+      create_erp,
+      config_status,
+      status,
+      create_time,
+      yn
+    )
+    values
+    <foreach collection="list" item="item" separator=",">
+      (
+        #{cameraCode,jdbcType=VARCHAR},
+        #{cameraName,jdbcType=VARCHAR},
+        #{nationalChannelCode,jdbcType=VARCHAR},
+        #{nationalChannelName,jdbcType=VARCHAR},
+        #{siteCode,jdbcType=INTEGER},
+        #{siteName,jdbcType=VARCHAR},
+        #{provinceAgencyCode,jdbcType=VARCHAR},
+        #{provinceAgencyName,jdbcType=VARCHAR},
+        #{areaHubCode,jdbcType=VARCHAR},
+        #{areaHubName,jdbcType=VARCHAR},
+        #{createErp,jdbcType=VARCHAR},
+        #{configStatus,jdbcType=TINYINT},
+        #{status,jdbcType=TINYINT},
+         now(),
+         1
+      )
+    </foreach>
   </insert>
   <update id="updateById" parameterType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera">
     update video_trace_camera

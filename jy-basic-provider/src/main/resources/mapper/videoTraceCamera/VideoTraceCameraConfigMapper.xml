@@ -14,12 +14,13 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_erp" jdbcType="VARCHAR" property="updateErp" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="status" jdbcType="TINYINT" property="status" />
     <result column="yn" jdbcType="TINYINT" property="yn" />
     <result column="ts" jdbcType="TIMESTAMP" property="ts" />
   </resultMap>
   <sql id="Base_Column_List">
     id, camera_id, ref_work_grid_key, ref_work_station_key, machine_code, chute_code, supply_dws_code,
-    master_camera, create_erp, create_time, update_erp, update_time, yn, ts
+    master_camera, create_erp, create_time, update_erp, update_time, status, yn, ts
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -45,6 +46,9 @@
     1=1
     <if test="yn != null">
       and yn = #{yn,jdbcType=INTEGER}
+    </if>
+    <if test="status != null" >
+      and status = #{status,jdbcType=TINYINT}
     </if>
     <if test="refWorkGridKey != null and refWorkGridKey != ''" >
       and ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
@@ -144,6 +148,18 @@
       <if test="createErp != null">
         create_erp,
       </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="updateErp != null">
+        update_erp,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="ts != null">
+        ts,
+      </if>
         create_time,
         yn
     </trim>
@@ -172,7 +188,24 @@
       <if test="createErp != null">
         #{createErp,jdbcType=VARCHAR},
       </if>
-      now(),
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="updateErp != null">
+        #{updateErp,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ts != null">
+        #{ts,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime == null">
+        now(),
+      </if>
       1
     </trim>
   </insert>
@@ -182,12 +215,12 @@
     insert into video_trace_camera_config (camera_id, ref_work_grid_key,
     ref_work_station_key, machine_code, chute_code,
     supply_dws_code, master_camera, create_erp,
-    create_time, yn)
+    create_time, yn,status)
     values
     <foreach collection="list" separator="," item="item">
     (#{item.cameraId,jdbcType=INTEGER}, #{item.refWorkGridKey,jdbcType=VARCHAR},
     #{item.refWorkStationKey,jdbcType=VARCHAR}, #{item.machineCode,jdbcType=VARCHAR}, #{item.chuteCode,jdbcType=VARCHAR},
-    #{item.supplyDwsCode,jdbcType=VARCHAR}, #{item.masterCamera,jdbcType=TINYINT}, #{item.createErp,jdbcType=VARCHAR}, now(), 1)
+    #{item.supplyDwsCode,jdbcType=VARCHAR}, #{item.masterCamera,jdbcType=TINYINT}, #{item.createErp,jdbcType=VARCHAR}, now(), 1,1)
     </foreach>
   </insert>
   <update id="batchDelete">

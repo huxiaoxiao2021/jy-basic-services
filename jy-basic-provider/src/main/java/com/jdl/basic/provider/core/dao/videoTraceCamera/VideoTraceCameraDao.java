@@ -23,4 +23,6 @@ public interface VideoTraceCameraDao {
     List<VideoTraceCamera>  queryByConditionAndYn(VideoTraceCameraQuery query);
 
     List<VideoTraceCamera> getByIds(@Param("ids")List<Integer> ids);
+
+    List<VideoTraceCamera> batchInsert(List<VideoTraceCamera> list);
 }

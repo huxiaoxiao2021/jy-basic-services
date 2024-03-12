@@ -10,6 +10,7 @@ import com.jdl.basic.api.domain.machine.Machine;
 import com.jdl.basic.api.domain.machine.WorkStationGridMachine;
 import com.jdl.basic.api.domain.position.PositionRecord;
 import com.jdl.basic.api.domain.tenant.JyConfigDictTenant;
+import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.enums.DictCodeEnum;
 import com.jdl.basic.api.enums.WorkSiteTypeEnum;
@@ -28,6 +29,7 @@ import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.machine.WorkStationGridMachineService;
 import com.jdl.basic.provider.core.service.position.PositionRecordService;
 import com.jdl.basic.provider.core.service.tenant.JyConfigDictTenantService;
+import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraConfigService;
 import com.jdl.basic.provider.core.service.workStation.WorkAbnormalGridBindingService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
@@ -90,6 +92,9 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 
 	@Resource
 	private JyConfigDictTenantService jyConfigDictTenantService;
+
+	@Autowired
+	private VideoTraceCameraConfigService videoTraceCameraConfigService;
 
 	/**
 	 * 插入一条数据
@@ -339,6 +344,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		setStationDataFromGrid(updateData,workGrid);
 		workStationGridDao.deleteById(updateData);
 		//todo
+		cancelCameraConfig(updateData.getRefWorkGridKey(),updateData.getRefStationKey());
 		updateData.setId(null);
 		result.setData(workStationGridDao.insert(updateData) == 1);
 
@@ -346,6 +352,13 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		invalidateWorkStationGridCache(oldData.getBusinessKey());
 
 		return result;
+	}
+
+	private void cancelCameraConfig(String workGridKey ,String workStationKey) {
+		VideoTraceCameraConfig videoTraceCameraConfig = new VideoTraceCameraConfig();
+		videoTraceCameraConfig.setRefWorkGridKey(workGridKey);
+		videoTraceCameraConfig.setRefWorkStationKey(workStationKey);
+		videoTraceCameraConfigService.cancelVideoTraceCameraConfig(videoTraceCameraConfig);
 	}
 
 	private void invalidateWorkStationGridCache(String businessKey) {
@@ -368,6 +381,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		}
 		result.setData(workStationGridDao.deleteById(deleteData) == 1);
 //todo
+		cancelCameraConfig(queryResult.getData().getRefWorkGridKey(),queryResult.getData().getRefStationKey());
 		// 清除网格工序缓存
 		invalidateWorkStationGridCache(queryResult.getData().getBusinessKey());
 
@@ -496,6 +510,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 					throw  new RuntimeException("根据id:" + oldData.getId() + "删除数据失败!");
 				}
 				//todo
+				cancelCameraConfig(oldData.getRefWorkGridKey(),oldData.getRefStationKey());
 				data.setBusinessKey(oldData.getBusinessKey());
 			}else {
 				data.setBusinessKey(generalBusinessKey());
@@ -650,6 +665,9 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		}
 		result.setData(workStationGridDao.deleteByIds(deleteRequest) > 0);
 		//todo
+		for (WorkStationGrid workStationGrid : oldDataList) {
+			cancelCameraConfig(workStationGrid.getRefWorkGridKey(),workStationGrid.getRefStationKey());
+		}
 		List<String> refGridKeyList = new ArrayList<>();
 		for(WorkStationGrid oldData : oldDataList) {
 			// 同步删除岗位记录

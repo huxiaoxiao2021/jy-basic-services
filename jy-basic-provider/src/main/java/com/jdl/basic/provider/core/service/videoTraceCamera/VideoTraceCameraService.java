@@ -1,9 +1,6 @@
 package com.jdl.basic.provider.core.service.videoTraceCamera;
 
-import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera;
-import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig;
-import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraQuery;
-import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraVo;
+import com.jdl.basic.api.domain.videoTraceCamera.*;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 
@@ -38,4 +35,8 @@ public interface VideoTraceCameraService {
     List<VideoTraceCamera> queryByCondition(VideoTraceCameraQuery query);
 
     List<VideoTraceCamera> getByIds(List<Integer> ids);
+
+    int  importDatas(List<VideoTraceCameraImport> list);
+
+    int saveOrUpdateCameraStatus(VideoTraceCamera videoTraceCamera);
 }

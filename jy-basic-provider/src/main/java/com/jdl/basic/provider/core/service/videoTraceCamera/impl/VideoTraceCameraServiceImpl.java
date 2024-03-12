@@ -1,11 +1,9 @@
 package com.jdl.basic.provider.core.service.videoTraceCamera.impl;
 
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
-import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera;
-import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig;
-import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraQuery;
-import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraVo;
-import com.jdl.basic.common.contants.Constants;
+import com.jdl.basic.api.domain.videoTraceCamera.*;
+import com.jdl.basic.api.domain.workStation.WorkStationGrid;
+import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
 import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
@@ -13,6 +11,7 @@ import com.jdl.basic.provider.core.dao.videoTraceCamera.VideoTraceCameraConfigDa
 import com.jdl.basic.provider.core.dao.videoTraceCamera.VideoTraceCameraDao;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraService;
+import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -39,6 +38,10 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
 
     @Autowired
     private BaseMajorManager baseMajorManager;
+
+    @Autowired
+    @Qualifier("workStationGridService")
+    private WorkStationGridService workStationGridService;
 
     @Override
     public Result<PageDto<VideoTraceCamera>> queryPageList(VideoTraceCameraQuery query) {
@@ -123,8 +126,14 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             update.setConfigStatus((byte) 0);
             videoTraceCameraDao.updateById(update);
         }
-        List<VideoTraceCameraConfig> delList = oldList.stream().filter(a -> newList.stream().noneMatch(b -> compare(a, b))).collect(Collectors.toList());
-        List<VideoTraceCameraConfig> addList = newList.stream().filter(a -> oldList.stream().noneMatch(b -> compare(a, b))).peek(x-> x.setMasterCamera((byte) 0)).collect(Collectors.toList());
+        List<VideoTraceCameraConfig> delList = oldList.stream().filter(a -> newList.stream().noneMatch(b -> compare(a, b))).peek(x -> x.setUpdateErp(videoTraceCameraVo.getCreateErp())).collect(Collectors.toList());
+        List<VideoTraceCameraConfig> addList = newList.stream()
+                .filter(a -> oldList.stream().noneMatch(b -> compare(a, b)))
+                .peek(x -> {
+                    x.setMasterCamera((byte) 0);
+                    x.setCreateErp(videoTraceCameraVo.getCreateErp());
+                })
+                .collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(addList)){
             videoTraceCameraConfigDao.batchSave(addList);
         }
@@ -194,6 +203,105 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     @Override
     public List<VideoTraceCamera> getByIds(List<Integer> ids) {
         return videoTraceCameraDao.getByIds(ids);
+    }
+
+    @Override
+    public int saveOrUpdateCameraStatus(VideoTraceCamera videoTraceCamera) {
+        VideoTraceCameraQuery condition = new VideoTraceCameraQuery();
+        condition.setNationalChannelCode(videoTraceCamera.getNationalChannelCode());
+        condition.setCameraCode(videoTraceCamera.getCameraCode());
+        List<VideoTraceCamera> videoTraceCameras = videoTraceCameraDao.queryByCondition(condition);
+        if (CollectionUtils.isEmpty(videoTraceCameras)){
+            BaseStaffSiteOrgDto siteInfo = baseMajorManager.getBaseSiteBySiteId(videoTraceCamera.getSiteCode());
+            if(siteInfo == null) {
+                throw new RuntimeException("所属站点在基础资料中不存在！");
+            }
+            fillSiteInfo(videoTraceCamera, siteInfo);
+            return videoTraceCameraDao.insert(videoTraceCamera);
+        }
+        if (!Objects.equals(videoTraceCameras.get(0).getStatus(), videoTraceCamera.getStatus())){
+            VideoTraceCamera update = new VideoTraceCamera();
+            update.setId(videoTraceCamera.getId());
+            update.setStatus(videoTraceCamera.getStatus());
+            videoTraceCameraDao.updateById(update);
+
+            VideoTraceCameraConfig query = new VideoTraceCameraConfig();
+            query.setCameraId(videoTraceCameras.get(0).getId());
+            List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigDao.queryByCameraId(query);
+            if (CollectionUtils.isNotEmpty(videoTraceCameraConfigs)){
+                videoTraceCameraConfigDao.batchDelete(videoTraceCameraConfigs.stream().map(VideoTraceCameraConfig::getId).collect(Collectors.toList()), videoTraceCamera.getUpdateErp());
+                List<VideoTraceCameraConfig> addList = videoTraceCameraConfigs.stream().peek(x -> {
+                    x.setId(null);
+                    x.setUpdateErp(videoTraceCamera.getUpdateErp());
+                    x.setCreateTime(null);
+                    x.setUpdateTime(null);
+                }).collect(Collectors.toList());
+                videoTraceCameraConfigDao.batchSave(addList);
+            }
+        }
+
+        return 0;
+    }
+
+
+    @Override
+    public int importDatas(List<VideoTraceCameraImport> list) {
+        for (VideoTraceCameraImport item : list) {
+            VideoTraceCameraQuery condition = new VideoTraceCameraQuery();
+            condition.setNationalChannelCode(item.getNationalChannelCode());
+            condition.setCameraCode(item.getCameraCode());
+            VideoTraceCamera videoTraceCamera;
+            List<VideoTraceCamera> videoTraceCameras = videoTraceCameraDao.queryByCondition(condition);
+            //摄像头消息不存在时，插入一条
+            if (CollectionUtils.isEmpty(videoTraceCameras)){
+                videoTraceCamera = getVideoTraceCamera(item);
+                videoTraceCameraDao.insert(videoTraceCamera);
+            } else {
+                videoTraceCamera=videoTraceCameras.get(0);
+            }
+            VideoTraceCameraConfig videoTraceCameraConfig = getVideoTraceCameraConfig(item, videoTraceCamera);
+            videoTraceCameraConfigDao.insert(videoTraceCameraConfig);
+        }
+        return list.size();
+    }
+
+
+    private VideoTraceCameraConfig getVideoTraceCameraConfig(VideoTraceCameraImport item, VideoTraceCamera videoTraceCamera) {
+        VideoTraceCameraConfig videoTraceCameraConfig = new VideoTraceCameraConfig();
+        WorkStationGridQuery workStationGridQuery = new WorkStationGridQuery();
+        workStationGridQuery.setBusinessKey(item.getStationGridKey());
+        //查询工序
+        WorkStationGrid workStationGrid = workStationGridService.queryByGridKeyWithCache(workStationGridQuery);
+        videoTraceCameraConfig.setRefWorkGridKey(workStationGrid.getRefWorkGridKey());
+        videoTraceCameraConfig.setCameraId(videoTraceCamera.getId());
+        videoTraceCameraConfig.setCreateErp(item.getUpdateErp());
+        videoTraceCameraConfig.setCreateTime(item.getUpdateTime());
+        videoTraceCameraConfig.setUpdateErp(item.getUpdateErp());
+        videoTraceCameraConfig.setUpdateTime(item.getUpdateTime());
+        videoTraceCameraConfig.setStatus(item.getStatus());
+        videoTraceCameraConfig.setTs(item.getUpdateTime());
+        return videoTraceCameraConfig;
+    }
+
+    private  VideoTraceCamera getVideoTraceCamera(VideoTraceCameraImport item) {
+        VideoTraceCamera videoTraceCamera = new VideoTraceCamera();
+        videoTraceCamera.setCameraCode(item.getCameraCode());
+        videoTraceCamera.setCameraName(item.getCameraName());
+        videoTraceCamera.setNationalChannelCode(item.getNationalChannelCode());
+        videoTraceCamera.setNationalChannelName(item.getNationalChannelName());
+        videoTraceCamera.setCreateErp(item.getUpdateErp());
+        videoTraceCamera.setCreateTime(item.getUpdateTime());
+        videoTraceCamera.setUpdateErp(item.getUpdateErp());
+        videoTraceCamera.setUpdateTime(item.getUpdateTime());
+        videoTraceCamera.setStatus(item.getStatus());
+        videoTraceCamera.setSiteCode(item.getSiteCode());
+        videoTraceCamera.setTs(item.getUpdateTime());
+        BaseStaffSiteOrgDto siteInfo = baseMajorManager.getBaseSiteBySiteId(item.getSiteCode());
+        if(siteInfo == null) {
+            throw new RuntimeException("所属站点在基础资料中不存在！");
+        }
+        fillSiteInfo(videoTraceCamera, siteInfo);
+        return videoTraceCamera;
     }
 
     private boolean compare(VideoTraceCameraConfig v1, VideoTraceCameraConfig v2) {
