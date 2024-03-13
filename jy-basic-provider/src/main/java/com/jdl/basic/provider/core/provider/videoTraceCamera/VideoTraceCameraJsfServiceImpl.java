@@ -82,6 +82,7 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
             delIds.addAll(masterCamera.stream().map(VideoTraceCameraConfig::getId).collect(Collectors.toList()));
         }
 
+        //查摄像头下已绑定数据
         VideoTraceCameraConfig query = new VideoTraceCameraConfig();
         query.setCameraId(videoTraceCameraVo.getId());
         List<VideoTraceCameraConfig> list = videoTraceCameraConfigService.queryByCameraId(query);
@@ -90,6 +91,12 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
             update.setId(videoTraceCameraVo.getId());
             update.setConfigStatus((byte) 1);
             videoTraceCameraService.updateById(update);
+        }
+        if (CollectionUtils.isNotEmpty(videoTraceCameraVo.getVideoTraceCameraConfigList())){
+            list.addAll(videoTraceCameraVo.getVideoTraceCameraConfigList());
+        }
+        if (list.stream().map(VideoTraceCameraConfig::getRefWorkGridKey).distinct().count() >3){
+            throw new RuntimeException("一个摄像头，最多只能绑定3个网格");
         }
 
         //绑定的主摄像头，原已存在绑定关系，先删除再绑定
