@@ -36,8 +36,7 @@ public class VideoTraceCameraJsfServiceTest {
         videoTraceCameraQuery.setCameraCode("C1211");
         videoTraceCameraQuery.setNationalChannelCode("VRC1211");
         videoTraceCameraQuery.setStatus(0);
-        videoTraceCameraQuery.setStartTimeStr("2024-02-23 16:37:47");
-        videoTraceCameraQuery.setEndTimeStr("2024-02-24 16:37:47");
+        videoTraceCameraQuery.setOperateTimeStr("2024-02-23 16:37:47");
         Result<List<VideoTraceCameraConfig>> result = videoTraceCameraJsfService.queryVideoTraceCameraConfig(videoTraceCameraQuery);
         System.out.println(JsonHelper.toJSONString(result));
     }
