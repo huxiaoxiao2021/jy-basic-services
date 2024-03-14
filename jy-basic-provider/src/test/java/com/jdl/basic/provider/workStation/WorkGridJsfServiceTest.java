@@ -17,7 +17,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author: chenyaguo@jd.com
@@ -56,6 +58,52 @@ public class WorkGridJsfServiceTest {
         workGridJsfService.queryByWorkGridKeyWithCache("CDWG00000022007");
         Result<WorkGrid> result = workGridJsfService.queryByWorkGridKeyWithCache("CDWG00000022007");
         log.info(JsonHelper.toJSONString(result));
+    }
+
+    @Test
+    public void queryAreaInfo() {
+        WorkGrid workGrid = new WorkGrid();
+        Result<List<WorkGrid>> listResult1 = workGridJsfService.queryAreaInfo(workGrid);
+        List<HashMap> collect1 = listResult1.getData().stream().map(x -> {
+            HashMap map = new HashMap();
+            map.put("AreaCode", x.getAreaCode());
+            map.put("AreaName", x.getAreaName());
+            return map;
+        }).collect(Collectors.toList());
+        log.error("查询全国场地，{}",collect1);
+        workGrid.setProvinceAgencyCode("110000");
+        workGrid.setAreaHubCode(null);
+        workGrid.setSiteCode(null);
+        Result<List<WorkGrid>> listResult2 = workGridJsfService.queryAreaInfo(workGrid);
+        List<HashMap> collect2 = listResult2.getData().stream().map(x -> {
+            HashMap map = new HashMap();
+            map.put("AreaCode", x.getAreaCode());
+            map.put("AreaName", x.getAreaName());
+            return map;
+        }).collect(Collectors.toList());
+        log.error("查询省区场地，{}",collect2);
+        workGrid.setProvinceAgencyCode(null);
+        workGrid.setAreaHubCode("100204");
+        workGrid.setSiteCode(null);
+        Result<List<WorkGrid>> listResult3 = workGridJsfService.queryAreaInfo(workGrid);
+        List<HashMap> collect3 = listResult3.getData().stream().map(x -> {
+            HashMap map = new HashMap();
+            map.put("AreaCode", x.getAreaCode());
+            map.put("AreaName", x.getAreaName());
+            return map;
+        }).collect(Collectors.toList());
+        log.error("查询枢纽场地，{}",collect3);
+        workGrid.setProvinceAgencyCode(null);
+        workGrid.setAreaHubCode(null);
+        workGrid.setSiteCode(910);
+        Result<List<WorkGrid>> listResult4 = workGridJsfService.queryAreaInfo(workGrid);
+        List<HashMap> collect4 = listResult4.getData().stream().map(x -> {
+            HashMap map = new HashMap();
+            map.put("AreaCode", x.getAreaCode());
+            map.put("AreaName", x.getAreaName());
+            return map;
+        }).collect(Collectors.toList());
+        log.error("查询站点场地，{}",collect4);
     }
 }
 

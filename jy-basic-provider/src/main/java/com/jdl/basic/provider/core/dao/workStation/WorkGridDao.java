@@ -139,4 +139,6 @@ public interface WorkGridDao {
 	@Cache(key = Constants.QUERY_BY_WORKGRID_KEY_CACHE_KEY + "@args0",
 			memoryEnable = false, redisExpiredTime = 24 * 60 * 60 * 1000)
 	WorkGrid queryByWorkGridKeyWithCache(String workGridKey);
+
+	List<WorkGrid> queryAreaInfo(WorkGrid queryParams);
 }

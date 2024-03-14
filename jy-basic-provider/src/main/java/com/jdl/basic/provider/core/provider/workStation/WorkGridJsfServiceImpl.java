@@ -315,4 +315,16 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
         return result;
     }
 
+	public Result<List<WorkGrid>> queryAreaInfo(WorkGrid workGrid){
+
+		Result<List<WorkGrid>> result = Result.success();
+		try {
+			result.setData(workGridService.queryAreaInfo(workGrid));
+		} catch (Exception e) {
+			log.error("WorkGridJsfServiceImpl.queryAreaInfo error:{}", e.getMessage(),e);
+			result.toFail("查询场地信息异常:" + e.getMessage());
+		}
+		return result;
+	}
+
 }

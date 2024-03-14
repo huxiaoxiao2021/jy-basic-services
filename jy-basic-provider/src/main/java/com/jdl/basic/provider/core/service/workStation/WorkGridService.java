@@ -202,4 +202,11 @@ public interface WorkGridService {
 	 * @return
 	 */
 	WorkGrid queryByWorkGridKeyWithCache(String workGridKey);
+
+	/**
+	 * 根据省区编码、枢纽编码或站点编码查询场地信息
+	 * @param workGrid
+	 * @return
+	 */
+    List<WorkGrid> queryAreaInfo(WorkGrid workGrid);
 }
