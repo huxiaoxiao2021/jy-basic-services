@@ -327,19 +327,19 @@
     values
     <foreach collection="list" item="item" separator=",">
       (
-        #{cameraCode,jdbcType=VARCHAR},
-        #{cameraName,jdbcType=VARCHAR},
-        #{nationalChannelCode,jdbcType=VARCHAR},
-        #{nationalChannelName,jdbcType=VARCHAR},
-        #{siteCode,jdbcType=INTEGER},
-        #{siteName,jdbcType=VARCHAR},
-        #{provinceAgencyCode,jdbcType=VARCHAR},
-        #{provinceAgencyName,jdbcType=VARCHAR},
-        #{areaHubCode,jdbcType=VARCHAR},
-        #{areaHubName,jdbcType=VARCHAR},
-        #{createErp,jdbcType=VARCHAR},
-        #{configStatus,jdbcType=TINYINT},
-        #{status,jdbcType=TINYINT},
+        #{item.cameraCode,jdbcType=VARCHAR},
+        #{item.cameraName,jdbcType=VARCHAR},
+        #{item.nationalChannelCode,jdbcType=VARCHAR},
+        #{item.nationalChannelName,jdbcType=VARCHAR},
+        #{item.siteCode,jdbcType=INTEGER},
+        #{item.siteName,jdbcType=VARCHAR},
+        #{item.provinceAgencyCode,jdbcType=VARCHAR},
+        #{item.provinceAgencyName,jdbcType=VARCHAR},
+        #{item.areaHubCode,jdbcType=VARCHAR},
+        #{item.areaHubName,jdbcType=VARCHAR},
+        #{item.createErp,jdbcType=VARCHAR},
+        #{item.configStatus,jdbcType=TINYINT},
+        #{item.status,jdbcType=TINYINT},
          now(),
          1
       )

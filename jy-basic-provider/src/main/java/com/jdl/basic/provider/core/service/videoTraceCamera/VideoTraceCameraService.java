@@ -36,7 +36,9 @@ public interface VideoTraceCameraService {
 
     List<VideoTraceCamera> getByIds(List<Integer> ids);
 
-    int  importDatas(List<VideoTraceCameraImport> list);
+    void importCameras(List<VideoTraceCameraImport> list);
 
     int saveOrUpdateCameraStatus(VideoTraceCamera videoTraceCamera);
+
+    void importCameraConfigs(List<VideoTraceCameraImport> list);
 }

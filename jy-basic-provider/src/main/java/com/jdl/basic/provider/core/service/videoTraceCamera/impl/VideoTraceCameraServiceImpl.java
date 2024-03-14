@@ -5,6 +5,7 @@ import com.jdl.basic.api.domain.videoTraceCamera.*;
 import com.jdl.basic.api.domain.workStation.WorkStationGrid;
 import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
 import com.jdl.basic.common.utils.DateHelper;
+import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.core.dao.videoTraceCamera.VideoTraceCameraConfigDao;
@@ -94,7 +95,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     private static boolean filter(Date createTime, Date updateTime, int yn, VideoTraceCameraQuery query) {
         if (StringUtils.isBlank(query.getStartTimeStr()) || StringUtils.isBlank(query.getEndTimeStr())){
             return true;
-        }
+        }//todo
         Date startTime = DateHelper.parse(query.getStartTimeStr());
         Date endTime = DateHelper.parse(query.getEndTimeStr());
         if (startTime == null || endTime == null){
@@ -126,7 +127,9 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             update.setConfigStatus((byte) 0);
             videoTraceCameraDao.updateById(update);
         }
+        //todo
         List<VideoTraceCameraConfig> delList = oldList.stream().filter(a -> newList.stream().noneMatch(b -> compare(a, b))).peek(x -> x.setUpdateErp(videoTraceCameraVo.getCreateErp())).collect(Collectors.toList());
+
         List<VideoTraceCameraConfig> addList = newList.stream()
                 .filter(a -> oldList.stream().noneMatch(b -> compare(a, b)))
                 .peek(x -> {
@@ -246,26 +249,40 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     }
 
 
+
+    private boolean compare(VideoTraceCameraConfig v1, VideoTraceCameraConfig v2) {
+    return Objects.equals(v1.getRefWorkGridKey(),v2.getRefWorkGridKey())
+        && Objects.equals(v1.getRefWorkStationKey(),v2.getRefWorkStationKey())
+        && Objects.equals(v1.getMachineCode(),v2.getMachineCode())
+        && Objects.equals(v1.getChuteCode(),v2.getChuteCode())
+        && Objects.equals(v1.getSupplyDwsCode(),v2.getSupplyDwsCode());
+}
+
+
     @Override
-    public int importDatas(List<VideoTraceCameraImport> list) {
+    public void importCameraConfigs(List<VideoTraceCameraImport> list) {
         for (VideoTraceCameraImport item : list) {
             VideoTraceCameraQuery condition = new VideoTraceCameraQuery();
             condition.setNationalChannelCode(item.getNationalChannelCode());
             condition.setCameraCode(item.getCameraCode());
-            VideoTraceCamera videoTraceCamera;
             List<VideoTraceCamera> videoTraceCameras = videoTraceCameraDao.queryByCondition(condition);
             //摄像头消息不存在时，插入一条
-            if (CollectionUtils.isEmpty(videoTraceCameras)){
-                videoTraceCamera = getVideoTraceCamera(item);
-                videoTraceCameraDao.insert(videoTraceCamera);
+            if (CollectionUtils.isNotEmpty(videoTraceCameras)){
+                VideoTraceCameraConfig videoTraceCameraConfig = getVideoTraceCameraConfig(item, videoTraceCameras.get(0));
+                videoTraceCameraConfigDao.insert(videoTraceCameraConfig);
             } else {
-                videoTraceCamera=videoTraceCameras.get(0);
+                log.error("同步摄像头配置关系失败，摄像头不存在。{}", JsonHelper.toJSONString(item));
             }
-            VideoTraceCameraConfig videoTraceCameraConfig = getVideoTraceCameraConfig(item, videoTraceCamera);
-            videoTraceCameraConfigDao.insert(videoTraceCameraConfig);
+
         }
-        return list.size();
     }
+
+
+    @Override
+    public void importCameras(List<VideoTraceCameraImport> list) {
+        videoTraceCameraDao.batchInsert(list.stream().map(this::getVideoTraceCamera).collect(Collectors.toList()));
+    }
+
 
 
     private VideoTraceCameraConfig getVideoTraceCameraConfig(VideoTraceCameraImport item, VideoTraceCamera videoTraceCamera) {
@@ -305,13 +322,5 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         fillSiteInfo(videoTraceCamera, siteInfo);
         return videoTraceCamera;
     }
-
-    private boolean compare(VideoTraceCameraConfig v1, VideoTraceCameraConfig v2) {
-    return Objects.equals(v1.getRefWorkGridKey(),v2.getRefWorkGridKey())
-        && Objects.equals(v1.getRefWorkStationKey(),v2.getRefWorkStationKey())
-        && Objects.equals(v1.getMachineCode(),v2.getMachineCode())
-        && Objects.equals(v1.getChuteCode(),v2.getChuteCode())
-        && Objects.equals(v1.getSupplyDwsCode(),v2.getSupplyDwsCode());
-}
 
 }

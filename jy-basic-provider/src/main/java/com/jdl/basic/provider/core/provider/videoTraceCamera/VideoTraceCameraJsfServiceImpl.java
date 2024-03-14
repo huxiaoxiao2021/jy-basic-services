@@ -128,6 +128,7 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
         if (StringUtils.isBlank(query.getWorkGridKey())){
             return Result.fail("网格业务主键不能为空");
         }
+        //todo
         //网格、格口、DWS、工序查配置信息
         if (StringUtils.isNotBlank(query.getChuteCode()) || StringUtils.isNotBlank(query.getSupplyDwsCode()) || StringUtils.isNotBlank(query.getWorkStationKey())){
             VideoTraceCameraConfig videoTraceCameraConfig =new VideoTraceCameraConfig();
@@ -197,9 +198,13 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
     }
 
     @Override
-    public Result<Boolean> importDatas(List<VideoTraceCameraImport> list) {
-        videoTraceCameraService.importDatas(list);
+    public Result<Boolean> importCameras(List<VideoTraceCameraImport> list, int type) {
+        if (type==1){
+            videoTraceCameraService.importCameras(list);
+        }
+        if (type==2){
+            videoTraceCameraService.importCameraConfigs(list);
+        }
         return null;
     }
-
 }

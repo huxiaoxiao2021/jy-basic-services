@@ -56,5 +56,6 @@ public interface VideoTraceCameraJsfService {
     int saveOrUpdateCameraStatus(VideoTraceCamera VideoTraceCamera);
 
 
-    Result<Boolean> importDatas(List<VideoTraceCameraImport> list);
+    Result<Boolean> importCameras(List<VideoTraceCameraImport> list,int type);
+
 }
