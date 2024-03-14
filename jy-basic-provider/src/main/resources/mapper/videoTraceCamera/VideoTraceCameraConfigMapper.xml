@@ -71,14 +71,20 @@
     <if test="cameraId != null and cameraId != ''" >
       and camera_id = #{cameraId,jdbcType=INTEGER}
     </if>
-    <if test="updateTime != null and updateTime !=''">
-      and create_time <![CDATA[ <= ]]>  #{updateTime}
-    </if>
     <if test="cameraIds != null and cameraIds.size() != 0">
         and camera_id in
         <foreach collection="cameraIds" item="cameraId" open="(" separator="," close=")">
           #{cameraId,jdbcType=INTEGER}
         </foreach>
+    </if>
+    <if test="operateTime != null and operateTime !=''">
+      and create_time <![CDATA[ <= ]]>  #{operateTime}
+    </if>
+    <if test="operateTime != null and operateTime !='' and yn=0">
+      chute_code = #{chuteCode,jdbcType=VARCHAR}
+      and create_time <![CDATA[ <= ]]>  #{operateTime}
+      and ((update_time <![CDATA[ >= ]]>  #{operateTime} and yn =0)
+      or yn=1)
     </if>
   </select>
 

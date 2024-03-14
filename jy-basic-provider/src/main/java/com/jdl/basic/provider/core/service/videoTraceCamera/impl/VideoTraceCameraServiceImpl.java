@@ -67,6 +67,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         Result<List<VideoTraceCameraConfig>> result = Result.success();
         if ((StringUtils.isBlank(query.getCameraCode()) || StringUtils.isBlank(query.getNationalChannelCode()))
                 && query.getId()<0){
+            log.error("参数错误，摄像头编码、通道号存在空值,查询入参【{}】",JsonHelper.toJSONString(query));
             return Result.fail("参数错误，摄像头编码、通道号存在空值");
         }
         VideoTraceCameraQuery videoTraceCameraQuery = new VideoTraceCameraQuery();
@@ -84,24 +85,9 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             condition.setCameraIds(cameraIds);
             condition.setYn(query.getStatus()==null ? null:query.getStatus().byteValue());
             List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigDao.queryByCondition(condition);
-            result.setData(videoTraceCameraConfigs.stream().filter(x->filter(x.getCreateTime(),x.getUpdateTime(), x.getYn(), query)).collect(Collectors.toList()));
+            result.setData(videoTraceCameraConfigs);
         }
         return result;
-    }
-
-    /**
-     * 筛选指定时间内有效的摄像头配置信息
-     */
-    private static boolean filter(Date createTime, Date updateTime, int yn, VideoTraceCameraQuery query) {
-        if (StringUtils.isBlank(query.getStartTimeStr()) || StringUtils.isBlank(query.getEndTimeStr())){
-            return true;
-        }//todo
-        Date startTime = DateHelper.parse(query.getStartTimeStr());
-        Date endTime = DateHelper.parse(query.getEndTimeStr());
-        if (startTime == null || endTime == null){
-            return true;
-        }
-        return endTime.compareTo(createTime) >= 0 && (yn==1 || startTime.compareTo(updateTime) <=0);
     }
 
     @Override

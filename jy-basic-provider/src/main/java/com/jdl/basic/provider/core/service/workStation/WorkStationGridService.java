@@ -207,4 +207,14 @@ public interface WorkStationGridService {
 	 * @return
 	 */
 	int syncWorkGridInfo(WorkGrid gridData);
+
+
+	/**
+	 * 查询场地下工序
+	 * @param query
+	 * @return
+	 */
+	Result<List<WorkStationGrid>> queryWorkStationGridBySiteCode(WorkStationGridQuery query);
+
+
 }

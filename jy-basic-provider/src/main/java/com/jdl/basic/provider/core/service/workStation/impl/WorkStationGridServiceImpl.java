@@ -919,4 +919,13 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		updateStationData.setUpdateUserName(gridData.getUpdateUserName());
 		return workStationGridDao.syncWorkGridInfo(updateStationData);
 	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryWorkStationGridBySiteCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<List<WorkStationGrid>> queryWorkStationGridBySiteCode(WorkStationGridQuery query) {
+		Result<List<WorkStationGrid>> result = Result.success();
+		result.setData(workStationGridDao.queryWorkStationGridBySiteCode(query));
+		return result;
+	}
+
 }

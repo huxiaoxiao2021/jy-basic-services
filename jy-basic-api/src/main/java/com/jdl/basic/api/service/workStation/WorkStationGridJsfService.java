@@ -166,4 +166,11 @@ public interface WorkStationGridJsfService {
 	 * @return
 	 */
 	List<WorkStationGrid> queryListForWorkGridVo(WorkStationGridQuery query);
+
+	/**
+	 * 查询场地下工序
+	 * @param query
+	 * @return
+	 */
+	Result<List<WorkStationGrid>> queryWorkStationGridBySiteCode(WorkStationGridQuery query);
 }

@@ -43,21 +43,19 @@ public class VideoTraceCameraQuery extends BasePagerCondition implements Seriali
     private Byte configStatus;
 
     /**
-     * 结束时间 格式 "yyyy-MM-dd HH:mm:ss"
+     * 查询的时间点 格式 "yyyy-MM-dd HH:mm:ss"
      *
      */
-    private String endTimeStr;
+    private String operateTimeStr;
 
     /**
-     * 开始时间 格式 "yyyy-MM-dd HH:mm:ss"
-     */
-    private String startTimeStr;
-
-    /**
-     * 为0时会查已失效的摄像头信息
+     * 1在线，2离线，3禁用
      */
     private Integer status;
 
+    /**
+     * 1正常，0删除
+     */
     private Integer yn;
 
     private int id;
