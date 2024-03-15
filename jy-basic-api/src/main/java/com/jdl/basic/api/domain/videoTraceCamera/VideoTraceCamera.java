@@ -68,6 +68,8 @@ public class VideoTraceCamera {
 
     private Date ts;
 
+    private boolean master;
+
     public Integer getId() {
         return id;
     }
@@ -218,5 +220,13 @@ public class VideoTraceCamera {
 
     public void setTs(Date ts) {
         this.ts = ts;
+    }
+
+    public boolean isMaster() {
+        return master;
+    }
+
+    public void setMaster(boolean master) {
+        this.master = master;
     }
 }

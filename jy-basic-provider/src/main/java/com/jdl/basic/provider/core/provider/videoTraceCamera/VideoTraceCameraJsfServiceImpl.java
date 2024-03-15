@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.core.provider.videoTraceCamera;
 
+import com.google.common.collect.Lists;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.videoTraceCamera.*;
@@ -184,7 +185,18 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
                     .collect(Collectors.toList());
         }
         if (CollectionUtils.isNotEmpty(collect)){
-            return Result.success(videoTraceCameraService.getByIds(collect.stream().map(VideoTraceCameraConfig::getCameraId).distinct().collect(Collectors.toList())));
+            List<VideoTraceCamera> res = Lists.newArrayList();
+            List<Integer> ids = Lists.newArrayList();
+            for (VideoTraceCameraConfig config:collect){
+                if (!ids.contains(config.getCameraId())){
+                    VideoTraceCamera videoTraceCamera = videoTraceCameraService.selectByPrimaryKey(config.getCameraId());
+                    videoTraceCamera.setMaster(config.getMasterCamera() == 1);
+                    res.add(videoTraceCamera);
+                    ids.add(config.getCameraId());
+                }
+            }
+//            videoTraceCameraService.getByIds(collect.stream().map(VideoTraceCameraConfig::getCameraId).distinct().collect(Collectors.toList()));
+            return Result.success(res);
         }
 
         return Result.success("未查到摄像头信息");
