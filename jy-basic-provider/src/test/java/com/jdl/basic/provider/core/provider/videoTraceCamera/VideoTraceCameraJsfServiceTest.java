@@ -33,10 +33,10 @@ public class VideoTraceCameraJsfServiceTest {
     @Test
     public void queryVideoTraceCameraConfigTest(){
         VideoTraceCameraQuery videoTraceCameraQuery = new VideoTraceCameraQuery();
-        videoTraceCameraQuery.setCameraCode("C1211");
-        videoTraceCameraQuery.setNationalChannelCode("VRC1211");
-        videoTraceCameraQuery.setStatus(0);
-        videoTraceCameraQuery.setOperateTimeStr("2024-02-23 16:37:47");
+        videoTraceCameraQuery.setCameraCode("11010118471181200122");
+        videoTraceCameraQuery.setNationalChannelCode("110101184713212011122");
+        videoTraceCameraQuery.setStatus(1);
+        videoTraceCameraQuery.setOperateTimeStr("2024-03-13 21:07:54");
         Result<List<VideoTraceCameraConfig>> result = videoTraceCameraJsfService.queryVideoTraceCameraConfig(videoTraceCameraQuery);
         System.out.println(JsonHelper.toJSONString(result));
     }
@@ -96,11 +96,10 @@ public class VideoTraceCameraJsfServiceTest {
 
     @Test
     public void queryCameraTest(){
-
         VideoTraceCameraConfigQuery videoTraceCameraQuery = new VideoTraceCameraConfigQuery();
-        videoTraceCameraQuery.setChuteCode("12");
-        videoTraceCameraQuery.setMachineCode("32");
-        videoTraceCameraQuery.setWorkGridKey("xx5");
+        videoTraceCameraQuery.setChuteCode("100101");
+        videoTraceCameraQuery.setMachineCode("WZX-TEST-0011");
+        videoTraceCameraQuery.setWorkGridKey("CDWG00000022144");
         Result<List<VideoTraceCamera>> result = videoTraceCameraJsfService.queryCamera(videoTraceCameraQuery);
         System.out.println(JsonHelper.toJSONString(result));
     }

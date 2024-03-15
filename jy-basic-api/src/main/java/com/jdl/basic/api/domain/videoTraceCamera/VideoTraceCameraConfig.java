@@ -53,4 +53,6 @@ public class VideoTraceCameraConfig {
     private List<Integer> cameraIds;
 
     private Byte status;
+
+    private Date operateTime;
 }
