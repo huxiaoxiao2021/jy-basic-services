@@ -982,4 +982,10 @@ public class WorkGridServiceImpl implements WorkGridService {
 	public WorkGrid queryByWorkGridKeyWithCache(String workGridKey) {
 		return workGridDao.queryByWorkGridKeyWithCache(workGridKey);
 	}
+
+
+	@Override
+	public List<WorkGrid> queryAreaInfo(WorkGrid workGrid) {
+		return workGridDao.queryAreaInfo(workGrid);
+	}
 }

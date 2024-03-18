@@ -54,6 +54,7 @@ mq:
     collectBoxFlowNotice: collect_box_flow_notice
     workGridManagerTaskConfigMq: workGridManagerTaskConfigMq
     workGridModifyMq: workGridModifyMq
+    updateUserSchedule: update_user_schedule
 
   consumer:
     topic:

@@ -303,4 +303,10 @@ public class CacheKeyConstants {
      * 查询场地下员工缓存key
      */
     public static final String CACHE_KEY_SEARCH_SITE_USER = "k_search_site_users:%s";
+
+    /**
+     * 网格所有设置过的班次
+     * %s对应网格
+     */
+    public static final String CACHE_KEY_ALL_VALID_WORK_GRID_SCHEDULE_IGNORE_YN = "all_valid_work_grid_schedule:%s";
 }
