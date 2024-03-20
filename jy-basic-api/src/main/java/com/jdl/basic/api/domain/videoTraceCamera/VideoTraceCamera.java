@@ -70,6 +70,8 @@ public class VideoTraceCamera {
 
     private boolean master;
 
+    private String gridCode;
+
     public Integer getId() {
         return id;
     }
@@ -228,5 +230,13 @@ public class VideoTraceCamera {
 
     public void setMaster(boolean master) {
         this.master = master;
+    }
+
+    public String getGridCode() {
+        return gridCode;
+    }
+
+    public void setGridCode(String gridCode) {
+        this.gridCode = gridCode;
     }
 }
