@@ -953,7 +953,7 @@
 		work_station_grid g
 		left outer join work_station s on g.ref_station_key = s.business_key and s.yn = 0
 		<where>
-			g.yn = 0 and update_time update_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+			g.yn = 0 and  s.update_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
 			<if test="orgCode != null" >
 				and g.org_code = #{orgCode,jdbcType=INTEGER}
 			</if>
