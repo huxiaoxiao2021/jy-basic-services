@@ -389,6 +389,11 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(Objects.equals(deletePositionResult.getData(), false)){
 			throw new RuntimeException("根据businessKey:" + businessKey + "删除岗位数据失败!");
 		}
+		// 更新状态和失败原因
+		if (!result.isSuccess()){
+			deleteData.setDeleteFailMessage(result.getMessage());
+		}
+		workStationGridDao.updatePassById(deleteData);
 		return result;
 	 }
 
@@ -897,5 +902,56 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		updateStationData.setUpdateUser(gridData.getUpdateUser());
 		updateStationData.setUpdateUserName(gridData.getUpdateUserName());
 		return workStationGridDao.syncWorkGridInfo(updateStationData);
+	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.updateByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<Boolean> updateByIds(UpdateRequest<WorkStationGrid> updateRequest) {
+		Result<Boolean> result = new Result<Boolean>().toSuccess();
+		if (Objects.isNull(updateRequest) || CollectionUtils.isEmpty(updateRequest.getDataList())){
+			result.toFail("场地网格工序状态更新数据不能为空！");
+			return result;
+		}
+		result.setData(workStationGridDao.updateByIds(updateRequest) > 0);
+		return result;
+	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.updateRejectByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<Boolean> updateRejectByIds(UpdateRequest<WorkStationGrid> updateRequest) {
+		Result<Boolean> result = new Result<Boolean>().toSuccess();
+		if (Objects.isNull(updateRequest) || CollectionUtils.isEmpty(updateRequest.getDataList())){
+			result.toFail("场地网格工序审批驳回状态更新数据不能为空！");
+			return result;
+		}
+		result.setData(workStationGridDao.updateRejectByIds(updateRequest) > 0);
+		return result;
+	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryHistoryPageList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<PageDto<WorkStationGrid>> queryHistoryPageList(WorkStationGridQuery query) {
+		Result<PageDto<WorkStationGrid>> result = Result.success();
+		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
+		if(!checkResult.isSuccess()){
+			return Result.fail(checkResult.getMessage());
+		}
+		PageDto<WorkStationGrid> pageData = new PageDto<>(query.getPageNumber(), query.getPageSize());
+		Long totalCount = workStationGridDao.queryHistoryCount(query);
+		if(totalCount != null && totalCount > 0){
+			List<WorkStationGrid> grids = workStationGridDao.queryHistoryList(query);
+			// 查询关联的自动化设备
+			HashMap<String, List<Machine>> machineMap = machineService.getMachineListByRefGridKey(grids);
+			for (WorkStationGrid grid : grids) {
+				grid.setMachine(machineMap.get(grid.getBusinessKey()));
+			}
+			pageData.setResult(grids);
+			pageData.setTotalRow(totalCount.intValue());
+		}else {
+			pageData.setResult(new ArrayList<WorkStationGrid>());
+			pageData.setTotalRow(0);
+		}
+		result.setData(pageData);
+		return result;
 	}
 }

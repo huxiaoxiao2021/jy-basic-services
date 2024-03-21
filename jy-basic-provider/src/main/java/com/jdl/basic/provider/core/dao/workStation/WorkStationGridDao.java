@@ -234,4 +234,37 @@ public interface WorkStationGridDao {
     List<WorkStationGrid> getGridInfoBySiteCodes(List<String> siteCodes);
 	
 	int syncWorkGridInfo(WorkStationGrid updateData);
+
+    /**
+     * 根据指定的ID列表更新工作站网格信息
+     * @param updateRequest 更新请求对象，包含要更新的工作站网格信息的ID列表
+     * @return 更新操作的响应对象
+     */
+	int updateByIds(UpdateRequest<WorkStationGrid> updateRequest);
+    /**
+     * 更新指定审批通过网格工序
+     * @param updateRequest 更新请求对象，包含要更新的工作站网格信息
+     * @return 更新后的工作站网格信息
+     */
+	int updatePassById(WorkStationGrid updateRequest);
+
+    /**
+     * 更新拒绝的工作站网格信息
+     * @param updateRequest 更新请求对象
+     * @return 更新后的工作站网格信息
+     */
+	int updateRejectByIds(UpdateRequest<WorkStationGrid> updateRequest);
+	/**
+	 * 按条件查询历史删除数量
+	 * @param query
+	 * @return
+	 */
+	long queryHistoryCount(WorkStationGridQuery query);
+
+	/**
+	 * 按条件分页查询历史删除记录
+	 * @param query
+	 * @return
+	 */
+	List<WorkStationGrid> queryHistoryList(WorkStationGridQuery query);
 }

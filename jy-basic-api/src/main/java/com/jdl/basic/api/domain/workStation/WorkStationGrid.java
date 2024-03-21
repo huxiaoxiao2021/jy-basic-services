@@ -190,5 +190,13 @@ public class WorkStationGrid implements Serializable {
 	 * 枢纽名称
 	 */
 	private String areaHubName;
+	/**
+	 * 数据状态,1-生效中，2-删除审批中、3-审批通过，4-审批驳回  默认生效中1
+	 */
+	private Integer status;
+	/**
+	 * 删除失败原因
+	 */
+	private String deleteFailMessage;
 
 }
