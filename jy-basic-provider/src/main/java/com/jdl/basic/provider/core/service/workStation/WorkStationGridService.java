@@ -212,9 +212,9 @@ public interface WorkStationGridService {
 	 * @param updateRequest 更新请求对象，包含要更新的工作站网格信息的ID列表
 	 * @return 更新操作的响应对象
 	 */
-	Result<Boolean> updateByIds(UpdateRequest<WorkStationGrid> updateRequest);
+	Result<Boolean> updateStatusByIds(UpdateRequest<WorkStationGrid> updateRequest);
 	/**
-	 * 更新拒绝的工作站网格信息
+	 * 更新审批拒绝的工作站网格工序信息
 	 * @param updateRequest 更新请求对象
 	 * @return 更新后的工作站网格信息
 	 */
@@ -225,4 +225,11 @@ public interface WorkStationGridService {
 	 * @return 历史页面列表的分页数据传输对象
 	 */
 	Result<PageDto<WorkStationGrid>> queryHistoryPageList(WorkStationGridQuery query);
+
+	/**
+	 * 更新审批通过的工作站网格工序信息
+	 * @param updateRequest 更新请求对象
+	 * @return 更新后的工作站网格信息
+	 */
+	Result<Boolean> updatePassByIds(UpdateRequest<WorkStationGrid> updateRequest);
 }

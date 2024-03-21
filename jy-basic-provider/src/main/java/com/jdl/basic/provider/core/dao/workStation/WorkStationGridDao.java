@@ -240,7 +240,7 @@ public interface WorkStationGridDao {
      * @param updateRequest 更新请求对象，包含要更新的工作站网格信息的ID列表
      * @return 更新操作的响应对象
      */
-	int updateByIds(UpdateRequest<WorkStationGrid> updateRequest);
+	int updateStatusByIds(UpdateRequest<WorkStationGrid> updateRequest);
     /**
      * 更新指定审批通过网格工序
      * @param updateRequest 更新请求对象，包含要更新的工作站网格信息

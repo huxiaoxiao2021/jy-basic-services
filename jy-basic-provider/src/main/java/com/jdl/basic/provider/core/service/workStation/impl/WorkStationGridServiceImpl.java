@@ -389,11 +389,6 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		if(Objects.equals(deletePositionResult.getData(), false)){
 			throw new RuntimeException("根据businessKey:" + businessKey + "删除岗位数据失败!");
 		}
-		// 更新状态和失败原因
-		if (!result.isSuccess()){
-			deleteData.setDeleteFailMessage(result.getMessage());
-		}
-		workStationGridDao.updatePassById(deleteData);
 		return result;
 	 }
 
@@ -906,13 +901,13 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 
 	@Override
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.updateByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-	public Result<Boolean> updateByIds(UpdateRequest<WorkStationGrid> updateRequest) {
+	public Result<Boolean> updateStatusByIds(UpdateRequest<WorkStationGrid> updateRequest) {
 		Result<Boolean> result = new Result<Boolean>().toSuccess();
 		if (Objects.isNull(updateRequest) || CollectionUtils.isEmpty(updateRequest.getDataList())){
 			result.toFail("场地网格工序状态更新数据不能为空！");
 			return result;
 		}
-		result.setData(workStationGridDao.updateByIds(updateRequest) > 0);
+		result.setData(workStationGridDao.updateStatusByIds(updateRequest) > 0);
 		return result;
 	}
 
@@ -952,6 +947,20 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			pageData.setTotalRow(0);
 		}
 		result.setData(pageData);
+		return result;
+	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.updatePassByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<Boolean> updatePassByIds(UpdateRequest<WorkStationGrid> updateRequest) {
+		Result<Boolean> result = new Result<Boolean>().toSuccess();
+		if (Objects.isNull(updateRequest) || CollectionUtils.isEmpty(updateRequest.getDataList())){
+			result.toFail("场地网格工序审批通过状态更新数据不能为空！");
+			return result;
+		}
+		for (WorkStationGrid workStationGrid : updateRequest.getDataList()) {
+			workStationGridDao.updatePassById(workStationGrid);
+		}
 		return result;
 	}
 }

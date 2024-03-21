@@ -165,13 +165,14 @@ public interface WorkStationGridJsfService {
 	List<WorkStationGrid> queryListForWorkGridVo(WorkStationGridQuery query);
 
 	/**
-	 * 根据指定的ID列表更新工作站网格信息
+	 * 根据指定的ID列表更新工作站网格状态
 	 * @param updateRequest 更新请求对象，包含要更新的工作站网格信息的ID列表
 	 * @return 更新操作的响应对象
 	 */
-	Result<Boolean> updateByIds(UpdateRequest<WorkStationGrid> updateRequest);
+	Result<Boolean> updateStatusByIds(UpdateRequest<WorkStationGrid> updateRequest);
+
 	/**
-	 * 更新拒绝的工作站网格信息
+	 * 更新审批拒绝的工作站网格信息
 	 * @param updateRequest 更新请求对象
 	 * @return 更新后的工作站网格信息
 	 */
@@ -184,5 +185,10 @@ public interface WorkStationGridJsfService {
      */
 	Result<PageDto<WorkStationGrid>> queryHistoryPageList(WorkStationGridQuery query);
 
-
+	/**
+	 * 更新审批通过的工作站网格信息
+	 * @param updateRequest 更新请求对象
+	 * @return 更新后的工作站网格信息
+	 */
+	Result<Boolean> updatePassByIds(UpdateRequest<WorkStationGrid> updateRequest);
 }
