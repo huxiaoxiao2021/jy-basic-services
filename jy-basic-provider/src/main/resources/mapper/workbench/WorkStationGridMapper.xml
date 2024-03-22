@@ -868,14 +868,14 @@
 	<update id="updatePassById" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGrid">
 		update work_station_grid
 		set
-		<if test="operateUserCode != null" >
-			update_user = #{operateUserCode,jdbcType=VARCHAR},
+		<if test="updateUser != null" >
+			update_user = #{updateUser,jdbcType=VARCHAR},
 		</if>
-		<if test="operateUserName != null" >
-			update_user_name = #{operateUserName,jdbcType=VARCHAR},
+		<if test="updateUserName != null" >
+			update_user_name = #{updateUserName,jdbcType=VARCHAR},
 		</if>
-		<if test="operateTime != null" >
-			update_time = #{operateTime,jdbcType=TIMESTAMP},
+		<if test="updateTime != null" >
+			update_time = #{updateTime,jdbcType=TIMESTAMP},
 		</if>
 		<if test="deleteFailMessage != null" >
 			delete_fail_message = #{deleteFailMessage,jdbcType=VARCHAR},
