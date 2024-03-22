@@ -268,18 +268,14 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     @Override
     public void importCameraConfigs(List<VideoTraceCameraImport> list) {
         for (VideoTraceCameraImport item : list) {
-            int i=0;
             VideoTraceCameraQuery condition = new VideoTraceCameraQuery();
             condition.setNationalChannelCode(item.getNationalChannelCode());
             condition.setCameraCode(item.getCameraCode());
             List<VideoTraceCamera> videoTraceCameras = videoTraceCameraDao.queryByCondition(condition);
-            //摄像头消息不存在时，插入一条
+            //摄像头存在时，插入一条配置
             if (CollectionUtils.isNotEmpty(videoTraceCameras)){
-                i++;
-
                 try {
-
-                    log.error("同步摄像头配置关系。{}ti{}",i, JsonHelper.toJSONString(item));
+                    log.error("同步摄像头配置关系。{}", JsonHelper.toJSONString(item));
                     VideoTraceCameraConfig videoTraceCameraConfig = getVideoTraceCameraConfig(item, videoTraceCameras.get(0));
                     videoTraceCameraConfigDao.insert(videoTraceCameraConfig);
 
@@ -318,7 +314,21 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
 
     @Override
     public void importCameras(List<VideoTraceCameraImport> list) {
-        videoTraceCameraDao.batchInsert(list.stream().map(this::getVideoTraceCamera).collect(Collectors.toList()));
+        for (VideoTraceCameraImport videoTraceCameraImport : list) {
+            VideoTraceCameraQuery condition = new VideoTraceCameraQuery();
+            condition.setNationalChannelCode(videoTraceCameraImport.getNationalChannelCode());
+            condition.setCameraCode(videoTraceCameraImport.getCameraCode());
+            List<VideoTraceCamera> videoTraceCameras = videoTraceCameraDao.queryByCondition(condition);
+            if (CollectionUtils.isNotEmpty(videoTraceCameras)){
+               log.error("初始化摄像头信息失败摄像头信息已存在！{}",JsonHelper.toJSONString(videoTraceCameraImport));
+               continue;
+            }
+            try {
+                videoTraceCameraDao.insert(getVideoTraceCamera(videoTraceCameraImport));
+            } catch (Exception e){
+                log.error("初始化摄像头信息失败,{}",JsonHelper.toJSONString(videoTraceCameraImport),e);
+            }
+        }
     }
 
 
