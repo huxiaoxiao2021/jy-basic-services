@@ -277,7 +277,6 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             //摄像头存在时，插入一条配置
             if (CollectionUtils.isNotEmpty(videoTraceCameras)){
                 try {
-                    log.error("同步摄像头配置关系。{}", JsonHelper.toJSONString(item));
                     VideoTraceCameraConfig videoTraceCameraConfig = getVideoTraceCameraConfig(item, videoTraceCameras.get(0));
                     videoTraceCameraConfigDao.insert(videoTraceCameraConfig);
 

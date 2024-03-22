@@ -40,7 +40,6 @@ public class VideoTraceCameraJsfServiceTest {
         Result<List<VideoTraceCameraConfig>> result = videoTraceCameraJsfService.queryVideoTraceCameraConfig(videoTraceCameraQuery);
         System.out.println(JsonHelper.toJSONString(result));
     }
-
     @Test
     public void editCameraConfigTest(){
         VideoTraceCameraVo videoTraceCameraVo = new VideoTraceCameraVo();
