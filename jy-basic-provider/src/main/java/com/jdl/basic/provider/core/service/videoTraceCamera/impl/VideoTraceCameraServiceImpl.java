@@ -100,13 +100,15 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         VideoTraceCameraConfig condition = new VideoTraceCameraConfig();
         condition.setCameraId(videoTraceCamera.getId());
         List<VideoTraceCameraConfig> oldList = videoTraceCameraConfigDao.queryByCameraId(condition);
-        if (CollectionUtils.isEmpty(oldList)){
+        List<VideoTraceCameraConfig> newList = videoTraceCameraVo.getVideoTraceCameraConfigList();
+        //摄像头之前没有配置，新增配置，修改摄像头配置状态为已配置
+        if (CollectionUtils.isEmpty(oldList) && CollectionUtils.isNotEmpty(newList)){
             VideoTraceCamera update = new VideoTraceCamera();
             update.setId(videoTraceCamera.getId());
             update.setConfigStatus((byte) 1);
             videoTraceCameraDao.updateById(update);
         }
-        List<VideoTraceCameraConfig> newList = videoTraceCameraVo.getVideoTraceCameraConfigList();
+        //传来的配置信息为空，修改摄像头配置状态为待配置
         if (CollectionUtils.isEmpty(newList)){
             //清空绑定关系后，修改摄像头配置状态
             VideoTraceCamera update = new VideoTraceCamera();
@@ -114,9 +116,13 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             update.setConfigStatus((byte) 0);
             videoTraceCameraDao.updateById(update);
         }
-        //todo
-        List<VideoTraceCameraConfig> delList = oldList.stream().filter(a -> newList.stream().noneMatch(b -> compare(a, b))).peek(x -> x.setUpdateErp(videoTraceCameraVo.getCreateErp())).collect(Collectors.toList());
+        //过滤出之前有的配置，保存是入参中没有的配置信息，这部分为删除数据
+        List<VideoTraceCameraConfig> delList = oldList.stream()
+                .filter(a -> newList.stream().noneMatch(b -> compare(a, b)))
+                .peek(x -> x.setUpdateErp(videoTraceCameraVo.getCreateErp()))
+                .collect(Collectors.toList());
 
+        //过滤出之前没有的配置，保存是入参中有的配置信息，这部分为新增数据
         List<VideoTraceCameraConfig> addList = newList.stream()
                 .filter(a -> oldList.stream().noneMatch(b -> compare(a, b)))
                 .peek(x -> {
@@ -125,11 +131,14 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
                     x.setStatus(videoTraceCamera.getStatus());
                 })
                 .collect(Collectors.toList());
+        //新增数据落库
         if (CollectionUtils.isNotEmpty(addList)){
             videoTraceCameraConfigDao.batchSave(addList);
         }
+        //删除配置逻辑删除
         if (CollectionUtils.isNotEmpty(delList)){
-            videoTraceCameraConfigDao.batchDelete(delList.stream().map(VideoTraceCameraConfig::getId).collect(Collectors.toList()),videoTraceCameraVo.getUpdateErp());
+            videoTraceCameraConfigDao.batchDelete(delList.stream().map(VideoTraceCameraConfig::getId).collect(Collectors.toList())
+                    ,videoTraceCameraVo.getUpdateErp());
         }
         return Result.success();
     }
@@ -163,6 +172,9 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         return videoTraceCameraDao.insert(record);
     }
 
+    /**
+     * 补全省区，枢纽信息
+     */
     private void fillSiteInfo(VideoTraceCamera record, BaseStaffSiteOrgDto siteInfo) {
         record.setSiteName(siteInfo.getSiteName());
         record.setProvinceAgencyCode( siteInfo.getProvinceAgencyCode());
@@ -210,6 +222,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             fillSiteInfo(videoTraceCamera, siteInfo);
             return videoTraceCameraDao.insert(videoTraceCamera);
         }
+        //新状态与原状态不同时，修改摄像头及配置状态
         if (!Objects.equals(videoTraceCameras.get(0).getStatus(), videoTraceCamera.getStatus())){
             VideoTraceCamera update = new VideoTraceCamera();
             update.setId(videoTraceCameras.get(0).getId());
@@ -220,7 +233,10 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             query.setCameraId(videoTraceCameras.get(0).getId());
             List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigDao.queryByCameraId(query);
             if (CollectionUtils.isNotEmpty(videoTraceCameraConfigs)){
-                videoTraceCameraConfigDao.batchDelete(videoTraceCameraConfigs.stream().map(VideoTraceCameraConfig::getId).collect(Collectors.toList()), videoTraceCamera.getUpdateErp());
+                //删除原配置信息，用新状态再次插入
+                videoTraceCameraConfigDao.batchDelete(videoTraceCameraConfigs.stream()
+                        .map(VideoTraceCameraConfig::getId)
+                        .collect(Collectors.toList()), videoTraceCamera.getUpdateErp());
                 List<VideoTraceCameraConfig> addList = videoTraceCameraConfigs.stream().peek(x -> {
                     x.setId(null);
                     x.setUpdateErp(videoTraceCamera.getUpdateErp());
@@ -236,7 +252,10 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     }
 
 
-
+    /**
+     *
+     * 更据网格、工序、设备、格口字段判断是不是同一条配置信息
+     */
     private boolean compare(VideoTraceCameraConfig v1, VideoTraceCameraConfig v2) {
     return Objects.equals(v1.getRefWorkGridKey(),v2.getRefWorkGridKey())
         && Objects.equals(v1.getRefWorkStationKey(),v2.getRefWorkStationKey())
@@ -249,19 +268,51 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     @Override
     public void importCameraConfigs(List<VideoTraceCameraImport> list) {
         for (VideoTraceCameraImport item : list) {
+            int i=0;
             VideoTraceCameraQuery condition = new VideoTraceCameraQuery();
             condition.setNationalChannelCode(item.getNationalChannelCode());
             condition.setCameraCode(item.getCameraCode());
             List<VideoTraceCamera> videoTraceCameras = videoTraceCameraDao.queryByCondition(condition);
             //摄像头消息不存在时，插入一条
             if (CollectionUtils.isNotEmpty(videoTraceCameras)){
-                VideoTraceCameraConfig videoTraceCameraConfig = getVideoTraceCameraConfig(item, videoTraceCameras.get(0));
-                videoTraceCameraConfigDao.insert(videoTraceCameraConfig);
+                i++;
+
+                try {
+
+                    log.error("同步摄像头配置关系。{}ti{}",i, JsonHelper.toJSONString(item));
+                    VideoTraceCameraConfig videoTraceCameraConfig = getVideoTraceCameraConfig(item, videoTraceCameras.get(0));
+                    videoTraceCameraConfigDao.insert(videoTraceCameraConfig);
+
+                    if(videoTraceCameras.get(0).getConfigStatus() ==0){
+                        VideoTraceCamera update = new VideoTraceCamera();
+                        update.setId(videoTraceCameras.get(0).getId());
+                        update.setConfigStatus((byte) 1);
+                        videoTraceCameraDao.updateById(update);
+                    }
+                } catch (Exception e){
+                    log.error("同步摄像头配置关系失败。错误信息{}，{}",e.getMessage(), JsonHelper.toJSONString(item),e);
+                }
             } else {
                 log.error("同步摄像头配置关系失败，摄像头不存在。{}", JsonHelper.toJSONString(item));
             }
 
         }
+    }
+
+    @Override
+    public int deleteCameraByIds(List<Integer> ids, String operate) {
+        for (Integer id : ids) {
+            VideoTraceCamera videoTraceCamera = new VideoTraceCamera();
+            videoTraceCamera.setId(id);
+            videoTraceCamera.setUpdateErp(operate);
+            videoTraceCameraDao.deleteById(videoTraceCamera);
+        }
+        return ids.size();
+    }
+
+    @Override
+    public int deleteCameraConfigByIds(List<Integer> ids, String operate) {
+        return videoTraceCameraConfigDao.batchDelete(ids, operate);
     }
 
 
@@ -285,7 +336,6 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         videoTraceCameraConfig.setUpdateErp(item.getUpdateErp());
         videoTraceCameraConfig.setUpdateTime(item.getUpdateTime());
         videoTraceCameraConfig.setStatus(item.getStatus());
-        videoTraceCameraConfig.setTs(item.getUpdateTime());
         return videoTraceCameraConfig;
     }
 
@@ -301,6 +351,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         videoTraceCamera.setUpdateTime(item.getUpdateTime());
         videoTraceCamera.setStatus(item.getStatus());
         videoTraceCamera.setSiteCode(item.getSiteCode());
+        videoTraceCamera.setConfigStatus((byte) 0);
         videoTraceCamera.setTs(item.getUpdateTime());
         BaseStaffSiteOrgDto siteInfo = baseMajorManager.getBaseSiteBySiteId(item.getSiteCode());
         if(siteInfo == null) {

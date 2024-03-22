@@ -246,4 +246,15 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
         }
         return null;
     }
+
+    @Override
+    public int deleteCameraByIds(List<Integer> ids, String operate) {
+        return videoTraceCameraService.deleteCameraByIds(ids,operate);
+    }
+
+    @Override
+    public int deleteCameraConfigByIds(List<Integer> ids, String operate) {
+        return videoTraceCameraService.deleteCameraConfigByIds(ids,operate);
+    }
+
 }

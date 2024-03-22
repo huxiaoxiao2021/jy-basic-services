@@ -41,4 +41,8 @@ public interface VideoTraceCameraService {
     int saveOrUpdateCameraStatus(VideoTraceCamera videoTraceCamera);
 
     void importCameraConfigs(List<VideoTraceCameraImport> list);
+
+    int deleteCameraByIds(List<Integer> ids, String operate);
+
+    int deleteCameraConfigByIds(List<Integer> ids, String operate);
 }

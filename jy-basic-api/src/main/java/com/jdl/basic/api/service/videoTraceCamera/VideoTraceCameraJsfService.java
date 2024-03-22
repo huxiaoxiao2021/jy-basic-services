@@ -12,7 +12,7 @@ public interface VideoTraceCameraJsfService {
      */
     Result<PageDto<VideoTraceCamera>> queryPageList(VideoTraceCameraQuery videoTraceCameraQuery);
     /**
-     * 查摄像头绑定数据
+     * 查摄像头绑定数据 入参operateTimeStr不为空时，会查询此时间有效的绑定关系
      */
     Result<List<VideoTraceCameraConfig>> queryVideoTraceCameraConfig(VideoTraceCameraQuery query);
     /**
@@ -57,5 +57,8 @@ public interface VideoTraceCameraJsfService {
 
 
     Result<Boolean> importCameras(List<VideoTraceCameraImport> list,int type);
+
+    int deleteCameraConfigByIds(List<Integer> ids, String operate);
+    int deleteCameraByIds(List<Integer> ids, String operate);
 
 }
