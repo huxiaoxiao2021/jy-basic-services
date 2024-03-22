@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.videoTraceCamera.*;
+import com.jdl.basic.api.domain.workStation.WorkGrid;
 import com.jdl.basic.api.service.videoTraceCamera.VideoTraceCameraJsfService;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.JsonHelper;
@@ -12,6 +13,7 @@ import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringUtils;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraConfigService;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraService;
+import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
 
     @Autowired
     private VideoTraceCameraConfigService videoTraceCameraConfigService;
+
+    @Autowired
+    private WorkGridService workGridService;
 
     @Override
     public Result<PageDto<VideoTraceCamera>> queryPageList(VideoTraceCameraQuery videoTraceCameraQuery) {
@@ -191,6 +196,10 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
                 if (!ids.contains(config.getCameraId())){
                     VideoTraceCamera videoTraceCamera = videoTraceCameraService.selectByPrimaryKey(config.getCameraId());
                     videoTraceCamera.setMaster(config.getMasterCamera() == 1);
+                    WorkGrid workGrid = workGridService.queryByWorkGridKey(config.getRefWorkGridKey());
+                    if (workGrid != null){
+                        videoTraceCamera.setGridCode(workGrid.getGridCode());
+                    }
                     res.add(videoTraceCamera);
                     ids.add(config.getCameraId());
                 }
