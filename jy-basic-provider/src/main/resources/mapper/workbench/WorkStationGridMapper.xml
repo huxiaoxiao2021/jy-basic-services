@@ -858,7 +858,7 @@
 			update_time = #{operateTime,jdbcType=TIMESTAMP},
 		</if>
 		status = 2
-		where yn = 1 and status = 1
+		where yn = 1
 		and id in
 		<foreach collection="dataList" item="item" open="(" close=")" separator=",">
 			#{item.id,jdbcType=BIGINT}
@@ -912,7 +912,7 @@
 		work_station_grid g
 		left outer join work_station s on g.ref_station_key = s.business_key and s.yn = 0
 		<where>
-			g.yn = 0 and s.update_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+			g.yn = 0 and g.update_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
 			<if test="orgCode != null" >
 				and g.org_code = #{orgCode,jdbcType=INTEGER}
 			</if>
@@ -953,7 +953,7 @@
 		work_station_grid g
 		left outer join work_station s on g.ref_station_key = s.business_key and s.yn = 0
 		<where>
-			g.yn = 0 and  s.update_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+			g.yn = 0 and  g.update_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
 			<if test="orgCode != null" >
 				and g.org_code = #{orgCode,jdbcType=INTEGER}
 			</if>
