@@ -278,6 +278,11 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             if (CollectionUtils.isNotEmpty(videoTraceCameras)){
                 try {
                     VideoTraceCameraConfig videoTraceCameraConfig = getVideoTraceCameraConfig(item, videoTraceCameras.get(0));
+                    List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigDao.queryByGrid(videoTraceCameraConfig);
+                    if (CollectionUtils.isNotEmpty(videoTraceCameraConfigs)){
+                        log.error("同步摄像头配置关系失败，该绑定关系已存在。{}", JsonHelper.toJSONString(item));
+                        continue;
+                    }
                     videoTraceCameraConfigDao.insert(videoTraceCameraConfig);
 
                     if(videoTraceCameras.get(0).getConfigStatus() ==0){

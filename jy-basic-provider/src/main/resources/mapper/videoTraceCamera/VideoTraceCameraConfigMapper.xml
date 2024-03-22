@@ -77,7 +77,7 @@
           #{cameraId,jdbcType=INTEGER}
         </foreach>
     </if>
-    <if test="operateTime != null and operateTime !=''">
+    <if test="operateTime != null">
       and create_time <![CDATA[ <= ]]>  #{operateTime}
       and ((update_time <![CDATA[ >= ]]>  #{operateTime} and yn =0)
       or yn=1)
