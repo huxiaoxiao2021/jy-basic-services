@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.core.provider.videoTraceCamera;
 
+import com.alibaba.cola.dto.PageResponse;
 import com.google.common.collect.Lists;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
@@ -15,6 +16,9 @@ import com.jdl.basic.provider.common.Jimdb.CacheService;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraConfigService;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
+import com.jdl.lcv.video.channel.api.VideoChannelService;
+import com.jdl.lcv.video.channel.dto.data.VideoChannelDTO;
+import com.jdl.lcv.video.channel.dto.query.VideoChannelPageBySiteQry;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +46,9 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
     @Resource
     @Qualifier("JimdbCacheService")
     private CacheService cacheService;
+
+    @Autowired
+    private VideoChannelService videoChannelService;
 
     private static final String CAMERA_CONFIG_CACHE_KEY_PRE="camera_config_cache_key_pre";
 
@@ -379,4 +386,35 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
         return videoTraceCameraService.deleteCameraConfigByIds(ids,operate);
     }
 
+    @Override
+    public String synCameraInfo(String code,Integer siteCode){
+        int page =1;
+        int pageSize=500;
+        int total;
+        do {
+            VideoChannelPageBySiteQry query = new VideoChannelPageBySiteQry();
+            query.setSiteCode(code);
+            query.setPageSize(pageSize);
+            query.setPageIndex(page);
+            query.setNeedTotalCount(true);
+            PageResponse<VideoChannelDTO> response = videoChannelService.pageBySite(query);
+            total =response.getTotalCount();
+            page++;
+            List<VideoTraceCameraImport> list = response.getData().stream()
+                    .filter(x->x.getVideoChannelStateCode().getCode().equals(111))
+                    .map(x -> {
+                VideoTraceCameraImport videoTraceCameraImport = new VideoTraceCameraImport();
+                videoTraceCameraImport.setCameraCode(x.getVideoDeviceCode());
+                videoTraceCameraImport.setCameraName(x.getVideoChannelName());
+                videoTraceCameraImport.setNationalChannelCode(x.getVideoChannelCode());
+                videoTraceCameraImport.setNationalChannelName(x.getVideoChannelName());
+                videoTraceCameraImport.setSiteCode(siteCode);
+                videoTraceCameraImport.setUpdateErp("syn");
+                videoTraceCameraImport.setStatus((byte) 1);
+                return videoTraceCameraImport;
+            }).collect(Collectors.toList());
+            videoTraceCameraService.importCameras(list);
+        }  while (pageSize*page < total);
+        return "同步完成";
+    }
 }

@@ -113,7 +113,9 @@ jsf:
     alias: level0_UAT
     token: automatic_UAT
     timeout: 2000
-
+  video:
+    channel:
+      alias: videoChannelService-jsf-uat-330
 basic:
   jsf:
     token: 96KYOS24GJ
