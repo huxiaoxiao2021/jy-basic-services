@@ -875,7 +875,7 @@
 		select
 		count(1)
 		from
-		work_grid
+		work_grid t
 		<where>
 			yn = 0 and update_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
 			<if test="orgCode != null and orgCode != ''" >
@@ -918,7 +918,7 @@
 		select
 		<include refid="Base_Column_List"/>
 		from
-		work_grid g
+		work_grid t
 		<where>
 			yn = 0 and update_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
 			<if test="orgCode != null and orgCode != ''" >
