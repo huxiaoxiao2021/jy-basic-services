@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -50,7 +50,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         if(query.getPageNumber() > 0) {
             query.setLimit(query.getPageSize());
             query.setOffset((query.getPageNumber() - 1) * query.getPageSize());
-        };
+        }
         int totalCount = videoTraceCameraDao.queryCount(query);
         PageDto<VideoTraceCamera> pageDto = new PageDto<>(query.getPageNumber(), query.getPageSize());
         pageDto.setTotalRow(totalCount);
@@ -278,7 +278,9 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             if (CollectionUtils.isNotEmpty(videoTraceCameras)){
                 try {
                     VideoTraceCameraConfig videoTraceCameraConfig = getVideoTraceCameraConfig(item, videoTraceCameras.get(0));
-                    List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigDao.queryByGrid(videoTraceCameraConfig);
+
+//                    List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigDao.queryByGrid(videoTraceCameraConfig);
+                    List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigDao.queryByCondition(videoTraceCameraConfig);
                     if (CollectionUtils.isNotEmpty(videoTraceCameraConfigs)){
                         log.error("同步摄像头配置关系失败，该绑定关系已存在。{}", JsonHelper.toJSONString(item));
                         continue;
@@ -346,12 +348,14 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         //查询工序
         WorkStationGrid workStationGrid = workStationGridService.queryByGridKeyWithCache(workStationGridQuery);
         videoTraceCameraConfig.setRefWorkGridKey(workStationGrid.getRefWorkGridKey());
+        videoTraceCameraConfig.setRefWorkGridKey(workStationGrid.getRefStationKey());
         videoTraceCameraConfig.setCameraId(videoTraceCamera.getId());
         videoTraceCameraConfig.setCreateErp(item.getUpdateErp());
         videoTraceCameraConfig.setCreateTime(item.getUpdateTime());
         videoTraceCameraConfig.setUpdateErp(item.getUpdateErp());
         videoTraceCameraConfig.setUpdateTime(item.getUpdateTime());
         videoTraceCameraConfig.setStatus(item.getStatus());
+        videoTraceCameraConfig.setYn((byte) 1);
         return videoTraceCameraConfig;
     }
 

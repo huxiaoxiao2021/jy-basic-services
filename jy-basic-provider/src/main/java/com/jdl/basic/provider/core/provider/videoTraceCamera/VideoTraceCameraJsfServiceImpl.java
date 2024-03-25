@@ -11,14 +11,17 @@ import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringUtils;
+import com.jdl.basic.provider.common.Jimdb.CacheService;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraConfigService;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -36,6 +39,12 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
     @Autowired
     private WorkGridService workGridService;
 
+    @Resource
+    @Qualifier("JimdbCacheService")
+    private CacheService cacheService;
+
+    private static final String CAMERA_CONFIG_CACHE_KEY_PRE="camera_config_cache_key_pre";
+
     @Override
     public Result<PageDto<VideoTraceCamera>> queryPageList(VideoTraceCameraQuery videoTraceCameraQuery) {
         return videoTraceCameraService.queryPageList(videoTraceCameraQuery);
@@ -50,6 +59,8 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
 
     @Override
     public Result<Boolean> editCameraConfig(VideoTraceCameraVo videoTraceCameraVo) {
+        //根据网格删除缓存
+        delCameraConfigCache(videoTraceCameraVo.getGridBusinessKey());
         return videoTraceCameraService.editCameraConfig(videoTraceCameraVo);
     }
 
@@ -71,13 +82,18 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
 
     @Override
     public int cancelVideoTraceCameraConfig(VideoTraceCameraConfig videoTraceCameraConfig) {
-
+        //根据网格删除缓存
+        delCameraConfigCache(videoTraceCameraConfig.getRefWorkGridKey());
         return videoTraceCameraConfigService.cancelVideoTraceCameraConfig( videoTraceCameraConfig);
 
     }
 
     @Override
     public Result<Boolean> changeMasterCameraConfig(VideoTraceCameraVo videoTraceCameraVo) {
+
+        //根据网格删除缓存
+        delCameraConfigCache(videoTraceCameraVo.getGridBusinessKey());
+
         List<Integer> delIds = new ArrayList<>();
         Result<Boolean> result = Result.success();
         VideoTraceCameraConfig videoTraceCameraConfig = new VideoTraceCameraConfig();
@@ -138,11 +154,8 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
         if (StringUtils.isBlank(query.getWorkGridKey())){
             return Result.fail("网格业务主键不能为空");
         }
-        //按网格查询出所有有效的摄像头配置
-        VideoTraceCameraConfig videoTraceCameraConfig =new VideoTraceCameraConfig();
-        videoTraceCameraConfig.setRefWorkGridKey(query.getWorkGridKey());
-        videoTraceCameraConfig.setYn((byte) 1);
-        List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigService.queryByCondition(videoTraceCameraConfig);
+
+        List<VideoTraceCameraConfig> videoTraceCameraConfigs = getCameraConfigByWorkGridKeyCache(query.getWorkGridKey());
 
 
         if (((StringUtils.isNotBlank(query.getChuteCode()) ? 1:0)
@@ -209,6 +222,35 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
         }
 
         return Result.success("未查到摄像头信息");
+    }
+
+    private List<VideoTraceCameraConfig> getCameraConfigByWorkGridKeyCache(String workGridKey) {
+        String key = getCacheKey(workGridKey);
+        String cameraConfigS = cacheService.get(key);
+        List<VideoTraceCameraConfig> videoTraceCameraConfigs = JsonHelper.toList(cameraConfigS, VideoTraceCameraConfig.class);
+
+
+        if (CollectionUtils.isNotEmpty(videoTraceCameraConfigs)){
+            return videoTraceCameraConfigs;
+        }
+
+        //缓存中不存在时 按网格查询出所有有效的摄像头配置
+        VideoTraceCameraConfig videoTraceCameraConfig =new VideoTraceCameraConfig();
+        videoTraceCameraConfig.setRefWorkGridKey(workGridKey);
+        videoTraceCameraConfig.setYn((byte) 1);
+        videoTraceCameraConfigs = videoTraceCameraConfigService.queryByCondition(videoTraceCameraConfig);
+
+        cacheService.setEx(key,JsonHelper.toJSONString(videoTraceCameraConfigs),60*60*10L);
+        return videoTraceCameraConfigs;
+    }
+
+    private boolean delCameraConfigCache(String workGridKey){
+        String key = getCacheKey(workGridKey);
+        return cacheService.del(key);
+    }
+
+    private String getCacheKey(String key) {
+        return CAMERA_CONFIG_CACHE_KEY_PRE+key;
     }
 
     @Override
