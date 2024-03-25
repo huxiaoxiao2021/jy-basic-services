@@ -83,11 +83,10 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         if (CollectionUtils.isNotEmpty(cameraIds)) {
             VideoTraceCameraConfig condition = new VideoTraceCameraConfig();
             condition.setCameraIds(cameraIds);
-            condition.setStatus((byte) 1);
             condition.setYn(query.getYn()==null ? null:query.getYn().byteValue());
             String operateTimeStr = query.getOperateTimeStr();
             condition.setOperateTime(StringUtils.isNotEmpty(operateTimeStr) ? DateHelper.parse(operateTimeStr):null);
-            List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigDao.queryByCondition(condition);
+            List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigDao.queryValidByCameraIdsAndTime(condition);
             result.setData(videoTraceCameraConfigs);
         }
         return result;

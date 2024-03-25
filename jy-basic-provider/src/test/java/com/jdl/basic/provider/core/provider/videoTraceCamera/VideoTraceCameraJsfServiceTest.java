@@ -98,7 +98,7 @@ public class VideoTraceCameraJsfServiceTest {
         VideoTraceCameraConfigQuery videoTraceCameraQuery = new VideoTraceCameraConfigQuery();
         videoTraceCameraQuery.setChuteCode("100101");
         videoTraceCameraQuery.setMachineCode("WZX-TEST-0011");
-        videoTraceCameraQuery.setWorkGridKey("CDWG00000022144");
+        videoTraceCameraQuery.setWorkGridKey("CDWG000000221342");
         Result<List<VideoTraceCamera>> result = videoTraceCameraJsfService.queryCamera(videoTraceCameraQuery);
         System.out.println(JsonHelper.toJSONString(result));
     }

@@ -43,15 +43,12 @@
     <include refid="Base_Column_List" />
     from video_trace_camera_config
     where
-    1=1
+    ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
     <if test="yn != null">
       and yn = #{yn,jdbcType=INTEGER}
     </if>
     <if test="status != null" >
       and status = #{status,jdbcType=TINYINT}
-    </if>
-    <if test="refWorkGridKey != null and refWorkGridKey != ''" >
-      and ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
     </if>
     <if test="refWorkStationKey != null and refWorkStationKey != ''" >
       and ref_work_station_key = #{refWorkStationKey,jdbcType=VARCHAR}
@@ -82,6 +79,22 @@
       and ((update_time <![CDATA[ >= ]]>  #{operateTime} and yn =0)
       or yn=1)
     </if>
+    limt 100
+  </select>
+
+  <select id="queryValidByCameraIdsAndTime" resultType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from video_trace_camera_config
+    where
+    status = 1
+      and camera_id in
+      <foreach collection="cameraIds" item="cameraId" open="(" separator="," close=")">
+        #{cameraId,jdbcType=INTEGER}
+      </foreach>
+      and create_time <![CDATA[ <= ]]>  #{operateTime}
+      and ((update_time <![CDATA[ >= ]]>  #{operateTime} and yn =0)
+      or yn=1)
   </select>
 
   <select id="queryByDevice" resultType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig" resultMap="BaseResultMap">

@@ -45,6 +45,10 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
 
     private static final String CAMERA_CONFIG_CACHE_KEY_PRE="camera_config_cache_key_pre";
 
+    private static Long  CAMERA_CACHE_TIME_EXPIRE= 60*60*24L ;
+
+
+
     @Override
     public Result<PageDto<VideoTraceCamera>> queryPageList(VideoTraceCameraQuery videoTraceCameraQuery) {
         return videoTraceCameraService.queryPageList(videoTraceCameraQuery);
@@ -150,19 +154,98 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + "videoTraceCameraJsfService.queryCamera", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<List<VideoTraceCamera>> queryCamera(VideoTraceCameraConfigQuery query) {
+        Result<String> result = verifyParam(query);
+        if (result.isFail()){
+            return Result.fail(result.getMessage());
+        }
+
+        //查摄像头配置信息 规则为先查格口绑定数据，未查到再查设备、最后查网格
+        List<VideoTraceCameraConfig> videoTraceCameraConfigs = getCameraConfigs(query);
+
+        //根据配置信息查到摄像头，并返回
+        if (CollectionUtils.isNotEmpty(videoTraceCameraConfigs) ){
+            List<Integer> cameraIds = videoTraceCameraConfigs.stream().map(VideoTraceCameraConfig::getCameraId).distinct().collect(Collectors.toList());
+            List<VideoTraceCamera> cameras = getCamerasWithCache(cameraIds);
+            return Result.success(cameras);
+
+        }
+        return Result.success("未查到摄像头信息");
+    }
+
+    private List<VideoTraceCamera> getCamerasWithCache(List<Integer> cameraIds) {
+        String key = getCacheKey(cameraIds.stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(",")));
+
+        String cameraConfigS = cacheService.get(key);
+        List<VideoTraceCamera> cameras = JsonHelper.toList(cameraConfigS, VideoTraceCamera.class);
+        if (cameras!=null){
+            return cameras;
+        }
+
+        //缓存中不存在时 查询出所有有效的摄像头
+        cameras = videoTraceCameraService.getByIds(cameraIds);
+        //查到的数据加入缓存
+        cacheService.setEx(key,JsonHelper.toJSONString(cameras),CAMERA_CACHE_TIME_EXPIRE);
+        return cameras;
+    }
+
+    @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + "videoTraceCameraJsfService.queryCameraInfo", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<List<VideoTraceCamera>> queryCameraInfo(VideoTraceCameraConfigQuery query) {
         log.info("queryCamera,查询入参【{}】", JsonHelper.toJSONString(query));
+        Result<String> result = verifyParam(query);
+        if (result.isFail()){
+            return Result.fail(result.getMessage());
+        }
+
+        //查摄像头配置信息
+        List<VideoTraceCameraConfig> videoTraceCameraConfigs = getCameraConfigs(query);
+
+        if (CollectionUtils.isNotEmpty(videoTraceCameraConfigs) ){
+            List<VideoTraceCamera> res = Lists.newArrayList();
+            List<Integer> ids = Lists.newArrayList();
+            for (VideoTraceCameraConfig config:videoTraceCameraConfigs){
+                if (!ids.contains(config.getCameraId())){
+                    VideoTraceCamera videoTraceCamera = videoTraceCameraService.selectByPrimaryKey(config.getCameraId());
+                    videoTraceCamera.setMaster(config.getMasterCamera() == 1);
+                    WorkGrid workGrid = workGridService.queryByWorkGridKey(config.getRefWorkGridKey());
+                    if (workGrid != null){
+                        videoTraceCamera.setGridCode(workGrid.getGridCode());
+                    }
+                    res.add(videoTraceCamera);
+                    ids.add(config.getCameraId());
+                }
+            }
+            return Result.success(res);
+        }
+
+        return Result.success("未查到摄像头信息");
+    }
+
+    /**
+     * 查摄像头信息入参校验
+     */
+    private static Result<String> verifyParam(VideoTraceCameraConfigQuery query) {
         if (StringUtils.isBlank(query.getWorkGridKey())){
             return Result.fail("网格业务主键不能为空");
         }
-
-        List<VideoTraceCameraConfig> videoTraceCameraConfigs = getCameraConfigByWorkGridKeyCache(query.getWorkGridKey());
-
-
         if (((StringUtils.isNotBlank(query.getChuteCode()) ? 1:0)
                 + (StringUtils.isNotBlank(query.getSupplyDwsCode()) ? 1:0)
                 + (StringUtils.isNotBlank(query.getWorkStationKey()) ? 1:0)) >1){
             return Result.fail("chuteCode，supplyDwsCode，workStationKey不能同时有值");
         }
+        return Result.success();
+    }
+
+    /**
+     * 按格口、工序，设备、网格查摄像头配置信息
+     * 先查格口绑定数据，未查到再查设备、最后查网格 查到即返回
+     */
+    private List<VideoTraceCameraConfig> getCameraConfigs(VideoTraceCameraConfigQuery query) {
+        
+        //按网格查询摄像头配置信息，先查缓存
+        List<VideoTraceCameraConfig> videoTraceCameraConfigs = getCameraConfigByWorkGridKeyCache(query.getWorkGridKey());
 
         List<VideoTraceCameraConfig> collect = null;
         //查询条件中格口不为空时，按格口筛选摄像头配置
@@ -202,35 +285,17 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
                             && StringUtils.isBlank(x.getRefWorkStationKey()))
                     .collect(Collectors.toList());
         }
-        if (CollectionUtils.isNotEmpty(collect)){
-            List<VideoTraceCamera> res = Lists.newArrayList();
-            List<Integer> ids = Lists.newArrayList();
-            for (VideoTraceCameraConfig config:collect){
-                if (!ids.contains(config.getCameraId())){
-                    VideoTraceCamera videoTraceCamera = videoTraceCameraService.selectByPrimaryKey(config.getCameraId());
-                    videoTraceCamera.setMaster(config.getMasterCamera() == 1);
-                    WorkGrid workGrid = workGridService.queryByWorkGridKey(config.getRefWorkGridKey());
-                    if (workGrid != null){
-                        videoTraceCamera.setGridCode(workGrid.getGridCode());
-                    }
-                    res.add(videoTraceCamera);
-                    ids.add(config.getCameraId());
-                }
-            }
-//            videoTraceCameraService.getByIds(collect.stream().map(VideoTraceCameraConfig::getCameraId).distinct().collect(Collectors.toList()));
-            return Result.success(res);
-        }
-
-        return Result.success("未查到摄像头信息");
+        return collect;
     }
 
+    /**
+     * 使用网格业务主键从缓存中查摄像头配置，不存在时查库并加入缓存
+     */
     private List<VideoTraceCameraConfig> getCameraConfigByWorkGridKeyCache(String workGridKey) {
         String key = getCacheKey(workGridKey);
         String cameraConfigS = cacheService.get(key);
         List<VideoTraceCameraConfig> videoTraceCameraConfigs = JsonHelper.toList(cameraConfigS, VideoTraceCameraConfig.class);
-
-
-        if (CollectionUtils.isNotEmpty(videoTraceCameraConfigs)){
+        if (videoTraceCameraConfigs!=null){
             return videoTraceCameraConfigs;
         }
 
@@ -239,16 +304,22 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
         videoTraceCameraConfig.setRefWorkGridKey(workGridKey);
         videoTraceCameraConfig.setYn((byte) 1);
         videoTraceCameraConfigs = videoTraceCameraConfigService.queryByCondition(videoTraceCameraConfig);
-
-        cacheService.setEx(key,JsonHelper.toJSONString(videoTraceCameraConfigs),60*60*10L);
+        //查到的数据加入缓存
+        cacheService.setEx(key,JsonHelper.toJSONString(videoTraceCameraConfigs),CAMERA_CACHE_TIME_EXPIRE);
         return videoTraceCameraConfigs;
     }
 
+    /**
+     * 根据网格主键删除缓存
+     */
     private boolean delCameraConfigCache(String workGridKey){
         String key = getCacheKey(workGridKey);
         return cacheService.del(key);
     }
 
+    /**
+     * 获取缓存key
+     */
     private String getCacheKey(String key) {
         return CAMERA_CONFIG_CACHE_KEY_PRE+key;
     }
@@ -273,18 +344,18 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
     }
 
     @Override
-    public int insert(VideoTraceCamera VideoTraceCamera) {
-        return videoTraceCameraService.insert(VideoTraceCamera);
+    public int insert(VideoTraceCamera videoTraceCamera) {
+        return videoTraceCameraService.insert(videoTraceCamera);
     }
 
     @Override
-    public int delete(VideoTraceCamera VideoTraceCamera) {
-        return videoTraceCameraService.deleteById(VideoTraceCamera);
+    public int delete(VideoTraceCamera videoTraceCamera) {
+        return videoTraceCameraService.deleteById(videoTraceCamera);
     }
 
     @Override
-    public int saveOrUpdateCameraStatus(VideoTraceCamera VideoTraceCamera) {
-        return videoTraceCameraService.saveOrUpdateCameraStatus(VideoTraceCamera);
+    public int saveOrUpdateCameraStatus(VideoTraceCamera videoTraceCamera) {
+        return videoTraceCameraService.saveOrUpdateCameraStatus(videoTraceCamera);
     }
 
     @Override

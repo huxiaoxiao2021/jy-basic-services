@@ -44,16 +44,22 @@ public interface VideoTraceCameraJsfService {
     Result<List<VideoTraceCamera>> queryCamera(VideoTraceCameraConfigQuery query);
 
     /**
+     * 格口、设备工序，网格查摄像头 包含网格编码和是否为主摄像头
+     *
+     */
+    Result<List<VideoTraceCamera>> queryCameraInfo(VideoTraceCameraConfigQuery query);
+
+    /**
      *
      * 查摄像头下绑定数据
      *
      */
     Result<List<VideoTraceCameraConfig>> queryCameraConfigByCameraId(int id);
 
-    int insert(VideoTraceCamera VideoTraceCamera);
-    int delete(VideoTraceCamera VideoTraceCamera);
+    int insert(VideoTraceCamera videoTraceCamera);
+    int delete(VideoTraceCamera videoTraceCamera);
 
-    int saveOrUpdateCameraStatus(VideoTraceCamera VideoTraceCamera);
+    int saveOrUpdateCameraStatus(VideoTraceCamera videoTraceCamera);
 
 
     Result<Boolean> importCameras(List<VideoTraceCameraImport> list,int type);
