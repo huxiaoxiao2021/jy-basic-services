@@ -79,7 +79,7 @@
       and ((update_time <![CDATA[ >= ]]>  #{operateTime} and yn =0)
       or yn=1)
     </if>
-    limt 100
+    limit 100
   </select>
 
   <select id="queryValidByCameraIdsAndTime" resultType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig" resultMap="BaseResultMap">

@@ -93,6 +93,7 @@ public class VideoTraceCameraConfigServiceTest {
     public void testQueryByCondition() {
         VideoTraceCameraConfig videoTraceCameraConfig = new VideoTraceCameraConfig();
         videoTraceCameraConfig.setCameraId(5);
+        videoTraceCameraConfig.setRefWorkGridKey("111");
         List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigService.queryByCondition(videoTraceCameraConfig);
         System.out.println(JsonHelper.toJSONString(videoTraceCameraConfigs));
     }

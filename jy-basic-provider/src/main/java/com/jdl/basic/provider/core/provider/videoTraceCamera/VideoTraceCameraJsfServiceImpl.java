@@ -414,7 +414,7 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
                 return videoTraceCameraImport;
             }).collect(Collectors.toList());
             videoTraceCameraService.importCameras(list);
-        }  while (pageSize*page < total);
+        }  while (pageSize*(page-1) < total);
         return "同步完成";
     }
 }
