@@ -5,23 +5,9 @@ import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.machine.Machine;
-import com.jdl.basic.api.domain.workStation.BatchAreaWorkGridQuery;
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkArea;
-import com.jdl.basic.api.domain.workStation.WorkGrid;
-import com.jdl.basic.api.domain.workStation.WorkGridBatchUpdateRequest;
-import com.jdl.basic.api.domain.workStation.WorkGridDeviceVo;
-import com.jdl.basic.api.domain.workStation.WorkGridEditVo;
-import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
-import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
-import com.jdl.basic.api.domain.workStation.WorkGridImport;
-import com.jdl.basic.api.domain.workStation.WorkGridModifyMqData;
-import com.jdl.basic.api.domain.workStation.WorkGridQuery;
-import com.jdl.basic.api.domain.workStation.WorkGridVo;
+import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.domain.workStation.WorkGridVo.FlowInfoItem;
 import com.jdl.basic.api.domain.workStation.WorkGridVo.WorkDataInfo;
-import com.jdl.basic.api.domain.workStation.WorkStationGrid;
-import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
 import com.jdl.basic.api.enums.ConfigFlowStatusEnum;
 import com.jdl.basic.api.enums.EditTypeEnum;
 import com.jdl.basic.api.enums.GridFlowLineTypeEnum;
@@ -56,15 +42,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 场地网格表--Service接口实现
@@ -987,5 +965,67 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Override
 	public List<WorkGrid> queryAreaInfo(WorkGrid workGrid) {
 		return workGridDao.queryAreaInfo(workGrid);
+	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridServiceImpl.updateStatusByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<Boolean> updateStatusByIds(UpdateRequest<WorkGrid> updateRequest) {
+		Result<Boolean> result = new Result<Boolean>().toSuccess();
+		if (Objects.isNull(updateRequest) || CollectionUtils.isEmpty(updateRequest.getDataList())){
+			result.toFail("场地网格状态更新数据不能为空！");
+			return result;
+		}
+		result.setData(workGridDao.updateStatusByIds(updateRequest) > 0);
+		return result;
+	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridServiceImpl.updateRejectByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<Boolean> updateRejectByIds(UpdateRequest<WorkGrid> updateRequest) {
+		Result<Boolean> result = new Result<Boolean>().toSuccess();
+		if (Objects.isNull(updateRequest) || CollectionUtils.isEmpty(updateRequest.getDataList())){
+			result.toFail("场地网格状态更新数据不能为空！");
+			return result;
+		}
+		result.setData(workGridDao.updateRejectByIds(updateRequest) > 0);
+		return result;
+	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridServiceImpl.queryHistoryPageList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<PageDto<WorkGridVo>> queryHistoryPageList(WorkGridQuery query) {
+		Result<PageDto<WorkGridVo>> result = Result.success();
+		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
+		if(!checkResult.isSuccess()){
+			return Result.fail(checkResult.getMessage());
+		}
+		List<WorkGridVo> voDataList = new ArrayList<WorkGridVo>();
+		PageDto<WorkGridVo> pageDto = new PageDto<>(query.getPageNumber(), query.getPageSize());
+		Long totalCount = workGridDao.queryHistoryCount(query);
+		if(totalCount != null && totalCount > 0){
+			List<WorkGrid> dataList = workGridDao.queryHistoryList(query);
+			for (WorkGrid tmp : dataList) {
+				voDataList.add(this.toWorkGridVo(tmp));
+			}
+		}
+		this.loadDeviceInfo(voDataList);
+		pageDto.setResult(voDataList);
+		pageDto.setTotalRow(totalCount.intValue());
+		result.setData(pageDto);
+		return result;
+	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridServiceImpl.updatePassByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<Boolean> updatePassByIds(UpdateRequest<WorkGrid> updateRequest) {
+		Result<Boolean> result = new Result<Boolean>().toSuccess();
+		if (Objects.isNull(updateRequest) || CollectionUtils.isEmpty(updateRequest.getDataList())){
+			result.toFail("场地网格工序审批通过状态更新数据不能为空！");
+			return result;
+		}
+		for (WorkGrid workGrid : updateRequest.getDataList()) {
+			workGridDao.updatePassById(workGrid);
+		}
+		return result;
 	}
 }

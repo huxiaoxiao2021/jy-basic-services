@@ -176,4 +176,32 @@ public interface WorkGridJsfService {
 	Result<WorkGrid> queryByWorkGridKeyWithCache(String workGridKey);
 
 	Result<List<WorkGrid>> queryAreaInfo(WorkGrid workGrid);
+
+	/**
+	 * 根据指定的ID列表更新网格状态
+	 * @param updateRequest 更新请求对象，包含要更新的网格信息的ID列表
+	 * @return 更新操作的响应对象
+	 */
+	Result<Boolean> updateStatusByIds(UpdateRequest<WorkGrid> updateRequest);
+
+	/**
+	 * 更新审批拒绝的网格
+	 * @param updateRequest 更新请求对象
+	 * @return 更新后的网格信息
+	 */
+	Result<Boolean> updateRejectByIds(UpdateRequest<WorkGrid> updateRequest);
+
+	/**
+	 * 查询历史删除记录页面列表
+	 * @param query 网格查询
+	 * @return 历史页面列表的分页数据传输对象
+	 */
+	Result<PageDto<WorkGridVo>> queryHistoryPageList(WorkGridQuery query);
+
+	/**
+	 * 更新审批通过的网格
+	 * @param updateRequest 更新请求对象
+	 * @return 更新后的网格信息
+	 */
+	Result<Boolean> updatePassByIds(UpdateRequest<WorkGrid> updateRequest);
 }

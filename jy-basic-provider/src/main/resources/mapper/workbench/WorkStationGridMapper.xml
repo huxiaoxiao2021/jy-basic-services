@@ -857,6 +857,7 @@
 		<if test="operateTime != null" >
 			update_time = #{operateTime,jdbcType=TIMESTAMP},
 		</if>
+		delete_fail_message = '',
 		status = 2
 		where yn = 1
 		and id in
