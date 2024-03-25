@@ -2,11 +2,12 @@ package com.jdl.basic.api.domain.videoTraceCamera;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Data
-public class VideoTraceCameraConfig {
+public class VideoTraceCameraConfig implements Serializable {
     private Integer id;
 
     /**

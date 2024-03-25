@@ -2,8 +2,10 @@ package com.jdl.basic.api.domain.videoTraceCamera;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class VideoTraceCameraConfigQuery {
+public class VideoTraceCameraConfigQuery implements Serializable {
     /**
      * 关联网格key:work_grid
      */

@@ -1,8 +1,9 @@
 package com.jdl.basic.api.domain.videoTraceCamera;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class VideoTraceCamera {
+public class VideoTraceCamera implements Serializable {
     private Integer id;
 
     /**
