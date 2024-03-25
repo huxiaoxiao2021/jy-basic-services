@@ -209,7 +209,7 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
                 if (!ids.contains(config.getCameraId())){
                     VideoTraceCamera videoTraceCamera = videoTraceCameraService.selectByPrimaryKey(config.getCameraId());
                     videoTraceCamera.setMaster(config.getMasterCamera() == 1);
-                    WorkGrid workGrid = workGridService.queryByWorkGridKey(config.getRefWorkGridKey());
+                    WorkGrid workGrid = workGridService.queryByWorkGridKeyWithCache(config.getRefWorkGridKey());
                     if (workGrid != null){
                         videoTraceCamera.setGridCode(workGrid.getGridCode());
                     }
