@@ -867,7 +867,7 @@
 			#{item.id,jdbcType=BIGINT}
 		</foreach>
 		<if test="sourceStatus != null and sourceStatus != ''" >
-			and t.status = #{sourceStatus,jdbcType=INTEGER}
+			and status = #{sourceStatus,jdbcType=INTEGER}
 		</if>
 	</update>
 
