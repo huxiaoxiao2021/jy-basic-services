@@ -43,7 +43,7 @@
         <jdmeta-project-outer-api-sort.version>1.0-SNAPSHOT</jdmeta-project-outer-api-sort.version>
         <aces.version>3.0.1-SNAPSHOT</aces.version>
         <muliti-tenant-plugin-mybatis.version>1.0.1-SORTING-RELEASE</muliti-tenant-plugin-mybatis.version>
-        <tenant-jsf-filter-sdk.version>1.0.1-SORTING-RELEASE</tenant-jsf-filter-sdk.version>
+        <tenant-jsf-filter-sdk.version>1.0.2-SORTING-RELEASE</tenant-jsf-filter-sdk.version>
     </properties>
 
     <!--配置环境的profile-->

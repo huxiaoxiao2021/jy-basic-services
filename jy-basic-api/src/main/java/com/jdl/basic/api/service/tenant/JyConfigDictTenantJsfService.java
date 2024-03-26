@@ -59,4 +59,12 @@ public interface JyConfigDictTenantJsfService {
      * @return 响应的站点类型列表
      */
     Result<List<JyConfigDictTenant>> getSiteTypeByTenantCode(String tenantCode);
+
+    /**
+     * 获取调用接口别名
+     * @param tenantCode 租户代码
+     * @param dictCode 字典代码
+     * @return 调用接口别名
+     */
+    Result<String> getCallInterfaceAlies(String tenantCode,String dictCode);
 }
