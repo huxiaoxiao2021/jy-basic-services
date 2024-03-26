@@ -30,4 +30,6 @@ public interface VideoTraceCameraConfigDao {
 
 
     List<VideoTraceCameraConfig> queryByGrid(VideoTraceCameraConfig videoTraceCameraConfig);
+
+    int deleteByIds(@Param("ids")List<Integer> ids);
 }

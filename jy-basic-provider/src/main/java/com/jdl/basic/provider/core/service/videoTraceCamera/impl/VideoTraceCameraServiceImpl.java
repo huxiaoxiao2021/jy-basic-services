@@ -318,6 +318,11 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         return videoTraceCameraConfigDao.batchDelete(ids, operate);
     }
 
+    @Override
+    public int deleteByIds(List<Integer> ids) {
+        return videoTraceCameraConfigDao.deleteByIds(ids);
+    }
+
 
     @Override
     public void importCameras(List<VideoTraceCameraImport> list) {
@@ -347,7 +352,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         //查询工序
         WorkStationGrid workStationGrid = workStationGridService.queryByGridKeyWithCache(workStationGridQuery);
         videoTraceCameraConfig.setRefWorkGridKey(workStationGrid.getRefWorkGridKey());
-        videoTraceCameraConfig.setRefWorkGridKey(workStationGrid.getRefStationKey());
+        videoTraceCameraConfig.setRefWorkStationKey(workStationGrid.getBusinessKey());
         videoTraceCameraConfig.setCameraId(videoTraceCamera.getId());
         videoTraceCameraConfig.setCreateErp(item.getUpdateErp());
         videoTraceCameraConfig.setCreateTime(item.getUpdateTime());

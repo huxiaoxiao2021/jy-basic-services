@@ -45,4 +45,11 @@ public interface VideoTraceCameraService {
     int deleteCameraByIds(List<Integer> ids, String operate);
 
     int deleteCameraConfigByIds(List<Integer> ids, String operate);
+
+    /**
+     * 物理删除
+     * @param ids
+     * @return
+     */
+    int deleteByIds(List<Integer> ids);
 }

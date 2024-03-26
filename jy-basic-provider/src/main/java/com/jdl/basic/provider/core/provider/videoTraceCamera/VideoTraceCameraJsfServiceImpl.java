@@ -237,11 +237,6 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
         if (StringUtils.isBlank(query.getWorkGridKey())){
             return Result.fail("网格业务主键不能为空");
         }
-        if (((StringUtils.isNotBlank(query.getChuteCode()) ? 1:0)
-                + (StringUtils.isNotBlank(query.getSupplyDwsCode()) ? 1:0)
-                + (StringUtils.isNotBlank(query.getWorkStationKey()) ? 1:0)) >1){
-            return Result.fail("chuteCode，supplyDwsCode，workStationKey不能同时有值");
-        }
         return Result.success();
     }
 
@@ -382,8 +377,8 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
     }
 
     @Override
-    public int deleteCameraConfigByIds(List<Integer> ids, String operate) {
-        return videoTraceCameraService.deleteCameraConfigByIds(ids,operate);
+    public int deleteCameraConfigByIds(List<Integer> ids) {
+        return videoTraceCameraService.deleteByIds(ids);
     }
 
     @Override

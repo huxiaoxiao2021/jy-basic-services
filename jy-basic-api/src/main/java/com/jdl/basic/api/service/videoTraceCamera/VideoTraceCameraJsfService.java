@@ -64,7 +64,11 @@ public interface VideoTraceCameraJsfService {
 
     Result<Boolean> importCameras(List<VideoTraceCameraImport> list,int type);
 
-    int deleteCameraConfigByIds(List<Integer> ids, String operate);
+    /**
+     *
+     * 物理删除
+     */
+    int deleteCameraConfigByIds(List<Integer> ids);
     int deleteCameraByIds(List<Integer> ids, String operate);
 
     String synCameraInfo(String code,Integer siteCode);
