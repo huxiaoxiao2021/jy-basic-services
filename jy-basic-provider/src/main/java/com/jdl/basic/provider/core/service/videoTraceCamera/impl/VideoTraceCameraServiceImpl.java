@@ -8,6 +8,7 @@ import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.provider.common.Jimdb.CacheService;
 import com.jdl.basic.provider.core.dao.videoTraceCamera.VideoTraceCameraConfigDao;
 import com.jdl.basic.provider.core.dao.videoTraceCamera.VideoTraceCameraDao;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
@@ -21,6 +22,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -44,6 +47,11 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     @Qualifier("workStationGridService")
     private WorkStationGridService workStationGridService;
 
+    @Resource
+    @Qualifier("JimdbCacheService")
+    private CacheService cacheService;
+
+    private static final String CAMERA_CONFIG_CACHE_KEY_PRE="camera_config_cache_key_pre";
     @Override
     public Result<PageDto<VideoTraceCamera>> queryPageList(VideoTraceCameraQuery query) {
         Result<PageDto<VideoTraceCamera>> result = Result.success();
@@ -102,6 +110,10 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         condition.setCameraId(videoTraceCamera.getId());
         List<VideoTraceCameraConfig> oldList = videoTraceCameraConfigDao.queryByCameraId(condition);
         List<VideoTraceCameraConfig> newList = videoTraceCameraVo.getVideoTraceCameraConfigList();
+        List<String> delCacheKeys = new ArrayList<>();
+        delCacheKeys.addAll(oldList.stream().map(VideoTraceCameraConfig::getRefWorkGridKey).collect(Collectors.toList()));
+        delCacheKeys.addAll(newList.stream().map(VideoTraceCameraConfig::getRefWorkGridKey).collect(Collectors.toList()));
+        delCacheKeys=delCacheKeys.stream().distinct().collect(Collectors.toList());
         //摄像头之前没有配置，新增配置，修改摄像头配置状态为已配置
         if (CollectionUtils.isEmpty(oldList) && CollectionUtils.isNotEmpty(newList)){
             VideoTraceCamera update = new VideoTraceCamera();
@@ -141,7 +153,23 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             videoTraceCameraConfigDao.batchDelete(delList.stream().map(VideoTraceCameraConfig::getId).collect(Collectors.toList())
                     ,videoTraceCameraVo.getUpdateErp());
         }
+
+        //根据网格删除缓存
+        delCameraConfigCache(delCacheKeys);
         return Result.success();
+    }
+
+    /**
+     * 根据网格主键删除缓存
+     */
+    private void delCameraConfigCache(List<String> list){
+        for (String workGridKey : list) {
+            cacheService.del(getKey(workGridKey));
+        }
+    }
+
+    private static String getKey(String workGridKey) {
+        return CAMERA_CONFIG_CACHE_KEY_PRE + workGridKey;
     }
 
     @Override

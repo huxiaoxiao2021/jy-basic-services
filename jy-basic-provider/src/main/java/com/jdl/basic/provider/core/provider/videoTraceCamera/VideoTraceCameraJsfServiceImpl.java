@@ -70,8 +70,7 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
 
     @Override
     public Result<Boolean> editCameraConfig(VideoTraceCameraVo videoTraceCameraVo) {
-        //根据网格删除缓存
-        delCameraConfigCache(videoTraceCameraVo.getGridBusinessKey());
+
         return videoTraceCameraService.editCameraConfig(videoTraceCameraVo);
     }
 
