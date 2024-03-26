@@ -367,7 +367,7 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
         if (type==2){
             videoTraceCameraService.importCameraConfigs(list);
         }
-        return null;
+        return Result.success();
     }
 
     @Override

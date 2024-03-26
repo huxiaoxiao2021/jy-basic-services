@@ -1,17 +1,16 @@
 package com.jdl.basic.provider.core.service.videoTraceCamera.impl;
 
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
+import com.jdl.basic.api.domain.machine.Machine;
 import com.jdl.basic.api.domain.videoTraceCamera.*;
 import com.jdl.basic.api.domain.workStation.WorkStationGrid;
 import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
-import com.jdl.basic.common.utils.DateHelper;
-import com.jdl.basic.common.utils.JsonHelper;
-import com.jdl.basic.common.utils.PageDto;
-import com.jdl.basic.common.utils.Result;
+import com.jdl.basic.common.utils.*;
 import com.jdl.basic.provider.common.Jimdb.CacheService;
 import com.jdl.basic.provider.core.dao.videoTraceCamera.VideoTraceCameraConfigDao;
 import com.jdl.basic.provider.core.dao.videoTraceCamera.VideoTraceCameraDao;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
+import com.jdl.basic.provider.core.service.machine.WorkStationGridMachineService;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +22,7 @@ import org.springframework.stereotype.Service;
 
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -51,6 +48,10 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     @Qualifier("JimdbCacheService")
     private CacheService cacheService;
 
+
+    @Autowired
+    private WorkStationGridMachineService workStationGridMachineService;
+
     private static final String CAMERA_CONFIG_CACHE_KEY_PRE="camera_config_cache_key_pre";
     @Override
     public Result<PageDto<VideoTraceCamera>> queryPageList(VideoTraceCameraQuery query) {
@@ -73,8 +74,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     @Override
     public Result<List<VideoTraceCameraConfig>> queryVideoTraceCameraConfig(VideoTraceCameraQuery query) {
         Result<List<VideoTraceCameraConfig>> result = Result.success();
-        if ((StringUtils.isBlank(query.getCameraCode()) || StringUtils.isBlank(query.getNationalChannelCode()))
-                && query.getId()<0){
+        if ((StringUtils.isBlank(query.getCameraCode()) || StringUtils.isBlank(query.getNationalChannelCode()))){
             log.error("参数错误，摄像头编码、通道号存在空值,查询入参【{}】",JsonHelper.toJSONString(query));
             return Result.fail("参数错误，摄像头编码、通道号存在空值");
         }
@@ -304,16 +304,16 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             //摄像头存在时，插入一条配置
             if (CollectionUtils.isNotEmpty(videoTraceCameras)){
                 try {
-                    VideoTraceCameraConfig videoTraceCameraConfig = getVideoTraceCameraConfig(item, videoTraceCameras.get(0));
+                    List<VideoTraceCameraConfig> videoTraceCameraConfigs = getVideoTraceCameraConfig(item, videoTraceCameras.get(0));
+                    for (VideoTraceCameraConfig videoTraceCameraConfig : videoTraceCameraConfigs) {
+                        List<VideoTraceCameraConfig> configs = videoTraceCameraConfigDao.queryByCondition(videoTraceCameraConfig);
+                        if (CollectionUtils.isNotEmpty(configs)){
+                            log.error("同步摄像头配置关系失败，该绑定关系已存在。{}", JsonHelper.toJSONString(item));
+                            continue;
+                        }
+                        videoTraceCameraConfigDao.insert(videoTraceCameraConfig);
 
-//                    List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigDao.queryByGrid(videoTraceCameraConfig);
-                    List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigDao.queryByCondition(videoTraceCameraConfig);
-                    if (CollectionUtils.isNotEmpty(videoTraceCameraConfigs)){
-                        log.error("同步摄像头配置关系失败，该绑定关系已存在。{}", JsonHelper.toJSONString(item));
-                        continue;
                     }
-                    videoTraceCameraConfigDao.insert(videoTraceCameraConfig);
-
                     if(videoTraceCameras.get(0).getConfigStatus() ==0){
                         VideoTraceCamera update = new VideoTraceCamera();
                         update.setId(videoTraceCameras.get(0).getId());
@@ -373,7 +373,8 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
 
 
 
-    private VideoTraceCameraConfig getVideoTraceCameraConfig(VideoTraceCameraImport item, VideoTraceCamera videoTraceCamera) {
+    private List<VideoTraceCameraConfig> getVideoTraceCameraConfig(VideoTraceCameraImport item, VideoTraceCamera videoTraceCamera) {
+        List<VideoTraceCameraConfig> list = new ArrayList<>();
         VideoTraceCameraConfig videoTraceCameraConfig = new VideoTraceCameraConfig();
         WorkStationGridQuery workStationGridQuery = new WorkStationGridQuery();
         workStationGridQuery.setBusinessKey(item.getStationGridKey());
@@ -388,7 +389,24 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         videoTraceCameraConfig.setUpdateTime(item.getUpdateTime());
         videoTraceCameraConfig.setStatus(item.getStatus());
         videoTraceCameraConfig.setYn((byte) 1);
-        return videoTraceCameraConfig;
+        list.add(videoTraceCameraConfig);
+
+        List<WorkStationGrid> grids = new ArrayList<>();
+        grids.add(workStationGrid);
+        HashMap<String, List<Machine>> machineListByRefGridKey = workStationGridMachineService.getMachineListByRefGridKey(grids);
+        for (Map.Entry<String, List<Machine>> entry : machineListByRefGridKey.entrySet()) {
+            List<VideoTraceCameraConfig> configs=entry.getValue().stream().map(x->{
+                VideoTraceCameraConfig config = BeanUtils.copy(videoTraceCameraConfig, VideoTraceCameraConfig.class);
+                if (config != null) {
+                    config.setMachineCode(x.getMachineCode());
+                    config.setRefWorkStationKey(null);
+                }
+                return config;
+            }).collect(Collectors.toList());
+            list.addAll(configs);
+        }
+
+        return list;
     }
 
     private  VideoTraceCamera getVideoTraceCamera(VideoTraceCameraImport item) {
