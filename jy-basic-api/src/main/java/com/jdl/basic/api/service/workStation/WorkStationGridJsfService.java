@@ -171,13 +171,6 @@ public interface WorkStationGridJsfService {
 	 */
 	Result<Boolean> updateStatusByIds(UpdateRequest<WorkStationGrid> updateRequest);
 
-	/**
-	 * 更新审批拒绝的工作站网格信息
-	 * @param updateRequest 更新请求对象
-	 * @return 更新后的工作站网格信息
-	 */
-	Result<Boolean> updateRejectByIds(UpdateRequest<WorkStationGrid> updateRequest);
-
     /**
      * 查询历史删除记录页面列表
      * @param query 工作站网格查询

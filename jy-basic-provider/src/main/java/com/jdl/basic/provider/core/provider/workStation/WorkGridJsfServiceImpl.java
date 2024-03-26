@@ -348,39 +348,6 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 		return result;
 	}
 
-	@Override
-	public Result<Boolean> updateRejectByIds(UpdateRequest<WorkGrid> updateRequest) {
-		log.info("场地网格管理 updateRejectByIds 入参-{}", JSON.toJSONString(updateRequest));
-		final Result<Boolean> result = Result.success();
-		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
-			@Override
-			public void success() {
-				Result<Boolean> apiResult = workGridService.updateRejectByIds(updateRequest);
-				if(!apiResult.isSuccess()) {
-					result.setCode(apiResult.getCode());
-					result.setMessage(apiResult.getMessage());
-					result.setData(apiResult.getData());
-					return ;
-				}
-			}
-			@Override
-			public void fail() {
-				result.toFail("其他用户正在更新审批驳回网格信息，请稍后操作！");
-			}
-			@Override
-			public void error(Exception e) {
-				log.error(e.getMessage(), e);
-				result.toFail("更新审批驳回网格信息操作异常，请稍后重试！");
-			}
-		});
-		return result;
-	}
-
-	@Override
-	public Result<PageDto<WorkGridVo>> queryHistoryPageList(WorkGridQuery query) {
-		log.info("场地网格管理 queryHistoryPageList 入参-{}", JSON.toJSONString(query));
-		return workGridService.queryHistoryPageList(query);
-	}
 
 	@Override
 	public Result<Boolean> updatePassByIds(UpdateRequest<WorkGrid> updateRequest) {

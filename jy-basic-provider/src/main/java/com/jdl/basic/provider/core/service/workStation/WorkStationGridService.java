@@ -214,12 +214,6 @@ public interface WorkStationGridService {
 	 */
 	Result<Boolean> updateStatusByIds(UpdateRequest<WorkStationGrid> updateRequest);
 	/**
-	 * 更新审批拒绝的工作站网格工序信息
-	 * @param updateRequest 更新请求对象
-	 * @return 更新后的工作站网格信息
-	 */
-	Result<Boolean> updateRejectByIds(UpdateRequest<WorkStationGrid> updateRequest);
-	/**
 	 * 查询历史删除记录页面列表
 	 * @param query 工作站网格查询
 	 * @return 历史页面列表的分页数据传输对象

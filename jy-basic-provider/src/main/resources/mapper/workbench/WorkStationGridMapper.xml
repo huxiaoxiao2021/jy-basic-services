@@ -857,13 +857,18 @@
 		<if test="operateTime != null" >
 			update_time = #{operateTime,jdbcType=TIMESTAMP},
 		</if>
-		delete_fail_message = '',
-		status = 2
+		<if test="deleteFailMessage != null" >
+			delete_fail_message = #{deleteFailMessage,jdbcType=VARCHAR},
+		</if>
+		status = #{targetStatus,jdbcType=INTEGER}
 		where yn = 1
 		and id in
 		<foreach collection="dataList" item="item" open="(" close=")" separator=",">
 			#{item.id,jdbcType=BIGINT}
 		</foreach>
+		<if test="areaCode != null and areaCode != ''" >
+			and t.status = #{sourceStatus,jdbcType=INTEGER}
+		</if>
 	</update>
 
 	<update id="updatePassById" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGrid">
@@ -886,31 +891,26 @@
 		and id = #{id,jdbcType=BIGINT}
 	</update>
 
-	<update id="updateRejectByIds" parameterType="com.jdl.basic.api.domain.workStation.UpdateRequest">
-		update work_station_grid
-		set
-		<if test="operateUserCode != null" >
-			update_user = #{operateUserCode,jdbcType=VARCHAR},
-		</if>
-		<if test="operateUserName != null" >
-			update_user_name = #{operateUserName,jdbcType=VARCHAR},
-		</if>
-		<if test="operateTime != null" >
-			update_time = #{operateTime,jdbcType=TIMESTAMP},
-		</if>
-		status = 4
-		where yn=1 and status = 2
-		and id in
-		<foreach collection="dataList" item="item" open="(" close=")" separator=",">
-			#{item.id,jdbcType=BIGINT}
-		</foreach>
-	</update>
-
 	<select id="queryHistoryCount" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGridQuery" resultType="long">
 		select
 		count(1)
 		from
 		work_station_grid g
+		<include refid="historyCondition"/>
+	</select>
+
+	<select id="queryHistoryList" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGridQuery" resultMap="WorkStationGrid">
+		select
+		<include refid="Base_Column_List"/>
+		from
+		work_station_grid g
+		<include refid="historyCondition"/>
+		<if test="pageNumber > 0">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<sql id="historyCondition">
 		left outer join work_station s on g.ref_station_key = s.business_key and s.yn = 0
 		<where>
 			g.yn = 0 and g.update_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
@@ -945,50 +945,6 @@
 				and g.supplier_code = #{supplierCode,jdbcType=VARCHAR}
 			</if>
 		</where>
-	</select>
-
-	<select id="queryHistoryList" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGridQuery" resultMap="WorkStationGrid">
-		select
-		<include refid="Base_Column_List"/>
-		from
-		work_station_grid g
-		left outer join work_station s on g.ref_station_key = s.business_key and s.yn = 0
-		<where>
-			g.yn = 0 and  g.update_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
-			<if test="orgCode != null" >
-				and g.org_code = #{orgCode,jdbcType=INTEGER}
-			</if>
-			<if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
-				and g.province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR}
-			</if>
-			<if test="areaHubCode != null and areaHubCode != ''" >
-				and g.area_hub_code = #{areaHubCode,jdbcType=VARCHAR}
-			</if>
-			<if test="siteCode != null" >
-				and g.site_code = #{siteCode,jdbcType=INTEGER}
-			</if>
-			<if test="workCode != null and workCode != ''" >
-				and s.work_code = #{workCode,jdbcType=VARCHAR}
-			</if>
-			<if test="floor != null" >
-				and g.floor = #{floor,jdbcType=INTEGER}
-			</if>
-			<if test="gridNo != null and gridNo != ''" >
-				and g.grid_no = #{gridNo,jdbcType=VARCHAR}
-			</if>
-			<if test="areaCode != null and areaCode != ''" >
-				and s.area_code = #{areaCode,jdbcType=VARCHAR}
-			</if>
-			<if test="dockCode != null and dockCode != ''" >
-				and g.dock_code = #{dockCode,jdbcType=VARCHAR}
-			</if>
-			<if test="supplierCode != null and supplierCode != ''" >
-				and g.supplier_code = #{supplierCode,jdbcType=VARCHAR}
-			</if>
-		</where>
-		<if test="pageNumber > 0">
-			limit #{offset}, #{limit}
-		</if>
-	</select>
+	</sql>
 
 </mapper>

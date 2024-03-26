@@ -106,4 +106,8 @@ public class WorkGridQuery extends BasePagerCondition implements Serializable {
 	 * 列表
 	 */
 	private List<String> businessKeyList;
+	/**
+	 * 是否删除状态,0-已删除,1-生效中
+	 */
+	private Integer yn;
 }

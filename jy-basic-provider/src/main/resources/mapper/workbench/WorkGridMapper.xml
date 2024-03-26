@@ -487,7 +487,12 @@
 
 	<sql id="queryCondition">
 		<where>
-			yn = 1
+			<if test="yn = null and yn=1">
+				AND t.yn = 1
+			</if>
+			<if test="yn != null and yn=0">
+				AND t.yn = #{yn,jdbcType=INTEGER} AND t.update_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+			</if>
             <if test="orgCode != null and orgCode != ''" >
                 and t.org_code = #{orgCode,jdbcType=INTEGER}
             </if>
@@ -822,13 +827,18 @@
 		<if test="operateTime != null" >
 			update_time = #{operateTime,jdbcType=TIMESTAMP},
 		</if>
-		delete_fail_message = '',
-		status = 2
+		<if test="deleteFailMessage != null" >
+			delete_fail_message = #{deleteFailMessage,jdbcType=VARCHAR},
+		</if>
+		status = #{targetStatus,jdbcType=INTEGER}
 		where yn = 1
 		and id in
 		<foreach collection="dataList" item="item" open="(" close=")" separator=",">
 			#{item.id,jdbcType=BIGINT}
 		</foreach>
+		<if test="areaCode != null and areaCode != ''" >
+			and t.status = #{sourceStatus,jdbcType=INTEGER}
+		</if>
 	</update>
 
 	<update id="updatePassById" parameterType="com.jdl.basic.api.domain.workStation.WorkGrid">
@@ -850,113 +860,4 @@
 		where status = 2
 		and id = #{id,jdbcType=BIGINT}
 	</update>
-
-	<update id="updateRejectByIds" parameterType="com.jdl.basic.api.domain.workStation.UpdateRequest">
-		update work_grid
-		set
-		<if test="operateUserCode != null" >
-			update_user = #{operateUserCode,jdbcType=VARCHAR},
-		</if>
-		<if test="operateUserName != null" >
-			update_user_name = #{operateUserName,jdbcType=VARCHAR},
-		</if>
-		<if test="operateTime != null" >
-			update_time = #{operateTime,jdbcType=TIMESTAMP},
-		</if>
-		status = 4
-		where yn=1 and status = 2
-		and id in
-		<foreach collection="dataList" item="item" open="(" close=")" separator=",">
-			#{item.id,jdbcType=BIGINT}
-		</foreach>
-	</update>
-
-	<select id="queryHistoryCount" parameterType="com.jdl.basic.api.domain.workStation.WorkGridQuery" resultType="long">
-		select
-		count(1)
-		from
-		work_grid t
-		<where>
-			yn = 0 and update_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
-			<if test="orgCode != null and orgCode != ''" >
-				and t.org_code = #{orgCode,jdbcType=INTEGER}
-			</if>
-			<if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
-				and t.province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR}
-			</if>
-			<if test="areaHubCode != null and areaHubCode != ''" >
-				and t.area_hub_code = #{areaHubCode,jdbcType=VARCHAR}
-			</if>
-			<if test="siteCode != null and siteCode != ''" >
-				and t.site_code = #{siteCode,jdbcType=INTEGER}
-			</if>
-			<if test="floor != null and floor != ''" >
-				and t.floor = #{floor,jdbcType=INTEGER}
-			</if>
-			<if test="areaCode != null and areaCode != ''" >
-				and t.area_code = #{areaCode,jdbcType=VARCHAR}
-			</if>
-			<if test="gridCode != null and gridCode != ''" >
-				and t.grid_code = #{gridCode,jdbcType=VARCHAR}
-			</if>
-			<if test="siteType != null" >
-				and t.site_type = #{siteType,jdbcType=INTEGER}
-			</if>
-			<if test="businessKey != null and businessKey != ''" >
-				and t.business_key = #{businessKey,jdbcType=VARCHAR}
-			</if>
-			<if test="configFlowStatus != null">
-				AND t.config_flow_status = #{configFlowStatus,jdbcType=INTEGER}
-			</if>
-			<if test="gridNo != null and gridNo != '' " >
-				AND t.grid_no = #{gridNo,jdbcType=VARCHAR}
-			</if>
-		</where>
-	</select>
-
-	<select id="queryHistoryList" parameterType="com.jdl.basic.api.domain.workStation.WorkGridQuery" resultMap="WorkGrid">
-		select
-		<include refid="Base_Column_List"/>
-		from
-		work_grid t
-		<where>
-			yn = 0 and update_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
-			<if test="orgCode != null and orgCode != ''" >
-				and t.org_code = #{orgCode,jdbcType=INTEGER}
-			</if>
-			<if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
-				and t.province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR}
-			</if>
-			<if test="areaHubCode != null and areaHubCode != ''" >
-				and t.area_hub_code = #{areaHubCode,jdbcType=VARCHAR}
-			</if>
-			<if test="siteCode != null and siteCode != ''" >
-				and t.site_code = #{siteCode,jdbcType=INTEGER}
-			</if>
-			<if test="floor != null and floor != ''" >
-				and t.floor = #{floor,jdbcType=INTEGER}
-			</if>
-			<if test="areaCode != null and areaCode != ''" >
-				and t.area_code = #{areaCode,jdbcType=VARCHAR}
-			</if>
-			<if test="gridCode != null and gridCode != ''" >
-				and t.grid_code = #{gridCode,jdbcType=VARCHAR}
-			</if>
-			<if test="siteType != null" >
-				and t.site_type = #{siteType,jdbcType=INTEGER}
-			</if>
-			<if test="businessKey != null and businessKey != ''" >
-				and t.business_key = #{businessKey,jdbcType=VARCHAR}
-			</if>
-			<if test="configFlowStatus != null">
-				AND t.config_flow_status = #{configFlowStatus,jdbcType=INTEGER}
-			</if>
-			<if test="gridNo != null and gridNo != '' " >
-				AND t.grid_no = #{gridNo,jdbcType=VARCHAR}
-			</if>
-		</where>
-		<if test="pageNumber > 0">
-			limit #{offset}, #{limit}
-		</if>
-	</select>
 </mapper>

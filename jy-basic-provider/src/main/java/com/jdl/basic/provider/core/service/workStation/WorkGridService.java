@@ -210,20 +210,6 @@ public interface WorkGridService {
 	Result<Boolean> updateStatusByIds(UpdateRequest<WorkGrid> updateRequest);
 
 	/**
-	 * 更新审批拒绝的网格
-	 * @param updateRequest 更新请求对象
-	 * @return 更新后的网格信息
-	 */
-	Result<Boolean> updateRejectByIds(UpdateRequest<WorkGrid> updateRequest);
-
-	/**
-	 * 查询历史删除记录页面列表
-	 * @param query 网格查询
-	 * @return 历史页面列表的分页数据传输对象
-	 */
-	Result<PageDto<WorkGridVo>> queryHistoryPageList(WorkGridQuery query);
-
-	/**
 	 * 更新审批通过的网格
 	 * @param updateRequest 更新请求对象
 	 * @return 更新后的网格信息

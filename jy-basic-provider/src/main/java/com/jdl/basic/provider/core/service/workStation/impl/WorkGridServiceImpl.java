@@ -980,42 +980,6 @@ public class WorkGridServiceImpl implements WorkGridService {
 	}
 
 	@Override
-	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridServiceImpl.updateRejectByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-	public Result<Boolean> updateRejectByIds(UpdateRequest<WorkGrid> updateRequest) {
-		Result<Boolean> result = new Result<Boolean>().toSuccess();
-		if (Objects.isNull(updateRequest) || CollectionUtils.isEmpty(updateRequest.getDataList())){
-			result.toFail("场地网格状态更新数据不能为空！");
-			return result;
-		}
-		result.setData(workGridDao.updateRejectByIds(updateRequest) > 0);
-		return result;
-	}
-
-	@Override
-	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridServiceImpl.queryHistoryPageList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-	public Result<PageDto<WorkGridVo>> queryHistoryPageList(WorkGridQuery query) {
-		Result<PageDto<WorkGridVo>> result = Result.success();
-		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
-		if(!checkResult.isSuccess()){
-			return Result.fail(checkResult.getMessage());
-		}
-		List<WorkGridVo> voDataList = new ArrayList<WorkGridVo>();
-		PageDto<WorkGridVo> pageDto = new PageDto<>(query.getPageNumber(), query.getPageSize());
-		Long totalCount = workGridDao.queryHistoryCount(query);
-		if(totalCount != null && totalCount > 0){
-			List<WorkGrid> dataList = workGridDao.queryHistoryList(query);
-			for (WorkGrid tmp : dataList) {
-				voDataList.add(this.toWorkGridVo(tmp));
-			}
-		}
-		this.loadDeviceInfo(voDataList);
-		pageDto.setResult(voDataList);
-		pageDto.setTotalRow(totalCount.intValue());
-		result.setData(pageDto);
-		return result;
-	}
-
-	@Override
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridServiceImpl.updatePassByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> updatePassByIds(UpdateRequest<WorkGrid> updateRequest) {
 		Result<Boolean> result = new Result<Boolean>().toSuccess();

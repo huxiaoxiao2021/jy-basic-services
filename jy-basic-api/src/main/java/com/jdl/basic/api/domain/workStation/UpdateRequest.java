@@ -38,4 +38,16 @@ public class UpdateRequest<T> implements Serializable {
      * 操作业务主键
      */
     private String operateBusinessKey;
+    /**
+     * 删除失败原因
+     */
+    private String deleteFailMessage;
+    /**
+     * 原始状态
+     */
+    private Integer sourceStatus;
+    /**
+     * 目标状态
+     */
+    private Integer targetStatus;
 }

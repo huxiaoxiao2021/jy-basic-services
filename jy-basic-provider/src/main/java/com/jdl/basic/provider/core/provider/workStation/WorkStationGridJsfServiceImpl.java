@@ -409,33 +409,6 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 		return result;
 	}
 
-	@Override
-	public Result<Boolean> updateRejectByIds(UpdateRequest<WorkStationGrid> updateRequest) {
-		log.info("场地网格工序管理 updateRejectByIds 入参-{}", JSON.toJSONString(updateRequest));
-		final Result<Boolean> result = Result.success();
-		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
-			@Override
-			public void success() {
-				Result<Boolean> apiResult = workStationGridService.updateRejectByIds(updateRequest);
-				if(!apiResult.isSuccess()) {
-					result.setCode(apiResult.getCode());
-					result.setMessage(apiResult.getMessage());
-					result.setData(apiResult.getData());
-					return ;
-				}
-			}
-			@Override
-			public void fail() {
-				result.toFail("其他用户正在更新网格工序审批驳回状态，请稍后操作！");
-			}
-			@Override
-			public void error(Exception e) {
-				log.error(e.getMessage(), e);
-				result.toFail("更新网格工序审批驳回状态操作异常，请稍后重试！");
-			}
-		});
-		return result;
-	}
 
 	@Override
 	public Result<PageDto<WorkStationGrid>> queryHistoryPageList(WorkStationGridQuery query) {

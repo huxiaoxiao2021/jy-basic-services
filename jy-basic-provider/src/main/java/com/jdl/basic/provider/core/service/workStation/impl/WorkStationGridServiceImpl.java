@@ -912,18 +912,6 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	}
 
 	@Override
-	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.updateRejectByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-	public Result<Boolean> updateRejectByIds(UpdateRequest<WorkStationGrid> updateRequest) {
-		Result<Boolean> result = new Result<Boolean>().toSuccess();
-		if (Objects.isNull(updateRequest) || CollectionUtils.isEmpty(updateRequest.getDataList())){
-			result.toFail("场地网格工序审批驳回状态更新数据不能为空！");
-			return result;
-		}
-		result.setData(workStationGridDao.updateRejectByIds(updateRequest) > 0);
-		return result;
-	}
-
-	@Override
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryHistoryPageList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<PageDto<WorkStationGrid>> queryHistoryPageList(WorkStationGridQuery query) {
 		Result<PageDto<WorkStationGrid>> result = Result.success();
