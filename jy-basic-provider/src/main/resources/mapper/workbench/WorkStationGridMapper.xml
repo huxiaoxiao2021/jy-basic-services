@@ -866,7 +866,7 @@
 		<foreach collection="dataList" item="item" open="(" close=")" separator=",">
 			#{item.id,jdbcType=BIGINT}
 		</foreach>
-		<if test="areaCode != null and areaCode != ''" >
+		<if test="sourceStatus != null and sourceStatus != ''" >
 			and t.status = #{sourceStatus,jdbcType=INTEGER}
 		</if>
 	</update>
