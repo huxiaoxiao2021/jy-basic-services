@@ -1,12 +1,18 @@
 package com.jdl.basic.provider.core.service.videoTraceCamera.impl;
 
+import com.jd.bd.dms.automatic.sdk.common.dto.BaseDmsAutoJsfResponse;
+import com.jd.bd.dms.automatic.sdk.modules.device.DeviceConfigInfoJsfService;
+import com.jd.bd.dms.automatic.sdk.modules.device.dto.DeviceGridDto;
+import com.jd.bd.dms.automatic.sdk.modules.device.dto.DeviceGridQuery;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jdl.basic.api.domain.machine.Machine;
+import com.jdl.basic.api.domain.machine.WorkStationGridMachine;
 import com.jdl.basic.api.domain.videoTraceCamera.*;
 import com.jdl.basic.api.domain.workStation.WorkStationGrid;
 import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
 import com.jdl.basic.common.utils.*;
 import com.jdl.basic.provider.common.Jimdb.CacheService;
+import com.jdl.basic.provider.core.dao.machine.WorkStationGridMachineDao;
 import com.jdl.basic.provider.core.dao.videoTraceCamera.VideoTraceCameraConfigDao;
 import com.jdl.basic.provider.core.dao.videoTraceCamera.VideoTraceCameraDao;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
@@ -50,7 +56,10 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
 
 
     @Autowired
-    private WorkStationGridMachineService workStationGridMachineService;
+    private WorkStationGridMachineDao workStationGridMachineDao;
+
+    @Autowired
+    private DeviceConfigInfoJsfService deviceConfigInfoJsfService;
 
     private static final String CAMERA_CONFIG_CACHE_KEY_PRE="camera_config_cache_key_pre";
     @Override
@@ -391,20 +400,29 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         videoTraceCameraConfig.setYn((byte) 1);
         list.add(videoTraceCameraConfig);
 
+        //根据工序获取设备
         List<WorkStationGrid> grids = new ArrayList<>();
         grids.add(workStationGrid);
-        HashMap<String, List<Machine>> machineListByRefGridKey = workStationGridMachineService.getMachineListByRefGridKey(grids);
-        for (Map.Entry<String, List<Machine>> entry : machineListByRefGridKey.entrySet()) {
-            List<VideoTraceCameraConfig> configs=entry.getValue().stream().map(x->{
-                VideoTraceCameraConfig config = BeanUtils.copy(videoTraceCameraConfig, VideoTraceCameraConfig.class);
-                if (config != null) {
-                    config.setMachineCode(x.getMachineCode());
-                    config.setRefWorkStationKey(null);
-                }
-                return config;
-            }).collect(Collectors.toList());
-            list.addAll(configs);
-        }
+        List<WorkStationGridMachine> machineList = workStationGridMachineDao.getMachineListByRefGridKey(grids);
+
+        List<VideoTraceCameraConfig> videoTraceCameraConfigs = machineList.stream().map(x -> {
+            String machineCode = x.getMachineCode();
+            DeviceGridQuery deviceGridQuery = new DeviceGridQuery();
+            deviceGridQuery.setMachineCode(machineCode);
+            //查询设备所在网格
+            BaseDmsAutoJsfResponse<DeviceGridDto> response = deviceConfigInfoJsfService.findDeviceGridByMachineInfo(deviceGridQuery);
+            if (response.getData() == null) {
+                log.error("同步设备摄像头绑定关系失败，设备网格关系不存在，或关联多个网格，设备编码:{}", machineCode);
+                return null;
+            }
+            VideoTraceCameraConfig config = BeanUtils.copy(videoTraceCameraConfig, VideoTraceCameraConfig.class);
+            if (config != null) {
+                config.setMachineCode(machineCode);
+                config.setRefWorkStationKey(null);
+            }
+            return config;
+        }).filter(Objects::nonNull).collect(Collectors.toList());
+
 
         return list;
     }
