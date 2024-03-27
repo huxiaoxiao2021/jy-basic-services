@@ -418,6 +418,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             VideoTraceCameraConfig config = BeanUtils.copy(videoTraceCameraConfig, VideoTraceCameraConfig.class);
             if (config != null) {
                 config.setMachineCode(machineCode);
+                config.setRefWorkGridKey(response.getData().getBusinessKey());
                 config.setRefWorkStationKey(null);
             }
             return config;
