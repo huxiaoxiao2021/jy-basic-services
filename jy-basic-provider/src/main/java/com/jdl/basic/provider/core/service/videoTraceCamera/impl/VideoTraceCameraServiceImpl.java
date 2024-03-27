@@ -423,6 +423,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             return config;
         }).filter(Objects::nonNull).collect(Collectors.toList());
 
+        list.addAll(videoTraceCameraConfigs);
 
         return list;
     }
