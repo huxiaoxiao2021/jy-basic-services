@@ -49,10 +49,15 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
 
     @Autowired
     private VideoChannelService videoChannelService;
-
+    /**
+     * 缓存前缀
+     */
     private static final String CAMERA_CONFIG_CACHE_KEY_PRE="camera_config_cache_key_pre";
 
-    private static Long  CAMERA_CACHE_TIME_EXPIRE= 60*60*24L ;
+    /**
+     * 缓存时间
+     */
+    private static final Long  CAMERA_CACHE_TIME_EXPIRE= 60*10L ;
 
 
 
