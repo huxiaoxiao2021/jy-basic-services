@@ -487,13 +487,13 @@
 
 	<sql id="queryCondition">
 		<where>
-			<if test="yn = null">
+			<if test="yn == null">
 				AND t.yn = 1
 			</if>
-			<if test="yn != null and yn=1">
+			<if test="yn != null and yn==1">
 				AND t.yn = 1
 			</if>
-			<if test="yn != null and yn=0">
+			<if test="yn != null and yn==0">
 				AND t.yn = #{yn,jdbcType=INTEGER} AND t.update_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
 			</if>
             <if test="orgCode != null and orgCode != ''" >
