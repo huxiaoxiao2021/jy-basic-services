@@ -234,4 +234,11 @@ public interface WorkStationGridDao {
     List<WorkStationGrid> getGridInfoBySiteCodes(List<String> siteCodes);
 	
 	int syncWorkGridInfo(WorkStationGrid updateData);
+
+	/**
+	 * 查询场地下工序
+	 * @param query
+	 * @return
+	 */
+	List<WorkStationGrid> queryWorkStationGridBySiteCode(WorkStationGridQuery query);
 }

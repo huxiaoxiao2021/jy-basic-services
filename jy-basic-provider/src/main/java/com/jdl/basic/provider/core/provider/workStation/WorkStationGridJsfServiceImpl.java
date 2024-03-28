@@ -380,4 +380,11 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 	public List<WorkStationGrid> queryListForWorkGridVo(WorkStationGridQuery query) {
 		return workStationGridService.queryListForWorkGridVo(query);
 	}
+
+	@Override
+	public Result<List<WorkStationGrid>> queryWorkStationGridBySiteCode(WorkStationGridQuery query) {
+		log.info("场地网格工序管理 queryWorkStationGridBySiteCode 入参-{}", JSON.toJSONString(query));
+		return workStationGridService.queryWorkStationGridBySiteCode(query);
+	}
+
 }

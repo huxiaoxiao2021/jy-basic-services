@@ -824,5 +824,13 @@
         and dock_code = #{dockCode,jdbcType=VARCHAR}
         limit #{offset}, #{limit}
     </select>
-
+	<select id="queryWorkStationGridBySiteCode" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGridQuery" resultMap="WorkStationGrid">
+		select
+		<include refid="Base_Column_List"/>
+		from
+		work_station_grid g
+		<include refid="joinSql"/>
+		where g.yn = 1
+		and g.site_code = #{siteCode,jdbcType=INTEGER}
+	</select>
 </mapper>

@@ -130,7 +130,9 @@ jsf:
     alias: test
     token: automatic
     timeout: 2000
-
+  video:
+    channel:
+      alias: videoChannelService-jsf-uat-330
 basic:
   jsf:
     token: 123456
