@@ -215,6 +215,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
      */
     private void fillSiteInfo(VideoTraceCamera record, BaseStaffSiteOrgDto siteInfo) {
         record.setSiteName(siteInfo.getSiteName());
+        record.setSiteCode(siteInfo.getSiteCode());
         record.setProvinceAgencyCode( siteInfo.getProvinceAgencyCode());
         record.setProvinceAgencyName( siteInfo.getProvinceAgencyName());
         record.setAreaHubCode(siteInfo.getAreaCode());
@@ -389,6 +390,10 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         workStationGridQuery.setBusinessKey(item.getStationGridKey());
         //查询工序
         WorkStationGrid workStationGrid = workStationGridService.queryByGridKeyWithCache(workStationGridQuery);
+        if (workStationGrid==null){
+            log.error("同步设备摄像头绑定关系失败，工序不存在，或关联多个网格，工序:{}，设备编码:{},通道编号:{}", item.getStationGridKey(),videoTraceCamera.getCameraCode(),videoTraceCamera.getNationalChannelCode());
+            return Collections.EMPTY_LIST;
+        }
         videoTraceCameraConfig.setRefWorkGridKey(workStationGrid.getRefWorkGridKey());
         videoTraceCameraConfig.setRefWorkStationKey(workStationGrid.getBusinessKey());
         videoTraceCameraConfig.setCameraId(videoTraceCamera.getId());
@@ -396,7 +401,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         videoTraceCameraConfig.setCreateTime(item.getUpdateTime());
         videoTraceCameraConfig.setUpdateErp(item.getUpdateErp());
         videoTraceCameraConfig.setUpdateTime(item.getUpdateTime());
-        videoTraceCameraConfig.setStatus(item.getStatus());
+        videoTraceCameraConfig.setStatus(videoTraceCamera.getStatus());
         videoTraceCameraConfig.setYn((byte) 1);
         list.add(videoTraceCameraConfig);
 
@@ -412,7 +417,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             //查询设备所在网格
             BaseDmsAutoJsfResponse<DeviceGridDto> response = deviceConfigInfoJsfService.findDeviceGridByMachineInfo(deviceGridQuery);
             if (response.getData() == null) {
-                log.error("同步设备摄像头绑定关系失败，设备网格关系不存在，或关联多个网格，设备编码:{}", machineCode);
+                log.error("同步设备摄像头绑定关系失败，设备网格关系不存在，或关联多个网格，自动化设备编码:{}，设备编码:{},通道编号:{}", machineCode,videoTraceCamera.getCameraCode(),videoTraceCamera.getNationalChannelCode());
                 return null;
             }
             VideoTraceCameraConfig config = BeanUtils.copy(videoTraceCameraConfig, VideoTraceCameraConfig.class);
@@ -440,10 +445,10 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         videoTraceCamera.setUpdateErp(item.getUpdateErp());
         videoTraceCamera.setUpdateTime(item.getUpdateTime());
         videoTraceCamera.setStatus(item.getStatus());
-        videoTraceCamera.setSiteCode(item.getSiteCode());
+//        videoTraceCamera.setSiteCode(item.getSiteCode());
         videoTraceCamera.setConfigStatus((byte) 0);
         videoTraceCamera.setTs(item.getUpdateTime());
-        BaseStaffSiteOrgDto siteInfo = baseMajorManager.getBaseSiteBySiteId(item.getSiteCode());
+        BaseStaffSiteOrgDto siteInfo = baseMajorManager.getBaseSiteByDmsCode(item.getSiteCode());
         if(siteInfo == null) {
             throw new RuntimeException("所属站点在基础资料中不存在！");
         }

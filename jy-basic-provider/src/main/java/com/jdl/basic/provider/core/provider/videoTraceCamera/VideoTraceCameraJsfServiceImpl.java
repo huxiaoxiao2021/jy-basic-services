@@ -400,20 +400,29 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
             total =response.getTotalCount();
             page++;
             List<VideoTraceCameraImport> list = response.getData().stream()
-                    .filter(x->x.getVideoChannelStateCode().getCode().equals(111))
+                    .filter(x->x.getVideoChannelStateCode().getCode()!=0)
                     .map(x -> {
                 VideoTraceCameraImport videoTraceCameraImport = new VideoTraceCameraImport();
                 videoTraceCameraImport.setCameraCode(x.getVideoDeviceCode());
                 videoTraceCameraImport.setCameraName(x.getVideoChannelName());
                 videoTraceCameraImport.setNationalChannelCode(x.getVideoChannelCode());
                 videoTraceCameraImport.setNationalChannelName(x.getVideoChannelName());
-                videoTraceCameraImport.setSiteCode(siteCode);
+                videoTraceCameraImport.setSiteCode(code);
                 videoTraceCameraImport.setUpdateErp("syn");
-                videoTraceCameraImport.setStatus((byte) 1);
+                videoTraceCameraImport.setStatus(getStatusByLcvStatus(x.getVideoChannelStateCode().getCode()));
                 return videoTraceCameraImport;
             }).collect(Collectors.toList());
             videoTraceCameraService.importCameras(list);
         }  while (pageSize*(page-1) < total);
         return "同步完成";
+    }
+
+    private Byte getStatusByLcvStatus(Integer code) {
+        switch (code){
+            case 111: return 1;
+            case 110: return 2;
+            case 0: return 0;
+            default: return 3;
+        }
     }
 }
