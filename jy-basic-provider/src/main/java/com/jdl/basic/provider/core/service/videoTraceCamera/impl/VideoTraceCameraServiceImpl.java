@@ -374,7 +374,10 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
                continue;
             }
             try {
-                videoTraceCameraDao.insert(getVideoTraceCamera(videoTraceCameraImport));
+                VideoTraceCamera videoTraceCamera = getVideoTraceCamera(videoTraceCameraImport);
+                if (videoTraceCamera != null){
+                    videoTraceCameraDao.insert(videoTraceCamera);
+                }
             } catch (Exception e){
                 log.error("初始化摄像头信息失败,{}",JsonHelper.toJSONString(videoTraceCameraImport),e);
             }
@@ -391,7 +394,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         //查询工序
         WorkStationGrid workStationGrid = workStationGridService.queryByGridKeyWithCache(workStationGridQuery);
         if (workStationGrid==null){
-            log.error("同步设备摄像头绑定关系失败，工序不存在，或关联多个网格，工序:{}，设备编码:{},通道编号:{}", item.getStationGridKey(),videoTraceCamera.getCameraCode(),videoTraceCamera.getNationalChannelCode());
+            log.error("同步设备摄像头绑定关系失败，工序不存在，工序:{}，设备编码:{},通道编号:{}", item.getStationGridKey(),videoTraceCamera.getCameraCode(),videoTraceCamera.getNationalChannelCode());
             return Collections.EMPTY_LIST;
         }
         videoTraceCameraConfig.setRefWorkGridKey(workStationGrid.getRefWorkGridKey());
@@ -435,6 +438,13 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     }
 
     private  VideoTraceCamera getVideoTraceCamera(VideoTraceCameraImport item) {
+        WorkStationGridQuery workStationGridQuery = new WorkStationGridQuery();
+        workStationGridQuery.setBusinessKey(item.getStationGridKey());
+        WorkStationGrid workStationGrid = workStationGridService.queryByGridKeyWithCache(workStationGridQuery);
+        if (workStationGrid==null){
+            log.error("同步设备摄像头绑定关系失败，工序不存在，工序:{}，设备编码:{},通道编号:{}", item.getStationGridKey(),item.getCameraCode(),item.getNationalChannelCode());
+            return null;
+        }
         VideoTraceCamera videoTraceCamera = new VideoTraceCamera();
         videoTraceCamera.setCameraCode(item.getCameraCode());
         videoTraceCamera.setCameraName(item.getCameraName());
@@ -445,10 +455,10 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         videoTraceCamera.setUpdateErp(item.getUpdateErp());
         videoTraceCamera.setUpdateTime(item.getUpdateTime());
         videoTraceCamera.setStatus(item.getStatus());
-//        videoTraceCamera.setSiteCode(item.getSiteCode());
+        videoTraceCamera.setSiteCode(workStationGrid.getSiteCode());
         videoTraceCamera.setConfigStatus((byte) 0);
         videoTraceCamera.setTs(item.getUpdateTime());
-        BaseStaffSiteOrgDto siteInfo = baseMajorManager.getBaseSiteByDmsCode(item.getSiteCode());
+        BaseStaffSiteOrgDto siteInfo = baseMajorManager.getBaseSiteBySiteId(workStationGrid.getSiteCode());
         if(siteInfo == null) {
             throw new RuntimeException("所属站点在基础资料中不存在！");
         }
