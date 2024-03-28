@@ -270,6 +270,9 @@ public class WorkGridServiceImpl implements WorkGridService {
 	 * @return
 	 */
 	public Result<PageDto<WorkGridVo>> queryPageList(WorkGridQuery query){
+		if (log.isInfoEnabled()){
+			log.info("WorkGridServiceImpl.queryPageList 入参：{}", JsonHelper.toJSONString(query));
+		}
 		Result<PageDto<WorkGridVo>> result = Result.success();
 		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
 		if(!checkResult.isSuccess()){

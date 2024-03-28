@@ -490,7 +490,7 @@
 			<if test="yn = null">
 				AND t.yn = 1
 			</if>
-			<if test="yn != null or yn=1">
+			<if test="yn != null and yn=1">
 				AND t.yn = 1
 			</if>
 			<if test="yn != null and yn=0">
