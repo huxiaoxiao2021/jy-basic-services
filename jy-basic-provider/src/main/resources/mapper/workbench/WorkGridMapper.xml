@@ -787,6 +787,9 @@
 		<if test="siteCode != null and siteCode != ''" >
 			and site_code = #{siteCode,jdbcType=INTEGER}
 		</if>
+		<if test="siteType != null and siteType != ''" >
+			and site_type = #{siteType,jdbcType=INTEGER}
+		</if>
 		group by area_code
 	</select>
 </mapper>
