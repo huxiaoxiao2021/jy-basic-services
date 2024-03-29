@@ -394,7 +394,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         //查询工序
         WorkStationGrid workStationGrid = workStationGridService.queryByGridKeyWithCache(workStationGridQuery);
         if (workStationGrid==null){
-            log.error("同步设备摄像头绑定关系失败，工序不存在，工序:{}，设备编码:{},通道编号:{}", item.getStationGridKey(),videoTraceCamera.getCameraCode(),videoTraceCamera.getNationalChannelCode());
+            log.error("同步设备摄像头绑定关系失败，工序不存在，工序:{}", JsonHelper.toJSONString(item));
             return Collections.EMPTY_LIST;
         }
         videoTraceCameraConfig.setRefWorkGridKey(workStationGrid.getRefWorkGridKey());
@@ -420,7 +420,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             //查询设备所在网格
             BaseDmsAutoJsfResponse<DeviceGridDto> response = deviceConfigInfoJsfService.findDeviceGridByMachineInfo(deviceGridQuery);
             if (response.getData() == null) {
-                log.error("同步设备摄像头绑定关系失败，设备网格关系不存在，或关联多个网格，自动化设备编码:{}，设备编码:{},通道编号:{}", machineCode,videoTraceCamera.getCameraCode(),videoTraceCamera.getNationalChannelCode());
+                log.error("同步设备摄像头绑定关系失败，设备网格关系不存在，或关联多个网格，自动化设备编码:{}，通道:{}", machineCode,JsonHelper.toJSONString(item));
                 return null;
             }
             VideoTraceCameraConfig config = BeanUtils.copy(videoTraceCameraConfig, VideoTraceCameraConfig.class);
@@ -442,7 +442,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         workStationGridQuery.setBusinessKey(item.getStationGridKey());
         WorkStationGrid workStationGrid = workStationGridService.queryByGridKeyWithCache(workStationGridQuery);
         if (workStationGrid==null){
-            log.error("同步设备摄像头绑定关系失败，工序不存在，工序:{}，设备编码:{},通道编号:{}", item.getStationGridKey(),item.getCameraCode(),item.getNationalChannelCode());
+            log.error("同步摄像头失败，工序不存在，工序:{}", JsonHelper.toJSONString(item));
             return null;
         }
         VideoTraceCamera videoTraceCamera = new VideoTraceCamera();
@@ -460,7 +460,8 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         videoTraceCamera.setTs(item.getUpdateTime());
         BaseStaffSiteOrgDto siteInfo = baseMajorManager.getBaseSiteBySiteId(workStationGrid.getSiteCode());
         if(siteInfo == null) {
-            throw new RuntimeException("所属站点在基础资料中不存在！");
+            log.error("同步摄像头失败，工序所属站点在基础资料中不存在，工序:{}", JsonHelper.toJSONString(videoTraceCamera));
+            return null;
         }
         fillSiteInfo(videoTraceCamera, siteInfo);
         return videoTraceCamera;
