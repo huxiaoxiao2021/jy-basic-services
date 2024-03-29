@@ -8,10 +8,7 @@ import com.jdl.basic.api.domain.videoTraceCamera.*;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
 import com.jdl.basic.api.service.videoTraceCamera.VideoTraceCameraJsfService;
 import com.jdl.basic.common.contants.Constants;
-import com.jdl.basic.common.utils.JsonHelper;
-import com.jdl.basic.common.utils.PageDto;
-import com.jdl.basic.common.utils.Result;
-import com.jdl.basic.common.utils.StringUtils;
+import com.jdl.basic.common.utils.*;
 import com.jdl.basic.provider.common.Jimdb.CacheService;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraConfigService;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraService;
@@ -27,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -240,6 +238,9 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
         videoTraceCameraConfig.setRefWorkGridKey(query.getWorkGridKey());
         videoTraceCameraConfig.setOperateTime(query.getOperaterTime());
         List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigService.queryByCondition(videoTraceCameraConfig);
+        if (CollectionUtils.isEmpty(videoTraceCameraConfigs)){
+            return null;
+        }
 
         List<VideoTraceCameraConfig> collect = null;
         //查询条件中格口不为空时，按格口筛选摄像头配置
@@ -279,7 +280,11 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
                             && StringUtils.isBlank(x.getRefWorkStationKey()))
                     .collect(Collectors.toList());
         }
-        return collect;
+
+
+        VideoTraceCameraConfig config = collect.get(0);
+        Date version = config.getCreateTime();
+        return collect.stream().filter(x -> version.equals(x.getCreateTime())).collect(Collectors.toList());
     }
 
     /**

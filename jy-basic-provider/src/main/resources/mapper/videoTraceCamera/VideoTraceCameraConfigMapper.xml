@@ -76,8 +76,7 @@
     </if>
     <if test="operateTime != null">
       and create_time <![CDATA[ <= ]]>  #{operateTime}
-      and ((update_time <![CDATA[ >= ]]>  #{operateTime} and yn =0)
-      or yn=1)
+      order by create_time desc
     </if>
     limit 100
   </select>
