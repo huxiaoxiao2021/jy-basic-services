@@ -281,10 +281,7 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
                     .collect(Collectors.toList());
         }
 
-
-        VideoTraceCameraConfig config = collect.get(0);
-        Date version = config.getCreateTime();
-        return collect.stream().filter(x -> version.equals(x.getCreateTime())).collect(Collectors.toList());
+        return collect;
     }
 
     /**
