@@ -1,7 +1,6 @@
 package com.jdl.basic.provider.core.service.user.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
@@ -271,6 +270,18 @@ public Result<List<JyUser>> queryUserListBySiteAndPosition(JyUserQueryDto dto) {
     }
     //日常
     return jyThirdpartyUserDao.queryJyThirdpartyUserUnderNormalTask(jyTpUserScheduleQueryDto);
+  }
+  
+  @Override
+  public List<JyThirdpartyUser> batchQueryJyThirdpartyUser(List<JyTpUserScheduleQueryDto> dtos){
+    List<JyThirdpartyUser> jyThirdpartyUsers = new ArrayList<>();
+    for(JyTpUserScheduleQueryDto dto : dtos){
+      List<JyThirdpartyUser> list = queryJyThirdpartyUser(dto);
+      if(CollectionUtils.isNotEmpty(list)){
+        jyThirdpartyUsers.add(list.get(0));
+      }
+    }
+    return jyThirdpartyUsers;
   }
 
   private JyUserQueryCondition convertQuery(JyUserQueryDto dto) {

@@ -12,7 +12,6 @@ import com.jdl.basic.provider.config.lock.LockService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.hander.ResultHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -387,4 +386,9 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 		return workStationGridService.queryWorkStationGridBySiteCode(query);
 	}
 
+
+	@Override
+	public List<String> queryBusinessKeyByRefWorkGridKeys(List<String> refWorkGridKeys){
+		return workStationGridService.queryBusinessKeyByRefWorkGridKeys(refWorkGridKeys);
+	}
 }

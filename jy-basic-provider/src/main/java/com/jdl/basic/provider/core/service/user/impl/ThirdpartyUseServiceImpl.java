@@ -50,6 +50,7 @@ public class ThirdpartyUseServiceImpl implements ThirdpartyUseService {
         if(CollectionUtils.isEmpty(afterRemoveDuplicate)){
             return  1;
         }
+        
         return jyThirdpartyUserDao.batchInsert(afterRemoveDuplicate);
     }
 

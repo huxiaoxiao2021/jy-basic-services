@@ -7,7 +7,6 @@ import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.machine.Machine;
-import com.jdl.basic.api.domain.machine.WorkStationGridMachine;
 import com.jdl.basic.api.domain.position.PositionRecord;
 import com.jdl.basic.api.domain.tenant.JyConfigDictTenant;
 import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig;
@@ -926,6 +925,14 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		Result<List<WorkStationGrid>> result = Result.success();
 		result.setData(workStationGridDao.queryWorkStationGridBySiteCode(query));
 		return result;
+	}
+
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryBusinessKeyByRefWorkGridKeys", 
+			jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public List<String> queryBusinessKeyByRefWorkGridKeys(List<String> refWorkGridKeys){
+		return workStationGridDao.queryBusinessKeyByRefWorkGridKeys(refWorkGridKeys);
 	}
 
 }

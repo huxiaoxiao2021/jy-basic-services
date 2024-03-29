@@ -173,4 +173,11 @@ public interface WorkStationGridJsfService {
 	 * @return
 	 */
 	Result<List<WorkStationGrid>> queryWorkStationGridBySiteCode(WorkStationGridQuery query);
+
+	/**
+	 * 根据网格 work_grid 业务主键查询网格工序业务主键
+	 * @param refWorkGridKeys
+	 * @return
+	 */
+	List<String> queryBusinessKeyByRefWorkGridKeys(List<String> refWorkGridKeys);
 }
