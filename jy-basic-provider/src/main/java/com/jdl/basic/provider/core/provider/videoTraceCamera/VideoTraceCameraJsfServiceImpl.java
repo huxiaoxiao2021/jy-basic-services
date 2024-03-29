@@ -211,7 +211,7 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
         }
 
         //查摄像头配置信息
-        List<VideoTraceCameraConfig> videoTraceCameraConfigs = getCameraConfigs(query);
+        List<VideoTraceCameraConfig> videoTraceCameraConfigs = getCameraConfigsNew(query);
 
         if (CollectionUtils.isNotEmpty(videoTraceCameraConfigs) ){
             List<VideoTraceCamera> res = Lists.newArrayList();
@@ -232,6 +232,54 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
         }
 
         return Result.success("未查到摄像头信息");
+    }
+
+    private List<VideoTraceCameraConfig> getCameraConfigsNew(VideoTraceCameraConfigQuery query) {
+
+        VideoTraceCameraConfig videoTraceCameraConfig =new VideoTraceCameraConfig();
+        videoTraceCameraConfig.setRefWorkGridKey(query.getWorkGridKey());
+        videoTraceCameraConfig.setOperateTime(query.getOperaterTime());
+        List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigService.queryByCondition(videoTraceCameraConfig);
+
+        List<VideoTraceCameraConfig> collect = null;
+        //查询条件中格口不为空时，按格口筛选摄像头配置
+        if (StringUtils.isNotBlank(query.getChuteCode())){
+            collect = videoTraceCameraConfigs.stream()
+                    .filter(x -> Objects.equals(query.getChuteCode(), x.getChuteCode()))
+                    .collect(Collectors.toList());
+        }
+        //以上步骤没有筛选到数据，且查询条件中dws不为空时，按dws筛选摄像头配置
+        if (CollectionUtils.isEmpty(collect) && StringUtils.isNotBlank(query.getSupplyDwsCode())){
+            collect = videoTraceCameraConfigs.stream()
+                    .filter(x -> Objects.equals(query.getSupplyDwsCode(), x.getSupplyDwsCode()))
+                    .collect(Collectors.toList());
+        }
+
+        //以上步骤没有筛选到数据，且查询条件中工序key不为空时，按工序筛选摄像头配置
+        if (CollectionUtils.isEmpty(collect) && StringUtils.isNotBlank(query.getWorkStationKey())){
+            collect = videoTraceCameraConfigs.stream()
+                    .filter(x -> Objects.equals(query.getWorkStationKey(),
+                            x.getRefWorkStationKey()))
+                    .collect(Collectors.toList());
+        }
+
+        //以上步骤没有筛选到数据，且查询条件中工序设备编码不为空时，按设备编码筛选摄像头配置
+        if (CollectionUtils.isEmpty(collect) && StringUtils.isNotBlank(query.getMachineCode())){
+            collect = videoTraceCameraConfigs.stream()
+                    .filter(x -> Objects.equals(query.getMachineCode(), x.getMachineCode())
+                            && StringUtils.isBlank(x.getSupplyDwsCode())
+                            && StringUtils.isBlank(x.getChuteCode()))
+                    .collect(Collectors.toList());
+        }
+        //以上步骤没有筛选到数据，且查询条件中工序设备编码不为空时，按设备编码筛选摄像头配置
+        if (CollectionUtils.isEmpty(collect)){
+            collect = videoTraceCameraConfigs.stream()
+                    .filter(x -> Objects.equals(query.getWorkGridKey(), x.getRefWorkGridKey())
+                            && StringUtils.isBlank(x.getMachineCode())
+                            && StringUtils.isBlank(x.getRefWorkStationKey()))
+                    .collect(Collectors.toList());
+        }
+        return collect;
     }
 
     /**
