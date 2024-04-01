@@ -8,10 +8,7 @@ import com.jdl.basic.api.domain.videoTraceCamera.*;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
 import com.jdl.basic.api.service.videoTraceCamera.VideoTraceCameraJsfService;
 import com.jdl.basic.common.contants.Constants;
-import com.jdl.basic.common.utils.JsonHelper;
-import com.jdl.basic.common.utils.PageDto;
-import com.jdl.basic.common.utils.Result;
-import com.jdl.basic.common.utils.StringUtils;
+import com.jdl.basic.common.utils.*;
 import com.jdl.basic.provider.common.Jimdb.CacheService;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraConfigService;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraService;
@@ -27,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -49,10 +47,15 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
 
     @Autowired
     private VideoChannelService videoChannelService;
-
+    /**
+     * 缓存前缀
+     */
     private static final String CAMERA_CONFIG_CACHE_KEY_PRE="camera_config_cache_key_pre";
 
-    private static Long  CAMERA_CACHE_TIME_EXPIRE= 60*60*24L ;
+    /**
+     * 缓存时间
+     */
+    private static final Long  CAMERA_CACHE_TIME_EXPIRE= 60*10L ;
 
 
 
@@ -70,8 +73,7 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
 
     @Override
     public Result<Boolean> editCameraConfig(VideoTraceCameraVo videoTraceCameraVo) {
-        //根据网格删除缓存
-        delCameraConfigCache(videoTraceCameraVo.getGridBusinessKey());
+
         return videoTraceCameraService.editCameraConfig(videoTraceCameraVo);
     }
 
@@ -207,7 +209,7 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
         }
 
         //查摄像头配置信息
-        List<VideoTraceCameraConfig> videoTraceCameraConfigs = getCameraConfigs(query);
+        List<VideoTraceCameraConfig> videoTraceCameraConfigs = getCameraConfigsNew(query);
 
         if (CollectionUtils.isNotEmpty(videoTraceCameraConfigs) ){
             List<VideoTraceCamera> res = Lists.newArrayList();
@@ -228,6 +230,58 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
         }
 
         return Result.success("未查到摄像头信息");
+    }
+
+    private List<VideoTraceCameraConfig> getCameraConfigsNew(VideoTraceCameraConfigQuery query) {
+
+        VideoTraceCameraConfig videoTraceCameraConfig =new VideoTraceCameraConfig();
+        videoTraceCameraConfig.setRefWorkGridKey(query.getWorkGridKey());
+        videoTraceCameraConfig.setOperateTime(query.getOperaterTime());
+        List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigService.queryByCondition(videoTraceCameraConfig);
+        if (CollectionUtils.isEmpty(videoTraceCameraConfigs)){
+            return null;
+        }
+
+        List<VideoTraceCameraConfig> collect = null;
+        //查询条件中格口不为空时，按格口筛选摄像头配置
+        if (StringUtils.isNotBlank(query.getChuteCode())){
+            collect = videoTraceCameraConfigs.stream()
+                    .filter(x -> Objects.equals(query.getChuteCode(), x.getChuteCode()))
+                    .collect(Collectors.toList());
+        }
+        //以上步骤没有筛选到数据，且查询条件中dws不为空时，按dws筛选摄像头配置
+        if (CollectionUtils.isEmpty(collect) && StringUtils.isNotBlank(query.getSupplyDwsCode())){
+            collect = videoTraceCameraConfigs.stream()
+                    .filter(x -> Objects.equals(query.getSupplyDwsCode(), x.getSupplyDwsCode()))
+                    .collect(Collectors.toList());
+        }
+
+        //以上步骤没有筛选到数据，且查询条件中工序key不为空时，按工序筛选摄像头配置
+        if (CollectionUtils.isEmpty(collect) && StringUtils.isNotBlank(query.getWorkStationKey())){
+            collect = videoTraceCameraConfigs.stream()
+                    .filter(x -> Objects.equals(query.getWorkStationKey(),
+                            x.getRefWorkStationKey()))
+                    .collect(Collectors.toList());
+        }
+
+        //以上步骤没有筛选到数据，且查询条件中工序设备编码不为空时，按设备编码筛选摄像头配置
+        if (CollectionUtils.isEmpty(collect) && StringUtils.isNotBlank(query.getMachineCode())){
+            collect = videoTraceCameraConfigs.stream()
+                    .filter(x -> Objects.equals(query.getMachineCode(), x.getMachineCode())
+                            && StringUtils.isBlank(x.getSupplyDwsCode())
+                            && StringUtils.isBlank(x.getChuteCode()))
+                    .collect(Collectors.toList());
+        }
+        //以上步骤没有筛选到数据，且查询条件中工序设备编码不为空时，按设备编码筛选摄像头配置
+        if (CollectionUtils.isEmpty(collect)){
+            collect = videoTraceCameraConfigs.stream()
+                    .filter(x -> Objects.equals(query.getWorkGridKey(), x.getRefWorkGridKey())
+                            && StringUtils.isBlank(x.getMachineCode())
+                            && StringUtils.isBlank(x.getRefWorkStationKey()))
+                    .collect(Collectors.toList());
+        }
+
+        return collect;
     }
 
     /**
@@ -368,7 +422,7 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
         if (type==2){
             videoTraceCameraService.importCameraConfigs(list);
         }
-        return null;
+        return Result.success();
     }
 
     @Override
@@ -396,20 +450,29 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
             total =response.getTotalCount();
             page++;
             List<VideoTraceCameraImport> list = response.getData().stream()
-                    .filter(x->x.getVideoChannelStateCode().getCode().equals(111))
+                    .filter(x->x.getVideoChannelStateCode().getCode()!=0)
                     .map(x -> {
                 VideoTraceCameraImport videoTraceCameraImport = new VideoTraceCameraImport();
                 videoTraceCameraImport.setCameraCode(x.getVideoDeviceCode());
                 videoTraceCameraImport.setCameraName(x.getVideoChannelName());
                 videoTraceCameraImport.setNationalChannelCode(x.getVideoChannelCode());
                 videoTraceCameraImport.setNationalChannelName(x.getVideoChannelName());
-                videoTraceCameraImport.setSiteCode(siteCode);
+                videoTraceCameraImport.setSiteCode(code);
                 videoTraceCameraImport.setUpdateErp("syn");
-                videoTraceCameraImport.setStatus((byte) 1);
+                videoTraceCameraImport.setStatus(getStatusByLcvStatus(x.getVideoChannelStateCode().getCode()));
                 return videoTraceCameraImport;
             }).collect(Collectors.toList());
             videoTraceCameraService.importCameras(list);
         }  while (pageSize*(page-1) < total);
         return "同步完成";
+    }
+
+    private Byte getStatusByLcvStatus(Integer code) {
+        switch (code){
+            case 111: return 1;
+            case 110: return 2;
+            case 0: return 0;
+            default: return 3;
+        }
     }
 }
