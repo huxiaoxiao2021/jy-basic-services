@@ -216,7 +216,8 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
             List<Integer> ids = Lists.newArrayList();
             for (VideoTraceCameraConfig config:videoTraceCameraConfigs){
                 if (!ids.contains(config.getCameraId())){
-                    VideoTraceCamera videoTraceCamera = videoTraceCameraService.selectByPrimaryKey(config.getCameraId());
+                    //查询包含yn为0的数据
+                    VideoTraceCamera videoTraceCamera = videoTraceCameraService.getByIdNoYn(config.getCameraId());
                     videoTraceCamera.setMaster(config.getMasterCamera() == 1);
                     WorkGrid workGrid = workGridService.queryByWorkGridKeyWithCache(config.getRefWorkGridKey());
                     if (workGrid != null){

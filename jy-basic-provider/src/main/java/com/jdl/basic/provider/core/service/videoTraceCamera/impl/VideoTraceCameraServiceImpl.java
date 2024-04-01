@@ -5,7 +5,6 @@ import com.jd.bd.dms.automatic.sdk.modules.device.DeviceConfigInfoJsfService;
 import com.jd.bd.dms.automatic.sdk.modules.device.dto.DeviceGridDto;
 import com.jd.bd.dms.automatic.sdk.modules.device.dto.DeviceGridQuery;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
-import com.jdl.basic.api.domain.machine.Machine;
 import com.jdl.basic.api.domain.machine.WorkStationGridMachine;
 import com.jdl.basic.api.domain.videoTraceCamera.*;
 import com.jdl.basic.api.domain.workStation.WorkStationGrid;
@@ -16,7 +15,6 @@ import com.jdl.basic.provider.core.dao.machine.WorkStationGridMachineDao;
 import com.jdl.basic.provider.core.dao.videoTraceCamera.VideoTraceCameraConfigDao;
 import com.jdl.basic.provider.core.dao.videoTraceCamera.VideoTraceCameraDao;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
-import com.jdl.basic.provider.core.service.machine.WorkStationGridMachineService;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +22,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
@@ -62,6 +61,9 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     private DeviceConfigInfoJsfService deviceConfigInfoJsfService;
 
     private static final String CAMERA_CONFIG_CACHE_KEY_PRE="camera_config_cache_key_pre";
+
+    @Value("${whether_syn_video_trace_camera:false}")
+    private boolean syncChannelState;
     @Override
     public Result<PageDto<VideoTraceCamera>> queryPageList(VideoTraceCameraQuery query) {
         Result<PageDto<VideoTraceCamera>> result = Result.success();
@@ -228,6 +230,11 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     }
 
     @Override
+    public VideoTraceCamera getByIdNoYn(Integer id) {
+        return videoTraceCameraDao.getByIdNoYn(id);
+    }
+
+    @Override
     public int updateById(VideoTraceCamera record) {
         return videoTraceCameraDao.updateById(record);
     }
@@ -262,7 +269,8 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             return videoTraceCameraDao.insert(videoTraceCamera);
         }
         //新状态与原状态不同时，修改摄像头及配置状态
-        if (!Objects.equals(videoTraceCameras.get(0).getStatus(), videoTraceCamera.getStatus())){
+
+        if (!Objects.equals(videoTraceCameras.get(0).getStatus(), videoTraceCamera.getStatus()) && syncChannelState){
             VideoTraceCamera update = new VideoTraceCamera();
             update.setId(videoTraceCameras.get(0).getId());
             update.setStatus(videoTraceCamera.getStatus());

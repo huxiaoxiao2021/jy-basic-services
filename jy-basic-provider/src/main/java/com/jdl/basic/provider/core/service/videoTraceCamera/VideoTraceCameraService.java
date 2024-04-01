@@ -27,6 +27,12 @@ public interface VideoTraceCameraService {
     int insert(VideoTraceCamera record);
 
     VideoTraceCamera selectByPrimaryKey(Integer id);
+    /**
+     * 通过id获取VideoTraceCamera信息，包括已逻辑删除的数据
+     * @param id 要获取信息的id
+     * @return VideoTraceCamera 返回对应id的VideoTraceCamera信息
+     */
+    VideoTraceCamera getByIdNoYn(Integer id);
 
     int updateById(VideoTraceCamera record);
 
