@@ -217,4 +217,11 @@ public interface WorkStationGridService {
 	Result<List<WorkStationGrid>> queryWorkStationGridBySiteCode(WorkStationGridQuery query);
 
 
+	/**
+	 * 关联场地网格批量查询
+	 *
+	 * @param query
+	 * @return
+	 */
+	List<WorkStationGrid> queryListForRefWorkGridKeyList(WorkStationGridQuery query);
 }

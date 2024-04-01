@@ -110,4 +110,8 @@ public class WorkGridFlowDirectionQuery extends BasePagerCondition implements Se
 	 */
 	private String workStationGridKey;
 
+	/**
+	 * 流向类型集合 1-进 2-出 0-其他
+	 */
+	private List<Integer> flowDirectionTypeList;
 }

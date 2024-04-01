@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.collections.CollectionUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -108,4 +109,10 @@ public class WorkGridServiceTest {
         logger.info("result {}", JsonHelper.toJSONString(result));
     }
 
+    @Test
+    public void queryListForExportTest() {
+        WorkGridQuery query = new WorkGridQuery();
+        Result<List<WorkGridVo>> result = workGridService.queryListForExport(query);
+        System.out.println("返回结果：" + JSON.toJSONString(result));
+    }
 }

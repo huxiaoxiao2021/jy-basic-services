@@ -714,6 +714,20 @@
           and g.ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
         limit 100
     </select>
+
+	<select id="queryListForRefWorkGridKeyList" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGridQuery" resultMap="WorkStationGrid">
+		select
+			<include refid="Base_Column_List"/>
+		from
+			work_station_grid g
+		<include refid="joinSql"/>
+		where g.yn = 1
+			and g.ref_work_grid_key in
+			<foreach collection="refWorkGridKeyList" item="item" open="(" close=")" separator=",">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+	</select>
+
     <select id="querySiteListForManagerScan" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGridQuery" resultType="java.lang.Integer">
         select distinct g.site_code
         from

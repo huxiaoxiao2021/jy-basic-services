@@ -835,6 +835,11 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	}
 
 	@Override
+	public List<WorkStationGrid> queryListForRefWorkGridKeyList(WorkStationGridQuery query) {
+		return workStationGridDao.queryListForRefWorkGridKeyList(query);
+	}
+
+	@Override
 	public List<Integer> querySiteListForManagerScan(WorkStationGridQuery query) {
 		if(CollectionUtils.isEmpty(query.getAreaCodeList())) {
 			return new ArrayList<>();
