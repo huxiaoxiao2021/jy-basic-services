@@ -1,5 +1,6 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.jd.jsf.gd.util.StringUtils;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jd.ump.annotation.JProEnum;
@@ -644,6 +645,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		return result;
 	}
 	@Override
+	@DS("slave")
 	public Result<List<WorkGridVo>> queryListForExport(WorkGridQuery query) {
 		Result<List<WorkGridVo>> result = Result.success();
 		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);

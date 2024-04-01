@@ -8,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
@@ -33,7 +34,7 @@ import org.springframework.context.annotation.PropertySources;
 )
 @Import(JDSecurityPropertyCleanService.class)
 @MapperScan(basePackages = {"com.jdl.basic.provider.core.dao"})
-@SpringBootApplication(scanBasePackages = {"com.jdl.basic"})
+@SpringBootApplication(exclude={DataSourceAutoConfiguration.class}, scanBasePackages = {"com.jdl.basic"})
 @ImportResource(value = {
         "classpath:spring/spring-context.xml"
 })
