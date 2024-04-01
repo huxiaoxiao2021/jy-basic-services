@@ -343,7 +343,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		}
 		setStationDataFromGrid(updateData,workGrid);
 		workStationGridDao.deleteById(updateData);
-		//todo
+		//工序网格删除时，同步删除摄像头配置数据
 		cancelCameraConfig(updateData.getRefWorkGridKey(),updateData.getRefStationKey());
 		updateData.setId(null);
 		result.setData(workStationGridDao.insert(updateData) == 1);
@@ -354,6 +354,9 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		return result;
 	}
 
+    /**
+     * 工序网格删除时，同步删除摄像头配置数据
+     */
 	private void cancelCameraConfig(String workGridKey ,String workStationKey) {
 		VideoTraceCameraConfig videoTraceCameraConfig = new VideoTraceCameraConfig();
 		videoTraceCameraConfig.setRefWorkGridKey(workGridKey);
@@ -380,7 +383,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			throw new RuntimeException("根据id:" + deleteData.getId() + "未查询到数据!");
 		}
 		result.setData(workStationGridDao.deleteById(deleteData) == 1);
-//todo
+		//工序网格删除时，同步删除摄像头配置数据
 		cancelCameraConfig(queryResult.getData().getRefWorkGridKey(),queryResult.getData().getRefStationKey());
 		// 清除网格工序缓存
 		invalidateWorkStationGridCache(queryResult.getData().getBusinessKey());
@@ -509,7 +512,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 				if(!Objects.equals(workStationGridDao.deleteById(oldData), Constants.YN_YES)){
 					throw  new RuntimeException("根据id:" + oldData.getId() + "删除数据失败!");
 				}
-				//todo
+				//工序网格删除时，同步删除摄像头配置数据
 				cancelCameraConfig(oldData.getRefWorkGridKey(),oldData.getRefStationKey());
 				data.setBusinessKey(oldData.getBusinessKey());
 			}else {
@@ -664,7 +667,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			}
 		}
 		result.setData(workStationGridDao.deleteByIds(deleteRequest) > 0);
-		//todo
+		//工序网格删除时，同步删除摄像头配置数据
 		for (WorkStationGrid workStationGrid : oldDataList) {
 			cancelCameraConfig(workStationGrid.getRefWorkGridKey(),workStationGrid.getRefStationKey());
 		}
