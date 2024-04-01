@@ -6,6 +6,8 @@ import com.jd.jim.cli.Cluster;
 import com.jd.lsb.task.domain.Request;
 import com.jd.lsb.task.domain.Response;
 import com.jd.lsb.task.handler.Handler;
+import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
+import com.jd.ql.basic.ws.BasicPrimaryWS;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf;
@@ -27,6 +29,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -41,6 +44,9 @@ public class CollectBoxFlowDirectionConfJsfServiceImpl implements CollectBoxFlow
     @Autowired
     Cluster cluster;
 
+    @Autowired
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    BasicPrimaryWS basicPrimaryWS;
     @Override
     public Result<CollectBoxFlowDirectionConf> selectById(Long id) {
         if(log.isInfoEnabled()){
@@ -162,5 +168,76 @@ public class CollectBoxFlowDirectionConfJsfServiceImpl implements CollectBoxFlow
         return result;
     }
 
+    /**
+     * 工具类：批量更新集包流向配置
+     * 更新内容：省区、枢纽
+     * 更新规则：根据startSiteId\endSiteId分页查询省区、枢纽信息
+     * @return 更新结果
+     */
+    @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionConfJsfServiceImpl.batchUpdateCollectBoxFlowDirectionConf", mState = {JProEnum.TP, JProEnum.FunctionError})
+    public Result<Boolean> batchUpdateCollectBoxFlowDirectionConf() {
+        Result<Boolean> result = new Result<>();
+        try {
+            int pageNumber = 1; // 页码
+            int pageSize = 100; // 每页大小
+            boolean hasMoreData = true;
 
+            while (hasMoreData) {
+                Pager<CollectBoxFlowDirectionConf> pager = new Pager<>(pageNumber, pageSize, 0L);
+                // 分页查询集包配置
+                Result<Pager<CollectBoxFlowDirectionConf>> pagerResult =
+                    collectBoxFlowDirectionConfService.listByParamAndWhetherConfiged(pager, false);
+                if (pagerResult.isSuccess()) {
+                    Pager<CollectBoxFlowDirectionConf> pagerResultData = pagerResult.getData();
+                    List<CollectBoxFlowDirectionConf> confList = pagerResultData.getData();
+                    if (confList != null && !confList.isEmpty()) {
+                        for (CollectBoxFlowDirectionConf conf : confList) {
+                            // 执行更新逻辑
+                            updateDirectionConf(conf);
+                        }
+                        pageNumber++; // 下一页
+                    } else {
+                        hasMoreData = false;
+                    }
+                }
+            }
+            result.setData(true);
+        } catch (Exception e) {
+            // 记录日志
+            log.error("集包规则查询当前版本号异常",e);
+            result.setData(false);
+            result.toError("集包规则查询当前版本号异常,请稍后再试");
+
+        }
+        return result;
+    }
+
+    private void updateDirectionConf(CollectBoxFlowDirectionConf conf) {
+        // 通过调用getBaseSiteBySiteId方法查询始发站点和目的站点信息
+        BaseStaffSiteOrgDto startSiteInfo = basicPrimaryWS.getBaseSiteBySiteId(conf.getStartSiteId());
+        BaseStaffSiteOrgDto endSiteInfo = basicPrimaryWS.getBaseSiteBySiteId(conf.getEndSiteId());
+        // 如果始发站点信息和省区编码不为空，则设置始发省区编码和名称
+        if(Objects.nonNull(startSiteInfo)&&null != startSiteInfo.getProvinceAgencyCode()){
+            conf.setStartProvinceAgencyCode(startSiteInfo.getProvinceAgencyCode());
+            conf.setStartProvinceAgencyName(startSiteInfo.getProvinceAgencyName());
+        }
+        // 如果始发站点信息和区域编码不为空，则设置始发区域枢纽编码和名称
+        if(Objects.nonNull(startSiteInfo)&&null != endSiteInfo.getAreaCode()) {
+            conf.setStartAreaHubCode(startSiteInfo.getAreaCode());
+            conf.setStartAreaHubName(startSiteInfo.getAreaName());
+        }
+        // 如果目的站点信息和省区编码不为空，则设置目的省区编码和名称
+        if(Objects.nonNull(endSiteInfo)&&null != endSiteInfo.getProvinceAgencyCode()) {
+            conf.setEndProvinceAgencyCode(endSiteInfo.getProvinceAgencyCode());
+            conf.setEndProvinceAgencyName(endSiteInfo.getProvinceAgencyName());
+        }
+        // 如果目的站点信息和区域编码不为空，则设置目的区域枢纽编码和名称
+        if(Objects.nonNull(endSiteInfo)&&null != endSiteInfo.getAreaCode()) {
+            conf.setEndAreaHubCode(endSiteInfo.getAreaCode());
+            conf.setEndAreaHubName(endSiteInfo.getAreaName());
+        }
+        // 调用collectBoxFlowDirectionConfService的updateConfig方法更新配置信息
+        collectBoxFlowDirectionConfService.updateConfig(conf);
+    }
 }
