@@ -368,6 +368,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		return voData;
 	 }
 
+	@JProfiler(jKey = Constants.UMP_APP_NAME + "WorkGridServiceImpl.toWorkGridVoBatch", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public List<WorkGridVo> toWorkGridVoBatch(List<WorkGrid> list){
 		if (CollectionUtils.isEmpty(list)) {
 			return null;
@@ -398,6 +399,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		voData.setFlowInfo(queryFlowInfoByWorkGridKey(voData));
 	}
 
+	@JProfiler(jKey = Constants.UMP_APP_NAME + "WorkGridServiceImpl.loadFlowInfoBatch", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	private void loadFlowInfoBatch(List<WorkGridVo> voList) {
 		if (CollectionUtils.isEmpty(voList)) {
 			return;
@@ -464,6 +466,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		workDataInfo.setMachineList(machineList);
 	}
 
+	@JProfiler(jKey = Constants.UMP_APP_NAME + "WorkGridServiceImpl.loadWorkInfoBatch", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	private void loadWorkInfoBatch(List<WorkGridVo> voList) {
 		if(CollectionUtils.isEmpty(voList)) {
 			return;
@@ -566,6 +569,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 		return flowInfo;
 	}
 
+	@JProfiler(jKey = Constants.UMP_APP_NAME + "WorkGridServiceImpl.queryFlowInfoByWorkGridKeyBatch", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	private void queryFlowInfoByWorkGridKeyBatch(List<WorkGridVo> voList){
 		WorkGridFlowDirectionQuery query = new WorkGridFlowDirectionQuery();
 		List<String> businessKeyList = voList.stream().map(WorkGridVo::getBusinessKey).distinct().collect(Collectors.toList());
@@ -646,6 +650,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 	}
 	@Override
 	@DS("slave")
+	@JProfiler(jKey = Constants.UMP_APP_NAME + "WorkGridServiceImpl.queryListForExport", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<List<WorkGridVo>> queryListForExport(WorkGridQuery query) {
 		Result<List<WorkGridVo>> result = Result.success();
 		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
@@ -662,19 +667,21 @@ public class WorkGridServiceImpl implements WorkGridService {
 			voDataList.addAll(this.toWorkGridVoBatch(batch));
 		}
 
-		int batchSizeResult = 500;
+		// 批量处理数据 - 每200条处理一次（查询设备信息接口单次最大支持查询200条）
+		int batchSizeResult = 200;
 		for (int i = 0; i < voDataList.size(); i += batchSizeResult) {
 			List<WorkGridVo> batch = voDataList.subList(i, Math.min(i + batchSizeResult, voDataList.size()));
 			// 在这里对每个批次的数据进行处理
 			loadDeviceInfo(batch);
-			result.setData(batch);
 		}
+		result.setData(voDataList);
 		return result;
 	}
 	/**
 	 * 批量加载设备绑定信息
 	 * @param dataList
 	 */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + "WorkGridServiceImpl.loadDeviceInfo", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	private void loadDeviceInfo(List<WorkGridVo> dataList) {
 		if(CollectionUtils.isEmpty(dataList)) {
 			return;

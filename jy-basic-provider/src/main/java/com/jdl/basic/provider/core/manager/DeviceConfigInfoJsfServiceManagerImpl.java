@@ -3,6 +3,8 @@ package com.jdl.basic.provider.core.manager;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,7 @@ public class DeviceConfigInfoJsfServiceManagerImpl implements DeviceConfigInfoJs
     private DeviceConfigInfoJsfService deviceConfigInfoJsfService;
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + "DeviceConfigInfoJsfServiceManagerImpl.findDeviceGridByBusinessKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<List<WorkGridDeviceVo>> findDeviceGridByBusinessKey(String gridKey,List<String> gridKeyList) {
         CallerInfo callerInfo = Profiler.registerInfo("basic.client.automatic.deviceConfigInfoJsfService.findDeviceGridByBusinessKey",
                 Constants.UMP_APP_NAME, false, true);
