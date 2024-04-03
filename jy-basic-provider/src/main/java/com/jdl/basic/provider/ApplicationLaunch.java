@@ -34,7 +34,7 @@ import org.springframework.context.annotation.PropertySources;
 )
 @Import(JDSecurityPropertyCleanService.class)
 @MapperScan(basePackages = {"com.jdl.basic.provider.core.dao"})
-@SpringBootApplication(exclude={DataSourceAutoConfiguration.class}, scanBasePackages = {"com.jdl.basic"})
+@SpringBootApplication(scanBasePackages = {"com.jdl.basic"})
 @ImportResource(value = {
         "classpath:spring/spring-context.xml"
 })
