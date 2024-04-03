@@ -39,4 +39,9 @@ public interface ICollectBoxFlowDirectionConfService {
     String getCurrentVersion();
 
     int updateCollectBoxFlowInfo(CollectBoxFlowInfo collectBoxFlowInfo);
+
+    /**
+     * 删除集包规则，只能删除集包要求为可混包的数据
+     */
+    Result<Boolean> deleteConfig(CollectBoxFlowDirectionConf conf);
 }

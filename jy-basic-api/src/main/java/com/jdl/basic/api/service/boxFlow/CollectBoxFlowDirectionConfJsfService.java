@@ -36,4 +36,9 @@ public interface CollectBoxFlowDirectionConfJsfService {
     Result<String> getCurrentVersion();
 
     Result<Integer> updateCollectBoxFlowInfo(CollectBoxFlowInfo collectBoxFlowInfo);
+
+    /**
+     * 删除集包规则，只能删除集包要求为可混包的数据
+     */
+    Result<Boolean> deleteConfig(CollectBoxFlowDirectionConf conf);
 }

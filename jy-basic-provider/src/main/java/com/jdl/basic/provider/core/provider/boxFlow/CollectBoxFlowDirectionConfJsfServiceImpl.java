@@ -162,5 +162,11 @@ public class CollectBoxFlowDirectionConfJsfServiceImpl implements CollectBoxFlow
         return result;
     }
 
+    @Override
+    public Result<Boolean> deleteConfig(CollectBoxFlowDirectionConf conf){
+        return collectBoxFlowDirectionConfService.deleteConfig(conf);
+    }
+
+
 
 }

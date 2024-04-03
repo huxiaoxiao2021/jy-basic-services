@@ -887,4 +887,12 @@
         </foreach>
     </update>
     <!-- 刷数sql end -->
+    <update id="updateYnById" parameterType="com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf">
+        update collect_box_flow_direction_conf
+        set
+        update_user_erp  = #{updateUserErp,jdbcType=VARCHAR},
+        update_time = now(),
+        yn = 0
+        where id = #{id,jdbcType=BIGINT}
+    </update>
 </mapper>

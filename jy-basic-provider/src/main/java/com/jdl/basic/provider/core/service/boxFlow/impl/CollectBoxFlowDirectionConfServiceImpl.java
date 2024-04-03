@@ -435,4 +435,26 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         return collectBoxFlowInfoDao.updateByPrimaryKeySelective(collectBoxFlowInfo);
     }
 
+    @Override
+    public Result<Boolean> deleteConfig(CollectBoxFlowDirectionConf conf) {
+        Result<Boolean> result = new Result<>();
+        try {
+            CollectBoxFlowDirectionConf queryConf = collectBoxFlowDirectionConfMapper.selectByPrimaryKey(conf.getId());
+            if (!Objects.equals(CollectBoxFlowDirectionConf.COLLECT_CLAIM_MIX,queryConf.getCollectClaim())){
+                log.info("删除失败，集包要求不是可混包，参数：{}", JSONObject.toJSONString(conf));
+                return Result.fail("删除失败，集包要求不是可混包");
+            }
+            int i = collectBoxFlowDirectionConfMapper.updateYnById(conf);
+            if (i != 1) {
+                log.info("新增配置失败，参数：{}", JSONObject.toJSONString(conf));
+                return Result.fail("删除失败");
+            }
+            result.toSuccess();
+        } catch (Exception e) {
+            log.info("删除失败配置失败", e);
+            return Result.fail("删除失败" + e.getMessage());
+        }
+        return result;
+    }
+
 }
