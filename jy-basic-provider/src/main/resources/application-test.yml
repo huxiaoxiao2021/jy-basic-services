@@ -27,10 +27,12 @@ spring:
       strict: true
       datasource:
         master:
+          driver-class-name: com.mysql.jdbc.Driver
           url: jdbc:mysql://mysql-cn-north-1-f51a5018ea1d406c.rds.jdcloud.com:3358/jybasic_conf?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&failOverReadOnly=false&allowMultiQueries=true
           username: ${spring.datasource.username}
           password: ${spring.datasource.password}
         slave:
+          driver-class-name: com.mysql.jdbc.Driver
           url: jdbc:mysql://mysql-cn-north-1-f51a5018ea1d406c.rds.jdcloud.com:3358/jybasic_conf?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&failOverReadOnly=false&allowMultiQueries=true
           username: ${spring.datasource.slave.username}
           password: ${spring.datasource.slave.password}
