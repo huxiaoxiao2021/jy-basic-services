@@ -12,6 +12,12 @@ public interface VideoTraceCameraDao {
     int insert(VideoTraceCamera record);
 
     VideoTraceCamera selectByPrimaryKey(Integer id);
+    /**
+     * 通过ID获取VideoTraceCamera对象，包括已删除的记录
+     * @param id 输入的ID参数
+     * @return 返回对应ID的VideoTraceCamera对象
+     */
+    VideoTraceCamera getByIdNoYn(Integer id);
 
     int updateById(VideoTraceCamera record);
 

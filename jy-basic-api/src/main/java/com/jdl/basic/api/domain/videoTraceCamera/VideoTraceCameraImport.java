@@ -27,7 +27,7 @@ public class VideoTraceCameraImport {
     /**
      * 场地编码
      */
-    private Integer siteCode;
+    private String siteCode;
 
 
     private String updateErp;

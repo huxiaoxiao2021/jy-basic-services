@@ -34,6 +34,13 @@
     where yn=1 and id = #{id,jdbcType=INTEGER}
   </select>
 
+  <select id="getByIdNoYn" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from video_trace_camera
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
   <select id="queryPageList" resultType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera" resultMap="BaseResultMap">
     select
       <include refid="Base_Column_List"/>
