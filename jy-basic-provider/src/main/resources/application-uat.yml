@@ -32,7 +32,7 @@ spring:
           username: ${spring.datasource.username}
           password: ${spring.datasource.password}
         slave:
-          url: jdbc:mysql://mysql-cn-north-1-faa4483a25674aac.rds.jdcloud.com:3358/jybasic_conf?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&failOverReadOnly=false&allowMultiQueries=true
+          url: jdbc:mysql://mysql-cn-north-1-969ddf18efc94849.rds.jdcloud.com:3358/jybasic_conf?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&failOverReadOnly=false&allowMultiQueries=true
           username: ${spring.datasource.slave.username}
           password: ${spring.datasource.slave.password}
   jmq:
