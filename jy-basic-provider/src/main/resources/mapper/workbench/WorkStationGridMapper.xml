@@ -844,6 +844,25 @@
         and dock_code = #{dockCode,jdbcType=VARCHAR}
         limit #{offset}, #{limit}
     </select>
+	<select id="queryWorkStationGridBySiteCode" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGridQuery" resultMap="WorkStationGrid">
+		select
+		<include refid="Base_Column_List"/>
+		from
+		work_station_grid g
+		<include refid="joinSql"/>
+		where g.yn = 1
+		and g.site_code = #{siteCode,jdbcType=INTEGER}
+	</select>
+	<select id="queryBusinessKeyByRefWorkGridKeys" resultType="java.lang.String">
+		select
+			business_key
+		from work_station_grid
+		where yn=1
+		and ref_work_grid_key in
+		<foreach collection="refWorkGridKeys" item="item" open="(" close=")" separator=",">
+			#{item,jdbcType=VARCHAR}
+		</foreach> 
+	</select>
 
 	<update id="updateStatusByIds" parameterType="com.jdl.basic.api.domain.workStation.UpdateRequest">
 		update work_station_grid

@@ -108,6 +108,8 @@ public interface UserJsfService {
     Result<List<JyThirdpartyUser>> queryJyThirdpartyUser(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto);
 
 
+    Result<List<JyThirdpartyUser>> batchQueryJyThirdpartyUser(List<JyTpUserScheduleQueryDto> dtos);
+
     /**
      * 查询某个人的储备情况
      * @param jyTpUserScheduleQueryDto

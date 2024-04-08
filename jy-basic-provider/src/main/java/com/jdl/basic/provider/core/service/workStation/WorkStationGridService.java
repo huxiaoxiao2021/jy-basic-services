@@ -1,7 +1,10 @@
 package com.jdl.basic.provider.core.service.workStation;
 
 
+import com.jd.ump.annotation.JProEnum;
+import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.workStation.*;
+import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 
@@ -207,6 +210,18 @@ public interface WorkStationGridService {
 	 * @return
 	 */
 	int syncWorkGridInfo(WorkGrid gridData);
+
+
+	/**
+	 * 查询场地下工序
+	 * @param query
+	 * @return
+	 */
+	Result<List<WorkStationGrid>> queryWorkStationGridBySiteCode(WorkStationGridQuery query);
+
+
+
+    List<String> queryBusinessKeyByRefWorkGridKeys(List<String> refWorkGridKeys);
 	/**
 	 * 根据指定的ID列表更新工作站网格信息
 	 * @param updateRequest 更新请求对象，包含要更新的工作站网格信息的ID列表

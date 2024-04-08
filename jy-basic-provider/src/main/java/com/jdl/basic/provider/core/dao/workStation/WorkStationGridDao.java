@@ -7,6 +7,7 @@ import com.jdl.basic.api.domain.workStation.WorkStationGrid;
 import com.jdl.basic.api.domain.workStation.WorkStationGridCountVo;
 import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
 import com.jdl.basic.api.domain.workStation.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -234,6 +235,15 @@ public interface WorkStationGridDao {
     List<WorkStationGrid> getGridInfoBySiteCodes(List<String> siteCodes);
 	
 	int syncWorkGridInfo(WorkStationGrid updateData);
+
+	/**
+	 * 查询场地下工序
+	 * @param query
+	 * @return
+	 */
+	List<WorkStationGrid> queryWorkStationGridBySiteCode(WorkStationGridQuery query);
+
+	List<String> queryBusinessKeyByRefWorkGridKeys(@Param("refWorkGridKeys") List<String> refWorkGridKeys);
 
     /**
      * 根据指定的ID列表更新工作站网格信息

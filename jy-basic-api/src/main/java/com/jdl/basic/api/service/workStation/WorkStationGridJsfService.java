@@ -165,6 +165,20 @@ public interface WorkStationGridJsfService {
 	List<WorkStationGrid> queryListForWorkGridVo(WorkStationGridQuery query);
 
 	/**
+	 * 查询场地下工序
+	 * @param query
+	 * @return
+	 */
+	Result<List<WorkStationGrid>> queryWorkStationGridBySiteCode(WorkStationGridQuery query);
+
+	/**
+	 * 根据网格 work_grid 业务主键查询网格工序业务主键
+	 * @param refWorkGridKeys
+	 * @return
+	 */
+	List<String> queryBusinessKeyByRefWorkGridKeys(List<String> refWorkGridKeys);
+
+	/**
 	 * 根据指定的ID列表更新工作站网格状态
 	 * @param updateRequest 更新请求对象，包含要更新的工作站网格信息的ID列表
 	 * @return 更新操作的响应对象
