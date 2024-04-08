@@ -225,7 +225,7 @@ public class CollectBoxFlowDirectionConfJsfServiceImpl implements CollectBoxFlow
             conf.setStartProvinceAgencyName(startSiteInfo.getProvinceAgencyName());
         }
         // 如果始发站点信息和区域编码不为空，则设置始发区域枢纽编码和名称
-        if (Objects.nonNull(startSiteInfo) && null != endSiteInfo.getAreaCode()) {
+        if (Objects.nonNull(startSiteInfo) && null != startSiteInfo.getAreaCode()) {
             conf.setStartAreaHubCode(startSiteInfo.getAreaCode());
             conf.setStartAreaHubName(startSiteInfo.getAreaName());
         }
