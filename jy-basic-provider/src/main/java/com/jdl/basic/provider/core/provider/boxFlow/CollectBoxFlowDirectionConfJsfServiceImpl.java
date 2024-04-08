@@ -176,7 +176,7 @@ public class CollectBoxFlowDirectionConfJsfServiceImpl implements CollectBoxFlow
      */
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionConfJsfServiceImpl.batchUpdateCollectBoxFlowDirectionConf", mState = {JProEnum.TP, JProEnum.FunctionError})
-    public Result<Boolean> batchUpdateCollectBoxFlowDirectionConf() {
+    public Result<Boolean> batchUpdateCollectBoxFlowDirectionConf(String str) {
         Result<Boolean> result = new Result<>();
         try {
             int pageNumber = 1; // 页码

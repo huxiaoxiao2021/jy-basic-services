@@ -37,5 +37,5 @@ public interface CollectBoxFlowDirectionConfJsfService {
 
     Result<Integer> updateCollectBoxFlowInfo(CollectBoxFlowInfo collectBoxFlowInfo);
 
-    Result<Boolean> batchUpdateCollectBoxFlowDirectionConf();
+    Result<Boolean> batchUpdateCollectBoxFlowDirectionConf(String str);
 }
