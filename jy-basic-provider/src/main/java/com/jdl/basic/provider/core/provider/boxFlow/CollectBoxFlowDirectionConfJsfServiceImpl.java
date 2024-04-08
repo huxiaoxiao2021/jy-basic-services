@@ -220,26 +220,26 @@ public class CollectBoxFlowDirectionConfJsfServiceImpl implements CollectBoxFlow
         BaseStaffSiteOrgDto startSiteInfo = basicPrimaryWS.getBaseSiteBySiteId(conf.getStartSiteId());
         BaseStaffSiteOrgDto endSiteInfo = basicPrimaryWS.getBaseSiteBySiteId(conf.getEndSiteId());
         // 如果始发站点信息和省区编码不为空，则设置始发省区编码和名称
-        if(Objects.nonNull(startSiteInfo)&&null != startSiteInfo.getProvinceAgencyCode()){
+        if (Objects.nonNull(startSiteInfo) && null != startSiteInfo.getProvinceAgencyCode()) {
             conf.setStartProvinceAgencyCode(startSiteInfo.getProvinceAgencyCode());
             conf.setStartProvinceAgencyName(startSiteInfo.getProvinceAgencyName());
         }
         // 如果始发站点信息和区域编码不为空，则设置始发区域枢纽编码和名称
-        if(Objects.nonNull(startSiteInfo)&&null != endSiteInfo.getAreaCode()) {
+        if (Objects.nonNull(startSiteInfo) && null != endSiteInfo.getAreaCode()) {
             conf.setStartAreaHubCode(startSiteInfo.getAreaCode());
             conf.setStartAreaHubName(startSiteInfo.getAreaName());
         }
         // 如果目的站点信息和省区编码不为空，则设置目的省区编码和名称
-        if(Objects.nonNull(endSiteInfo)&&null != endSiteInfo.getProvinceAgencyCode()) {
+        if (Objects.nonNull(endSiteInfo) && null != endSiteInfo.getProvinceAgencyCode()) {
             conf.setEndProvinceAgencyCode(endSiteInfo.getProvinceAgencyCode());
             conf.setEndProvinceAgencyName(endSiteInfo.getProvinceAgencyName());
         }
         // 如果目的站点信息和区域编码不为空，则设置目的区域枢纽编码和名称
-        if(Objects.nonNull(endSiteInfo)&&null != endSiteInfo.getAreaCode()) {
+        if (Objects.nonNull(endSiteInfo) && null != endSiteInfo.getAreaCode()) {
             conf.setEndAreaHubCode(endSiteInfo.getAreaCode());
             conf.setEndAreaHubName(endSiteInfo.getAreaName());
         }
         // 调用collectBoxFlowDirectionConfService的updateConfig方法更新配置信息
-        collectBoxFlowDirectionConfService.updateConfig(conf);
+        collectBoxFlowDirectionConfService.updateCollectBoxFlowDirectionConf(conf);
     }
 }

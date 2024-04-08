@@ -464,4 +464,20 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         result.setData(resultPager);
         return result;
     }
+
+    @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionConfServiceImpl.updateCollectBoxFlowDirectionConf", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<Boolean> updateCollectBoxFlowDirectionConf(CollectBoxFlowDirectionConf conf) {
+        Result<Boolean> result = new Result<>();
+        if (conf.getStartSiteId() == null || conf.getEndSiteId() == null || conf.getStartOrgId() == null
+            || conf.getEndOrgId() == null || conf.getFlowType() == null || conf.getTransportType() == null
+            || conf.getSupportDeputyReceiveSite() == null) {
+            return result.toFail("参数错误，不能为空");
+        }
+        int i = collectBoxFlowDirectionConfMapper.updateByPrimaryKeySelective(conf);
+        if (i != 1) {
+            return result.toFail("更新失败");
+        }
+        return result.success();
+    }
 }

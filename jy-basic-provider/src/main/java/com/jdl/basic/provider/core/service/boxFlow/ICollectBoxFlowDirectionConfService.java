@@ -41,4 +41,6 @@ public interface ICollectBoxFlowDirectionConfService {
     int updateCollectBoxFlowInfo(CollectBoxFlowInfo collectBoxFlowInfo);
 
     Result<Pager<CollectBoxFlowDirectionConf>> listCollectBoxFlowDirectionConf(Pager<CollectBoxFlowDirectionConf> pager);
+
+    Result<Boolean> updateCollectBoxFlowDirectionConf(CollectBoxFlowDirectionConf conf);
 }
