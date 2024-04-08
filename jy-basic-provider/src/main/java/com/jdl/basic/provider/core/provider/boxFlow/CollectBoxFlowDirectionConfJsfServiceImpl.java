@@ -182,12 +182,13 @@ public class CollectBoxFlowDirectionConfJsfServiceImpl implements CollectBoxFlow
             int pageNumber = 1; // 页码
             int pageSize = 100; // 每页大小
             boolean hasMoreData = true;
-
+            log.info("集包规则配置 updateConfig 开始");
             while (hasMoreData) {
                 Pager<CollectBoxFlowDirectionConf> pager = new Pager<>(pageNumber, pageSize, 0L);
                 // 分页查询集包配置
                 Result<Pager<CollectBoxFlowDirectionConf>> pagerResult =
                     collectBoxFlowDirectionConfService.listByParamAndWhetherConfiged(pager, false);
+                log.info("集包规则配置 updateConfig 分页信息-{}",JSON.toJSONString(pager));
                 if (pagerResult.isSuccess()) {
                     Pager<CollectBoxFlowDirectionConf> pagerResultData = pagerResult.getData();
                     List<CollectBoxFlowDirectionConf> confList = pagerResultData.getData();
@@ -202,6 +203,7 @@ public class CollectBoxFlowDirectionConfJsfServiceImpl implements CollectBoxFlow
                     }
                 }
             }
+            log.info("集包规则配置 updateConfig 结束");
             result.setData(true);
         } catch (Exception e) {
             // 记录日志
