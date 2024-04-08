@@ -435,4 +435,33 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         return collectBoxFlowInfoDao.updateByPrimaryKeySelective(collectBoxFlowInfo);
     }
 
+    @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionConfServiceImpl.listCollectBoxFlowDirectionConf", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<Pager<CollectBoxFlowDirectionConf>> listCollectBoxFlowDirectionConf(Pager<CollectBoxFlowDirectionConf> pager) {
+        Result<Pager<CollectBoxFlowDirectionConf>> result = Result.success();
+        if(pager == null){
+            return Result.fail("必填参数不能为空");
+        }
+        if(pager.getPageNo() == null){
+            pager.setPageNo(1);
+        }
+        if(pager.getPageSize() == null){
+            pager.setPageSize(10);
+        }
+        Page<CollectBoxFlowDirectionConf> collectBoxFlowDirectionConfs = null;
+        try {
+            collectBoxFlowDirectionConfs = PageHelper.startPage(pager.getPageNo(), pager.getPageSize())
+                .doSelectPage(() -> collectBoxFlowDirectionConfMapper.select(pager.getSearchVo()));
+        } catch (Exception e) {
+            log.error("分页查询异常，参数:" + JSONObject.toJSONString(pager), e);
+        }
+        Pager<CollectBoxFlowDirectionConf> resultPager = new Pager<>();
+        if(collectBoxFlowDirectionConfs != null){
+            resultPager.setData(collectBoxFlowDirectionConfs.getResult());
+            resultPager.setTotal(collectBoxFlowDirectionConfs.getTotal());
+            resultPager.setPageNo(collectBoxFlowDirectionConfs.getPageNum());
+        }
+        result.setData(resultPager);
+        return result;
+    }
 }

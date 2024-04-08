@@ -187,7 +187,7 @@ public class CollectBoxFlowDirectionConfJsfServiceImpl implements CollectBoxFlow
                 Pager<CollectBoxFlowDirectionConf> pager = new Pager<>(pageNumber, pageSize, 0L);
                 // 分页查询集包配置
                 Result<Pager<CollectBoxFlowDirectionConf>> pagerResult =
-                    collectBoxFlowDirectionConfService.listByParamAndWhetherConfiged(pager, false);
+                    collectBoxFlowDirectionConfService.listCollectBoxFlowDirectionConf(pager);
                 log.info("集包规则配置 updateConfig 分页信息-{}",JSON.toJSONString(pager));
                 if (pagerResult.isSuccess()) {
                     Pager<CollectBoxFlowDirectionConf> pagerResultData = pagerResult.getData();

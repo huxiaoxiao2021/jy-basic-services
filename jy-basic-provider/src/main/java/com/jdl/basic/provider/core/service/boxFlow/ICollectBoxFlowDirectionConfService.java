@@ -39,4 +39,6 @@ public interface ICollectBoxFlowDirectionConfService {
     String getCurrentVersion();
 
     int updateCollectBoxFlowInfo(CollectBoxFlowInfo collectBoxFlowInfo);
+
+    Result<Pager<CollectBoxFlowDirectionConf>> listCollectBoxFlowDirectionConf(Pager<CollectBoxFlowDirectionConf> pager);
 }
