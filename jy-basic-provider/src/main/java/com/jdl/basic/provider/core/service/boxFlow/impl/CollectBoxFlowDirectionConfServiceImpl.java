@@ -4,6 +4,8 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
 import com.jd.fastjson.JSONObject;
+import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
+import com.jd.ql.basic.ws.BasicPrimaryWS;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf;
@@ -58,6 +60,9 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
     @Value("${mq.topic.collectBoxFlowNotice:}")
     private String collectBoxFlowNoticTopic;
 
+    @Autowired
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    BasicPrimaryWS basicPrimaryWS;
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionConfServiceImpl.selectById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<CollectBoxFlowDirectionConf> selectById(Long id) {
@@ -164,14 +169,21 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
                 .originalBoxReceiveId(collectBoxFlowDirectionConf.getBoxReceiveId())
                 .originalBoxPkgName(collectBoxFlowDirectionConf.getBoxPkgName())
                 .originalBoxReceiveName(collectBoxFlowDirectionConf.getBoxReceiveName())
-
                 .build();
         collectBoxFlowDirectionConf.setBoxReceiveId(conf.getBoxReceiveId());
         collectBoxFlowDirectionConf.setBoxPkgName(conf.getBoxPkgName());
         collectBoxFlowDirectionConf.setBoxReceiveName(conf.getBoxReceiveName());
         collectBoxFlowDirectionConf.setUpdateTime(new Date());
         collectBoxFlowDirectionConf.setUpdateUserErp(conf.getUpdateUserErp());
-
+        // add 添加省区，枢纽，场景
+        collectBoxFlowDirectionConf.setStartProvinceAgencyCode(conf.getStartProvinceAgencyCode());
+        collectBoxFlowDirectionConf.setStartProvinceAgencyName(conf.getStartProvinceAgencyName());
+        collectBoxFlowDirectionConf.setStartAreaHubCode(conf.getStartAreaHubCode());
+        collectBoxFlowDirectionConf.setStartAreaHubName(conf.getStartAreaHubName());
+        collectBoxFlowDirectionConf.setStartProvinceAgencyCode(conf.getStartProvinceAgencyCode());
+        collectBoxFlowDirectionConf.setEndProvinceAgencyName(conf.getEndProvinceAgencyName());
+        collectBoxFlowDirectionConf.setEndAreaHubCode(conf.getEndAreaHubCode());
+        collectBoxFlowDirectionConf.setEndAreaHubName(conf.getEndAreaHubName());
         if (conf.getCollectClaim() != null) {
             collectBoxFlowDirectionConf.setCollectClaim(conf.getCollectClaim());
         }
@@ -262,7 +274,8 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
             Integer boxReceiveId = conf.getBoxReceiveId();
             Integer flowType = conf.getFlowType();
             Integer transportType = conf.getTransportType();
-
+            // 增加省区，枢纽，场景信息
+            addDirectionConfInfo(conf);
             CollectBoxFlowDirectionConf query = new CollectBoxFlowDirectionConf();
             query.setStartSiteId(startSiteId);
             query.setStartOrgId(conf.getStartOrgId());
@@ -290,6 +303,31 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
             return Result.fail("更新或新规则异常" + e.getMessage());
         }
         return result;
+    }
+    private void addDirectionConfInfo(CollectBoxFlowDirectionConf conf) {
+        // 通过调用getBaseSiteBySiteId方法查询始发站点和目的站点信息
+        BaseStaffSiteOrgDto startSiteInfo = basicPrimaryWS.getBaseSiteBySiteId(conf.getStartSiteId());
+        BaseStaffSiteOrgDto endSiteInfo = basicPrimaryWS.getBaseSiteBySiteId(conf.getEndSiteId());
+        // 如果始发站点信息和省区编码不为空，则设置始发省区编码和名称
+        if (Objects.nonNull(startSiteInfo) && null != startSiteInfo.getProvinceAgencyCode()) {
+            conf.setStartProvinceAgencyCode(startSiteInfo.getProvinceAgencyCode());
+            conf.setStartProvinceAgencyName(startSiteInfo.getProvinceAgencyName());
+        }
+        // 如果始发站点信息和区域编码不为空，则设置始发区域枢纽编码和名称
+        if (Objects.nonNull(startSiteInfo) && null != startSiteInfo.getAreaCode()) {
+            conf.setStartAreaHubCode(startSiteInfo.getAreaCode());
+            conf.setStartAreaHubName(startSiteInfo.getAreaName());
+        }
+        // 如果目的站点信息和省区编码不为空，则设置目的省区编码和名称
+        if (Objects.nonNull(endSiteInfo) && null != endSiteInfo.getProvinceAgencyCode()) {
+            conf.setEndProvinceAgencyCode(endSiteInfo.getProvinceAgencyCode());
+            conf.setEndProvinceAgencyName(endSiteInfo.getProvinceAgencyName());
+        }
+        // 如果目的站点信息和区域编码不为空，则设置目的区域枢纽编码和名称
+        if (Objects.nonNull(endSiteInfo) && null != endSiteInfo.getAreaCode()) {
+            conf.setEndAreaHubCode(endSiteInfo.getAreaCode());
+            conf.setEndAreaHubName(endSiteInfo.getAreaName());
+        }
     }
     @Override
     public int deleteByVersion(String version, Integer deleteCount){
