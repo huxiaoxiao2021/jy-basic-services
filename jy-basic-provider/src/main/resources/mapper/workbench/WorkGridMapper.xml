@@ -474,6 +474,9 @@
 		from
 			work_grid t
 		<include refid="queryCondition"/>
+		<if test="yn != null and yn==0">
+			order by update_time desc
+		</if>
 		limit #{offset}, #{limit}
 	</select>
 
