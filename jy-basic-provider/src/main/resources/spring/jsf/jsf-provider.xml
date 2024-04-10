@@ -388,5 +388,14 @@
                   alias="${jsf.jy_basic.alias}"
                   server="jsf">
     </jsf:provider>
+
+    <!-- nc件可上线白名单 -->
+    <jsf:provider id="ncAllowedAutoSortListJsfService"
+                  interface="com.jdl.basic.api.service.ncAllowedAutoSortList.NCAllowedAutoSortListJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="NCAllowedAutoSortListJsfServiceImpl"
+                  server="jsf">
+        <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
+    </jsf:provider>
 </beans>
 
