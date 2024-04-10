@@ -50,8 +50,8 @@ import static com.jdl.basic.common.enums.CollectBoxFlowNoticTypeEnum.ROUTER_WARN
 public class CollectBoxFlowDirectionVerifyServiceImpl implements ICollectBoxFlowDirectionVerifyService {
     private static String  CHECK_ROUTE_NOTIC_ERP_CACHE_PREFIX = "route-check-";
     
-    private static String BDP_PUSH_ERP = "大数据推送规则";
-    private static String BDP_PUSH_ERP2 = "大数据更新规则";
+    private static String BDP_PUSH_ERP = "拣运小胖推送规则";
+    private static String BDP_PUSH_ERP2 = "拣运小胖更新规则";
     @Resource
     private CollectBoxFlowDirectionConfDao collectBoxFlowDirectionConfMapper;
     @Autowired

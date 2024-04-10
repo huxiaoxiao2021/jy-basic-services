@@ -158,7 +158,7 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
             BeanUtils.copyProperties(dto, conf);
             conf.setUpdateTime(new Date());
 
-            conf.setUpdateUserErp("大数据更新规则");
+            conf.setUpdateUserErp("拣运小胖更新规则");
             
             OrgEnum startOrgEnum = OrgEnum.getOrgEnum(dto.getStartOrgId());
             OrgEnum endOrgEnum = OrgEnum.getOrgEnum(dto.getEndOrgId());
@@ -177,7 +177,7 @@ public class CollectBoxFlowDirectionConfPushServiceImpl  implements ICollectBoxF
             } else {
                 conf.setIfChangeSinceLastUpdate(conf.getCollectClaim());
             }
-            conf.setCreateUserErp(verifyResult.getData() == null ? "大数据推送规则" : verifyResult.getData().getCreateUserErp());
+            conf.setCreateUserErp(verifyResult.getData() == null ? "拣运小胖推送规则" : verifyResult.getData().getCreateUserErp());
             conf.setYn(true);
 
 
