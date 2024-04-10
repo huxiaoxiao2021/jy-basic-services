@@ -1,14 +1,6 @@
 package com.jdl.basic.provider.core.service.workStation;
 
-import com.jdl.basic.api.domain.workStation.BatchAreaWorkGridQuery;
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkGrid;
-import com.jdl.basic.api.domain.workStation.WorkGridBatchUpdateRequest;
-import com.jdl.basic.api.domain.workStation.WorkGridDeviceVo;
-import com.jdl.basic.api.domain.workStation.WorkGridEditVo;
-import com.jdl.basic.api.domain.workStation.WorkGridImport;
-import com.jdl.basic.api.domain.workStation.WorkGridQuery;
-import com.jdl.basic.api.domain.workStation.WorkGridVo;
+import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 
@@ -209,4 +201,18 @@ public interface WorkGridService {
 	 * @return
 	 */
     List<WorkGrid> queryAreaInfo(WorkGrid workGrid);
+
+	/**
+	 * 根据指定的ID列表更新网格状态
+	 * @param updateRequest 更新请求对象，包含要更新的网格信息的ID列表
+	 * @return 更新操作的响应对象
+	 */
+	Result<Boolean> updateStatusByIds(UpdateRequest<WorkGrid> updateRequest);
+
+	/**
+	 * 更新审批通过的网格
+	 * @param updateRequest 更新请求对象
+	 * @return 更新后的网格信息
+	 */
+	Result<Boolean> updatePassByIds(UpdateRequest<WorkGrid> updateRequest);
 }

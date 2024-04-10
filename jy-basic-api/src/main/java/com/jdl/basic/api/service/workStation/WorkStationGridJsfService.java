@@ -1,10 +1,7 @@
 package com.jdl.basic.api.service.workStation;
 
 
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkStationGrid;
-import com.jdl.basic.api.domain.workStation.WorkStationGridCountVo;
-import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
+import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 
@@ -180,4 +177,25 @@ public interface WorkStationGridJsfService {
 	 * @return
 	 */
 	List<String> queryBusinessKeyByRefWorkGridKeys(List<String> refWorkGridKeys);
+
+	/**
+	 * 根据指定的ID列表更新工作站网格状态
+	 * @param updateRequest 更新请求对象，包含要更新的工作站网格信息的ID列表
+	 * @return 更新操作的响应对象
+	 */
+	Result<Boolean> updateStatusByIds(UpdateRequest<WorkStationGrid> updateRequest);
+
+    /**
+     * 查询历史删除记录页面列表
+     * @param query 工作站网格查询
+     * @return 历史页面列表的分页数据传输对象
+     */
+	Result<PageDto<WorkStationGrid>> queryHistoryPageList(WorkStationGridQuery query);
+
+	/**
+	 * 更新审批通过的工作站网格信息
+	 * @param updateRequest 更新请求对象
+	 * @return 更新后的工作站网格信息
+	 */
+	Result<Boolean> updatePassByIds(UpdateRequest<WorkStationGrid> updateRequest);
 }

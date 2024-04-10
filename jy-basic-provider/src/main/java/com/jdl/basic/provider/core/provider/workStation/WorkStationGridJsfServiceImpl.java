@@ -391,4 +391,69 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 	public List<String> queryBusinessKeyByRefWorkGridKeys(List<String> refWorkGridKeys){
 		return workStationGridService.queryBusinessKeyByRefWorkGridKeys(refWorkGridKeys);
 	}
+
+	@Override
+	public Result<Boolean> updateStatusByIds(UpdateRequest<WorkStationGrid> updateRequest) {
+		log.info("场地网格工序管理 updateStatusByIds 入参-{}", JSON.toJSONString(updateRequest));
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				Result<Boolean> apiResult = workStationGridService.updateStatusByIds(updateRequest);
+				if(!apiResult.isSuccess()) {
+					result.setCode(apiResult.getCode());
+					result.setMessage(apiResult.getMessage());
+					result.setData(apiResult.getData());
+					return ;
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在更新网格工序状态，请稍后操作！");
+			}
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("更新网格工序状态操作异常，请稍后重试！");
+			}
+		});
+		return result;
+	}
+
+
+	@Override
+	public Result<PageDto<WorkStationGrid>> queryHistoryPageList(WorkStationGridQuery query) {
+		if(log.isInfoEnabled()){
+			log.info("场地网格工序管理 queryHistoryPageList 入参-{}", JSON.toJSONString(query));
+		}
+		return workStationGridService.queryHistoryPageList(query);
+	}
+
+	@Override
+	public Result<Boolean> updatePassByIds(UpdateRequest<WorkStationGrid> updateRequest) {
+		log.info("场地网格工序管理 updatePassByIds 入参-{}", JSON.toJSONString(updateRequest));
+		final Result<Boolean> result = Result.success();
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+			@Override
+			public void success() {
+				Result<Boolean> apiResult = workStationGridService.updatePassByIds(updateRequest);
+				if(!apiResult.isSuccess()) {
+					result.setCode(apiResult.getCode());
+					result.setMessage(apiResult.getMessage());
+					result.setData(apiResult.getData());
+					return ;
+				}
+			}
+			@Override
+			public void fail() {
+				result.toFail("其他用户正在更新网格工序审批通过状态，请稍后操作！");
+			}
+			@Override
+			public void error(Exception e) {
+				log.error(e.getMessage(), e);
+				result.toFail("更新网格工序审批通过状态操作异常，请稍后重试！");
+			}
+		});
+		return result;
+	}
 }

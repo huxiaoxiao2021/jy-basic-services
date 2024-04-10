@@ -107,5 +107,21 @@ public class WorkGridServiceTest {
         List<WorkGrid> result = workGridService.queryAllGridBySiteCode(query);
         logger.info("result {}", JsonHelper.toJSONString(result));
     }
+    /**
+     * 测试查询方法
+     */
+    @Test
+    public void testQuery(){
 
+
+        WorkGridQuery query = new WorkGridQuery();
+
+
+        Result<PageDto<WorkGridVo>> queryPageList1 = workGridService.queryPageList(query);
+        for (WorkGridVo workGridVo : queryPageList1.getData().getResult()) {
+            Integer yn = workGridVo.getYn();
+            System.out.println("删除"+ workGridVo.getId()+ ":"+ yn);
+        }
+        System.out.println("queryPageList222:{}"+JsonHelper.toJSONString(queryPageList1));
+    }
 }

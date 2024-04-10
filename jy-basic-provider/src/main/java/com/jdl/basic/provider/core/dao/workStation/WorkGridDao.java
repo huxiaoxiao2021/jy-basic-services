@@ -141,4 +141,16 @@ public interface WorkGridDao {
 	WorkGrid queryByWorkGridKeyWithCache(String workGridKey);
 
 	List<WorkGrid> queryAreaInfo(WorkGrid queryParams);
+
+    /**
+     * 更新指定ID的网格状态
+     * @param updateRequest 更新请求对象
+     * @return 更新后的网格对象
+     */
+	int updateStatusByIds(UpdateRequest<WorkGrid> updateRequest);
+    /**
+     * 根据ID更新审批通过的网格
+     * @param workGrid 工作网格对象
+     */
+	void updatePassById(WorkGrid workGrid);
 }
