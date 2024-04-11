@@ -1,6 +1,5 @@
 package com.jdl.basic.provider.core.provider.videoTraceCamera;
 
-import com.alibaba.cola.dto.PageResponse;
 import com.google.common.collect.Lists;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
@@ -13,9 +12,6 @@ import com.jdl.basic.provider.common.Jimdb.CacheService;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraConfigService;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
-import com.jdl.lcv.video.channel.api.VideoChannelService;
-import com.jdl.lcv.video.channel.dto.data.VideoChannelDTO;
-import com.jdl.lcv.video.channel.dto.query.VideoChannelPageBySiteQry;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +41,6 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
     @Qualifier("JimdbCacheService")
     private CacheService cacheService;
 
-    @Autowired
-    private VideoChannelService videoChannelService;
     /**
      * 缓存前缀
      */

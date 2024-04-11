@@ -346,12 +346,6 @@
             <groupId>com.jd</groupId>
             <artifactId>muliti-tenant-plugin-mybatis</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.jdl.lcv</groupId>
-            <artifactId>lcv-cloud-api-jsf</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
     <build>
