@@ -71,5 +71,4 @@ public interface VideoTraceCameraJsfService {
     int deleteCameraConfigByIds(List<Integer> ids);
     int deleteCameraByIds(List<Integer> ids, String operate);
 
-    String synCameraInfo(String code,Integer siteCode);
 }

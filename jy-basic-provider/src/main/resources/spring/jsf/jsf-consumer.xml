@@ -62,9 +62,5 @@
         <jsf:parameter key="token" value="${jsf.automatic.token}" hide="true"/>
     </jsf:consumer>
 
-    <jsf:consumer id="videoChannelService" interface="com.jdl.lcv.video.channel.api.VideoChannelService"
-                  serialization="hessian"
-                  protocol="jsf" alias="${jsf.video.channel.alias}" timeout="${jsf.video.channel.timeout}" retries="${jsf.retries}" lazy="${jsf.consumer.lazy}">
-    </jsf:consumer>
 
 </beans>
