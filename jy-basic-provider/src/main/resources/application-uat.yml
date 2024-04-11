@@ -117,6 +117,7 @@ jsf:
   video:
     channel:
       alias: videoChannelService-jsf-uat-330
+      timeout: 3000
 basic:
   jsf:
     token: 96KYOS24GJ

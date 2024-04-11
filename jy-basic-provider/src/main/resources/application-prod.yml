@@ -116,7 +116,10 @@ jsf:
     alias: level0
     token: automatic
     timeout: 2000
-
+  video:
+    channel:
+      alias: videoChannelService-jsf-prod
+      timeout: 3000
 basic:
   jsf:
     token: 96KYOS24GJ
