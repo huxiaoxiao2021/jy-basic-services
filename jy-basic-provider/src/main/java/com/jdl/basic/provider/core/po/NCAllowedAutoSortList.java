@@ -11,6 +11,8 @@ public class NCAllowedAutoSortList {
 
     private String ruleDetail;
 
+    private String sku;
+
     private String updateTime;
 
     private String operatorErp;

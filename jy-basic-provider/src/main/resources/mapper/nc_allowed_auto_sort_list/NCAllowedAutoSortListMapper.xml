@@ -9,10 +9,11 @@
 		<result column="rule_detail" jdbcType="VARCHAR" property="ruleDetail" />
 		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
 		<result column="operator_erp" jdbcType="VARCHAR" property="operatorErp" />
+		<result column="sku" jdbcType="VARCHAR" property="sku" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		`id`, `vender_id`, `keyword`, `rule_detail`, `update_time`, `operator_erp`
+		`id`, `vender_id`, `keyword`, `rule_detail`, `update_time`, `operator_erp`, `sku`
 	</sql>
 
 	<select id="queryByCondition" parameterType="com.jdl.basic.api.domain.ncAllowedAutoSortList.NCAllowedAutoSortListQuery" resultMap="BaseResultMap">
@@ -24,11 +25,14 @@
 			<if test="id != null" >
 				and id = #{id,jdbcType=INTEGER}
 			</if>
-			<if test="class1 != null and class1 != ''" >
-				and class1 like CONCAT('%', #{class1, jdbcType=VARCHAR}, '%')
+			<if test="venderId != null and venderId != ''" >
+				and vender_id like CONCAT('%', #{venderId, jdbcType=VARCHAR}, '%')
 			</if>
 			<if test="keyword != null and keyword != ''" >
 				and keyword like CONCAT('%', #{keyword, jdbcType=VARCHAR}, '%')
+			</if>
+			<if test="sku != null and sku != ''" >
+				and sku like CONCAT('%', #{sku, jdbcType=VARCHAR}, '%')
 			</if>
 		</where>
 		<if test="pageSize != 0 and pageNo != 0" >
@@ -45,11 +49,14 @@
 			<if test="id != null" >
 				and id = #{id,jdbcType=INTEGER}
 			</if>
-			<if test="class1 != null and class1 != ''" >
-				and class1 like CONCAT('%', #{class1, jdbcType=VARCHAR}, '%')
+			<if test="venderId != null and venderId != ''" >
+				and vender_id like CONCAT('%', #{venderId, jdbcType=VARCHAR}, '%')
 			</if>
 			<if test="keyword != null and keyword != ''" >
 				and keyword like CONCAT('%', #{keyword, jdbcType=VARCHAR}, '%')
+			</if>
+			<if test="sku != null and sku != ''" >
+				and sku like CONCAT('%', #{sku, jdbcType=VARCHAR}, '%')
 			</if>
 		</where>
 	</select>
@@ -60,9 +67,9 @@
 
 	<insert id="insert" parameterType="com.jdl.basic.provider.core.po.NCAllowedAutoSortList" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO
-		    nc_allowed_auto_sort_list (vender_id, keyword, rule_detail, update_time, operator_erp)
+		    nc_allowed_auto_sort_list (vender_id, keyword, rule_detail, update_time, operator_erp, sku)
 		VALUES
-		       (#{venderId}, #{keyword}, #{ruleDetail}, #{updateTime}, #{operatorErp}, )
+		       (#{venderId}, #{keyword}, #{ruleDetail}, #{updateTime}, #{operatorErp}, #{sku})
 	</insert>
 
 	<update id="updateByPK" parameterType="com.jdl.basic.provider.core.po.NCAllowedAutoSortList">
@@ -79,6 +86,9 @@
 			</if>
 			<if test="operatorErp != null">
 				`operator_erp` = #{operatorErp,jdbcType=VARCHAR},
+			</if>
+			<if test="sku != null and sku != ''" >
+				`sku` = #{sku,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where `id` = #{id,jdbcType=INTEGER}

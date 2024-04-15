@@ -17,6 +17,8 @@ public class NCAllowedAutoSortListDTO {
 
     private String operatorErp;
 
+    private String sku;
+
     private List<NCAllowedAutoSortRuleDTO> rules;
 
 }
