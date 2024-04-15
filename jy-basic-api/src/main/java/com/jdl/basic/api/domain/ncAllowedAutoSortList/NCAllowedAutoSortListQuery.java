@@ -9,7 +9,7 @@ public class NCAllowedAutoSortListQuery {
 
     private String venderId;
 
-    private String skuId;
+    private String sku;
 
     private String keyword;
 
