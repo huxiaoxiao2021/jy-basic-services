@@ -9,6 +9,8 @@ public class NCAllowedAutoSortListDTO {
 
     private Integer id;
 
+    private String venderId;
+
     private String keyword;
 
     private String ruleDetail;
