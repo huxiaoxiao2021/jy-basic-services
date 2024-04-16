@@ -67,9 +67,9 @@
 
 	<insert id="insert" parameterType="com.jdl.basic.provider.core.po.NCAllowedAutoSortList" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO
-		    nc_allowed_auto_sort_list (vender_id, keyword, rule_detail, update_time, operator_erp, sku)
+		    nc_allowed_auto_sort_list (vender_id, keyword, rule_detail , operator_erp, sku)
 		VALUES
-		       (#{venderId}, #{keyword}, #{ruleDetail}, #{updateTime}, #{operatorErp}, #{sku})
+		       (#{venderId}, #{keyword}, #{ruleDetail},  #{operatorErp}, #{sku})
 	</insert>
 
 	<update id="updateByPK" parameterType="com.jdl.basic.provider.core.po.NCAllowedAutoSortList">
