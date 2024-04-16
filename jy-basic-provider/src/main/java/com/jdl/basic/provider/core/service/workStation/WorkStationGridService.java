@@ -241,4 +241,11 @@ public interface WorkStationGridService {
 	 * @return 更新后的工作站网格信息
 	 */
 	Result<Boolean> updatePassByIds(UpdateRequest<WorkStationGrid> updateRequest);
+	/**
+	 * 关联场地网格批量查询
+	 *
+	 * @param query
+	 * @return
+	 */
+	List<WorkStationGrid> queryListForRefWorkGridKeyList(WorkStationGridQuery query);
 }

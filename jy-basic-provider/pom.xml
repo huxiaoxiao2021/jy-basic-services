@@ -346,6 +346,12 @@
             <groupId>com.jd</groupId>
             <artifactId>muliti-tenant-plugin-mybatis</artifactId>
         </dependency>
+
+        <!-- 多数据源配置 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
