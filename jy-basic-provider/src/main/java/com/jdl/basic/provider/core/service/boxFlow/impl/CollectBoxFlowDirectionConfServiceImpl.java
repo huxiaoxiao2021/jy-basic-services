@@ -2,8 +2,9 @@ package com.jdl.basic.provider.core.service.boxFlow.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-
 import com.jd.fastjson.JSONObject;
+import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
+import com.jd.ql.basic.ws.BasicPrimaryWS;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.boxFlow.CollectBoxFlowDirectionConf;
@@ -37,6 +38,13 @@ import static com.jdl.basic.common.enums.CollectBoxFlowInfoOperateTypeEnum.ACTIV
 import static com.jdl.basic.common.enums.CollectBoxFlowInfoOperateTypeEnum.ROLLBACK;
 import static com.jdl.basic.common.enums.CollectBoxFlowInfoStatusEnum.*;
 
+/**
+ * 集包规则配置服务实现类。
+ * 实现了集包规则配置相关的业务逻辑处理。
+ * <p>
+ * 作者：wunan84
+ * 日期：2023-04-14
+ */
 @Slf4j
 @Service
 public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDirectionConfService {
@@ -58,6 +66,16 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
     @Value("${mq.topic.collectBoxFlowNotice:}")
     private String collectBoxFlowNoticTopic;
 
+    @Autowired
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    BasicPrimaryWS basicPrimary;
+
+    /**
+     * 根据ID查询集包规则配置。
+     *
+     * @param id 配置ID
+     * @return 查询结果
+     */
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionConfServiceImpl.selectById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<CollectBoxFlowDirectionConf> selectById(Long id) {
@@ -75,6 +93,12 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         return result;
     }
 
+    /**
+     * 新增集包规则配置。
+     *
+     * @param conf 配置对象
+     * @return 新增结果
+     */
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionConfServiceImpl.newConfig", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> newConfig(CollectBoxFlowDirectionConf conf) {
@@ -131,6 +155,13 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         }
         return result;
     }
+
+    /**
+     * 更新集包规则配置。
+     *
+     * @param conf 配置对象
+     * @return 更新结果
+     */
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionConfServiceImpl.updateConfig", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> updateConfig(CollectBoxFlowDirectionConf conf) {
@@ -164,14 +195,21 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
                 .originalBoxReceiveId(collectBoxFlowDirectionConf.getBoxReceiveId())
                 .originalBoxPkgName(collectBoxFlowDirectionConf.getBoxPkgName())
                 .originalBoxReceiveName(collectBoxFlowDirectionConf.getBoxReceiveName())
-
                 .build();
         collectBoxFlowDirectionConf.setBoxReceiveId(conf.getBoxReceiveId());
         collectBoxFlowDirectionConf.setBoxPkgName(conf.getBoxPkgName());
         collectBoxFlowDirectionConf.setBoxReceiveName(conf.getBoxReceiveName());
         collectBoxFlowDirectionConf.setUpdateTime(new Date());
         collectBoxFlowDirectionConf.setUpdateUserErp(conf.getUpdateUserErp());
-
+        // add 添加省区，枢纽，场景
+        collectBoxFlowDirectionConf.setStartProvinceAgencyCode(conf.getStartProvinceAgencyCode());
+        collectBoxFlowDirectionConf.setStartProvinceAgencyName(conf.getStartProvinceAgencyName());
+        collectBoxFlowDirectionConf.setStartAreaHubCode(conf.getStartAreaHubCode());
+        collectBoxFlowDirectionConf.setStartAreaHubName(conf.getStartAreaHubName());
+        collectBoxFlowDirectionConf.setStartProvinceAgencyCode(conf.getStartProvinceAgencyCode());
+        collectBoxFlowDirectionConf.setEndProvinceAgencyName(conf.getEndProvinceAgencyName());
+        collectBoxFlowDirectionConf.setEndAreaHubCode(conf.getEndAreaHubCode());
+        collectBoxFlowDirectionConf.setEndAreaHubName(conf.getEndAreaHubName());
         if (conf.getCollectClaim() != null) {
             collectBoxFlowDirectionConf.setCollectClaim(conf.getCollectClaim());
         }
@@ -220,6 +258,13 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         return result.toSuccess();
     }
 
+    /**
+     * 根据条件查询集包规则配置列表。
+     *
+     * @param pager    分页参数
+     * @param configed 是否已配置
+     * @return 分页查询结果
+     */
     @Override
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionConfServiceImpl.listByParamAndWhetherConfiged", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Pager<CollectBoxFlowDirectionConf>> listByParamAndWhetherConfiged(Pager<CollectBoxFlowDirectionConf> pager, Boolean configed) {
@@ -249,6 +294,13 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         result.setData(resultPager);
         return result;
     }
+
+    /**
+     * 新增更新配置结果
+     *
+     * @param conf 配置规则
+     * @return 新增更新结果
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionConfServiceImpl.updateOrNewConfig", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
@@ -262,7 +314,8 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
             Integer boxReceiveId = conf.getBoxReceiveId();
             Integer flowType = conf.getFlowType();
             Integer transportType = conf.getTransportType();
-
+            // 增加省区，枢纽，场景信息
+            addDirectionConfInfo(conf);
             CollectBoxFlowDirectionConf query = new CollectBoxFlowDirectionConf();
             query.setStartSiteId(startSiteId);
             query.setStartOrgId(conf.getStartOrgId());
@@ -291,15 +344,49 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         }
         return result;
     }
+    private void addDirectionConfInfo(CollectBoxFlowDirectionConf conf) {
+        // 通过调用getBaseSiteBySiteId方法查询始发站点和目的站点信息
+        BaseStaffSiteOrgDto startSiteInfo = basicPrimary.getBaseSiteBySiteId(conf.getStartSiteId());
+        BaseStaffSiteOrgDto endSiteInfo = basicPrimary.getBaseSiteBySiteId(conf.getEndSiteId());
+        // 如果始发站点信息和省区编码不为空，则设置始发省区编码和名称
+        if (Objects.nonNull(startSiteInfo) && null != startSiteInfo.getProvinceAgencyCode()) {
+            conf.setStartProvinceAgencyCode(startSiteInfo.getProvinceAgencyCode());
+            conf.setStartProvinceAgencyName(startSiteInfo.getProvinceAgencyName());
+        }
+        // 如果始发站点信息和区域编码不为空，则设置始发区域枢纽编码和名称
+        if (Objects.nonNull(startSiteInfo) && null != startSiteInfo.getAreaCode()) {
+            conf.setStartAreaHubCode(startSiteInfo.getAreaCode());
+            conf.setStartAreaHubName(startSiteInfo.getAreaName());
+        }
+        // 如果目的站点信息和省区编码不为空，则设置目的省区编码和名称
+        if (Objects.nonNull(endSiteInfo) && null != endSiteInfo.getProvinceAgencyCode()) {
+            conf.setEndProvinceAgencyCode(endSiteInfo.getProvinceAgencyCode());
+            conf.setEndProvinceAgencyName(endSiteInfo.getProvinceAgencyName());
+        }
+        // 如果目的站点信息和区域编码不为空，则设置目的区域枢纽编码和名称
+        if (Objects.nonNull(endSiteInfo) && null != endSiteInfo.getAreaCode()) {
+            conf.setEndAreaHubCode(endSiteInfo.getAreaCode());
+            conf.setEndAreaHubName(endSiteInfo.getAreaName());
+        }
+    }
+
+    /**
+     * 根据版本号删除配置。
+     *
+     * @param version     版本号
+     * @param deleteCount 删除数量限制
+     * @return 删除计数
+     */
     @Override
     public int deleteByVersion(String version, Integer deleteCount){
         return collectBoxFlowDirectionConfMapper.deleteByVersion(version, deleteCount);
     }
 
     /**
-     * 切换新版本
+     * 切换到新版本的集包规则配置。
      * 1. 删除历史版本
      * 2. 当前版本修改成历史版本
+     * @throws Exception 操作异常
      */
     @Override
     @Transactional
@@ -360,11 +447,11 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         
         
     }
-    
 
     /**
-     * 版本回滚
-     * 
+     * 回滚到上一个版本的集包规则配置。
+     *
+     * @return 操作结果
      */
     @Override
     @Transactional
@@ -410,10 +497,16 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         return result;
     }
 
+    /**
+     * 查询所有集包规则信息。
+     *
+     * @return 集包规则信息列表
+     */
     @Override
     public List<CollectBoxFlowInfo> selectAllCollectBoxFlowInfo() {
         return collectBoxFlowInfoDao.selectAll();
     }
+
 
     private CollectBoxFlowNoticDto initCollectBoxFlowNoticDto(String version){
         CollectBoxFlowNoticDto dto = new CollectBoxFlowNoticDto();
@@ -421,6 +514,12 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         dto.setOperateType(CollectBoxFlowNoticTypeEnum.ROLLBACK.getCode());
         return dto;
     }
+
+    /**
+     * 获取当前集包规则配置的版本。
+     *
+     * @return 当前版本号
+     */
     @Override
     public String getCurrentVersion(){
         CollectBoxFlowInfo collectBoxFlowInfo = collectBoxFlowInfoDao.selectByCreateTimeAndStatus(null, null, CURRENT.getCode());
@@ -430,9 +529,72 @@ public class CollectBoxFlowDirectionConfServiceImpl implements ICollectBoxFlowDi
         return null;
     }
 
+    /**
+     * 更新集包规则信息。
+     *
+     * @param collectBoxFlowInfo 集包规则信息
+     * @return 更新计数
+     */
     @Override
     public int updateCollectBoxFlowInfo(CollectBoxFlowInfo collectBoxFlowInfo) {
         return collectBoxFlowInfoDao.updateByPrimaryKeySelective(collectBoxFlowInfo);
     }
 
+    /**
+     * 根据配置状态分页查询集包规则配置。
+     *
+     * @param pager 分页参数
+     * @return 分页结果
+     */
+    @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionConfServiceImpl.listCollectBoxFlowDirectionConf", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<Pager<CollectBoxFlowDirectionConf>> listCollectBoxFlowDirectionConf(Pager<CollectBoxFlowDirectionConf> pager) {
+        Result<Pager<CollectBoxFlowDirectionConf>> result = Result.success();
+        if(pager == null){
+            return Result.fail("必填参数不能为空");
+        }
+        if(pager.getPageNo() == null){
+            pager.setPageNo(1);
+        }
+        if(pager.getPageSize() == null){
+            pager.setPageSize(10);
+        }
+        Page<CollectBoxFlowDirectionConf> collectBoxFlowDirectionConfs = null;
+        try {
+            collectBoxFlowDirectionConfs = PageHelper.startPage(pager.getPageNo(), pager.getPageSize())
+                .doSelectPage(() -> collectBoxFlowDirectionConfMapper.select(pager.getSearchVo()));
+        } catch (Exception e) {
+            log.error("分页查询异常，参数:" + JSONObject.toJSONString(pager), e);
+        }
+        Pager<CollectBoxFlowDirectionConf> resultPager = new Pager<>();
+        if(collectBoxFlowDirectionConfs != null){
+            resultPager.setData(collectBoxFlowDirectionConfs.getResult());
+            resultPager.setTotal(collectBoxFlowDirectionConfs.getTotal());
+            resultPager.setPageNo(collectBoxFlowDirectionConfs.getPageNum());
+        }
+        result.setData(resultPager);
+        return result;
+    }
+
+    /**
+     * 更新现有的集包规则配置。
+     *
+     * @param conf 待更新的配置信息
+     * @return 更新结果
+     */
+    @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + ".CollectBoxFlowDirectionConfServiceImpl.updateCollectBoxFlowDirectionConf", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+    public Result<Boolean> updateCollectBoxFlowDirectionConf(CollectBoxFlowDirectionConf conf) {
+        Result<Boolean> result = new Result<>();
+        if (conf.getStartSiteId() == null || conf.getEndSiteId() == null || conf.getStartOrgId() == null
+            || conf.getEndOrgId() == null || conf.getFlowType() == null || conf.getTransportType() == null
+            || conf.getSupportDeputyReceiveSite() == null) {
+            return result.toFail("参数错误，不能为空");
+        }
+        int i = collectBoxFlowDirectionConfMapper.updateByPrimaryKeySelective(conf);
+        if (i != 1) {
+            return result.toFail("更新失败");
+        }
+        return result.success();
+    }
 }
