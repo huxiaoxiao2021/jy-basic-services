@@ -53,7 +53,7 @@ public class CollectBoxFlowDirectionConfJsfServiceImpl implements CollectBoxFlow
 
     @Autowired
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    BasicPrimaryWS basicPrimaryWS;
+    BasicPrimaryWS basicPrimary;
 
     /**
      * 根据ID查询集包规则配置。
@@ -284,8 +284,8 @@ public class CollectBoxFlowDirectionConfJsfServiceImpl implements CollectBoxFlow
      */
     private void updateDirectionConf(CollectBoxFlowDirectionConf conf) {
         // 通过调用getBaseSiteBySiteId方法查询始发站点和目的站点信息
-        BaseStaffSiteOrgDto startSiteInfo = basicPrimaryWS.getBaseSiteBySiteId(conf.getStartSiteId());
-        BaseStaffSiteOrgDto endSiteInfo = basicPrimaryWS.getBaseSiteBySiteId(conf.getEndSiteId());
+        BaseStaffSiteOrgDto startSiteInfo = basicPrimary.getBaseSiteBySiteId(conf.getStartSiteId());
+        BaseStaffSiteOrgDto endSiteInfo = basicPrimary.getBaseSiteBySiteId(conf.getEndSiteId());
         // 如果始发站点信息和省区编码不为空，则设置始发省区编码和名称
         if (Objects.nonNull(startSiteInfo) && null != startSiteInfo.getProvinceAgencyCode()) {
             conf.setStartProvinceAgencyCode(startSiteInfo.getProvinceAgencyCode());
