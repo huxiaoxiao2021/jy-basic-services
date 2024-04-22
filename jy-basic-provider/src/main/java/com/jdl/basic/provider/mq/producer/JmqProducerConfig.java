@@ -24,6 +24,9 @@ public class JmqProducerConfig {
 
     @Value("mq.topic.updateUserSchedule")
     private String updateUserSchedule;
+
+    @Value("${mq.topic.workStationGridDeleteMq}")
+    private String workStationGridDeleteMq;
     
     @Bean(name = "collectBoxFlowNoticeMQ")
     public DefaultJMQProducer collectBoxFlowNoticeMQ(){
@@ -49,6 +52,13 @@ public class JmqProducerConfig {
     public DefaultJMQProducer userScheduleUpdateMq() {
         DefaultJMQProducer mqProducer = new DefaultJMQProducer();
         mqProducer.setTopic(updateUserSchedule);
+        return mqProducer;
+    }
+
+    @Bean(name = "workStationGridDeleteMq")
+    public DefaultJMQProducer workStationGridDeleteMq() {
+        DefaultJMQProducer mqProducer = new DefaultJMQProducer();
+        mqProducer.setTopic(workStationGridDeleteMq);
         return mqProducer;
     }
 }

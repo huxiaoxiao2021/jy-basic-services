@@ -373,7 +373,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	 * @param deleteData
 	 * @return
 	 */
-	@Transactional
+	@Transactional(rollbackFor = {RuntimeException.class})
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.deleteById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> deleteById(WorkStationGrid deleteData){
 		Result<Boolean> result = Result.success();

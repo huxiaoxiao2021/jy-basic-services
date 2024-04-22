@@ -2,7 +2,10 @@ package com.jdl.basic.provider.workStation;
 
 import com.alibaba.fastjson.JSON;
 import com.jdl.basic.api.domain.workStation.WorkStation;
+import com.jdl.basic.api.domain.workStation.WorkStationGrid;
+import com.jdl.basic.api.service.workStation.WorkStationGridJsfService;
 import com.jdl.basic.api.service.workStation.WorkStationJsfService;
+import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.ApplicationLaunch;
 import org.junit.Test;
@@ -23,6 +26,9 @@ public class WorkStationJsfServiceTest {
 
     @Autowired
     private WorkStationJsfService workStationJsfService;
+
+    @Autowired
+    private WorkStationGridJsfService workStationGridJsfService;
 
     @Test
     public void queryByIdTest(){
@@ -48,5 +54,13 @@ public class WorkStationJsfServiceTest {
         ws.setBusinessLineCode("5");
         Result<Boolean> result = workStationJsfService.importDatas(Arrays.asList(ws));
         System.out.println(JSON.toJSONString(result));
+    }
+
+    @Test
+    public void testLock(){
+        WorkStationGrid workStationGrid = new WorkStationGrid();
+        workStationGrid.setBusinessKey("CDGX00000971431");
+        Result<Boolean> booleanResult = workStationGridJsfService.deleteById(workStationGrid);
+        System.out.println(JsonHelper.toJSONString(booleanResult));
     }
 }

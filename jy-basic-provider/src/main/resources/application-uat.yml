@@ -65,6 +65,7 @@ mq:
     workGridManagerTaskConfigMq: workGridManagerTaskConfigMq
     workGridModifyMq: workGridModifyMq
     updateUserSchedule: update_user_schedule
+    workStationGridDeleteMq: work_station_grid_retry_delete_uat
 
   consumer:
     topic:
@@ -73,6 +74,7 @@ mq:
       site_change: basic_base_site_change
       wmsSite_Change: basic_ps_storeinfo
       workGridModifyMq: workGridModifyMq
+      workStationGridDeleteMq: work_station_grid_retry_delete_uat
   jmq4producer:
     password: f0a10912179747fd9b31dd8e32c6009c
     app: JYBasic

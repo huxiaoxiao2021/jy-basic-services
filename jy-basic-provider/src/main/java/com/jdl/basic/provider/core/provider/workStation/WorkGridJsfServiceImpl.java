@@ -324,7 +324,7 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	public Result<Boolean> updateStatusByIds(UpdateRequest<WorkGrid> updateRequest) {
 		log.info("场地网格管理 updateStatusByIds 入参-{}", JSON.toJSONString(updateRequest));
 		final Result<Boolean> result = Result.success();
-		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_GRID_EDIT,DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
 			@Override
 			public void success() {
 				Result<Boolean> apiResult = workGridService.updateStatusByIds(updateRequest);
@@ -353,7 +353,7 @@ public class WorkGridJsfServiceImpl implements WorkGridJsfService {
 	public Result<Boolean> updatePassByIds(UpdateRequest<WorkGrid> updateRequest) {
 		log.info("场地网格管理 updatePassByIds 入参-{}", JSON.toJSONString(updateRequest));
 		final Result<Boolean> result = Result.success();
-		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
+		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_GRID_EDIT,DateHelper.FIVE_MINUTES_MILLI, new ResultHandler() {
 			@Override
 			public void success() {
 				Result<Boolean> apiResult = workGridService.updatePassByIds(updateRequest);

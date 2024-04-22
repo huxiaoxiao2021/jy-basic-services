@@ -3,14 +3,18 @@ package com.jdl.basic.provider.core.provider.workStation;
 
 import com.alibaba.fastjson.JSON;
 import com.jdl.basic.api.domain.workStation.*;
+import com.jdl.basic.api.enums.EditTypeEnum;
 import com.jdl.basic.api.service.workStation.WorkStationGridJsfService;
 import com.jdl.basic.common.contants.CacheKeyConstants;
+import com.jdl.basic.common.contants.ResultCodeConstant;
 import com.jdl.basic.common.utils.DateHelper;
+import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.provider.config.lock.LockService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
 import com.jdl.basic.provider.hander.ResultHandler;
+import com.jdl.basic.provider.mq.producer.DefaultJMQProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +41,10 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 	@Autowired
 	@Qualifier("jimdbRemoteLockService")
 	private LockService lockService;
+
+	@Autowired
+	@Qualifier("workStationGridDeleteMq")
+	DefaultJMQProducer workStationGridDeleteMq;
 
 	/**
 	 * 插入一条数据
@@ -108,7 +116,7 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 	public Result<Boolean> deleteById(final WorkStationGrid deleteData){
 		log.info("场地网格工序管理 deleteById 入参-{}", JSON.toJSONString(deleteData));
 		final Result<Boolean> result = Result.success();
-		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+		lockService.lock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
 			@Override
 			public void success() {
 				Result<Boolean> apiResult = workStationGridService.deleteById(deleteData);
@@ -121,7 +129,13 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 			}
 			@Override
 			public void fail() {
-				result.toFail("其他用户正在修改网格信息，请稍后操作！");
+				result.toFail("其他用户正在修改网格工序信息，请稍后操作！", ResultCodeConstant.LOCK_FAIL);
+				// 删除重试补偿
+				String refWorkGridKey = deleteData.getBusinessKey();
+				WorkStationGridDeleteMqData mqData = new WorkStationGridDeleteMqData();
+				mqData.setEditType(EditTypeEnum.DELETE.getCode());
+				mqData.setWorkStationGrid(deleteData);
+				workStationGridDeleteMq.sendOnFailPersistent(refWorkGridKey, JsonHelper.toJSONString(mqData));
 			}
 			@Override
 			public void error(Exception e) {
@@ -396,7 +410,7 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 	public Result<Boolean> updateStatusByIds(UpdateRequest<WorkStationGrid> updateRequest) {
 		log.info("场地网格工序管理 updateStatusByIds 入参-{}", JSON.toJSONString(updateRequest));
 		final Result<Boolean> result = Result.success();
-		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+		lockService.lock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
 			@Override
 			public void success() {
 				Result<Boolean> apiResult = workStationGridService.updateStatusByIds(updateRequest);
@@ -433,7 +447,7 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 	public Result<Boolean> updatePassByIds(UpdateRequest<WorkStationGrid> updateRequest) {
 		log.info("场地网格工序管理 updatePassByIds 入参-{}", JSON.toJSONString(updateRequest));
 		final Result<Boolean> result = Result.success();
-		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
+		lockService.lock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_EDIT,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
 			@Override
 			public void success() {
 				Result<Boolean> apiResult = workStationGridService.updatePassByIds(updateRequest);
@@ -446,7 +460,7 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 			}
 			@Override
 			public void fail() {
-				result.toFail("其他用户正在更新网格工序审批通过状态，请稍后操作！");
+				result.toFail("其他用户正在更新网格工序审批通过状态，请稍后操作！", ResultCodeConstant.LOCK_FAIL);
 			}
 			@Override
 			public void error(Exception e) {
