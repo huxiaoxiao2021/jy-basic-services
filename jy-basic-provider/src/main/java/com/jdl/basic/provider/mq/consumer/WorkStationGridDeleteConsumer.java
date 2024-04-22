@@ -1,6 +1,6 @@
 package com.jdl.basic.provider.mq.consumer;
 
-import com.jd.jmq.client.springboot.annotation.JmqListener;
+import com.jd.joyqueue.client.springboot2.annotation.JmqListener;
 import com.jd.jmq.common.message.Message;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
