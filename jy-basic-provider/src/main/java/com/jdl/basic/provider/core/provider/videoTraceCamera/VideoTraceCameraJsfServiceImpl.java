@@ -88,6 +88,7 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
     }
 
     @Override
+    @JProfiler(jKey = Constants.UMP_APP_NAME + "videoTraceCameraJsfService.cancelVideoTraceCameraConfig", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public int cancelVideoTraceCameraConfig(VideoTraceCameraConfig videoTraceCameraConfig) {
         //根据网格删除缓存
         delCameraConfigCache(videoTraceCameraConfig.getRefWorkGridKey());

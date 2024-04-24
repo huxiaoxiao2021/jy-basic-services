@@ -60,7 +60,7 @@
       and chute_code = #{chuteCode,jdbcType=VARCHAR}
     </if>
     <if test="supplyDwsCode != null and supplyDwsCode != ''" >
-      and supply_dws_code = #{cameraCode,jdbcType=VARCHAR}
+      and supply_dws_code = #{supplyDwsCode,jdbcType=VARCHAR}
     </if>
     <if test="masterCamera != null" >
       and master_camera = #{masterCamera,jdbcType=TINYINT}
