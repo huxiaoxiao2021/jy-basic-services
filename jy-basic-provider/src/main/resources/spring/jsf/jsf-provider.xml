@@ -381,6 +381,13 @@
                   server="jsf">
         <jsf:parameter key="token" value="${jsf.jy_basic.token}" hide="true" />
     </jsf:provider>
+
+    <jsf:provider id="videoTraceCameraJsfService"
+                  interface="com.jdl.basic.api.service.videoTraceCamera.VideoTraceCameraJsfService"
+                  ref="videoTraceCameraJsfServiceImpl"
+                  alias="${jsf.jy_basic.alias}"
+                  server="jsf">
+    </jsf:provider>
     <!-- 拣运工种配置 -->
     <jsf:provider id="jyJobTypeJsf"
                   timeout="${jsf.automatic.timeout}"

@@ -7,9 +7,9 @@ import java.util.List;
 
 public enum JyJobTypeEnum {
   FULL_TIME_LABORER(1,"正式工", Arrays.asList("A", "D", "L", "H", "U", "T")),
-  LABOR_DISPATCHER(2,"派遣工", Arrays.asList("E", "F", "K")),
+  LABOR_DISPATCHER(2,"派遣工", Arrays.asList("E", "F", "K", "I")),
   LABOR_OUTSOURCING(3,"外包工", Arrays.asList("B", "P")),
-  NO_FULL_TIME_LABORER(4,"临时工", Arrays.asList("G", "I")),
+  NO_FULL_TIME_LABORER(4,"临时工", Arrays.asList("G")),
 
   HOUR_WORKER(5,"小时工", Arrays.asList("Q", "R")),
 

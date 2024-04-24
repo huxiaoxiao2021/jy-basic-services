@@ -38,4 +38,6 @@ public class ResultCodeConstant {
     public static final int PARSE_EXCEPTION = 1503;
 
     public static final int IO_EXCEPTION = 1901;
+
+    public static final int LOCK_FAIL = 2001;
 }

@@ -7,9 +7,9 @@ import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.machine.Machine;
-import com.jdl.basic.api.domain.machine.WorkStationGridMachine;
 import com.jdl.basic.api.domain.position.PositionRecord;
 import com.jdl.basic.api.domain.tenant.JyConfigDictTenant;
+import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig;
 import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.enums.DictCodeEnum;
 import com.jdl.basic.api.enums.WorkSiteTypeEnum;
@@ -28,6 +28,7 @@ import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.machine.WorkStationGridMachineService;
 import com.jdl.basic.provider.core.service.position.PositionRecordService;
 import com.jdl.basic.provider.core.service.tenant.JyConfigDictTenantService;
+import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraConfigService;
 import com.jdl.basic.provider.core.service.workStation.WorkAbnormalGridBindingService;
 import com.jdl.basic.provider.core.service.workStation.WorkGridService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
@@ -90,6 +91,9 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 
 	@Resource
 	private JyConfigDictTenantService jyConfigDictTenantService;
+
+	@Autowired
+	private VideoTraceCameraConfigService videoTraceCameraConfigService;
 
 	/**
 	 * 插入一条数据
@@ -338,6 +342,8 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		}
 		setStationDataFromGrid(updateData,workGrid);
 		workStationGridDao.deleteById(updateData);
+		//工序网格删除时，同步删除摄像头配置数据
+		cancelCameraConfig(updateData.getRefWorkGridKey(),updateData.getRefStationKey());
 		updateData.setId(null);
 		result.setData(workStationGridDao.insert(updateData) == 1);
 
@@ -345,6 +351,16 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		invalidateWorkStationGridCache(oldData.getBusinessKey());
 
 		return result;
+	}
+
+    /**
+     * 工序网格删除时，同步删除摄像头配置数据
+     */
+	private void cancelCameraConfig(String workGridKey ,String workStationKey) {
+		VideoTraceCameraConfig videoTraceCameraConfig = new VideoTraceCameraConfig();
+		videoTraceCameraConfig.setRefWorkGridKey(workGridKey);
+		videoTraceCameraConfig.setRefWorkStationKey(workStationKey);
+		videoTraceCameraConfigService.cancelVideoTraceCameraConfig(videoTraceCameraConfig);
 	}
 
 	private void invalidateWorkStationGridCache(String businessKey) {
@@ -357,7 +373,7 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	 * @param deleteData
 	 * @return
 	 */
-	@Transactional
+	@Transactional(rollbackFor = {RuntimeException.class})
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.deleteById", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<Boolean> deleteById(WorkStationGrid deleteData){
 		Result<Boolean> result = Result.success();
@@ -366,7 +382,8 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			throw new RuntimeException("根据id:" + deleteData.getId() + "未查询到数据!");
 		}
 		result.setData(workStationGridDao.deleteById(deleteData) == 1);
-
+		//工序网格删除时，同步删除摄像头配置数据
+		cancelCameraConfig(queryResult.getData().getRefWorkGridKey(),queryResult.getData().getRefStationKey());
 		// 清除网格工序缓存
 		invalidateWorkStationGridCache(queryResult.getData().getBusinessKey());
 
@@ -494,6 +511,8 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 				if(!Objects.equals(workStationGridDao.deleteById(oldData), Constants.YN_YES)){
 					throw  new RuntimeException("根据id:" + oldData.getId() + "删除数据失败!");
 				}
+				//工序网格删除时，同步删除摄像头配置数据
+				cancelCameraConfig(oldData.getRefWorkGridKey(),oldData.getRefStationKey());
 				data.setBusinessKey(oldData.getBusinessKey());
 			}else {
 				data.setBusinessKey(generalBusinessKey());
@@ -647,6 +666,10 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 			}
 		}
 		result.setData(workStationGridDao.deleteByIds(deleteRequest) > 0);
+		//工序网格删除时，同步删除摄像头配置数据
+		for (WorkStationGrid workStationGrid : oldDataList) {
+			cancelCameraConfig(workStationGrid.getRefWorkGridKey(),workStationGrid.getRefStationKey());
+		}
 		List<String> refGridKeyList = new ArrayList<>();
 		for(WorkStationGrid oldData : oldDataList) {
 			// 同步删除岗位记录
@@ -814,6 +837,11 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 	}
 
 	@Override
+	public List<WorkStationGrid> queryListForRefWorkGridKeyList(WorkStationGridQuery query) {
+		return workStationGridDao.queryListForRefWorkGridKeyList(query);
+	}
+
+	@Override
 	public List<Integer> querySiteListForManagerScan(WorkStationGridQuery query) {
 		if(CollectionUtils.isEmpty(query.getAreaCodeList())) {
 			return new ArrayList<>();
@@ -897,5 +925,75 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		updateStationData.setUpdateUser(gridData.getUpdateUser());
 		updateStationData.setUpdateUserName(gridData.getUpdateUserName());
 		return workStationGridDao.syncWorkGridInfo(updateStationData);
+	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryWorkStationGridBySiteCode", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<List<WorkStationGrid>> queryWorkStationGridBySiteCode(WorkStationGridQuery query) {
+		Result<List<WorkStationGrid>> result = Result.success();
+		result.setData(workStationGridDao.queryWorkStationGridBySiteCode(query));
+		return result;
+	}
+
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryBusinessKeyByRefWorkGridKeys",
+			jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public List<String> queryBusinessKeyByRefWorkGridKeys(List<String> refWorkGridKeys){
+		return workStationGridDao.queryBusinessKeyByRefWorkGridKeys(refWorkGridKeys);
+	}
+
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.updateByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<Boolean> updateStatusByIds(UpdateRequest<WorkStationGrid> updateRequest) {
+		Result<Boolean> result = new Result<Boolean>().toSuccess();
+		if (Objects.isNull(updateRequest) || CollectionUtils.isEmpty(updateRequest.getDataList())){
+			result.toFail("场地网格工序状态更新数据不能为空！");
+			return result;
+		}
+		result.setData(workStationGridDao.updateStatusByIds(updateRequest) > 0);
+		return result;
+	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryHistoryPageList", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<PageDto<WorkStationGrid>> queryHistoryPageList(WorkStationGridQuery query) {
+		Result<PageDto<WorkStationGrid>> result = Result.success();
+		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
+		if(!checkResult.isSuccess()){
+			return Result.fail(checkResult.getMessage());
+		}
+		PageDto<WorkStationGrid> pageData = new PageDto<>(query.getPageNumber(), query.getPageSize());
+		Long totalCount = workStationGridDao.queryHistoryCount(query);
+		if(totalCount != null && totalCount > 0){
+			List<WorkStationGrid> grids = workStationGridDao.queryHistoryList(query);
+			// 查询关联的自动化设备
+			HashMap<String, List<Machine>> machineMap = machineService.getMachineListByRefGridKey(grids);
+			for (WorkStationGrid grid : grids) {
+				grid.setMachine(machineMap.get(grid.getBusinessKey()));
+			}
+			pageData.setResult(grids);
+			pageData.setTotalRow(totalCount.intValue());
+		}else {
+			pageData.setResult(new ArrayList<WorkStationGrid>());
+			pageData.setTotalRow(0);
+		}
+		result.setData(pageData);
+		return result;
+	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.updatePassByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<Boolean> updatePassByIds(UpdateRequest<WorkStationGrid> updateRequest) {
+		Result<Boolean> result = new Result<Boolean>().toSuccess();
+		if (Objects.isNull(updateRequest) || CollectionUtils.isEmpty(updateRequest.getDataList())){
+			result.toFail("场地网格工序审批通过状态更新数据不能为空！");
+			return result;
+		}
+		for (WorkStationGrid workStationGrid : updateRequest.getDataList()) {
+			workStationGridDao.updatePassById(workStationGrid);
+		}
+		return result;
 	}
 }

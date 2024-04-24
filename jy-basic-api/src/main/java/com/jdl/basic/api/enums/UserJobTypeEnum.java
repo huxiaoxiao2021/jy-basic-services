@@ -6,7 +6,7 @@ public enum UserJobTypeEnum {
   FULL_TIME_LABORER("A","全日制劳动合同工",1),
   LABOR_DISPATCHER("E","劳务派遣工",2),
   NEW_RESOURCE_SCHEDULE_WORKER("K","新源计划外包工",2),
-  NO_FULL_TIME_LABORER("I","非全日制劳动合同工",4),
+  NO_FULL_TIME_LABORER("I","非全日制劳动合同工",2),
   GENERAL_INTERN("D","普通实习生",1),
   APPRENTICE("L","见习生",1),
   PEAK_INTERN("G","高峰期实习生",4),

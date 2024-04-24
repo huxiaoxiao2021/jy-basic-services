@@ -250,6 +250,12 @@ public class UserJsfServiceImpl implements UserJsfService {
     }
 
     @Override
+    public Result<List<JyThirdpartyUser>> batchQueryJyThirdpartyUser(List<JyTpUserScheduleQueryDto> dtos) {
+        return Result.success(userService.batchQueryJyThirdpartyUser(dtos));
+    }
+
+
+    @Override
     public Result<JyThirdpartyUser> queryTpUserReserveInfo(JyTpUserScheduleQueryDto jyTpUserScheduleQueryDto) {
         return Result.success(thirdpartyUseService.queryTpUserReserveInfo(jyTpUserScheduleQueryDto));
     }

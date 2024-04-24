@@ -43,7 +43,9 @@
         <jdmeta-project-outer-api-sort.version>1.0-SNAPSHOT</jdmeta-project-outer-api-sort.version>
         <aces.version>3.0.1-SNAPSHOT</aces.version>
         <muliti-tenant-plugin-mybatis.version>1.0.1-SORTING-RELEASE</muliti-tenant-plugin-mybatis.version>
-        <tenant-jsf-filter-sdk.version>1.0.1-SORTING-RELEASE</tenant-jsf-filter-sdk.version>
+        <tenant-jsf-filter-sdk.version>1.0.2-SORTING-RELEASE</tenant-jsf-filter-sdk.version>
+        <!-- 多数据源配置 -->
+        <dynamic-datasource.version>3.4.1</dynamic-datasource.version>
     </properties>
 
     <!--配置环境的profile-->
@@ -338,6 +340,13 @@
                 <groupId>com.jdl.sorting.tech</groupId>
                 <artifactId>tenant-jsf-filter-sdk</artifactId>
                 <version>${tenant-jsf-filter-sdk.version}</version>
+            </dependency>
+
+            <!-- 多数据源配置 -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+                <version>${dynamic-datasource.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

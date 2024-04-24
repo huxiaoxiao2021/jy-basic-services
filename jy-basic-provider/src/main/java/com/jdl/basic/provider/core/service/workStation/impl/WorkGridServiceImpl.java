@@ -1,27 +1,14 @@
 package com.jdl.basic.provider.core.service.workStation.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.jd.jsf.gd.util.StringUtils;
 import com.jd.ql.basic.dto.BaseStaffSiteOrgDto;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.machine.Machine;
-import com.jdl.basic.api.domain.workStation.BatchAreaWorkGridQuery;
-import com.jdl.basic.api.domain.workStation.DeleteRequest;
-import com.jdl.basic.api.domain.workStation.WorkArea;
-import com.jdl.basic.api.domain.workStation.WorkGrid;
-import com.jdl.basic.api.domain.workStation.WorkGridBatchUpdateRequest;
-import com.jdl.basic.api.domain.workStation.WorkGridDeviceVo;
-import com.jdl.basic.api.domain.workStation.WorkGridEditVo;
-import com.jdl.basic.api.domain.workStation.WorkGridFlowDirection;
-import com.jdl.basic.api.domain.workStation.WorkGridFlowDirectionQuery;
-import com.jdl.basic.api.domain.workStation.WorkGridImport;
-import com.jdl.basic.api.domain.workStation.WorkGridModifyMqData;
-import com.jdl.basic.api.domain.workStation.WorkGridQuery;
-import com.jdl.basic.api.domain.workStation.WorkGridVo;
+import com.jdl.basic.api.domain.workStation.*;
 import com.jdl.basic.api.domain.workStation.WorkGridVo.FlowInfoItem;
 import com.jdl.basic.api.domain.workStation.WorkGridVo.WorkDataInfo;
-import com.jdl.basic.api.domain.workStation.WorkStationGrid;
-import com.jdl.basic.api.domain.workStation.WorkStationGridQuery;
 import com.jdl.basic.api.enums.ConfigFlowStatusEnum;
 import com.jdl.basic.api.enums.EditTypeEnum;
 import com.jdl.basic.api.enums.GridFlowLineTypeEnum;
@@ -56,15 +43,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 场地网格表--Service接口实现
@@ -292,6 +272,9 @@ public class WorkGridServiceImpl implements WorkGridService {
 	 * @return
 	 */
 	public Result<PageDto<WorkGridVo>> queryPageList(WorkGridQuery query){
+		if (log.isInfoEnabled()){
+			log.info("WorkGridServiceImpl.queryPageList 入参：{}", JsonHelper.toJSONString(query));
+		}
 		Result<PageDto<WorkGridVo>> result = Result.success();
 		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
 		if(!checkResult.isSuccess()){
@@ -363,6 +346,27 @@ public class WorkGridServiceImpl implements WorkGridService {
 		loadWorkInfo(voData);
 		return voData;
 	 }
+
+	@JProfiler(jKey = Constants.UMP_APP_NAME + "WorkGridServiceImpl.toWorkGridVoBatch", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public List<WorkGridVo> toWorkGridVoBatch(List<WorkGrid> list){
+		if (CollectionUtils.isEmpty(list)) {
+			return null;
+		}
+		List<WorkGridVo> voList = new ArrayList<>();
+		list.forEach(workGrid -> {
+			WorkGridVo workGridVo = new WorkGridVo();
+			BeanUtils.copyProperties(workGrid, workGridVo);
+			voList.add(workGridVo);
+		});
+		voList.forEach(e -> {
+			e.setConfigFlowStatusName(ConfigFlowStatusEnum.getNameByCode(e.getConfigFlowStatus()));
+		});
+		//特殊字段设置
+		loadFlowInfoBatch(voList);
+		loadWorkInfoBatch(voList);
+		return voList;
+	}
+
 	private void loadFlowInfo(WorkGridVo voData) {
 		if(voData == null) {
 			return;
@@ -373,6 +377,23 @@ public class WorkGridServiceImpl implements WorkGridService {
 		}
 		voData.setFlowInfo(queryFlowInfoByWorkGridKey(voData));
 	}
+
+	@JProfiler(jKey = Constants.UMP_APP_NAME + "WorkGridServiceImpl.loadFlowInfoBatch", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	private void loadFlowInfoBatch(List<WorkGridVo> voList) {
+		if (CollectionUtils.isEmpty(voList)) {
+			return;
+		}
+		List<String> areaCodes = voList.stream().map(WorkGridVo::getAreaCode).distinct().collect(Collectors.toList());
+		Map<String, WorkArea> areaMap = workAreaService.queryByAreaCodeListToMap(areaCodes);
+		voList.forEach(voData -> {
+			WorkArea area = areaMap.get(voData.getAreaCode());
+			if (area != null) {
+				voData.setFlowDirectionType(area.getFlowDirectionType());
+			}
+		});
+		queryFlowInfoByWorkGridKeyBatch(voList);
+	}
+
 	private void loadWorkInfo(WorkGridVo voData) {
 		if(voData == null) {
 			return;
@@ -423,6 +444,75 @@ public class WorkGridServiceImpl implements WorkGridService {
 		workDataInfo.setStandardNum(standardNum);
 		workDataInfo.setMachineList(machineList);
 	}
+
+	@JProfiler(jKey = Constants.UMP_APP_NAME + "WorkGridServiceImpl.loadWorkInfoBatch", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	private void loadWorkInfoBatch(List<WorkGridVo> voList) {
+		if(CollectionUtils.isEmpty(voList)) {
+			return;
+		}
+
+		// 批量处理 - 先查询所有的数据
+		WorkStationGridQuery query = new WorkStationGridQuery();
+		List<String> businessCodeList = voList.stream().map(WorkGridVo::getBusinessKey).distinct().collect(Collectors.toList());
+		query.setRefWorkGridKeyList(businessCodeList);
+		List<WorkStationGrid> list = workStationGridService.queryListForRefWorkGridKeyList(query);
+		Map<String,List<Machine>> machineMap = machineService.getMachineListByRefGridKey(list);
+
+		Map<String, List<WorkStationGrid>> map = Optional.ofNullable(list)
+				.orElse(new ArrayList<>()).stream().collect(Collectors.groupingBy(WorkStationGrid::getRefWorkGridKey));
+		// 遍历赋值
+		voList.forEach(voData -> {
+			WorkDataInfo workDataInfo = new WorkDataInfo();
+			voData.setWorkDataInfo(workDataInfo);
+			List<WorkStationGrid> workStationGridList = map.get(voData.getBusinessKey());
+			if(CollectionUtils.isEmpty(workStationGridList)) {
+				return;
+			}
+			workDataInfo.setWorkStationGridList(workStationGridList);
+			workDataInfo.setWorkStationGridNum(workStationGridList.size());
+			Collections.sort(workStationGridList,new Comparator<WorkStationGrid>() {
+				@Override
+				public int compare(WorkStationGrid o1, WorkStationGrid o2) {
+					Date o1Ts = o1.getTs();
+					Date o2Ts = o2.getTs();
+					if(o1Ts != null && o1Ts != null) {
+						return o2Ts.compareTo(o1Ts);
+					}
+					return 0;
+				}
+			});
+			Integer standardNum = 0;
+			List<Machine> machineList = new ArrayList<>();
+			Set<String> machineCodes = new HashSet<>();
+			for(WorkStationGrid workGrid : workStationGridList) {
+				if(workGrid.getStandardNum() != null) {
+					standardNum += workGrid.getStandardNum();
+				}
+			}
+
+			Set<String> businessKeySet = workStationGridList.stream().map(WorkStationGrid::getBusinessKey).collect(Collectors.toSet());
+			Map<String,List<Machine>> machineDatas = machineMap.entrySet().stream()
+					.filter(entry -> businessKeySet.contains(entry.getKey()))
+					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+			for(String k: machineDatas.keySet()) {
+				for(Machine machine: machineDatas.get(k)) {
+					if(!machineCodes.contains(machine.getMachineCode())) {
+						machineList.add(machine);
+						machineCodes.add(machine.getMachineCode());
+					}
+				}
+			}
+			WorkStationGrid data = workStationGridList.get(0);
+			workDataInfo.setDockCode(data.getDockCode());
+			workDataInfo.setSupplierCode(data.getSupplierCode());
+			workDataInfo.setSupplierName(data.getSupplierName());
+			workDataInfo.setOwnerUserErp(data.getOwnerUserErp());
+			workDataInfo.setStandardNum(standardNum);
+			workDataInfo.setMachineList(machineList);
+		});
+	}
+
 	/**
 	 * 查询流向配置信息，按线路类型分类返回map形式
 	 * @param workGridKey
@@ -457,6 +547,44 @@ public class WorkGridServiceImpl implements WorkGridService {
 		}
 		return flowInfo;
 	}
+
+	@JProfiler(jKey = Constants.UMP_APP_NAME + "WorkGridServiceImpl.queryFlowInfoByWorkGridKeyBatch", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	private void queryFlowInfoByWorkGridKeyBatch(List<WorkGridVo> voList){
+		WorkGridFlowDirectionQuery query = new WorkGridFlowDirectionQuery();
+		List<String> businessKeyList = voList.stream().map(WorkGridVo::getBusinessKey).distinct().collect(Collectors.toList());
+		List<Integer> flowDirectionTypeList = voList.stream().map(WorkGridVo::getFlowDirectionType).distinct().collect(Collectors.toList());
+		query.setRefWorkGridKeyList(businessKeyList);
+		query.setFlowDirectionTypeList(flowDirectionTypeList);
+		List<WorkGridFlowDirection> flowAllList = workGridFlowDirectionService.queryListForWorkGridVo(query);
+		if(CollectionUtils.isEmpty(flowAllList)) {
+			return;
+		}
+		voList.forEach(vo -> {
+			List<WorkGridFlowDirection> flowList = flowAllList.stream().filter(flow -> Objects.equals(flow.getRefWorkGridKey(), vo.getBusinessKey())
+					&& Objects.equals(flow.getFlowDirectionType(), vo.getFlowDirectionType())).collect(Collectors.toList());
+			Map<String,FlowInfoItem> flowInfo = new HashMap<>();
+			for(WorkGridFlowDirection item: flowList) {
+				String lineType = GridFlowLineTypeEnum.OTHER.getCode().toString();
+				if(item.getLineType() != null) {
+					GridFlowLineTypeEnum lineTypeEnum = GridFlowLineTypeEnum.getEnumByCode(item.getLineType());
+					if(lineTypeEnum != null) {
+						lineType = lineTypeEnum.getCode().toString();
+					}
+				}
+				FlowInfoItem flowInfoItem= flowInfo.get(lineType);
+				if(flowInfoItem == null) {
+					flowInfoItem = new FlowInfoItem();
+					flowInfoItem.setFlowList(new ArrayList<>());
+					flowInfoItem.setFlowNum(0);
+					flowInfo.put(lineType, flowInfoItem);
+				}
+				flowInfoItem.getFlowList().add(item);
+				flowInfoItem.setFlowNum(flowInfoItem.getFlowList().size());
+			}
+			vo.setFlowInfo(flowInfo);
+		});
+	}
+
 	@Transactional
 	@Override
 	public Result<WorkGrid> saveData(WorkGrid workGrid) {
@@ -500,6 +628,8 @@ public class WorkGridServiceImpl implements WorkGridService {
 		return result;
 	}
 	@Override
+	@DS("slave")
+	@JProfiler(jKey = Constants.UMP_APP_NAME + "WorkGridServiceImpl.queryListForExport", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	public Result<List<WorkGridVo>> queryListForExport(WorkGridQuery query) {
 		Result<List<WorkGridVo>> result = Result.success();
 		Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
@@ -508,10 +638,21 @@ public class WorkGridServiceImpl implements WorkGridService {
 		}
 		List<WorkGrid> dataList = workGridDao.queryList(query);
 	    List<WorkGridVo> voDataList = new ArrayList<WorkGridVo>();
-	    for (WorkGrid tmp : dataList) {
-	    	voDataList.add(this.toWorkGridVo(tmp));
-	    }
-	    loadDeviceInfo(voDataList);
+		// 批量处理数据 - 基础数据每条对应流数据最多300条，每10条遍历一次单次查询3000条
+		int batchSize = 10;
+		for (int i = 0; i < dataList.size(); i += batchSize) {
+			List<WorkGrid> batch = dataList.subList(i, Math.min(i + batchSize, dataList.size()));
+			// 在这里对每个批次的数据进行处理
+			voDataList.addAll(this.toWorkGridVoBatch(batch));
+		}
+
+		// 批量处理数据 - 每200条处理一次（查询设备信息接口单次最大支持查询200条）
+		int batchSizeResult = 200;
+		for (int i = 0; i < voDataList.size(); i += batchSizeResult) {
+			List<WorkGridVo> batch = voDataList.subList(i, Math.min(i + batchSizeResult, voDataList.size()));
+			// 在这里对每个批次的数据进行处理
+			loadDeviceInfo(batch);
+		}
 		result.setData(voDataList);
 		return result;
 	}
@@ -519,6 +660,7 @@ public class WorkGridServiceImpl implements WorkGridService {
 	 * 批量加载设备绑定信息
 	 * @param dataList
 	 */
+	@JProfiler(jKey = Constants.UMP_APP_NAME + "WorkGridServiceImpl.loadDeviceInfo", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
 	private void loadDeviceInfo(List<WorkGridVo> dataList) {
 		if(CollectionUtils.isEmpty(dataList)) {
 			return;
@@ -981,5 +1123,37 @@ public class WorkGridServiceImpl implements WorkGridService {
 	@Override
 	public WorkGrid queryByWorkGridKeyWithCache(String workGridKey) {
 		return workGridDao.queryByWorkGridKeyWithCache(workGridKey);
+	}
+
+
+	@Override
+	public List<WorkGrid> queryAreaInfo(WorkGrid workGrid) {
+		return workGridDao.queryAreaInfo(workGrid);
+	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridServiceImpl.updateStatusByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<Boolean> updateStatusByIds(UpdateRequest<WorkGrid> updateRequest) {
+		Result<Boolean> result = new Result<Boolean>().toSuccess();
+		if (Objects.isNull(updateRequest) || CollectionUtils.isEmpty(updateRequest.getDataList())){
+			result.toFail("场地网格状态更新数据不能为空！");
+			return result;
+		}
+		result.setData(workGridDao.updateStatusByIds(updateRequest) > 0);
+		return result;
+	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridServiceImpl.updatePassByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<Boolean> updatePassByIds(UpdateRequest<WorkGrid> updateRequest) {
+		Result<Boolean> result = new Result<Boolean>().toSuccess();
+		if (Objects.isNull(updateRequest) || CollectionUtils.isEmpty(updateRequest.getDataList())){
+			result.toFail("场地网格工序审批通过状态更新数据不能为空！");
+			return result;
+		}
+		for (WorkGrid workGrid : updateRequest.getDataList()) {
+			workGridDao.updatePassById(workGrid);
+		}
+		return result;
 	}
 }

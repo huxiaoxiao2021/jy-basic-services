@@ -112,4 +112,9 @@ public class WorkStationGridQuery extends BasePagerCondition {
 	 * 枢纽编码
 	 */
 	private String areaHubCode;
+
+	/**
+	 * 关联场地网格key:work_grid
+	 */
+	private List<String> refWorkGridKeyList;
 }

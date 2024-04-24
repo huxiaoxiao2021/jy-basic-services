@@ -23,11 +23,13 @@
     <result column="ts" jdbcType="TIMESTAMP" property="ts" />
     <result column="old_start_time" jdbcType="VARCHAR" property="oldStartTime" />
     <result column="old_end_time" jdbcType="VARCHAR" property="oldEndTime" />
+    <result column="valid_time" jdbcType="TIMESTAMP" property="validTime"/>
+    <result column="invalid_time" jdbcType="TIMESTAMP" property="invalidTime"/>
   </resultMap>
   <sql id="Base_Column_List">
     id, work_grid_key, schedule_no, schedule_key, schedule_name, start_time, end_time,
     schedule_type, source_type, site_code, area_code, yn, create_time, update_time, create_user_erp, create_user_name, update_user_erp,
-    update_user_name, ts, old_start_time, old_end_time
+    update_user_name, ts, old_start_time, old_end_time, valid_time, invalid_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
@@ -247,6 +249,24 @@
     </foreach>
   </update>
 
+  <update id="batchDeleteByScheduleKey">
+    update      work_grid_schedule
+    set         yn = 0,
+                update_user_erp = #{updateUserErp},
+                update_user_name = #{updateUserName},
+                update_time = #{updateTime},
+    <trim prefix="invalid_time = case schedule_key" suffix="end">
+      <foreach collection="workGridSchedules" item="item">
+        when #{item.scheduleKey} then #{item.invalidTime}
+      </foreach>
+    </trim>
+    where       yn = 1
+    and         schedule_key in
+    <foreach collection="workGridSchedules" item="item" separator="," open="(" close=")">
+      #{item.scheduleKey}
+    </foreach>
+  </update>
+
   <insert id="batchInsert">
     insert into work_grid_schedule
     (
@@ -267,7 +287,8 @@
         update_user_erp,
         update_user_name,
         old_start_time,
-        old_end_time
+        old_end_time,
+        valid_time
     )
     values
     <foreach collection="workGridSchedules" item="item" separator=",">
@@ -289,7 +310,8 @@
         #{item.updateUserErp},
         #{item.updateUserName},
         #{item.oldStartTime},
-        #{item.oldEndTime}
+        #{item.oldEndTime},
+        #{item.validTime}
       )
     </foreach>
   </insert>
@@ -381,5 +403,11 @@
     and
         update_time <![CDATA[ >= ]]> #{updateTime}
     order by create_time asc
+  </select>
+
+  <select id="listAllScheduleIgnoreYn" resultMap="BaseResultMap">
+    select  <include refid="Base_Column_List"/>
+    from    work_grid_schedule
+    where   work_grid_key = #{workGridKey}
   </select>
 </mapper>

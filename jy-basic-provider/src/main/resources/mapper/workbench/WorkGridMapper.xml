@@ -37,6 +37,8 @@
 		<result column="update_time" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
 		<result column="yn" property="yn" javaType="java.lang.Integer" jdbcType="TINYINT" />
 		<result column="ts" property="ts" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+		<result column="delete_fail_message" property="deleteFailMessage" javaType="java.lang.String" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List" >
@@ -46,7 +48,7 @@
 		grid_name,area_code,area_name,standard_num,owner_user_erp,
 		dock_code,supplier_code,supplier_name,config_flow_user,config_flow_time,
 		config_flow_status,create_user,create_user_name,update_user,update_user_name,
-		create_time,update_time,yn,ts
+		create_time,update_time,yn,ts,status,delete_fail_message
 	</sql>
 
 	<insert id="insert" parameterType="com.jdl.basic.api.domain.workStation.WorkGrid" useGeneratedKeys="true" keyProperty="id">
@@ -155,6 +157,12 @@
 				<if test="ts != null" >
 					ts,
 				</if>
+				<if test="status != null" >
+					status,
+				</if>
+				<if test="deleteFailMessage != null" >
+					delete_fail_message,
+				</if>
 			</trim>
 			)
 			values
@@ -262,6 +270,12 @@
 				<if test="ts != null" >
 					#{ts,jdbcType=TIMESTAMP},
 				</if>
+				<if test="status != null" >
+					#{status,jdbcType=INTEGER},
+				</if>
+				<if test="deleteFailMessage != null" >
+					#{deleteFailMessage,jdbcType=VARCHAR},
+				</if>
 			</trim>
 			)
 	</insert>
@@ -368,6 +382,12 @@
 				<if test="ts != null" >
 					ts = #{ts,jdbcType=TIMESTAMP},
 				</if>
+				<if test="status != null" >
+					status = #{status,jdbcType=INTEGER},
+				</if>
+				<if test="deleteFailMessage != null" >
+					delete_fail_message = #{deleteFailMessage,jdbcType=VARCHAR},
+				</if>
 			</set>
 		where id = #{id,jdbcType=BIGINT}
 	</update>
@@ -454,6 +474,9 @@
 		from
 			work_grid t
 		<include refid="queryCondition"/>
+		<if test="yn != null and yn==0">
+			order by update_time desc
+		</if>
 		limit #{offset}, #{limit}
 	</select>
 
@@ -467,7 +490,15 @@
 
 	<sql id="queryCondition">
 		<where>
-			yn = 1
+			<if test="yn == null">
+				AND t.yn = 1
+			</if>
+			<if test="yn != null and yn==1">
+				AND t.yn = 1
+			</if>
+			<if test="yn != null and yn==0">
+				AND t.yn = #{yn,jdbcType=INTEGER} AND t.update_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+			</if>
             <if test="orgCode != null and orgCode != ''" >
                 and t.org_code = #{orgCode,jdbcType=INTEGER}
             </if>
@@ -770,4 +801,72 @@
 		order by t.id desc
 		limit 1
 	</select>
+
+	<select id="queryAreaInfo" parameterType="com.jdl.basic.api.domain.workStation.WorkGrid" resultMap="WorkGrid">
+		select
+		area_code,area_name
+		from
+		work_grid
+		where
+		yn = 1
+		<if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
+			and province_agency_code = #{provinceAgencyCode,jdbcType=VARCHAR}
+		</if>
+		<if test="areaHubCode != null and areaHubCode != ''" >
+			and area_hub_code = #{areaHubCode,jdbcType=VARCHAR}
+		</if>
+		<if test="siteCode != null and siteCode != ''" >
+			and site_code = #{siteCode,jdbcType=INTEGER}
+		</if>
+		<if test="siteType != null and siteType != ''" >
+			and site_type = #{siteType,jdbcType=INTEGER}
+		</if>
+		group by area_code
+	</select>
+
+	<update id="updateStatusByIds" parameterType="com.jdl.basic.api.domain.workStation.UpdateRequest">
+		update work_grid
+		set
+		<if test="operateUserCode != null" >
+			update_user = #{operateUserCode,jdbcType=VARCHAR},
+		</if>
+		<if test="operateUserName != null" >
+			update_user_name = #{operateUserName,jdbcType=VARCHAR},
+		</if>
+		<if test="operateTime != null" >
+			update_time = #{operateTime,jdbcType=TIMESTAMP},
+		</if>
+		<if test="deleteFailMessage != null" >
+			delete_fail_message = #{deleteFailMessage,jdbcType=VARCHAR},
+		</if>
+		status = #{targetStatus,jdbcType=INTEGER}
+		where yn = 1
+		and id in
+		<foreach collection="dataList" item="item" open="(" close=")" separator=",">
+			#{item.id,jdbcType=BIGINT}
+		</foreach>
+		<if test="sourceStatus != null and sourceStatus != ''" >
+			and status = #{sourceStatus,jdbcType=INTEGER}
+		</if>
+	</update>
+
+	<update id="updatePassById" parameterType="com.jdl.basic.api.domain.workStation.WorkGrid">
+		update work_grid
+		set
+		<if test="updateUser != null" >
+			update_user = #{updateUser,jdbcType=VARCHAR},
+		</if>
+		<if test="updateUserName != null" >
+			update_user_name = #{updateUserName,jdbcType=VARCHAR},
+		</if>
+		<if test="updateTime != null" >
+			update_time = #{updateTime,jdbcType=TIMESTAMP},
+		</if>
+		<if test="deleteFailMessage != null" >
+			delete_fail_message = #{deleteFailMessage,jdbcType=VARCHAR},
+		</if>
+		status = 3
+		where status = 2
+		and id = #{id,jdbcType=BIGINT}
+	</update>
 </mapper>
