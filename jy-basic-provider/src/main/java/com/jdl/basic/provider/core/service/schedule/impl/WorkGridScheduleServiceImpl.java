@@ -10,6 +10,7 @@ import com.jdl.basic.api.domain.schedule.*;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.DateHelper;
+import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.config.cache.CacheService;
 import com.jdl.basic.provider.config.ducc.DuccPropertyConfiguration;
@@ -200,6 +201,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         processValidateTimeAndInvalidTime(request);
 
         if (CollectionUtils.isNotEmpty(request.getDeleteWorkGridSchedule())) {
+            log.info("班次变更-删除班次数据:{}", JsonHelper.toJSONString(request.getDeleteWorkGridSchedule()));
             WorkGridScheduleBatchRequest deleteRequest = buildScheduleBatchRequest(request, request.getDeleteWorkGridSchedule());
             Result<Boolean> deleteResult = batchDeleteByScheduleKeyV2(deleteRequest);
             if (deleteResult.isFail()) {
@@ -208,6 +210,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         }
 
         if (CollectionUtils.isNotEmpty(request.getAddWorkGridSchedule())) {
+            log.info("班次变更-新增班次数据:{}", JsonHelper.toJSONString(request.getAddWorkGridSchedule()));
             WorkGridScheduleBatchRequest insertRequest = buildScheduleBatchRequest(request, request.getAddWorkGridSchedule());
             Result<Boolean> insertResult = batchInsert(insertRequest);
             if (insertResult.isFail()) {
@@ -218,7 +221,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         return result.setData(Boolean.TRUE);
     }
 
-    private void processValidateTimeAndInvalidTimeV2(WorkGridScheduleBatchUpdateRequest request) {
+    private void processValidateTimeAndInvalidTime(WorkGridScheduleBatchUpdateRequest request) {
         boolean hasAddSchedules = CollectionUtils.isNotEmpty(request.getAddWorkGridSchedule());
         boolean hasDeleteSchedules = CollectionUtils.isNotEmpty(request.getDeleteWorkGridSchedule());
 
@@ -255,61 +258,39 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         }
     }
 
-    private void processValidateTimeAndInvalidTime(WorkGridScheduleBatchUpdateRequest request) {
-        if (CollectionUtils.isEmpty(request.getAddWorkGridSchedule()) && CollectionUtils.isEmpty(request.getDeleteWorkGridSchedule())){
-            return;
-        }
 
-        if (CollectionUtils.isNotEmpty(request.getDeleteWorkGridSchedule())){
-            if (CollectionUtils.isNotEmpty(request.getAddWorkGridSchedule())){
-                for (WorkGridSchedule delete :request.getDeleteWorkGridSchedule()){
-                    WorkGridSchedule insert =checkDeleteScheduleIfExitsInsertScheduleList(delete ,request.getAddWorkGridSchedule());
-                    if (ObjectHelper.isNotNull(insert)){
-                        caculInvalidateTime(delete, insert);
-                    } else {
-                        caculInvalidateTime(delete);
-                    }
-                }
-            } else {
-                for (WorkGridSchedule delete :request.getDeleteWorkGridSchedule()){
-                    caculInvalidateTime(delete);
-                }
-            }
-        }
 
-        if (CollectionUtils.isNotEmpty(request.getAddWorkGridSchedule())){
-            if (CollectionUtils.isNotEmpty(request.getDeleteWorkGridSchedule())){
-                for (WorkGridSchedule insert :request.getAddWorkGridSchedule()){
-                    WorkGridSchedule delete =checkInsertScheduleIfExitsDeleteScheduleList(insert ,request.getDeleteWorkGridSchedule());
-                    if (ObjectHelper.isNotNull(insert)){
-                        caculValidateTime(insert, delete);
-                    } else {
-                        caculValidateTime(insert);
-                    }
-                }
-            } else {
-                for (WorkGridSchedule insert :request.getAddWorkGridSchedule()){
-                    caculValidateTime(insert);
-                }
-
-            }
-        }
-    }
-
+    /**
+     * 计算新网格的生效时间--变更场景
+     * @param insert 待插入的工作网格计划
+     * @param delete 待删除的工作网格计划
+     */
     private void caculValidateTime(WorkGridSchedule insert, WorkGridSchedule delete) {
     }
-
+    /**
+     * 计算新网格的生效时间--新增场景
+     * @param insert 待插入的工作网格计划
+     */
     private void caculValidateTime(WorkGridSchedule insert) {
     }
 
-    private WorkGridSchedule checkInsertScheduleIfExitsDeleteScheduleList(WorkGridSchedule insert, List<WorkGridSchedule> deleteWorkGridSchedule) {
-        return null;
-    }
 
+
+    /**
+     * 计算旧网格的失效时间-变更场景
+     * @param delete 需要删除的工作网格计划
+     * @param insert 需要插入的工作网格计划
+     */
     private void caculInvalidateTime(WorkGridSchedule delete, WorkGridSchedule insert) {
+
     }
 
+    /**
+     * 计算旧网格的失效时间-删除场景
+     * @param delete 需要删除的工作网格计划
+     */
     private void caculInvalidateTime(WorkGridSchedule delete) {
+
     }
 
     private static WorkGridSchedule checkIfExitsIntersection(WorkGridSchedule target ,List<WorkGridSchedule> workGridScheduleList) {
