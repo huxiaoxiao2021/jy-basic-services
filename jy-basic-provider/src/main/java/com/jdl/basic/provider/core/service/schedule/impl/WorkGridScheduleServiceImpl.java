@@ -3,13 +3,16 @@ package com.jdl.basic.provider.core.service.schedule.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.jd.dms.java.utils.sdk.base.Result;
+import com.jd.laf.config.ucc.configurator.UccConfigurator;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.schedule.*;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.DateHelper;
+import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.config.cache.CacheService;
+import com.jdl.basic.provider.config.ducc.DuccPropertyConfiguration;
 import com.jdl.basic.provider.core.dao.schedule.WorkGridScheduleDao;
 import com.jdl.basic.provider.core.service.schedule.WorkGridScheduleService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.print.DocFlavor;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -37,6 +41,9 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
 
     @Autowired
     CacheService jimdbCacheService;
+
+    @Autowired
+    private DuccPropertyConfiguration ducc;
 
 
     @Override
@@ -138,6 +145,9 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
     @Transactional
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridScheduleServiceImpl.batchUpdateWorkGridSchedule", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> batchUpdateWorkGridSchedule(WorkGridScheduleBatchUpdateRequest request) {
+        if (ducc.getSiteQueryDowngradeSwitch()){
+            return batchUpdateWorkGridScheduleV2(request);
+        }
         Result<Boolean> result = Result.success();
 
         if (StringUtils.isEmpty(request.getUpdateUserErp())) {
@@ -169,6 +179,155 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
             }
         }
         return result.setData(Boolean.TRUE);
+    }
+
+    public Result<Boolean> batchUpdateWorkGridScheduleV2(WorkGridScheduleBatchUpdateRequest request) {
+        Result<Boolean> result = Result.success();
+
+        if (StringUtils.isEmpty(request.getUpdateUserErp())) {
+            return result.toFail("updateUserErp不能为空！");
+        }
+        if (StringUtils.isEmpty(request.getUpdateUserName())) {
+            return result.toFail("updateUserName不能为空！");
+        }
+        if (request.getUpdateTime() == null) {
+            return result.toFail("修改时间不能为空！");
+        }
+
+        /**
+         * 计算生效和失效时间
+         */
+        processValidateTimeAndInvalidTime(request);
+
+        if (CollectionUtils.isNotEmpty(request.getDeleteWorkGridSchedule())) {
+            WorkGridScheduleBatchRequest deleteRequest = buildScheduleBatchRequest(request, request.getDeleteWorkGridSchedule());
+            Result<Boolean> deleteResult = batchDeleteByScheduleKeyV2(deleteRequest);
+            if (deleteResult.isFail()) {
+                log.warn("batchUpdateWorkGridSchedule 批量删除失败！" + deleteResult.getMessage());
+            }
+        }
+
+        if (CollectionUtils.isNotEmpty(request.getAddWorkGridSchedule())) {
+            WorkGridScheduleBatchRequest insertRequest = buildScheduleBatchRequest(request, request.getAddWorkGridSchedule());
+            Result<Boolean> insertResult = batchInsert(insertRequest);
+            if (insertResult.isFail()) {
+                log.warn("batchUpdateWorkGridSchedule 批量插入失败！" + insertResult.getMessage());
+                throw new RuntimeException(insertResult.getMessage());
+            }
+        }
+        return result.setData(Boolean.TRUE);
+    }
+
+    private void processValidateTimeAndInvalidTimeV2(WorkGridScheduleBatchUpdateRequest request) {
+        boolean hasAddSchedules = CollectionUtils.isNotEmpty(request.getAddWorkGridSchedule());
+        boolean hasDeleteSchedules = CollectionUtils.isNotEmpty(request.getDeleteWorkGridSchedule());
+
+        if (!hasAddSchedules && !hasDeleteSchedules) {
+            return;
+        }
+
+        if (hasDeleteSchedules) {
+            processSchedules(request.getDeleteWorkGridSchedule(), request.getAddWorkGridSchedule(), true);
+        }
+
+        if (hasAddSchedules) {
+            processSchedules(request.getAddWorkGridSchedule(), request.getDeleteWorkGridSchedule(), false);
+        }
+    }
+
+    private void processSchedules(List<WorkGridSchedule> primarySchedules, List<WorkGridSchedule> secondarySchedules, boolean isDelete) {
+        for (WorkGridSchedule primarySchedule : primarySchedules) {
+            WorkGridSchedule secondarySchedule =  checkIfExitsIntersection(primarySchedule, secondarySchedules);
+
+            if (ObjectHelper.isNotNull(secondarySchedule)) {
+                if (isDelete) {
+                    caculInvalidateTime(primarySchedule, secondarySchedule);
+                } else {
+                    caculValidateTime(primarySchedule, secondarySchedule);
+                }
+            } else {
+                if (isDelete) {
+                    caculInvalidateTime(primarySchedule);
+                } else {
+                    caculValidateTime(primarySchedule);
+                }
+            }
+        }
+    }
+
+    private void processValidateTimeAndInvalidTime(WorkGridScheduleBatchUpdateRequest request) {
+        if (CollectionUtils.isEmpty(request.getAddWorkGridSchedule()) && CollectionUtils.isEmpty(request.getDeleteWorkGridSchedule())){
+            return;
+        }
+
+        if (CollectionUtils.isNotEmpty(request.getDeleteWorkGridSchedule())){
+            if (CollectionUtils.isNotEmpty(request.getAddWorkGridSchedule())){
+                for (WorkGridSchedule delete :request.getDeleteWorkGridSchedule()){
+                    WorkGridSchedule insert =checkDeleteScheduleIfExitsInsertScheduleList(delete ,request.getAddWorkGridSchedule());
+                    if (ObjectHelper.isNotNull(insert)){
+                        caculInvalidateTime(delete, insert);
+                    } else {
+                        caculInvalidateTime(delete);
+                    }
+                }
+            } else {
+                for (WorkGridSchedule delete :request.getDeleteWorkGridSchedule()){
+                    caculInvalidateTime(delete);
+                }
+            }
+        }
+
+        if (CollectionUtils.isNotEmpty(request.getAddWorkGridSchedule())){
+            if (CollectionUtils.isNotEmpty(request.getDeleteWorkGridSchedule())){
+                for (WorkGridSchedule insert :request.getAddWorkGridSchedule()){
+                    WorkGridSchedule delete =checkInsertScheduleIfExitsDeleteScheduleList(insert ,request.getDeleteWorkGridSchedule());
+                    if (ObjectHelper.isNotNull(insert)){
+                        caculValidateTime(insert, delete);
+                    } else {
+                        caculValidateTime(insert);
+                    }
+                }
+            } else {
+                for (WorkGridSchedule insert :request.getAddWorkGridSchedule()){
+                    caculValidateTime(insert);
+                }
+
+            }
+        }
+    }
+
+    private void caculValidateTime(WorkGridSchedule insert, WorkGridSchedule delete) {
+    }
+
+    private void caculValidateTime(WorkGridSchedule insert) {
+    }
+
+    private WorkGridSchedule checkInsertScheduleIfExitsDeleteScheduleList(WorkGridSchedule insert, List<WorkGridSchedule> deleteWorkGridSchedule) {
+        return null;
+    }
+
+    private void caculInvalidateTime(WorkGridSchedule delete, WorkGridSchedule insert) {
+    }
+
+    private void caculInvalidateTime(WorkGridSchedule delete) {
+    }
+
+    private static WorkGridSchedule checkIfExitsIntersection(WorkGridSchedule target ,List<WorkGridSchedule> workGridScheduleList) {
+        for (WorkGridSchedule workGridSchedule : workGridScheduleList){
+            if (workGridSchedule.getScheduleKey().equals(target.getScheduleKey())){
+                return workGridSchedule;
+            }
+        }
+        return null;
+    }
+
+    private static WorkGridSchedule checkDeleteScheduleIfExitsInsertScheduleList(WorkGridSchedule delete ,List<WorkGridSchedule> addWorkGridSchedule) {
+        for (WorkGridSchedule insert : addWorkGridSchedule){
+            if (delete.getScheduleKey().equals(insert.getScheduleKey())){
+                return insert;
+            }
+        }
+        return null;
     }
 
     private WorkGridScheduleBatchRequest buildScheduleBatchRequest(WorkGridScheduleBatchUpdateRequest inputRequest, List<WorkGridSchedule> workGridSchedules) {
@@ -255,6 +414,28 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         }
 
         setInvalidTime(request.getWorkGridSchedules());
+
+        Boolean deleteResult = workGridScheduleDao.batchDeleteByScheduleKey(request);
+        if (!deleteResult) {
+            log.warn("WorkGridScheduleServiceImpl batchDeleteByScheduleKey 执行失败！");
+        }
+        List<String> workGridKeys = request.getWorkGridSchedules().stream().map(WorkGridSchedule::getWorkGridKey).distinct().collect(Collectors.toList());
+        delWorkGridScheduleCache(workGridKeys);
+        return result.setData(deleteResult);
+    }
+
+    public Result<Boolean> batchDeleteByScheduleKeyV2(WorkGridScheduleBatchRequest request) {
+        Result<Boolean> result = Result.success();
+        if (CollectionUtils.isEmpty(request.getWorkGridSchedules())) {
+            return result.toFail("班次key不能为空！");
+        }
+        if (StringUtils.isEmpty(request.getUpdateUserErp())) {
+            return result.toFail("修改人erp不能为空！");
+        }
+        if (request.getUpdateTime() == null) {
+            return result.toFail("修改时间不能为空！");
+        }
+
 
         Boolean deleteResult = workGridScheduleDao.batchDeleteByScheduleKey(request);
         if (!deleteResult) {
