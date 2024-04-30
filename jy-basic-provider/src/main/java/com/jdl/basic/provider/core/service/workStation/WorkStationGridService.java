@@ -248,4 +248,17 @@ public interface WorkStationGridService {
 	 * @return
 	 */
 	List<WorkStationGrid> queryListForRefWorkGridKeyList(WorkStationGridQuery query);
+
+    /**
+     * 根据工序业务主键查询场地网格工序
+     * @param query 查询条件
+     * @return 工作站网格列表
+     */
+	Result<List<WorkStationGrid>> queryListByRefStationKey(WorkStationGridQuery query);
+	/**
+	 * 根据id集合批量更新编制人数
+	 * @param updateRequest 更新请求对象
+	 * @return 更新后的工作站网格信息
+	 */
+	Result<Boolean> updateStandardNumByIds(UpdateRequest<WorkStationGrid> updateRequest);
 }

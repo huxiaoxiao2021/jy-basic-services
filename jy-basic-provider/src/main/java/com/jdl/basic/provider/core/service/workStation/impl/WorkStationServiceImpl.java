@@ -231,6 +231,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 		String workName = data.getWorkName();
 		String areaCode = data.getAreaCode();
 		String areaName = data.getAreaName();
+		Integer standardNum = data.getStandardNum();
 		if(!CheckHelper.checkStr("作业区ID", areaCode, 50, result).isSuccess()) {
 			return result;
 		}
@@ -241,6 +242,9 @@ public class WorkStationServiceImpl implements WorkStationService {
 			return result;
 		}
 		if(!CheckHelper.checkStr("工序名称", workName, 100, result).isSuccess()) {
+			return result;
+		}
+		if(!CheckHelper.checkInteger("编制人数", standardNum, result).isSuccess()) {
 			return result;
 		}
 		//业务条线必填

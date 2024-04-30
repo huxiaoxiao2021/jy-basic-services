@@ -996,4 +996,31 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		}
 		return result;
 	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryListByRefStationKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<List<WorkStationGrid>> queryListByRefStationKey(WorkStationGridQuery query) {
+		Result<List<WorkStationGrid>> result = Result.success();
+		List<WorkStationGrid> workStationGrids = workStationGridDao.queryListByRefStationKey(query);
+		result.setData(workStationGrids);
+		return result;
+	}
+
+	@Override
+	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.updateStandardNumByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
+	public Result<Boolean> updateStandardNumByIds(UpdateRequest<WorkStationGrid> updateRequest) {
+		Result<Boolean> result = new Result<Boolean>().toSuccess();
+		if (Objects.isNull(updateRequest) || CollectionUtils.isEmpty(updateRequest.getDataList())){
+			result.toFail("更新场地网格工序编制人数数据不能为空！");
+			return result;
+		}
+		try {
+			workStationGridDao.updateStandardNumByIds(updateRequest);
+		} catch (Exception e) {
+			log.error("WorkStationGridServiceImpl.updateStandardNumByIds 更新场地网格工序编制人数异常", e);
+			result.toFail("更新场地网格工序编制人数异常");
+			return result;
+		}
+		return result;
+	}
 }
