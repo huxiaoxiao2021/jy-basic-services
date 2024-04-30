@@ -3,7 +3,6 @@ package com.jdl.basic.provider.core.service.schedule.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.jd.dms.java.utils.sdk.base.Result;
-import com.jd.laf.config.ucc.configurator.UccConfigurator;
 import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.schedule.*;
@@ -25,7 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.print.DocFlavor;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -45,6 +47,9 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
 
     @Autowired
     private DuccPropertyConfiguration ducc;
+
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+
 
 
     @Override
@@ -266,12 +271,44 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
      * @param delete 待删除的工作网格计划
      */
     private void caculValidateTime(WorkGridSchedule insert, WorkGridSchedule delete) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalTime insertStartTime = LocalTime.parse(insert.getStartTime(), TIME_FORMATTER);
+        LocalTime deleteStartTime = LocalTime.parse(delete.getStartTime(), TIME_FORMATTER);
+        LocalTime deleteEndTime = LocalTime.parse(delete.getEndTime(), TIME_FORMATTER);
+        LocalDateTime oneHourLater = now.plusHours(1);
+
+        if (oneHourLater.toLocalTime().isBefore(deleteStartTime)) {
+            // 立即生效
+            insert.setValidTime(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()));
+        } else {
+            LocalDateTime validTime;
+            if (deleteEndTime.isAfter(insertStartTime)) {
+                // 若有交叉 新班次的生效时间是第三天班次的开始时间
+                validTime = LocalDateTime.of(now.toLocalDate().plusDays(2), insertStartTime);
+            } else {
+                // 若无交叉 则新班次的生效时间是第二天班次的开始时间
+                validTime = LocalDateTime.of(now.toLocalDate().plusDays(1), insertStartTime);
+            }
+            insert.setValidTime(Date.from(validTime.atZone(ZoneId.systemDefault()).toInstant()));
+        }
     }
     /**
      * 计算新网格的生效时间--新增场景
      * @param insert 待插入的工作网格计划
      */
     private void caculValidateTime(WorkGridSchedule insert) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalTime insertStartTime = LocalTime.parse(insert.getStartTime(), TIME_FORMATTER);
+        LocalDateTime oneHourLater = now.plusHours(1);
+
+        if (oneHourLater.toLocalTime().isBefore(insertStartTime)) {
+            // 立即生效
+            insert.setValidTime(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()));
+        } else {
+            // 第二天班次开始时间
+            LocalDateTime validTime = LocalDateTime.of(now.toLocalDate().plusDays(1), insertStartTime);
+            insert.setValidTime(Date.from(validTime.atZone(ZoneId.systemDefault()).toInstant()));
+        }
     }
 
 
