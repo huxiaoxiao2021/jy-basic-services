@@ -29,7 +29,18 @@ public class DuccPropertyConfiguration {
 
     @Value("${jyOrganizationCodeStr:}")
     private String jyOrganizationCodeStr;
-    
+
+    @Value("${updateWorkGridScheduleSwitch:910}")
+    private String updateWorkGridScheduleSwitch;
+
+    public String getUpdateWorkGridScheduleSwitch() {
+        return updateWorkGridScheduleSwitch;
+    }
+
+    public void setUpdateWorkGridScheduleSwitch(String updateWorkGridScheduleSwitch) {
+        this.updateWorkGridScheduleSwitch = updateWorkGridScheduleSwitch;
+    }
+
     public boolean getSiteQueryDowngradeSwitch() {
         return siteQueryDowngradeSwitch;
     }

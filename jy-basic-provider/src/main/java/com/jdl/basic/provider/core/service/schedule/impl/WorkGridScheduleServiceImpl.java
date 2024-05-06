@@ -24,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -31,6 +33,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static com.jdl.basic.common.contants.Constants.CONSTANT_SPECIAL_MARK_ASTERISK;
 
 @Slf4j
 @Service
@@ -151,7 +155,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
     @Transactional
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridScheduleServiceImpl.batchUpdateWorkGridSchedule", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> batchUpdateWorkGridSchedule(WorkGridScheduleBatchUpdateRequest request) {
-        if (ducc.getSiteQueryDowngradeSwitch()){
+        if (checkUpdateWorkGridScheduleSwitchV2(request)){
             return batchUpdateWorkGridScheduleV2(request);
         }
         Result<Boolean> result = Result.success();
@@ -185,6 +189,21 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
             }
         }
         return result.setData(Boolean.TRUE);
+    }
+
+    private boolean checkUpdateWorkGridScheduleSwitchV2(WorkGridScheduleBatchUpdateRequest request) {
+        if (CONSTANT_SPECIAL_MARK_ASTERISK.equals(ducc.getUpdateWorkGridScheduleSwitch())){
+            return true;
+        }
+        try {
+            List<String>  siteList  =Arrays.asList(ducc.getUpdateWorkGridScheduleSwitch().split(Constants.SEPARATOR_COMMA));
+            if (CollectionUtils.isNotEmpty(siteList) && ObjectHelper.isNotEmpty(request.getSiteCode()) && siteList.contains(String.valueOf(request.getSiteCode()))){
+                return true;
+            }
+        } catch (Exception e) {
+            log.error("checkUpdateWorkGridScheduleSwitchV2 err request:{},",JsonHelper.toJSONString(request),e);
+        }
+        return false;
     }
 
     public Result<Boolean> batchUpdateWorkGridScheduleV2(WorkGridScheduleBatchUpdateRequest request) {
@@ -278,12 +297,12 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         LocalDateTime oneHourLater = now.plusHours(1);
 
         if (oneHourLater.toLocalTime().isBefore(deleteStartTime)) {
-            // 立即生效
+            // 旧班次立即失效，新班次立即生效
             insert.setValidTime(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()));
         } else {
             LocalDateTime validTime;
             if (deleteEndTime.isAfter(insertStartTime)) {
-                // 若有交叉 新班次的生效时间是第三天班次的开始时间
+                // 若有交叉（旧班次结束时间 在新班次开始时间之后） 新班次的生效时间是第三天班次的开始时间
                 validTime = LocalDateTime.of(now.toLocalDate().plusDays(2), insertStartTime);
             } else {
                 // 若无交叉 则新班次的生效时间是第二天班次的开始时间
@@ -311,6 +330,17 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         }
     }
 
+    public static void main(String[] args) {
+        WorkGridSchedule insert =new WorkGridSchedule();
+        insert.setStartTime("15:00");
+        insert.setEndTime("18:00");
+        //caculValidateTime(insert);
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        System.out.println(format.format((insert.getValidTime())));
+
+    }
+
 
 
     /**
@@ -330,6 +360,12 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
 
     }
 
+    /**
+     * 校验是否存在交集
+     * @param target
+     * @param workGridScheduleList
+     * @return
+     */
     private static WorkGridSchedule checkIfExitsIntersection(WorkGridSchedule target ,List<WorkGridSchedule> workGridScheduleList) {
         for (WorkGridSchedule workGridSchedule : workGridScheduleList){
             if (workGridSchedule.getScheduleKey().equals(target.getScheduleKey())){
