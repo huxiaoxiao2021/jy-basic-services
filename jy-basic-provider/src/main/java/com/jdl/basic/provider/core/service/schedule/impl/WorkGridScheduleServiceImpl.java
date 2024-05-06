@@ -296,9 +296,15 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         LocalTime deleteEndTime = LocalTime.parse(delete.getEndTime(), TIME_FORMATTER);
         LocalDateTime oneHourLater = now.plusHours(1);
 
+        // 旧班次立即失效
         if (oneHourLater.toLocalTime().isBefore(deleteStartTime)) {
-            // 旧班次立即失效，新班次立即生效
-            insert.setValidTime(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()));
+            //新班次立即生效
+            if (oneHourLater.toLocalTime().isBefore(insertStartTime)){
+                insert.setValidTime(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()));
+            }else {
+                LocalDateTime validTime = LocalDateTime.of(now.toLocalDate().plusDays(1), insertStartTime);
+                insert.setValidTime(Date.from(validTime.atZone(ZoneId.systemDefault()).toInstant()));
+            }
         } else {
             LocalDateTime validTime;
             if (deleteEndTime.isAfter(insertStartTime)) {
