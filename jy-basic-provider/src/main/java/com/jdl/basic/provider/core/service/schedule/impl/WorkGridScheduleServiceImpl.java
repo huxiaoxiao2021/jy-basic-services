@@ -363,7 +363,26 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
      * @param delete 需要删除的工作网格计划
      */
     private void caculInvalidateTime(WorkGridSchedule delete) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime oneHourLater = now.plusHours(1);
+        LocalTime startTime = LocalTime.parse(delete.getStartTime(), TIME_FORMATTER);
+        LocalTime endTime = LocalTime.parse(delete.getEndTime(), TIME_FORMATTER);
 
+        LocalDateTime invalidateTime;
+        if (oneHourLater.toLocalTime().isBefore(startTime)) {
+            // 班次的失效时间就是当前时间
+            invalidateTime = now;
+        } else {
+            // 判断班次是否跨夜
+            if (endTime.isBefore(startTime)) {
+                // 跨夜，失效时间就是第二天的班次结束时间
+                invalidateTime = LocalDateTime.of(now.toLocalDate().plusDays(1), endTime);
+            } else {
+                // 不跨夜，失效时间就是当天的班次结束时间
+                invalidateTime = LocalDateTime.of(now.toLocalDate(), endTime);
+            }
+        }
+        delete.setInvalidTime(Date.from(invalidateTime.atZone(ZoneId.systemDefault()).toInstant()));
     }
 
     /**
