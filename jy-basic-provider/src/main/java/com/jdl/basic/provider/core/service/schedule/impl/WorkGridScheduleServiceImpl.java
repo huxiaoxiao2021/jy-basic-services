@@ -355,7 +355,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
      * @param insert 需要插入的工作网格计划
      */
     private void caculInvalidateTime(WorkGridSchedule delete, WorkGridSchedule insert) {
-
+        caculInvalidateTime(delete);
     }
 
     /**
