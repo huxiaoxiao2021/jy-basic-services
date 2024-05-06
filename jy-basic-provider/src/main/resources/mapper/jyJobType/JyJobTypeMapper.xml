@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jdl.basic.provider.core.dao.jyJobType.JyJobTypeDao">
+
+    <resultMap id="JobType" type="com.jdl.basic.api.domain.jyJobType.JyJobType">
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <result column="name" property="name" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="code" property="code" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+        <result column="status" property="status" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+        <result column="belong" property="belong" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="photo_support" property="photoSupport" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+        <result column="auto_sign_out_hour" property="autoSignOutHour" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result column="sort" property="sort" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result column="create_user" property="createUser" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateUser" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        <result column="yn" property="yn" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+        <result column="ts" property="ts" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,code,status,belong,photo_support,
+        auto_sign_out_hour,sort,create_user,update_user,create_time,update_time,yn,ts
+    </sql>
+
+    <insert id="insert" parameterType="com.jdl.basic.api.domain.jyJobType.JyJobType" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into jy_job_type
+        (
+        <trim suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="belong != null">
+                belong,
+            </if>
+            <if test="photoSupport != null">
+                photo_support,
+            </if>
+            <if test="autoSignOutHour != null">
+                auto_sign_out_hour,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="updateUser != null">
+                update_user,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="yn != null">
+                yn,
+            </if>
+            <if test="ts != null">
+                ts,
+            </if>
+        </trim>
+        )
+        values
+        (
+        <trim suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="belong != null">
+                #{belong,jdbcType=VARCHAR},
+            </if>
+            <if test="photoSupport != null">
+                #{photoSupport,jdbcType=TINYINT},
+            </if>
+            <if test="autoSignOutHour != null">
+                #{autoSignOutHour,jdbcType=INTEGER},
+            </if>
+            <if test="sort != null">
+                #{sort,jdbcType=INTEGER},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="yn != null">
+                #{yn,jdbcType=TINYINT},
+            </if>
+            <if test="ts != null">
+                #{ts,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+        )
+    </insert>
+
+    <update id="updateById" parameterType="com.jdl.basic.api.domain.jyJobType.JyJobType">
+        update jy_job_type
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="belong != null">
+                belong = #{belong,jdbcType=VARCHAR},
+            </if>
+            <if test="photoSupport != null">
+                photo_support = #{photoSupport,jdbcType=TINYINT},
+            </if>
+            <if test="autoSignOutHour != null">
+                auto_sign_out_hour = #{autoSignOutHour,jdbcType=INTEGER},
+            </if>
+            <if test="sort != null">
+                sort = #{sort,jdbcType=INTEGER},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="yn != null">
+                yn = #{yn,jdbcType=TINYINT},
+            </if>
+            <if test="ts != null">
+                ts = #{ts,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="deleteById" parameterType="com.jdl.basic.api.domain.jyJobType.JyJobType">
+        update jy_job_type
+        set
+        <if test="updateUser != null">
+            update_user = #{updateUser,jdbcType=VARCHAR},
+        </if>
+        <if test="updateTime != null">
+            update_time = #{updateTime,jdbcType=TIMESTAMP},
+        </if>
+        yn = 0
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="queryById" parameterType="java.lang.Long" resultMap="JobType">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        jy_job_type t
+        where yn = 1 and id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="queryList" parameterType="com.jdl.basic.api.domain.jyJobType.JyJobTypeQuery" resultMap="JobType">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        jy_job_type t
+        <include refid="queryCondition"/>
+        order by id
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="queryCount" parameterType="com.jdl.basic.api.domain.jyJobType.JyJobTypeQuery" resultType="long">
+        select
+        count(1)
+        from
+        jy_job_type t
+        <include refid="queryCondition"/>
+        order by sort
+    </select>
+
+    <sql id="queryCondition">
+        <where>
+            yn = 1
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%',#{name},'%')
+            </if>
+            <if test="status != null">
+                AND status = #{status,jdbcType=TINYINT}
+            </if>
+        </where>
+    </sql>
+
+    <select id="queryListByCondition" parameterType="com.jdl.basic.api.domain.jyJobType.JyJobType" resultMap="JobType">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        jy_job_type t
+        <where>
+            yn = 1
+            <if test="name != null and name != ''">
+                AND name = #{name,jdbcType=VARCHAR}
+
+            </if>
+            <if test="code != null">
+                AND code = #{code,jdbcType=TINYINT}
+            </if>
+            <if test="status != null">
+                AND status = #{status,jdbcType=TINYINT}
+            </if>
+            <if test="id != null">
+                AND id != #{id,jdbcType=TINYINT}
+            </if>
+        </where>
+        order by sort
+    </select>
+
+    <select id="queryALlList" resultMap="JobType">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        jy_job_type t
+        <where>
+            yn = 1
+        </where>
+        order by sort
+    </select>
+
+    <select id="queryAllAvailableList" resultMap="JobType">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        jy_job_type t
+        <where>
+            yn = 1
+            and status = 1
+        </where>
+        order by sort
+    </select>
+</mapper>

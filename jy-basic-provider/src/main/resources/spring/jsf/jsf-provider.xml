@@ -388,5 +388,13 @@
                   alias="${jsf.jy_basic.alias}"
                   server="jsf">
     </jsf:provider>
+    <!-- 拣运工种配置 -->
+    <jsf:provider id="jyJobTypeJsf"
+                  timeout="${jsf.automatic.timeout}"
+                  interface="com.jdl.basic.api.service.jyJobType.JyJobTypeJsfService"
+                  alias="${jsf.jy_basic.alias}"
+                  ref="jyJobTypeJsfService"
+                  server="jsf">
+    </jsf:provider>
 </beans>
 
