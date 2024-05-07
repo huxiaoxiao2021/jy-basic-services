@@ -2,6 +2,7 @@ package com.jdl.basic.provider.core.provider.videoTraceCamera;
 
 
 import com.jdl.basic.api.domain.videoTraceCamera.*;
+import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.api.service.videoTraceCamera.VideoTraceCameraJsfService;
 import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.common.utils.PageDto;
@@ -121,4 +122,54 @@ public class VideoTraceCameraJsfServiceTest {
         videoTraceCameraJsfService.saveOrUpdateCameraStatus(videoTraceCamera);
     }
 
+    @Test
+    public void exportCameraConfigByGridTest() {
+        WorkGridQuery query = new WorkGridQuery();
+
+        Result<List<CameraConfigExportVo>> listResult = videoTraceCameraJsfService.exportCameraConfigByGrid(query);
+        System.out.println(JsonHelper.toJSONString(listResult));
+    }
+
+
+    @Test
+    public void getBoundCameraInfoTest(){
+        VideoTraceCameraConfigQuery query = new VideoTraceCameraConfigQuery();
+        query.setWorkGridKey("CDWG00000022144");
+        query.setMachineCode("WZX-TEST-001");
+        Result<List<VideoTraceCameraConfigVo>> boundCameraInfo = videoTraceCameraJsfService.getBoundCameraInfo(query);
+        System.out.println(JsonHelper.toJSONString(boundCameraInfo));
+    }
+
+    @Test
+    public void getHisBoundCameraInfoTest(){
+        VideoTraceCameraConfigQuery query = new VideoTraceCameraConfigQuery();
+        query.setWorkGridKey("CDWG00000022144");
+        query.setMachineCode("WZX-TEST-001");
+        Result<List<VideoTraceCameraConfigVo>> boundCameraInfo = videoTraceCameraJsfService.getHisBoundCameraInfo(query);
+        System.out.println(JsonHelper.toJSONString(boundCameraInfo));
+    }
+    @Test
+    public void queryCameraInfoForBindingTest(){
+        VideoTraceCameraQuery query = new VideoTraceCameraQuery();
+        query.setSiteCode(910);
+        Result<List<VideoTraceCameraVo>> listResult = videoTraceCameraJsfService.queryCameraInfoForBinding(query);
+        System.out.println(JsonHelper.toJSONString(listResult));
+    }
+    @Test
+    public void saveConfigsTest(){
+        VideoTraceCameraConfigVo videoTraceCameraConfigVo = new VideoTraceCameraConfigVo();
+        videoTraceCameraConfigVo.setRefWorkGridKey("CDWG00000022144");
+        videoTraceCameraConfigVo.setMachineCode("WZX-TEST-001");
+        List<VideoTraceCameraConfig> list = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            VideoTraceCameraConfig config = new VideoTraceCameraConfig();
+            config.setRefWorkGridKey("CDWG00000022144");
+            config.setMachineCode("WZX-TEST-001");
+            config.setCameraId(i+166);
+            list.add(config);
+        }
+       videoTraceCameraConfigVo.setVideoTraceCameraConfigs(list);
+        Result<Boolean> booleanResult = videoTraceCameraJsfService.saveConfigs(videoTraceCameraConfigVo);
+        System.out.println(JsonHelper.toJSONString(booleanResult));
+    }
 }

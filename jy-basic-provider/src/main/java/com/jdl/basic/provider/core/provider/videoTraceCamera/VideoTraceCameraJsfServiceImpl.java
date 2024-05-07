@@ -5,6 +5,7 @@ import com.jd.ump.annotation.JProEnum;
 import com.jd.ump.annotation.JProfiler;
 import com.jdl.basic.api.domain.videoTraceCamera.*;
 import com.jdl.basic.api.domain.workStation.WorkGrid;
+import com.jdl.basic.api.domain.workStation.WorkGridQuery;
 import com.jdl.basic.api.service.videoTraceCamera.VideoTraceCameraJsfService;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.*;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -430,4 +430,49 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
         return videoTraceCameraService.deleteByIds(ids);
     }
 
+    @Override
+    public Result<List<CameraConfigExportVo>> exportCameraConfigByGrid(WorkGridQuery query) {
+        return videoTraceCameraService.exportCameraConfigByGrid(query);
+    }
+
+    @Override
+    public Result<PageDto<GridCameraBindingVo>> queryPageListWithWorkGrid(WorkGridQuery query) {
+        return videoTraceCameraService.queryPageListWithWorkGrid(query);
+    }
+
+    @Override
+    public List<GridCameraBindingVo> getWorkDeviceCameraData(String gridKey) {
+        return videoTraceCameraService.getWorkDeviceCameraData(gridKey);
+    }
+
+    @Override
+    public Result<List<VideoTraceCameraConfigVo>> getBoundCameraInfo(VideoTraceCameraConfigQuery query) {
+        if (StringUtils.isBlank(query.getWorkGridKey())){
+            return Result.fail("网格业务主键不能为空");
+        }
+        Result<List<VideoTraceCameraConfigVo>> result = Result.success();
+        return result.setData(videoTraceCameraService.getBoundCameraInfo(query));
+    }
+
+    @Override
+    public Result<List<VideoTraceCameraConfigVo>> getHisBoundCameraInfo(VideoTraceCameraConfigQuery query) {
+        if (StringUtils.isBlank(query.getWorkGridKey())){
+            return Result.fail("网格业务主键不能为空");
+        }
+        Result<List<VideoTraceCameraConfigVo>> result = Result.success();
+        return result.setData(videoTraceCameraService.getHisBoundCameraInfo(query));
+    }
+
+
+    @Override
+    public Result<List<VideoTraceCameraVo>> queryCameraInfoForBinding(VideoTraceCameraQuery query) {
+        Result<List<VideoTraceCameraVo>> result = Result.success();
+        return result.setData(videoTraceCameraService.queryCameraInfoForBinding(query));
+
+    }
+
+    @Override
+    public Result<Boolean> saveConfigs(VideoTraceCameraConfigVo videoTraceCameraConfigVo) {
+        return videoTraceCameraService.saveConfigs(videoTraceCameraConfigVo);
+    }
 }

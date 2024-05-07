@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Setter
 @Getter
@@ -61,4 +62,22 @@ public class VideoTraceCameraQuery extends BasePagerCondition implements Seriali
     private int id;
 
     private int pageSize;
+    /**
+     * 多个摄像头编码，逗号分割
+     */
+    private String cameraCodes;
+
+    /**
+     * 多个通道编码，逗号分割
+     */
+    private String nationalChannelCodes;
+    /**
+     * 摄像头编码
+     */
+    private List<String> cameraCodeList;
+
+    /**
+     * 通道编码
+     */
+    private List<String> nationalChannelCodeList;
 }

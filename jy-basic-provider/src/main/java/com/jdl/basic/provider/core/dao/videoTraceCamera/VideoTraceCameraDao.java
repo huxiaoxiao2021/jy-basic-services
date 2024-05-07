@@ -5,6 +5,7 @@ import com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraQuery;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 public interface VideoTraceCameraDao {
     int deleteById(VideoTraceCamera record);
@@ -31,4 +32,8 @@ public interface VideoTraceCameraDao {
     List<VideoTraceCamera> getByIds(@Param("ids")List<Integer> ids);
 
     int batchInsert(@Param("list") List<VideoTraceCamera> list);
+
+    List<VideoTraceCamera> queryCameraInfoForBinding(VideoTraceCameraQuery query);
+
+    void updateCameraConfigStatusBatch(@Param("ids") List<Integer> cameraIds, @Param("configStatus") byte configStatus);
 }
