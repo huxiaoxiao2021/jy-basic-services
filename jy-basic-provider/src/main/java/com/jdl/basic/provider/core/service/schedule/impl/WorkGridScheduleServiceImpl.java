@@ -156,6 +156,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridScheduleServiceImpl.batchUpdateWorkGridSchedule", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> batchUpdateWorkGridSchedule(WorkGridScheduleBatchUpdateRequest request) {
         if (checkUpdateWorkGridScheduleSwitchV2(request)){
+            log.info("batchUpdateWorkGridSchedule 切流量：{}",JsonHelper.toJSONString(request));
             return batchUpdateWorkGridScheduleV2(request);
         }
         Result<Boolean> result = Result.success();
@@ -192,6 +193,7 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
     }
 
     private boolean checkUpdateWorkGridScheduleSwitchV2(WorkGridScheduleBatchUpdateRequest request) {
+        log.info("checkUpdateWorkGridScheduleSwitchV2:{}",ducc.getUpdateWorkGridScheduleSwitch());
         if (CONSTANT_SPECIAL_MARK_ASTERISK.equals(ducc.getUpdateWorkGridScheduleSwitch())){
             return true;
         }
