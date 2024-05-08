@@ -61,6 +61,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -245,12 +246,17 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         siteQuery.setSubTypeList(siteQueryCondition.getSubTypes());
         if(StringUtils.isNotEmpty(siteQueryCondition.getSearchStr())){
             if(NumberHelper.isNumber(siteQueryCondition.getSearchStr())){
-                final long siteCode = Long.parseLong(siteQueryCondition.getSearchStr());
-                if(siteCode > Integer.MAX_VALUE || siteCode < Integer.MIN_VALUE){
+                long maxValue = Integer.MAX_VALUE;
+                try {
+                    BigInteger bigInteger = new BigInteger(siteQueryCondition.getSearchStr());
+                    if (bigInteger.compareTo(BigInteger.valueOf(maxValue)) <= 0) {
+                        siteQuery.setSiteCode(bigInteger.intValue());
+                    } else {
+                        siteQuery.setSiteName(siteQueryCondition.getSearchStr());
+                    }
+                } catch (NumberFormatException e) {
+                    logger.error("BaseSiteQueryServiceImpl.convertOutSiteQuery exception:", e);
                     siteQuery.setSiteName(siteQueryCondition.getSearchStr());
-                } else {
-                    // 数字，则根据站点id查询
-                    siteQuery.setSiteCode((int) siteCode);
                 }
             }else {
                 // 非数字则根据站点名称模糊查询
