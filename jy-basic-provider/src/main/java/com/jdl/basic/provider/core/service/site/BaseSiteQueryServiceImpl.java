@@ -425,12 +425,6 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
                             Constants.CONSTANT_SPECIAL_MARK_ASTERISK + subOverLength(siteQueryCondition.getSearchStr()) + Constants.CONSTANT_SPECIAL_MARK_ASTERISK))
                     .should(QueryBuilders.wildcardQuery(BasicSiteEsDto.SITE_NAME_PYM,
                             Constants.CONSTANT_SPECIAL_MARK_ASTERISK + subOverLength(siteQueryCondition.getSearchStr()) + Constants.CONSTANT_SPECIAL_MARK_ASTERISK));
-            if(NumberUtils.isNumber(siteQueryCondition.getSearchStr())){
-                final Long siteCodeQuery = NumberUtils.createLong(siteQueryCondition.getSearchStr());
-                if(siteCodeQuery >= Integer.MIN_VALUE && siteCodeQuery <= Integer.MAX_VALUE){
-                    searchShouldBuilder.should(QueryBuilders.termQuery(BasicSiteEsDto.SITE_CODE, siteCodeQuery));
-                }
-            }
             if(NumberHelper.isNumber(siteQueryCondition.getSearchStr())){
                 try {
                     BigInteger bigInteger = new BigInteger(siteQueryCondition.getSearchStr());
