@@ -571,8 +571,18 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         psStoreInfoRequest.setProvinceAgencyCode(siteQueryCondition.getProvinceAgencyCode());
         if(StringUtils.isNotEmpty(siteQueryCondition.getSearchStr())){
             if(NumberHelper.isNumber(siteQueryCondition.getSearchStr())){
-                // 数字，则根据站点id查询
-                psStoreInfoRequest.setDmsSiteId(Integer.valueOf(siteQueryCondition.getSearchStr()));
+                long maxValue = Integer.MAX_VALUE;
+                try {
+                    BigInteger bigInteger = new BigInteger(siteQueryCondition.getSearchStr());
+                    if (bigInteger.compareTo(BigInteger.valueOf(maxValue)) <= 0) {
+                        psStoreInfoRequest.setDmsSiteId(Integer.valueOf(siteQueryCondition.getSearchStr()));
+                    } else {
+                        psStoreInfoRequest.setSiteNamePym(siteQueryCondition.getSearchStr());
+                    }
+                } catch (NumberFormatException e) {
+                    logger.error("BaseSiteQueryServiceImpl.convertOutWareQuery exception:", e);
+                    psStoreInfoRequest.setSiteNamePym(siteQueryCondition.getSearchStr());
+                }
             }else {
                 // 非数字则根据站点名称模糊查询
                 psStoreInfoRequest.setSiteNamePym(siteQueryCondition.getSearchStr());
