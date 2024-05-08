@@ -255,7 +255,7 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
                         siteQuery.setSiteName(siteQueryCondition.getSearchStr());
                     }
                 } catch (NumberFormatException e) {
-                    logger.error("BaseSiteQueryServiceImpl.convertOutSiteQuery exception:", e);
+                    logger.error("BaseSiteQueryServiceImpl.convertOutSiteQuery exception {}", JsonHelper.toJSONString(siteQueryCondition), e);
                     siteQuery.setSiteName(siteQueryCondition.getSearchStr());
                 }
             }else {
@@ -431,6 +431,16 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
                     searchShouldBuilder.should(QueryBuilders.termQuery(BasicSiteEsDto.SITE_CODE, siteCodeQuery));
                 }
             }
+            if(NumberHelper.isNumber(siteQueryCondition.getSearchStr())){
+                try {
+                    BigInteger bigInteger = new BigInteger(siteQueryCondition.getSearchStr());
+                    if (bigInteger.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) <= 0) {
+                        searchShouldBuilder.should(QueryBuilders.termQuery(BasicSiteEsDto.SITE_CODE, bigInteger.intValue()));
+                    }
+                } catch (NumberFormatException e) {
+                    logger.error("BaseSiteQueryServiceImpl.createQueryCondition exception {}", JsonHelper.toJSONString(siteQueryCondition), e);
+                }
+            }
             boolQueryBuilder.filter(searchShouldBuilder);
         }
         return boolQueryBuilder;
@@ -575,12 +585,12 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
                 try {
                     BigInteger bigInteger = new BigInteger(siteQueryCondition.getSearchStr());
                     if (bigInteger.compareTo(BigInteger.valueOf(maxValue)) <= 0) {
-                        psStoreInfoRequest.setDmsSiteId(Integer.valueOf(siteQueryCondition.getSearchStr()));
+                        psStoreInfoRequest.setDmsSiteId(bigInteger.intValue());
                     } else {
                         psStoreInfoRequest.setSiteNamePym(siteQueryCondition.getSearchStr());
                     }
                 } catch (NumberFormatException e) {
-                    logger.error("BaseSiteQueryServiceImpl.convertOutWareQuery exception:", e);
+                    logger.error("BaseSiteQueryServiceImpl.convertOutWareQuery exception {}", JsonHelper.toJSONString(siteQueryCondition), e);
                     psStoreInfoRequest.setSiteNamePym(siteQueryCondition.getSearchStr());
                 }
             }else {
