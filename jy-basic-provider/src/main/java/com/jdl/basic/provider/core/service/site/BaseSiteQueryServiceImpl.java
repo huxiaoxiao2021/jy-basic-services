@@ -245,8 +245,13 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         siteQuery.setSubTypeList(siteQueryCondition.getSubTypes());
         if(StringUtils.isNotEmpty(siteQueryCondition.getSearchStr())){
             if(NumberHelper.isNumber(siteQueryCondition.getSearchStr())){
-                // 数字，则根据站点id查询
-                siteQuery.setSiteCode(Integer.valueOf(siteQueryCondition.getSearchStr()));
+                final long siteCode = Long.parseLong(siteQueryCondition.getSearchStr());
+                if(siteCode > Integer.MAX_VALUE || siteCode < Integer.MIN_VALUE){
+                    siteQuery.setSiteName(siteQueryCondition.getSearchStr());
+                } else {
+                    // 数字，则根据站点id查询
+                    siteQuery.setSiteCode((int) siteCode);
+                }
             }else {
                 // 非数字则根据站点名称模糊查询
                 siteQuery.setSiteName(siteQueryCondition.getSearchStr());
