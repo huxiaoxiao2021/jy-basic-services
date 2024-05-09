@@ -3,6 +3,7 @@ package com.jdl.basic.api.domain.videoTraceCamera;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class CameraConfigExportVo {
@@ -73,29 +74,14 @@ public class CameraConfigExportVo {
      */
     private String areaName;
 
-
-    /**
-     * 摄像头编码
-     */
-    private String cameraCode;
-
-    /**
-     * 通道号
-     */
-    private String nationalChannelCode;
-    /**
-     * 通道名称
-     */
-    private String nationalChannelName;
-
     /**
      * 关联网格key:work_grid
      */
-    private String refWorkGridKey;
+    private String workGridKey;
     /**
      * 关联工序ref：work_station业务主键
      */
-    private String refWorkStationKey;
+    private String workStationKey;
     /**
      * 自动化设备编码
      */
@@ -118,4 +104,6 @@ public class CameraConfigExportVo {
      * 工序名称
      */
     private String workName;
+
+    private List<VideoTraceCameraConfig> configVoList;
 }

@@ -70,4 +70,16 @@ public class VideoTraceCameraConfig implements Serializable {
      * 配置生效结束时间
      */
     private Date endEffectiveTime;
+    /**
+     * 摄像头编码
+     */
+    private String cameraCode;
+    /**
+     * 通道号
+     */
+    private String nationalChannelCode;
+    /**
+     * 通道名称
+     */
+    private String nationalChannelName;
 }

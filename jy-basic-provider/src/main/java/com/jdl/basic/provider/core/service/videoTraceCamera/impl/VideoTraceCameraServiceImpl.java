@@ -19,7 +19,6 @@ import com.jdl.basic.provider.core.dao.workStation.WorkStationDao;
 import com.jdl.basic.provider.core.manager.BaseMajorManager;
 import com.jdl.basic.provider.core.service.videoTraceCamera.VideoTraceCameraService;
 import com.jdl.basic.provider.core.service.workStation.WorkStationGridService;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -487,78 +486,116 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
 
     @Override
     public Result<List<CameraConfigExportVo>> exportCameraConfigByGrid(WorkGridQuery query) {
+        List<CameraConfigExportVo> cameraConfigExportVos = new ArrayList<>();
         Result<List<CameraConfigExportVo>> result = Result.success();
         Result<Boolean> checkResult = this.checkParamForQueryPageList(query);
         if (!checkResult.isSuccess()) {
             return Result.fail(checkResult.getMessage());
         }
         //查询网格数据
-        List<WorkGrid> dataList = workGridDao.queryList(query);
+        List<WorkGrid> workGridList = workGridDao.queryList(query);
+        List<String> gridKeys = workGridList.stream().map(WorkGrid::getBusinessKey).collect(Collectors.toList());
         //根据网格查询摄像头配置数据
-        List<VideoTraceCameraConfig> list = videoTraceCameraConfigDao.queryByGridKeys(dataList.stream().map(WorkGrid::getBusinessKey).collect(Collectors.toList()));
+        List<VideoTraceCameraConfig> configs = videoTraceCameraConfigDao.queryByGridKeys(gridKeys);
 
+        // 查询网格下工序
+        WorkStationGridQuery workStationGridQuery = new WorkStationGridQuery();
+        workStationGridQuery.setRefWorkGridKeyList(gridKeys);
+        List<WorkStationGrid> workStationGrids = workStationGridService.queryListForRefWorkGridKeyList(workStationGridQuery);
+
+        // 查询网格关联的自动化设备
+        BaseDmsAutoJsfResponse<List<DeviceGridDto>> deviceGrid = deviceConfigInfoJsfService.findDeviceGridByBusinessKey(null, gridKeys);
+
+
+        Map<String, List<VideoTraceCameraConfig>> configMapByGridKey = configs.stream().collect(Collectors.groupingBy(VideoTraceCameraConfig::getRefWorkGridKey));
+        Map<String, List<WorkStationGrid>> workStationMap = workStationGrids.stream().collect(Collectors.groupingBy(WorkStationGrid::getRefWorkGridKey));
+        Map<String, List<DeviceGridDto>> deviceGridMap = deviceGrid.getData().stream().collect(Collectors.groupingBy(DeviceGridDto::getBusinessKey));
+
+        for (WorkGrid workGrid : workGridList) {
+            List<VideoTraceCameraConfig> videoTraceCameraConfigs = configMapByGridKey.getOrDefault(workGrid.getBusinessKey(),Collections.emptyList());
+            //网格行数据
+            CameraConfigExportVo cameraConfigExportVo = BeanUtils.copy(workGrid, CameraConfigExportVo.class);
+            List<VideoTraceCameraConfig> collect = videoTraceCameraConfigs.stream()
+                    .filter(x -> StringUtils.isBlank(x.getRefWorkStationKey()) && StringUtils.isBlank(x.getMachineCode()))
+                    .collect(Collectors.toList());
+            cameraConfigExportVo.setConfigVoList(collect);
+            cameraConfigExportVos.add(cameraConfigExportVo);
+            //工序列数据
+            List<WorkStationGrid> workStationGridList = workStationMap.get(workGrid.getBusinessKey());
+            if (CollectionUtils.isNotEmpty(workStationGridList)){
+                List<CameraConfigExportVo> extracted = generateCameraConfigExportVoFromWorkStaion(workGrid, workStationGridList, videoTraceCameraConfigs);
+                cameraConfigExportVos.addAll(extracted);
+            }
+
+            //设备列数据
+            List<DeviceGridDto> deviceGrids = deviceGridMap.get(workGrid.getBusinessKey());
+
+            if (CollectionUtils.isNotEmpty(deviceGrids)){
+                List<CameraConfigExportVo> configExportVos = generateCameraConfigExportVoFromDevice(workGrid, videoTraceCameraConfigs, deviceGrids);
+                cameraConfigExportVos.addAll(configExportVos);
+            }
+
+        }
         //组装返回数据
-        List<CameraConfigExportVo> cameraConfigExportVos = generateCameraConfigExportVo(dataList, list);
-
         result.setData(cameraConfigExportVos);
         return result;
     }
 
-    /**
-     * 根据网格和摄像头配置组装导出数据
-     */
-    public List<CameraConfigExportVo> generateCameraConfigExportVo(List<WorkGrid> dataList, List<VideoTraceCameraConfig> list2) {
-        List<CameraConfigExportVo> result = new ArrayList<>();
-        Map<String, VideoTraceCameraConfig> cameraConfigMap = list2.stream().collect(Collectors.toMap(VideoTraceCameraConfig::getRefWorkGridKey, item -> item));
+    private static List<CameraConfigExportVo> generateCameraConfigExportVoFromDevice(WorkGrid workGrid, List<VideoTraceCameraConfig> videoTraceCameraConfigs, List<DeviceGridDto> deviceGrids) {
+        List<CameraConfigExportVo> cameraConfigExportVos = new ArrayList<>();
+        if (videoTraceCameraConfigs == null) {
+            videoTraceCameraConfigs = Collections.emptyList();
+        }
+        Map<String, List<VideoTraceCameraConfig>> configMapByGrid = videoTraceCameraConfigs
+                .stream().filter(x -> StringUtils.isNotBlank(x.getMachineCode()))
+                .collect(Collectors.groupingBy(x -> x.getMachineCode() + x.getChuteCode() + x.getSupplyDwsCode()));
 
-        for (WorkGrid workGrid : dataList) {
-            VideoTraceCameraConfig videoTraceCameraConfig = cameraConfigMap.get(workGrid.getBusinessKey());
-            CameraConfigExportVo cameraConfigExportVo = getCameraConfigExportVo(workGrid, videoTraceCameraConfig);
-            result.add(cameraConfigExportVo);
+        // 处理设备格数据
+        for (DeviceGridDto deviceGridDto : deviceGrids) {
+            String key = deviceGridDto.getMachineCode() + deviceGridDto.getChuteCode() + deviceGridDto.getSupplyNo();
+            List<VideoTraceCameraConfig> configsForDevice = configMapByGrid.getOrDefault(key, Collections.emptyList());
+            configMapByGrid.remove(key);
+            cameraConfigExportVos.add(createExportVo(workGrid, deviceGridDto.getMachineCode(), deviceGridDto.getChuteCode(), deviceGridDto.getSupplyNo(), configsForDevice));
         }
 
-        return result;
-    }
-
-    /**
-     * 导出数据赋值
-     */
-    private CameraConfigExportVo getCameraConfigExportVo(WorkGrid workGrid, VideoTraceCameraConfig videoTraceCameraConfig) {
-        CameraConfigExportVo cameraConfigExportVo = new CameraConfigExportVo();
-        cameraConfigExportVo.setProvinceAgencyCode(workGrid.getProvinceAgencyCode());
-        cameraConfigExportVo.setProvinceAgencyName(workGrid.getProvinceAgencyName());
-        cameraConfigExportVo.setAreaHubCode(workGrid.getAreaHubCode());
-        cameraConfigExportVo.setAreaHubName(workGrid.getAreaHubName());
-        cameraConfigExportVo.setSiteType(workGrid.getSiteType());
-        cameraConfigExportVo.setSiteTypeName(workGrid.getSiteTypeName());
-        cameraConfigExportVo.setSiteCode(workGrid.getSiteCode());
-        cameraConfigExportVo.setSiteName(workGrid.getSiteName());
-        cameraConfigExportVo.setFloor(workGrid.getFloor());
-        cameraConfigExportVo.setGridNo(workGrid.getGridNo());
-        cameraConfigExportVo.setGridCode(workGrid.getGridCode());
-        cameraConfigExportVo.setGridName(workGrid.getGridName());
-        cameraConfigExportVo.setAreaCode(workGrid.getAreaCode());
-        cameraConfigExportVo.setAreaName(workGrid.getAreaName());
-        if (videoTraceCameraConfig != null) {
-            VideoTraceCamera videoTraceCamera = videoTraceCameraDao.selectByPrimaryKey(videoTraceCameraConfig.getCameraId());
-            cameraConfigExportVo.setCameraCode(videoTraceCamera.getCameraCode());
-            cameraConfigExportVo.setNationalChannelCode(videoTraceCamera.getNationalChannelCode());
-            cameraConfigExportVo.setNationalChannelName(videoTraceCamera.getNationalChannelName());
-            cameraConfigExportVo.setRefWorkGridKey(videoTraceCameraConfig.getRefWorkGridKey());
-            cameraConfigExportVo.setMachineCode(videoTraceCameraConfig.getMachineCode());
-            cameraConfigExportVo.setChuteCode(videoTraceCameraConfig.getChuteCode());
-            cameraConfigExportVo.setSupplyDwsCode(videoTraceCameraConfig.getSupplyDwsCode());
-            if (StringUtils.isNotBlank(videoTraceCameraConfig.getRefWorkStationKey())) {
-                WorkStation workStation = workStationDao.queryByRealBusinessKey(videoTraceCameraConfig.getRefWorkStationKey());
-                if (workStation != null) {
-                    cameraConfigExportVo.setWorkCode(workStation.getWorkCode());
-                    cameraConfigExportVo.setWorkName(workStation.getWorkName());
-                }
+        // 处理剩余的设备配置
+        configMapByGrid.forEach((key, configs) -> {
+            if (!configs.isEmpty()) {
+                VideoTraceCameraConfig sampleConfig = configs.get(0);
+                cameraConfigExportVos.add(createExportVo(workGrid, sampleConfig.getMachineCode(), sampleConfig.getChuteCode(), sampleConfig.getSupplyDwsCode(), configs));
             }
-        }
+        });
 
-        return cameraConfigExportVo;
+        return cameraConfigExportVos;
     }
+
+    private static CameraConfigExportVo createExportVo(WorkGrid workGrid, String machineCode, String chuteCode, String supplyDwsCode, List<VideoTraceCameraConfig> configs) {
+        CameraConfigExportVo configExportVo = BeanUtils.copy(workGrid, CameraConfigExportVo.class);
+        configExportVo.setMachineCode(machineCode);
+        configExportVo.setChuteCode(chuteCode);
+        configExportVo.setSupplyDwsCode(supplyDwsCode);
+        configExportVo.setConfigVoList(configs);
+        return configExportVo;
+    }
+
+
+    private static List<CameraConfigExportVo> generateCameraConfigExportVoFromWorkStaion(WorkGrid workGrid, List<WorkStationGrid> workStationGridList, List<VideoTraceCameraConfig> videoTraceCameraConfigs) {
+        List<CameraConfigExportVo> cameraConfigExportVos = new ArrayList<>();
+        for (WorkStationGrid workStationGrid : workStationGridList) {
+            CameraConfigExportVo configExportVo = BeanUtils.copy(workGrid, CameraConfigExportVo.class);
+            configExportVo.setWorkName(workStationGrid.getWorkName());
+            configExportVo.setWorkCode(workStationGrid.getWorkCode());
+            if (CollectionUtils.isNotEmpty(videoTraceCameraConfigs)){
+                List<VideoTraceCameraConfig> collect1 = videoTraceCameraConfigs.stream()
+                        .filter(x -> Objects.equals(x.getRefWorkGridKey(), workStationGrid.getRefWorkGridKey()))
+                        .collect(Collectors.toList());
+                configExportVo.setConfigVoList(collect1);
+            }
+            cameraConfigExportVos.add(configExportVo);
+        }
+        return cameraConfigExportVos;
+    }
+
 
     /**
      * 查询参数校验
@@ -622,7 +659,11 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
      */
     @Override
     public List<VideoTraceCameraConfigVo> getBoundCameraInfo(VideoTraceCameraConfigQuery query) {
-            return getVideoTraceCameraConfigVos(getCameraInfo(query));
+        List<VideoTraceCameraConfigVo> videoTraceCameraConfigVos = getVideoTraceCameraConfigVos(getCameraInfo(query));
+        if (CollectionUtils.isNotEmpty(videoTraceCameraConfigVos)){
+            videoTraceCameraConfigVos.sort(Comparator.comparing(VideoTraceCameraConfigVo::getMasterCamera).reversed());
+        }
+        return videoTraceCameraConfigVos;
     }
 
     @Override
@@ -701,7 +742,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         videoTraceCameraVo.setNationalChannelCode(videoTraceCamera.getNationalChannelCode());
         videoTraceCameraVo.setNationalChannelName(videoTraceCamera.getNationalChannelName());
         videoTraceCameraVo.setId(videoTraceCamera.getId());
-        videoTraceCameraVo.setConfigStatus(videoTraceCameraVo.getConfigStatus());
+        videoTraceCameraVo.setConfigStatus(videoTraceCamera.getConfigStatus());
         return videoTraceCameraVo;
     }
 
@@ -838,22 +879,6 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     private GridCameraBindingVo getGridCameraBindingVo(WorkGrid workGrid, List<VideoTraceCameraConfig> videoTraceCameraConfigs) {
 
         GridCameraBindingVo gridCameraBindingVo = BeanUtils.copy(workGrid, GridCameraBindingVo.class);
-//        GridCameraBindingVo gridCameraBindingVo = new GridCameraBindingVo();
-//        gridCameraBindingVo.setTreeNodeLabel(workGrid.getGridName());
-//        gridCameraBindingVo.setTreeNodeKey(workGrid.getBusinessKey());
-//        gridCameraBindingVo.setGridBusinessKey(workGrid.getBusinessKey());
-//        gridCameraBindingVo.setGridCode(workGrid.getGridCode());
-//        gridCameraBindingVo.setGridName(workGrid.getGridName());
-//        gridCameraBindingVo.setAreaCode(workGrid.getAreaCode());
-//        gridCameraBindingVo.setAreaName(workGrid.getAreaName());
-//        gridCameraBindingVo.setProvinceAgencyCode(workGrid.getProvinceAgencyCode());
-//        gridCameraBindingVo.setProvinceAgencyName(workGrid.getProvinceAgencyName());
-//        gridCameraBindingVo.setAreaHubCode(workGrid.getAreaHubCode());
-//        gridCameraBindingVo.setAreaHubName(workGrid.getAreaHubName());
-//        gridCameraBindingVo.setSiteCode(workGrid.getSiteCode());
-//        gridCameraBindingVo.setSiteName(workGrid.getSiteName());
-//        gridCameraBindingVo.setFloor(workGrid.getFloor());
-//        gridCameraBindingVo.setGridNo(workGrid.getGridNo());
         gridCameraBindingVo.setHasChildren(true);
         if (CollectionUtils.isNotEmpty(videoTraceCameraConfigs)) {
             List<VideoTraceCameraConfigVo> configVos = getVideoTraceCameraConfigVos(videoTraceCameraConfigs);
