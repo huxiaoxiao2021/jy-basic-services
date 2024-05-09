@@ -394,9 +394,11 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
      * @return
      */
     private static WorkGridSchedule checkIfExitsIntersection(WorkGridSchedule target ,List<WorkGridSchedule> workGridScheduleList) {
-        for (WorkGridSchedule workGridSchedule : workGridScheduleList){
-            if (workGridSchedule.getScheduleKey().equals(target.getScheduleKey())){
-                return workGridSchedule;
+        if (CollectionUtils.isNotEmpty(workGridScheduleList)){
+            for (WorkGridSchedule workGridSchedule : workGridScheduleList){
+                if (workGridSchedule.getScheduleKey().equals(target.getScheduleKey())){
+                    return workGridSchedule;
+                }
             }
         }
         return null;
