@@ -642,7 +642,12 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
 
         // 转换网格数据为返回的对象
         List<GridCameraBindingVo> gridCameraBindingVos = dataList.stream()
-                .map(workGrid -> getGridCameraBindingVo(workGrid, cameraConfigMap.get(workGrid.getBusinessKey())))
+                .map(workGrid -> {
+                    GridCameraBindingVo gridCameraBindingVo = getGridCameraBindingVo(workGrid, cameraConfigMap.get(workGrid.getBusinessKey()));
+                    gridCameraBindingVo.setTreeNodeKey(workGrid.getBusinessKey());
+                    gridCameraBindingVo.setTreeNodeLabel(workGrid.getGridName());
+                    return gridCameraBindingVo;
+                })
                 .collect(Collectors.toList());
 
         // 设置分页结果并返回
@@ -758,6 +763,22 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
 
         List<VideoTraceCameraConfig> oldList = getCameraInfo(query);
         List<VideoTraceCameraConfig> newList = save.getVideoTraceCameraConfigs();
+        for (VideoTraceCameraConfig videoTraceCameraConfig : newList) {
+            videoTraceCameraConfig.setRefWorkGridKey(save.getRefWorkGridKey());
+            videoTraceCameraConfig.setRefWorkStationKey(save.getRefWorkStationKey());
+            videoTraceCameraConfig.setMachineCode(save.getMachineCode());
+            videoTraceCameraConfig.setChuteCode(save.getChuteCode());
+            videoTraceCameraConfig.setSupplyDwsCode(save.getSupplyDwsCode());
+            VideoTraceCameraQuery videoTraceCameraQuery = new VideoTraceCameraQuery();
+            videoTraceCameraQuery.setCameraCode(videoTraceCameraConfig.getCameraCode());
+            videoTraceCameraQuery.setNationalChannelCode(videoTraceCameraConfig.getNationalChannelCode());
+            List<VideoTraceCamera> videoTraceCameras = videoTraceCameraDao.queryByCondition(videoTraceCameraQuery);
+            if (CollectionUtils.isEmpty(videoTraceCameras)){
+                String errorMsg = String.format("保存摄像头配置失败，摄像头不存在,设备编号：{}，通道编号：{}", videoTraceCameraConfig.getCameraCode(), videoTraceCameraConfig.getNationalChannelCode());
+                return Result.fail(errorMsg);
+            }
+            videoTraceCameraConfig.setCameraId(videoTraceCameras.get(0).getId());
+        }
 
         // 分别过滤出新增和删除的配置
         List<VideoTraceCameraConfig> addList = filterConfigs(newList, oldList, save.getUpdateUserErp());
@@ -836,6 +857,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
                 GridCameraBindingVo newVo = getGridCameraBindingVo(workGrid, deviceConfigs);
                 newVo.setTreeNodeKey(datum.getMachineCode());
                 newVo.setTreeNodeLabel(datum.getMachineCode());
+                newVo.setMachineCode(datum.getMachineCode());
                 newVo.setHasChildren(false);
                 newVo.setChildren(new ArrayList<>());
                 return newVo;
@@ -849,6 +871,9 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
                             && Objects.equals(config.getChuteCode(), datum.getChuteCode()) && Objects.equals(config.getSupplyDwsCode(), datum.getSupplyNo()))
                     .collect(Collectors.toList());
             GridCameraBindingVo children = getGridCameraBindingVo(workGrid, childrenConfigs);
+            children.setMachineCode(datum.getMachineCode());
+            children.setChuteCode(StringUtils.isNotBlank(datum.getChuteCode()) ? datum.getChuteCode() : null);
+            children.setSupplyDwsCode(StringUtils.isNotBlank(datum.getSupplyNo()) ? datum.getSupplyNo() : null);
             children.setTreeNodeKey(StringUtils.isBlank(datum.getSupplyNo()) ? datum.getChuteCode() : datum.getSupplyNo());
             children.setTreeNodeLabel(StringUtils.isBlank(datum.getSupplyNo()) ? datum.getChuteCode() : datum.getSupplyNo());
             gridCameraBindingVo.getChildren().add(children);
@@ -858,11 +883,12 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         // 遍历工序，构建工序与摄像头的绑定关系
         List<GridCameraBindingVo> workStationCameraList = workStationGrids.stream().map(workStationGrid -> {
             List<VideoTraceCameraConfig> stationConfigs = allConfigs.stream()
-                    .filter(config -> workStationGrid.getRefStationKey().equals(config.getRefWorkGridKey()))
+                    .filter(config -> workStationGrid.getBusinessKey().equals(config.getRefWorkGridKey()))
                     .collect(Collectors.toList());
             GridCameraBindingVo stationVo = getGridCameraBindingVo(workGrid, stationConfigs);
             stationVo.setTreeNodeKey(workStationGrid.getBusinessKey());
             stationVo.setTreeNodeLabel(workStationGrid.getWorkName());
+            stationVo.setWorkStationKey(workStationGrid.getBusinessKey());
             return stationVo;
         }).collect(Collectors.toList());
 
@@ -879,6 +905,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     private GridCameraBindingVo getGridCameraBindingVo(WorkGrid workGrid, List<VideoTraceCameraConfig> videoTraceCameraConfigs) {
 
         GridCameraBindingVo gridCameraBindingVo = BeanUtils.copy(workGrid, GridCameraBindingVo.class);
+        gridCameraBindingVo.setGridBusinessKey(workGrid.getBusinessKey());
         gridCameraBindingVo.setHasChildren(true);
         if (CollectionUtils.isNotEmpty(videoTraceCameraConfigs)) {
             List<VideoTraceCameraConfigVo> configVos = getVideoTraceCameraConfigVos(videoTraceCameraConfigs);
