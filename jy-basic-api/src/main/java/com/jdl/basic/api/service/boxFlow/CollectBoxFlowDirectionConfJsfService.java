@@ -86,4 +86,9 @@ public interface CollectBoxFlowDirectionConfJsfService {
      * @return 返回操作是否成功。
      */
     Result<Boolean> batchUpdateCollectBoxFlowDirectionConf(String str);
+
+    /**
+     * 删除集包规则，只能删除集包要求为可混包的数据
+     */
+    Result<Boolean> deleteConfig(CollectBoxFlowDirectionConf conf);
 }

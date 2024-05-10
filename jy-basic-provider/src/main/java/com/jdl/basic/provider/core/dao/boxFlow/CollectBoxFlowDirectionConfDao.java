@@ -52,4 +52,5 @@ public interface CollectBoxFlowDirectionConfDao {
     List<CollectBoxFlowDirectionConf> selectPageById(@Param("id") Long id, @Param("collectClaim")Integer collectClaim,
                                                      @Param("version") String version);
 
+    int updateYnById(CollectBoxFlowDirectionConf record);
 }
