@@ -39,6 +39,7 @@ public class VideoTraceCameraConfigVo  implements Serializable {
      * 更新人
      */
     private String updateUserErp;
+    private String updateErp;
 
     /**
      * 主摄像头 1是 0否

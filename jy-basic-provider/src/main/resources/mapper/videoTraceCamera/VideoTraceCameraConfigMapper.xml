@@ -146,8 +146,7 @@
     <include refid="Base_Column_List" />
     from video_trace_camera_config
     where
-    status = 1
-    and yn = 1
+    yn = 1
     and camera_id in
     <foreach collection="cameraIds" item="cameraId" open="(" separator="," close=")">
       #{cameraId,jdbcType=INTEGER}

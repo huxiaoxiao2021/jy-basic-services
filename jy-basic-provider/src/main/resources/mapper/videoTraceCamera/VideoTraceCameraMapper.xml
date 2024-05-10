@@ -171,7 +171,7 @@
       <if test="nationalChannelCode != null and nationalChannelCode != ''" >
         and national_channel_code = #{nationalChannelCode,jdbcType=VARCHAR}
       </if>
-      <if test="siteCode != null and siteCode != ''" >
+      <if test="siteCode != null" >
         and site_code = #{siteCode,jdbcType=INTEGER}
       </if>
       <if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
@@ -179,9 +179,6 @@
       </if>
       <if test="areaHubCode != null and areaHubCode != ''" >
         and area_hub_code = #{areaHubCode,jdbcType=VARCHAR}
-      </if>
-      <if test="cameraCode != null and cameraCode != ''" >
-        and camera_code = #{cameraCode,jdbcType=VARCHAR}
       </if>
       <if test="configStatus != null" >
         and config_status = #{configStatus,jdbcType=TINYINT}
@@ -204,9 +201,6 @@
       <if test="siteCode != null and siteCode != ''" >
         and site_code = #{siteCode,jdbcType=INTEGER}
       </if>
-      <if test="cameraCode != null and cameraCode != ''" >
-        and camera_code = #{cameraCode,jdbcType=VARCHAR}
-      </if>
       <if test="configStatus != null" >
         and config_status = #{configStatus,jdbcType=TINYINT}
       </if>
@@ -218,8 +212,8 @@
       </if>
       <if test="cameraCodeList != null and cameraCodeList.size() != 0">
         and camera_code in
-        <foreach collection="cameraCodeList" item="cameraCode" open="(" separator="," close=")">
-          #{cameraCode,jdbcType=VARCHAR}
+        <foreach collection="cameraCodeList" item="cameraCodeItem" open="(" separator="," close=")">
+          #{cameraCodeItem,jdbcType=VARCHAR}
         </foreach>
       </if>
       limit 100

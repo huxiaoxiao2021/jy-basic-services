@@ -541,6 +541,9 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         return result;
     }
 
+    /**
+     * 导出，设备列数据组装
+     */
     private static List<CameraConfigExportVo> generateCameraConfigExportVoFromDevice(WorkGrid workGrid, List<VideoTraceCameraConfig> videoTraceCameraConfigs, List<DeviceGridDto> deviceGrids) {
         List<CameraConfigExportVo> cameraConfigExportVos = new ArrayList<>();
         if (videoTraceCameraConfigs == null) {
@@ -569,6 +572,14 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         return cameraConfigExportVos;
     }
 
+    /**
+     * 创建导出对象
+     * @param workGrid 工作网格
+     * @param machineCode 自动化设备码
+     * @param chuteCode 格口
+     * @param supplyDwsCode 供包台码
+     * @param configs 视频追踪摄像头配置列表
+     */
     private static CameraConfigExportVo createExportVo(WorkGrid workGrid, String machineCode, String chuteCode, String supplyDwsCode, List<VideoTraceCameraConfig> configs) {
         CameraConfigExportVo configExportVo = BeanUtils.copy(workGrid, CameraConfigExportVo.class);
         configExportVo.setMachineCode(machineCode);
@@ -579,6 +590,9 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     }
 
 
+    /**
+     * 导出，工序列数据组装
+     */
     private static List<CameraConfigExportVo> generateCameraConfigExportVoFromWorkStaion(WorkGrid workGrid, List<WorkStationGrid> workStationGridList, List<VideoTraceCameraConfig> videoTraceCameraConfigs) {
         List<CameraConfigExportVo> cameraConfigExportVos = new ArrayList<>();
         for (WorkStationGrid workStationGrid : workStationGridList) {
@@ -614,10 +628,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     }
 
     /**
-     * 根据工作网格查询分页列表及其绑定的摄像头配置信息。
-     *
-     * @param query 工作网格查询条件
-     * @return 分页展示的工作网格及其绑定的摄像头配置信息
+     * 根据网格查询分页列表及其绑定的摄像头配置信息。
      */
     @Override
     public Result<PageDto<GridCameraBindingVo>> queryPageListWithWorkGrid(WorkGridQuery query) {
@@ -630,6 +641,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             return result;
         }
         // 查询网格数据
+        query.setLimit(query.getPageSize());
         List<WorkGrid> dataList = workGridDao.queryList(query);
 
         // 查询网格摄像头配置数据
@@ -638,6 +650,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
 
         // 将摄像头配置数据按网格分组
         Map<String, List<VideoTraceCameraConfig>> cameraConfigMap = videoTraceCameraConfigs.stream()
+                .filter(x->StringUtils.isBlank(x.getMachineCode()) && StringUtils.isBlank(x.getRefWorkStationKey()))
                 .collect(Collectors.groupingBy(VideoTraceCameraConfig::getRefWorkGridKey));
 
         // 转换网格数据为返回的对象
@@ -695,6 +708,10 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         condition.setYn((byte) 0);
         return getVideoTraceCameraConfigVos(videoTraceCameraConfigDao.queryByCondition(condition));
     }
+    /**
+     * 根据查询条件获取绑定的摄像头配置信息。查询逻辑分为三种情况：仅根据网格查询、仅根据设备查询、根据工序、格口、供包台查询。
+     *
+     */
     private List<VideoTraceCameraConfig> getCameraInfo(VideoTraceCameraConfigQuery query){
         VideoTraceCameraConfig condition = new VideoTraceCameraConfig();
         condition.setRefWorkGridKey(query.getWorkGridKey());
@@ -723,6 +740,9 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
     public List<VideoTraceCameraVo> queryCameraInfoForBinding(VideoTraceCameraQuery query) {
         //查询摄像头信息
         List<VideoTraceCamera> videoTraceCameras = videoTraceCameraDao.queryCameraInfoForBinding(query);
+        if (CollectionUtils.isEmpty(videoTraceCameras)){
+            return Collections.emptyList();
+        }
         //根据查到的数据，查询配置信息
         VideoTraceCameraConfig videoTraceCameraConfig = new VideoTraceCameraConfig();
         videoTraceCameraConfig.setCameraIds(videoTraceCameras.stream().map(VideoTraceCamera::getId).collect(Collectors.toList()));
@@ -731,12 +751,13 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         List<VideoTraceCameraVo> videoTraceCameraVos = videoTraceCameras.stream().map(x-> convertVideoTraceCameraVo(x)).collect(Collectors.toList());
         //按网格对摄像头下绑定关系去重，构建返回对象
         for (VideoTraceCameraVo videoTraceCameraVo : videoTraceCameraVos) {
-            List<VideoTraceCameraConfig> distinctList = configMap.getOrDefault(videoTraceCameraVo.getId(), Collections.emptyList()).stream()
-                    .collect(Collectors.collectingAndThen(
-                            Collectors.toMap(VideoTraceCameraConfig::getRefWorkGridKey, config -> config, (existing, replacement) -> existing),
-                            map -> new ArrayList<>(map.values())
-                    ));
-            videoTraceCameraVo.setVideoTraceCameraConfigList(distinctList);
+            List<String> gridNames = configMap.getOrDefault(videoTraceCameraVo.getId(), Collections.emptyList())
+                    .stream().map(VideoTraceCameraConfig::getRefWorkGridKey).distinct()
+                    .map(x -> {
+                WorkGrid workGrid = workGridDao.queryByWorkGridKeyWithCache(x);
+                return workGrid.getGridName();
+            }).collect(Collectors.toList());
+            videoTraceCameraVo.setWorkGridNames(gridNames);
         }
         return videoTraceCameraVos;
     }
@@ -753,40 +774,34 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
 
     @Override
     public Result<Boolean> saveConfigs(VideoTraceCameraConfigVo save) {
-        // 初始化查询条件
-        VideoTraceCameraConfigQuery query = new VideoTraceCameraConfigQuery();
-        query.setWorkGridKey(save.getRefWorkGridKey());
-        query.setWorkStationKey(save.getRefWorkStationKey());
-        query.setMachineCode(save.getMachineCode());
-        query.setChuteCode(save.getChuteCode());
-        query.setSupplyDwsCode(save.getSupplyDwsCode());
 
-        List<VideoTraceCameraConfig> oldList = getCameraInfo(query);
-        List<VideoTraceCameraConfig> newList = save.getVideoTraceCameraConfigs();
-        for (VideoTraceCameraConfig videoTraceCameraConfig : newList) {
-            videoTraceCameraConfig.setRefWorkGridKey(save.getRefWorkGridKey());
-            videoTraceCameraConfig.setRefWorkStationKey(save.getRefWorkStationKey());
-            videoTraceCameraConfig.setMachineCode(save.getMachineCode());
-            videoTraceCameraConfig.setChuteCode(save.getChuteCode());
-            videoTraceCameraConfig.setSupplyDwsCode(save.getSupplyDwsCode());
-            VideoTraceCameraQuery videoTraceCameraQuery = new VideoTraceCameraQuery();
-            videoTraceCameraQuery.setCameraCode(videoTraceCameraConfig.getCameraCode());
-            videoTraceCameraQuery.setNationalChannelCode(videoTraceCameraConfig.getNationalChannelCode());
-            List<VideoTraceCamera> videoTraceCameras = videoTraceCameraDao.queryByCondition(videoTraceCameraQuery);
-            if (CollectionUtils.isEmpty(videoTraceCameras)){
-                String errorMsg = String.format("保存摄像头配置失败，摄像头不存在,设备编号：{}，通道编号：{}", videoTraceCameraConfig.getCameraCode(), videoTraceCameraConfig.getNationalChannelCode());
-                return Result.fail(errorMsg);
-            }
-            videoTraceCameraConfig.setCameraId(videoTraceCameras.get(0).getId());
+        // 获取之前已绑定数据
+        List<VideoTraceCameraConfig> oldList = getBoundCameraConfig(save);
+
+        //校验摄像头是否存在，构建要保存数据
+        Result<List<VideoTraceCameraConfig>> result = generateCameraConfig(save);
+        if (result.isFail()){
+            return Result.fail(result.getMessage());
         }
+        List<VideoTraceCameraConfig> newList = result.getData();
 
         // 分别过滤出新增和删除的配置
-        List<VideoTraceCameraConfig> addList = filterConfigs(newList, oldList, save.getUpdateUserErp());
-        List<VideoTraceCameraConfig> delList = filterConfigs(oldList, newList, save.getUpdateUserErp());
+        List<VideoTraceCameraConfig> addList = filterConfigs(newList, oldList, save.getUpdateErp());
+        List<VideoTraceCameraConfig> delList = filterConfigs(oldList, newList, save.getUpdateErp());
 
-        // 更新摄像头配置状态
-        updateCameraConfigStatus(addList, true);
-        updateCameraConfigStatus(delList, false);
+        if (!addList.isEmpty()) {
+            //校验，一个摄像头上绑定网格数量不能超过3个
+            Result<Boolean> errorMsg = checkCameraGridLimit(addList);
+            if (errorMsg != null) {
+                return errorMsg;
+            }
+        }
+
+        // 新增配置 更新摄像头配置状态
+        List<Integer> cameraIds = addList.stream().map(VideoTraceCameraConfig::getCameraId).collect(Collectors.toList());
+        if (!cameraIds.isEmpty()) {
+            videoTraceCameraDao.updateCameraConfigStatusBatch(cameraIds, (byte) 1);
+        }
 
         //保存新增配置
         if (!addList.isEmpty()) {
@@ -794,13 +809,95 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         }
         if (!delList.isEmpty()) {
             List<Integer> idsToDelete = delList.stream().map(VideoTraceCameraConfig::getId).collect(Collectors.toList());
-            videoTraceCameraConfigDao.batchDelete(idsToDelete, save.getUpdateUserErp());
+            videoTraceCameraConfigDao.batchDelete(idsToDelete, save.getUpdateErp());
+            //删除配置时更新摄像头配置状态
+            updateCameraConfigStatusWithDelConfig(delList);
         }
 
         // 清理缓存
         cacheService.del(getKey(save.getRefWorkGridKey()));
 
         return Result.success();
+    }
+
+    /**
+     * 删除配置时，更新对应摄像头配置状态
+     */
+    private void updateCameraConfigStatusWithDelConfig(List<VideoTraceCameraConfig> delList) {
+        VideoTraceCameraConfig videoTraceCameraConfig = new VideoTraceCameraConfig();
+        videoTraceCameraConfig.setCameraIds(delList.stream().map(VideoTraceCameraConfig::getCameraId).collect(Collectors.toList()));
+        List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigDao.queryValidByCameraIds(videoTraceCameraConfig);
+        List<Integer> delCameraIds = delList.stream().map(VideoTraceCameraConfig::getCameraId).collect(Collectors.toList());
+        List<Integer> existingCameraIds = videoTraceCameraConfigs.stream().map(VideoTraceCameraConfig::getCameraId).collect(Collectors.toList());
+        List<Integer> removedCameraIds = delCameraIds.stream().filter(x -> !existingCameraIds.contains(x)).collect(Collectors.toList());
+        if (!removedCameraIds.isEmpty()){
+            videoTraceCameraDao.updateCameraConfigStatusBatch(removedCameraIds, (byte) 0);
+        }
+    }
+
+    private Result<Boolean> checkCameraGridLimit(List<VideoTraceCameraConfig> addList) {
+        VideoTraceCameraConfig videoTraceCameraConfig = new VideoTraceCameraConfig();
+        videoTraceCameraConfig.setCameraIds(addList.stream().map(VideoTraceCameraConfig::getCameraId).collect(Collectors.toList()));
+        List<VideoTraceCameraConfig> videoTraceCameraConfigs = videoTraceCameraConfigDao.queryValidByCameraIds(videoTraceCameraConfig);
+        videoTraceCameraConfigs.addAll(addList);
+        Map<Integer, Set<String>> collect = videoTraceCameraConfigs.stream()
+                .collect(Collectors.toMap(
+                        VideoTraceCameraConfig::getCameraId,
+                        config -> {
+                            Set<String> workGridKeySet = new HashSet<>();
+                            workGridKeySet.add(config.getRefWorkGridKey());
+                            return workGridKeySet;
+                        },
+                        // 合并函数，处理相同cameraId的refWorkGridKey集合
+                        (set1, set2) -> {
+                            set1.addAll(set2);
+                            return set1;
+                        }
+                ));
+        for (Map.Entry<Integer, Set<String>> item : collect.entrySet()) {
+            if (item.getValue().size()>3){
+                VideoTraceCamera videoTraceCamera = videoTraceCameraDao.selectByPrimaryKey(item.getKey());
+                String errorMsg = String.format("保存摄像头配置失败，摄像头下绑定网格不能超过3个,设备编号：%s，通道编号：%s", videoTraceCamera.getCameraCode(), videoTraceCamera.getNationalChannelCode());
+                return Result.fail(errorMsg);
+            }
+        }
+        return null;
+    }
+
+    private Result<List<VideoTraceCameraConfig>> generateCameraConfig(VideoTraceCameraConfigVo save) {
+        List<VideoTraceCameraConfig> newList = save.getVideoTraceCameraConfigs();
+        for (VideoTraceCameraConfig videoTraceCameraConfig : newList) {
+            videoTraceCameraConfig.setRefWorkGridKey(save.getRefWorkGridKey());
+            videoTraceCameraConfig.setRefWorkStationKey(save.getRefWorkStationKey());
+            videoTraceCameraConfig.setMachineCode(save.getMachineCode());
+            videoTraceCameraConfig.setChuteCode(save.getChuteCode());
+            videoTraceCameraConfig.setSupplyDwsCode(save.getSupplyDwsCode());
+            if (videoTraceCameraConfig.getMasterCamera() == null){
+                videoTraceCameraConfig.setMasterCamera((byte) 0);
+            }
+            videoTraceCameraConfig.setStatus((byte) 1);
+            VideoTraceCameraQuery videoTraceCameraQuery = new VideoTraceCameraQuery();
+            videoTraceCameraQuery.setCameraCode(videoTraceCameraConfig.getCameraCode());
+            videoTraceCameraQuery.setNationalChannelCode(videoTraceCameraConfig.getNationalChannelCode());
+            List<VideoTraceCamera> videoTraceCameras = videoTraceCameraDao.queryByCondition(videoTraceCameraQuery);
+            if (CollectionUtils.isEmpty(videoTraceCameras)){
+                String errorMsg = String.format("保存摄像头配置失败，摄像头不存在,设备编号：%s，通道编号：%s", videoTraceCameraConfig.getCameraCode(), videoTraceCameraConfig.getNationalChannelCode());
+                return Result.fail(errorMsg);
+            }
+            videoTraceCameraConfig.setCameraId(videoTraceCameras.get(0).getId());
+        }
+        return Result.success(newList);
+    }
+
+    private List<VideoTraceCameraConfig> getBoundCameraConfig(VideoTraceCameraConfigVo save) {
+        VideoTraceCameraConfigQuery query = new VideoTraceCameraConfigQuery();
+        query.setWorkGridKey(save.getRefWorkGridKey());
+        query.setWorkStationKey(save.getRefWorkStationKey());
+        query.setMachineCode(save.getMachineCode());
+        query.setChuteCode(save.getChuteCode());
+        query.setSupplyDwsCode(save.getSupplyDwsCode());
+        List<VideoTraceCameraConfig> oldList = getCameraInfo(query);
+        return oldList;
     }
 
     /**
@@ -815,35 +912,37 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
                 }).collect(Collectors.toList());
     }
 
-    /**
-     * 修改摄像头配置状态
-     */
-    private void updateCameraConfigStatus(List<VideoTraceCameraConfig> list, boolean isAdd) {
-        List<Integer> cameraIds = list.stream().map(VideoTraceCameraConfig::getCameraId).collect(Collectors.toList());
-        if (!cameraIds.isEmpty()) {
-            videoTraceCameraDao.updateCameraConfigStatusBatch(cameraIds, isAdd ? (byte) 1 : (byte) 0);
-        }
-    }
+
 
 
     /**
-     * 获取工作设备与摄像头绑定的数据信息。
-     *
-     * @param gridKey 网格唯一标识符
-     * @return 返回包含工作设备与摄像头绑定信息的视图对象列表
+     * 获取工序、设备与摄像头绑定的数据信息。
      */
     @Override
     public List<GridCameraBindingVo> getWorkDeviceCameraData(String gridKey) {
         // 查询网格信息
         WorkGrid workGrid = workGridDao.queryByWorkGridKey(gridKey);
-        // 查询网格下工序
-        WorkStationGridQuery query = new WorkStationGridQuery();
-        List<WorkStationGrid> workStationGrids = workStationGridService.queryListForWorkGridVo(query);
+
         // 查询网格下绑定数据
         VideoTraceCameraConfig condition = new VideoTraceCameraConfig();
         condition.setRefWorkGridKey(gridKey);
         condition.setYn((byte) 1);
         List<VideoTraceCameraConfig> allConfigs = videoTraceCameraConfigDao.queryByCondition(condition);
+        List<GridCameraBindingVo> deviceGridCameraBindingVo = getStringGridCameraBindingVoMap(gridKey, allConfigs, workGrid);
+
+        // 遍历工序，构建工序与摄像头的绑定关系
+        List<GridCameraBindingVo> workStationCameraList = getGridCameraBindingVosByWorkStation(allConfigs, workGrid);
+
+        // 工序和绑定关系，构成最终结果
+        List<GridCameraBindingVo> result = new ArrayList<>(deviceGridCameraBindingVo);
+        result.addAll(workStationCameraList);
+        return result;
+    }
+
+    /**
+     * 构建页面设备网格列数据
+     */
+    private List<GridCameraBindingVo> getStringGridCameraBindingVoMap(String gridKey, List<VideoTraceCameraConfig> allConfigs, WorkGrid workGrid) {
         // 查询网格关联的设备
         BaseDmsAutoJsfResponse<List<DeviceGridDto>> deviceGrid = deviceConfigInfoJsfService.findDeviceGridByBusinessKey(gridKey, null);
         Map<String, GridCameraBindingVo> deviceCameraMap = new HashMap<>();
@@ -879,8 +978,17 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             gridCameraBindingVo.getChildren().add(children);
             gridCameraBindingVo.setHasChildren(true);
         }
+        return new ArrayList<>(deviceCameraMap.values());
+    }
 
-        // 遍历工序，构建工序与摄像头的绑定关系
+    /**
+     * 构建工序对应摄像头绑定列表,页面列表页展示
+     */
+    private List<GridCameraBindingVo> getGridCameraBindingVosByWorkStation( List<VideoTraceCameraConfig> allConfigs, WorkGrid workGrid) {
+        // 查询网格下工序
+        WorkStationGridQuery query = new WorkStationGridQuery();
+        query.setRefWorkGridKey(workGrid.getBusinessKey());
+        List<WorkStationGrid> workStationGrids = workStationGridService.queryListForWorkGridVo(query);
         List<GridCameraBindingVo> workStationCameraList = workStationGrids.stream().map(workStationGrid -> {
             List<VideoTraceCameraConfig> stationConfigs = allConfigs.stream()
                     .filter(config -> workStationGrid.getBusinessKey().equals(config.getRefWorkGridKey()))
@@ -891,11 +999,7 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             stationVo.setWorkStationKey(workStationGrid.getBusinessKey());
             return stationVo;
         }).collect(Collectors.toList());
-
-        // 工序和绑定关系，构成最终结果
-        List<GridCameraBindingVo> result = new ArrayList<>(deviceCameraMap.values());
-        result.addAll(workStationCameraList);
-        return result;
+        return workStationCameraList;
     }
 
 
