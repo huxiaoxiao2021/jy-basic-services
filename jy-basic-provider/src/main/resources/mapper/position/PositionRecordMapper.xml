@@ -50,8 +50,8 @@
         <result column="supplier_code" property="supplierCode" javaType="java.lang.String" jdbcType="VARCHAR" />
         <result column="supplier_name" property="supplierName" javaType="java.lang.String" jdbcType="VARCHAR" />
         <result column="ref_work_grid_key" property="refWorkGridKey" javaType="java.lang.String" jdbcType="VARCHAR" />
-		<result column="standard_num" property="standardNum" javaType="java.lang.String" jdbcType="VARCHAR" />
-		<result column="owner_user_erp" property="ownerUserErp" javaType="java.lang.Integer" jdbcType="TINYINT" />
+		<result column="standard_num" property="standardNum" javaType="java.lang.Integer" jdbcType="TINYINT" />
+		<result column="owner_user_erp" property="ownerUserErp" javaType="java.lang.String" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List" >
