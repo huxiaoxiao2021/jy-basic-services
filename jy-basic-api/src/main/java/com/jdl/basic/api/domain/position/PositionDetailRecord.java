@@ -120,4 +120,12 @@ public class PositionDetailRecord extends PositionRecord {
      * 枢纽名称
      */
     private String areaHubName;
+    /**
+     * 编制人数
+     */
+    private Integer standardNum;
+    /**
+     * 负责人erp
+     */
+    private String ownerUserErp;
 }
