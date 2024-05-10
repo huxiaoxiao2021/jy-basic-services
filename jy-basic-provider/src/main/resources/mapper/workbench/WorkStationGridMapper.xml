@@ -988,7 +988,7 @@
 		work_station_grid g
 		<include refid="joinSql"/>
 		where g.yn = 1
-		and	g.ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
+		and	g.ref_station_key = #{refWorkGridKey,jdbcType=VARCHAR}
 	</select>
 
 	<update id="updateStandardNumByIds" parameterType="com.jdl.basic.api.domain.workStation.UpdateRequest">
