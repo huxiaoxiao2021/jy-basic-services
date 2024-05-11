@@ -319,6 +319,7 @@ public class WorkStationServiceImpl implements WorkStationService {
 		updateRequest.setOperateUserCode(updateData.getUpdateUser());
 		updateRequest.setOperateUserName(updateData.getUpdateUserName());
 		updateRequest.setOperateTime(updateData.getUpdateTime());
+		updateRequest.setStandardNum(updateData.getStandardNum());
 		ArrayList<WorkStationGrid> list = new ArrayList<>();
 		for (WorkStationGrid workStationGrid : workStationGrids) {
 			WorkStationGrid wsg = new WorkStationGrid();
