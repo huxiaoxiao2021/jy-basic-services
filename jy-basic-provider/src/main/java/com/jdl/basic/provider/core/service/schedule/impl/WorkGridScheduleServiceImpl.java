@@ -310,8 +310,13 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         } else {
             LocalDateTime validTime;
             if (deleteEndTime.isAfter(insertStartTime)) {
-                // 若有交叉（旧班次结束时间 在新班次开始时间之后） 新班次的生效时间是第三天班次的开始时间
-                validTime = LocalDateTime.of(now.toLocalDate().plusDays(2), insertStartTime);
+                if (deleteEndTime.isBefore(deleteStartTime)){
+                    // 若有交叉 且跨夜（旧班次结束时间 在新班次开始时间之后） 新班次的生效时间是第三天班次的开始时间
+                    validTime = LocalDateTime.of(now.toLocalDate().plusDays(2), insertStartTime);
+                }else {
+                    // 若有交叉 不跨夜（旧班次结束时间 在新班次开始时间之后） 新班次的生效时间是第二天班次的开始时间
+                    validTime = LocalDateTime.of(now.toLocalDate().plusDays(1), insertStartTime);
+                }
             } else {
                 // 若无交叉 则新班次的生效时间是第二天班次的开始时间
                 validTime = LocalDateTime.of(now.toLocalDate().plusDays(1), insertStartTime);
