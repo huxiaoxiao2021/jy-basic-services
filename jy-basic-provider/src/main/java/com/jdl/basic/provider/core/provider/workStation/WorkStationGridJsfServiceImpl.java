@@ -472,14 +472,6 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 	}
 
 	@Override
-	public Result<List<WorkStationGrid>> queryListByRefStationKey(WorkStationGridQuery query) {
-		if(log.isInfoEnabled()){
-			log.info("场地网格工序管理 queryListByRefStationKey 入参-{}", JSON.toJSONString(query));
-		}
-		return workStationGridService.queryListByRefStationKey(query);
-	}
-
-	@Override
 	public Result<Boolean> updateStandardNumByIds(UpdateRequest<WorkStationGrid> updateRequest) {
 		log.info("场地网格工序管理 updateStandardNumByIds 入参-{}", JSON.toJSONString(updateRequest));
 		final Result<Boolean> result = Result.success();

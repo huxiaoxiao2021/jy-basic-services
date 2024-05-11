@@ -981,14 +981,14 @@
 		</where>
 	</sql>
 
-	<select id="queryListByRefStationKey" parameterType="com.jdl.basic.api.domain.workStation.WorkStationGrid" resultMap="WorkStationGrid">
+	<select id="queryListByRefStationKey" parameterType="java.lang.String" resultMap="WorkStationGrid">
 		select
 		<include refid="Base_Column_List"/>
 		from
 		work_station_grid g
 		<include refid="joinSql"/>
 		where g.yn = 1
-		and	g.ref_station_key = #{refWorkGridKey,jdbcType=VARCHAR}
+		and	g.ref_station_key = #{refStationKey,jdbcType=VARCHAR}
 	</select>
 
 	<update id="updateStandardNumByIds" parameterType="com.jdl.basic.api.domain.workStation.UpdateRequest">

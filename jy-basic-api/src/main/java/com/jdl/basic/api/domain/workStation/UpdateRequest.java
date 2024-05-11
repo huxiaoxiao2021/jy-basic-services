@@ -50,4 +50,8 @@ public class UpdateRequest<T> implements Serializable {
      * 目标状态
      */
     private Integer targetStatus;
+    /**
+     * 编制人数
+     */
+    private Integer standardNum;
 }

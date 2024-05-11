@@ -17,6 +17,7 @@ import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringHelper;
 import com.jdl.basic.provider.core.components.IGenerateObjectId;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationDao;
+import com.jdl.basic.provider.core.dao.workStation.WorkStationGridDao;
 import com.jdl.basic.provider.core.dao.workStation.WorkStationJobTypeDao;
 import com.jdl.basic.provider.core.po.WorkStationJobTypePO;
 import com.jdl.basic.provider.core.service.tenant.JyConfigDictTenantService;
@@ -68,6 +69,9 @@ public class WorkStationServiceImpl implements WorkStationService {
 
 	@Resource
 	private JyConfigDictTenantService jyConfigDictTenantService;
+
+	@Autowired
+	private WorkStationGridDao workStationGridDao;
 
 	/**
 	 * 插入一条数据
@@ -301,8 +305,30 @@ public class WorkStationServiceImpl implements WorkStationService {
 		if(result.getData()) {
 			saveWorkArea(updateData);
 		}
+		// 工序的标准编制人数同步到 场地网格工序的编制人数
+		List<WorkStationGrid> workStationGrids = workStationGridDao.queryListByRefStationKey(updateData.getBusinessKey());
+		if (CollectionUtils.isNotEmpty(workStationGrids)){
+			UpdateRequest<WorkStationGrid> updateRequest = getWorkStationGridUpdateRequest(updateData, workStationGrids);
+			workStationGridDao.updateStandardNumByIds(updateRequest);
+		}
 		return result;
 	 }
+
+	private UpdateRequest<WorkStationGrid> getWorkStationGridUpdateRequest(WorkStation updateData, List<WorkStationGrid> workStationGrids) {
+		UpdateRequest<WorkStationGrid> updateRequest = new UpdateRequest<>();
+		updateRequest.setOperateUserCode(updateData.getUpdateUser());
+		updateRequest.setOperateUserName(updateData.getUpdateUserName());
+		updateRequest.setOperateTime(updateData.getUpdateTime());
+		ArrayList<WorkStationGrid> list = new ArrayList<>();
+		for (WorkStationGrid workStationGrid : workStationGrids) {
+			WorkStationGrid wsg = new WorkStationGrid();
+			wsg.setId(workStationGrid.getId());
+			list.add(wsg);
+		}
+		updateRequest.setDataList(list);
+		return updateRequest;
+	}
+
 	/**
 	 * 根据id删除数据
 	 * @param deleteData

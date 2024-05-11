@@ -997,14 +997,6 @@ public class WorkStationGridServiceImpl implements WorkStationGridService {
 		return result;
 	}
 
-	@Override
-	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.queryListByRefStationKey", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
-	public Result<List<WorkStationGrid>> queryListByRefStationKey(WorkStationGridQuery query) {
-		Result<List<WorkStationGrid>> result = Result.success();
-		List<WorkStationGrid> workStationGrids = workStationGridDao.queryListByRefStationKey(query);
-		result.setData(workStationGrids);
-		return result;
-	}
 
 	@Override
 	@JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkStationGridServiceImpl.updateStandardNumByIds", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})

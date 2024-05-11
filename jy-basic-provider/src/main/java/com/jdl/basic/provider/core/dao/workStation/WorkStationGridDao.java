@@ -279,7 +279,7 @@ public interface WorkStationGridDao {
 	 */
 	List<WorkStationGrid> queryListForRefWorkGridKeyList(WorkStationGridQuery query);
 
-	List<WorkStationGrid> queryListByRefStationKey(WorkStationGridQuery query);
+	List<WorkStationGrid> queryListByRefStationKey(String refStationKey);
 
 	int updateStandardNumByIds(UpdateRequest<WorkStationGrid> updateRequest);
 }
