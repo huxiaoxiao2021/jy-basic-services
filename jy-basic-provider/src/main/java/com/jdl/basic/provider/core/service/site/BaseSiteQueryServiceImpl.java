@@ -61,7 +61,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -246,16 +245,11 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         siteQuery.setSubTypeList(siteQueryCondition.getSubTypes());
         if(StringUtils.isNotEmpty(siteQueryCondition.getSearchStr())){
             if(NumberHelper.isNumber(siteQueryCondition.getSearchStr())){
-                long maxValue = Integer.MAX_VALUE;
-                try {
-                    BigInteger bigInteger = new BigInteger(siteQueryCondition.getSearchStr());
-                    if (bigInteger.compareTo(BigInteger.valueOf(maxValue)) <= 0) {
-                        siteQuery.setSiteCode(bigInteger.intValue());
-                    } else {
-                        siteQuery.setSiteName(siteQueryCondition.getSearchStr());
-                    }
-                } catch (NumberFormatException e) {
-                    logger.error("BaseSiteQueryServiceImpl.convertOutSiteQuery exception {}", JsonHelper.toJSONString(siteQueryCondition), e);
+                // 数字，则根据站点id查询
+                final Integer siteCodeQuery = NumberHelper.getIntegerValue(siteQueryCondition.getSearchStr());
+                if (siteCodeQuery != null) {
+                    siteQuery.setSiteCode(siteCodeQuery);
+                } else {
                     siteQuery.setSiteName(siteQueryCondition.getSearchStr());
                 }
             }else {
@@ -425,14 +419,10 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
                             Constants.CONSTANT_SPECIAL_MARK_ASTERISK + subOverLength(siteQueryCondition.getSearchStr()) + Constants.CONSTANT_SPECIAL_MARK_ASTERISK))
                     .should(QueryBuilders.wildcardQuery(BasicSiteEsDto.SITE_NAME_PYM,
                             Constants.CONSTANT_SPECIAL_MARK_ASTERISK + subOverLength(siteQueryCondition.getSearchStr()) + Constants.CONSTANT_SPECIAL_MARK_ASTERISK));
-            if(NumberHelper.isNumber(siteQueryCondition.getSearchStr())){
-                try {
-                    BigInteger bigInteger = new BigInteger(siteQueryCondition.getSearchStr());
-                    if (bigInteger.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) <= 0) {
-                        searchShouldBuilder.should(QueryBuilders.termQuery(BasicSiteEsDto.SITE_CODE, bigInteger.intValue()));
-                    }
-                } catch (NumberFormatException e) {
-                    logger.error("BaseSiteQueryServiceImpl.createQueryCondition exception {}", JsonHelper.toJSONString(siteQueryCondition), e);
+            if(NumberUtils.isNumber(siteQueryCondition.getSearchStr())){
+                final Integer siteCodeQuery = NumberHelper.getIntegerValue(siteQueryCondition.getSearchStr());
+                if (siteCodeQuery != null) {
+                    searchShouldBuilder.should(QueryBuilders.termQuery(BasicSiteEsDto.SITE_CODE, siteCodeQuery));
                 }
             }
             boolQueryBuilder.filter(searchShouldBuilder);
@@ -575,16 +565,11 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         psStoreInfoRequest.setProvinceAgencyCode(siteQueryCondition.getProvinceAgencyCode());
         if(StringUtils.isNotEmpty(siteQueryCondition.getSearchStr())){
             if(NumberHelper.isNumber(siteQueryCondition.getSearchStr())){
-                long maxValue = Integer.MAX_VALUE;
-                try {
-                    BigInteger bigInteger = new BigInteger(siteQueryCondition.getSearchStr());
-                    if (bigInteger.compareTo(BigInteger.valueOf(maxValue)) <= 0) {
-                        psStoreInfoRequest.setDmsSiteId(bigInteger.intValue());
-                    } else {
-                        psStoreInfoRequest.setSiteNamePym(siteQueryCondition.getSearchStr());
-                    }
-                } catch (NumberFormatException e) {
-                    logger.error("BaseSiteQueryServiceImpl.convertOutWareQuery exception {}", JsonHelper.toJSONString(siteQueryCondition), e);
+                // 数字，则根据站点id查询
+                final Integer siteCodeQuery = NumberHelper.getIntegerValue(siteQueryCondition.getSearchStr());
+                if (siteCodeQuery != null) {
+                    psStoreInfoRequest.setDmsSiteId(siteCodeQuery);
+                } else {
                     psStoreInfoRequest.setSiteNamePym(siteQueryCondition.getSearchStr());
                 }
             }else {
