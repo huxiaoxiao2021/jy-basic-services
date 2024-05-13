@@ -5,7 +5,6 @@ import com.github.pagehelper.PageHelper;
 import com.jd.dms.java.utils.sdk.base.PageData;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.user.*;
-import com.jdl.basic.api.enums.JyJobTypeEnum;
 import com.jdl.basic.api.enums.UserJobTypeEnum;
 import com.jdl.basic.api.service.user.UserJsfService;
 import com.jdl.basic.api.utils.JyUserUtils;
@@ -13,6 +12,7 @@ import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.DateHelper;
 import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.JYBasicRpcException;
+import com.jdl.basic.provider.core.service.jyJobType.JyJobTypeService;
 import com.jdl.basic.provider.core.service.user.ThirdpartyUseService;
 import com.jdl.basic.provider.core.service.user.UserService;
 import java.util.Date;
@@ -37,6 +37,8 @@ public class UserJsfServiceImpl implements UserJsfService {
     UserWorkGridService userWorkGridService;
     @Autowired
     ThirdpartyUseService thirdpartyUseService;
+    @Autowired
+    JyJobTypeService jyJobTypeService;
     @Override
     public Result<List<JyUserDto>> searchUserBySiteCode(JyUserQueryDto dto) {
         return convertToResult(userService.searchUserBySiteCode(dto.getSiteCode()));
@@ -192,10 +194,10 @@ public class UserJsfServiceImpl implements UserJsfService {
     @Override
     public Result<List<JyJobType>> getAllJobTypeList() {
         List<JyJobType> jobTypeList = new ArrayList<>();
-        for (JyJobTypeEnum jobTypeEnum : JyJobTypeEnum.values()) {
+        for (com.jdl.basic.api.domain.jyJobType.JyJobType jyJobType : jyJobTypeService.queryAllAvailableList()) {
             JyJobType jobType = new JyJobType();
-            jobType.setCode(jobTypeEnum.getJyJobTypeCode());
-            jobType.setName(jobTypeEnum.getJyJobTypeName());
+            jobType.setCode(jyJobType.getCode());
+            jobType.setName(jyJobType.getName());
             jobTypeList.add(jobType);
         }
         return Result.success(jobTypeList);

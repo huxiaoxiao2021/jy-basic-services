@@ -309,4 +309,9 @@ public class CollectBoxFlowDirectionConfJsfServiceImpl implements CollectBoxFlow
         // 调用collectBoxFlowDirectionConfService的updateConfig方法更新配置信息
         collectBoxFlowDirectionConfService.updateCollectBoxFlowDirectionConf(conf);
     }
+
+    @Override
+    public Result<Boolean> deleteConfig(CollectBoxFlowDirectionConf conf){
+        return collectBoxFlowDirectionConfService.deleteConfig(conf);
+    }
 }

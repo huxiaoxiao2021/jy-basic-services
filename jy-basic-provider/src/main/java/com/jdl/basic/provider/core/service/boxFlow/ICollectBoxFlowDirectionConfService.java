@@ -116,4 +116,9 @@ public interface ICollectBoxFlowDirectionConfService {
      * @return 操作结果
      */
     Result<Boolean> updateCollectBoxFlowDirectionConf(CollectBoxFlowDirectionConf conf);
+
+    /**
+     * 删除集包规则，只能删除集包要求为可混包的数据
+     */
+    Result<Boolean> deleteConfig(CollectBoxFlowDirectionConf conf);
 }
