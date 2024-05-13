@@ -198,11 +198,4 @@ public interface WorkStationGridJsfService {
 	 * @return 更新后的工作站网格信息
 	 */
 	Result<Boolean> updatePassByIds(UpdateRequest<WorkStationGrid> updateRequest);
-
-	/**
-	 * 根据id集合批量更新编制人数
-	 * @param updateRequest 更新请求对象
-	 * @return 更新后的工作站网格信息
-	 */
-	Result<Boolean> updateStandardNumByIds(UpdateRequest<WorkStationGrid> updateRequest);
 }

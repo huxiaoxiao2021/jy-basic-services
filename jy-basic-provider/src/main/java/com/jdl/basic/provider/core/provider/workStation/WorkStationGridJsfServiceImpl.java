@@ -471,31 +471,4 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 		return result;
 	}
 
-	@Override
-	public Result<Boolean> updateStandardNumByIds(UpdateRequest<WorkStationGrid> updateRequest) {
-		log.info("场地网格工序管理 updateStandardNumByIds 入参-{}", JSON.toJSONString(updateRequest));
-		final Result<Boolean> result = Result.success();
-		lockService.tryLock(CacheKeyConstants.CACHE_KEY_WORK_STATION_GRID_UPATE,DateHelper.ONE_MINUTES_MILLI, new ResultHandler() {
-			@Override
-			public void success() {
-				Result<Boolean> apiResult = workStationGridService.updateStandardNumByIds(updateRequest);
-				if(!apiResult.isSuccess()) {
-					result.setCode(apiResult.getCode());
-					result.setMessage(apiResult.getMessage());
-					result.setData(apiResult.getData());
-					return ;
-				}
-			}
-			@Override
-			public void fail() {
-				result.toFail("其他用户正在修改网格信息，请稍后操作！");
-			}
-			@Override
-			public void error(Exception e) {
-				log.error(e.getMessage(), e);
-				result.toFail("操作异常，请稍后重试！");
-			}
-		});
-		return result;
-	}
 }
