@@ -115,4 +115,5 @@ public interface VideoTraceCameraJsfService {
      */
     Result<Boolean> saveConfigs(VideoTraceCameraConfigVo videoTraceCameraConfigVo);
 
+    int updateById(VideoTraceCamera record);
 }

@@ -80,4 +80,6 @@ public class VideoTraceCameraQuery extends BasePagerCondition implements Seriali
      * 通道编码
      */
     private List<String> nationalChannelCodeList;
+
+    private List<VideoTraceCamera> videoTraceCameras;
 }

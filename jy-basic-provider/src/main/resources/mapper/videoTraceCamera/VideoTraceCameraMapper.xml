@@ -186,38 +186,15 @@
     </where>
   </select>
   <select id="queryCameraInfoForBinding" resultType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List"/>
-    from
-    video_trace_camera
-    <where>
-      yn=1
-      <if test="cameraCode != null and cameraCode != ''" >
-        and camera_code = #{cameraCode,jdbcType=VARCHAR}
-      </if>
-      <if test="nationalChannelCode != null and nationalChannelCode != ''" >
-        and national_channel_code = #{nationalChannelCode,jdbcType=VARCHAR}
-      </if>
-      <if test="siteCode != null and siteCode != ''" >
-        and site_code = #{siteCode,jdbcType=INTEGER}
-      </if>
-      <if test="configStatus != null" >
-        and config_status = #{configStatus,jdbcType=TINYINT}
-      </if>
-      <if test="nationalChannelCodeList != null and nationalChannelCodeList.size() != 0">
-        and national_channel_code in
-        <foreach collection="nationalChannelCodeList" item="nationalChannelCode" open="(" separator="," close=")">
-          #{nationalChannelCode,jdbcType=VARCHAR}
-        </foreach>
-      </if>
-      <if test="cameraCodeList != null and cameraCodeList.size() != 0">
-        and camera_code in
-        <foreach collection="cameraCodeList" item="cameraCodeItem" open="(" separator="," close=")">
-          #{cameraCodeItem,jdbcType=VARCHAR}
-        </foreach>
-      </if>
-      limit 100
-    </where>
+    <!-- 使用UNION组合多个查询 -->
+    <foreach item="item" index="index" collection="videoTraceCameras" separator="UNION" open="" close="">
+      select
+      <include refid="Base_Column_List"/>
+      from video_trace_camera
+      where yn=1
+      and camera_code = #{item.cameraCode}
+      and national_channel_code = #{item.nationalChannelCode}
+    </foreach>
   </select>
 
     <update id="deleteById">
