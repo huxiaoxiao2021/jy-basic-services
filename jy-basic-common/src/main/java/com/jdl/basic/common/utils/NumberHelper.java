@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,7 +42,21 @@ public class NumberHelper {
     }
 
     public static Integer getIntegerValue(Object object) {
-        return ObjectHelper.isNotEmpty(object) ? Integer.valueOf(object.toString()) : 0;
+        if (ObjectHelper.isEmpty(object)) {
+            return null;
+        }
+        final String str = object.toString();
+        if(NumberHelper.isNumber(str)){
+            try {
+                BigInteger bigInteger = new BigInteger(str);
+                if (bigInteger.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) <= 0 || bigInteger.compareTo(BigInteger.valueOf(Integer.MIN_VALUE)) >= 0) {
+                    return bigInteger.intValue();
+                }
+            } catch (NumberFormatException e) {
+                log.error("NumberHelper.getIntegerValue exception {}", JsonHelper.toJSONString(object), e);
+            }
+        }
+        return null;
     }
 
     public static boolean isPositiveNumber(Integer number) {
