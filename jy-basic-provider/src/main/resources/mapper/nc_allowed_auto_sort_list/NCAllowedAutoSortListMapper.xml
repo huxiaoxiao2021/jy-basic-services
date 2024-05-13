@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jdl.basic.provider.core.dao.ncAllowedAutoSortList.NCAllowedAutoSortListDao" >
+
+	<resultMap id="BaseResultMap" type="com.jdl.basic.provider.core.po.NCAllowedAutoSortList">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="vender_id" jdbcType="VARCHAR" property="venderId"/>
+		<result column="keyword" jdbcType="VARCHAR" property="keyword"/>
+		<result column="rule_detail" jdbcType="VARCHAR" property="ruleDetail" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="operator_erp" jdbcType="VARCHAR" property="operatorErp" />
+		<result column="sku" jdbcType="VARCHAR" property="sku" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`, `vender_id`, `keyword`, `rule_detail`, `update_time`, `operator_erp`, `sku`
+	</sql>
+
+	<select id="queryByCondition" parameterType="com.jdl.basic.api.domain.ncAllowedAutoSortList.NCAllowedAutoSortListQuery" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from nc_allowed_auto_sort_list
+		<where>
+			yn = 1
+			<if test="id != null" >
+				and id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="venderId != null and venderId != ''" >
+				and vender_id like CONCAT('%', #{venderId, jdbcType=VARCHAR}, '%')
+			</if>
+			<if test="keyword != null and keyword != ''" >
+				and keyword like CONCAT('%', #{keyword, jdbcType=VARCHAR}, '%')
+			</if>
+			<if test="sku != null and sku != ''" >
+				and sku like CONCAT('%', #{sku, jdbcType=VARCHAR}, '%')
+			</if>
+		</where>
+		<if test="pageSize != 0 and pageNo != 0" >
+			limit #{offset}, #{pageSize}
+		</if>
+	</select>
+
+	<select id="countByCondition" parameterType="com.jdl.basic.api.domain.ncAllowedAutoSortList.NCAllowedAutoSortListQuery" resultType="java.lang.Long">
+		select
+		       count(*) as count
+		from nc_allowed_auto_sort_list
+		<where>
+			yn = 1
+			<if test="id != null" >
+				and id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="venderId != null and venderId != ''" >
+				and vender_id like CONCAT('%', #{venderId, jdbcType=VARCHAR}, '%')
+			</if>
+			<if test="keyword != null and keyword != ''" >
+				and keyword like CONCAT('%', #{keyword, jdbcType=VARCHAR}, '%')
+			</if>
+			<if test="sku != null and sku != ''" >
+				and sku like CONCAT('%', #{sku, jdbcType=VARCHAR}, '%')
+			</if>
+		</where>
+	</select>
+
+	<update id="deleteByPK" parameterType="java.lang.Integer">
+		update nc_allowed_auto_sort_list set yn = 0 where `id` = #{id,jdbcType=INTEGER}
+	</update>
+
+	<insert id="insert" parameterType="com.jdl.basic.provider.core.po.NCAllowedAutoSortList" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+		    nc_allowed_auto_sort_list (vender_id, keyword, rule_detail , operator_erp, sku)
+		VALUES
+		       (#{venderId}, #{keyword}, #{ruleDetail},  #{operatorErp}, #{sku})
+	</insert>
+
+	<update id="updateByPK" parameterType="com.jdl.basic.provider.core.po.NCAllowedAutoSortList">
+		update nc_allowed_auto_sort_list
+		<set>
+			<if test="venderId != null">
+				`vender_id` = #{venderId,jdbcType=VARCHAR},
+			</if>
+			<if test="keyword != null">
+				`keyword` = #{keyword,jdbcType=VARCHAR},
+			</if>
+			<if test="ruleDetail != null">
+				`rule_detail` = #{ruleDetail,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorErp != null">
+				`operator_erp` = #{operatorErp,jdbcType=VARCHAR},
+			</if>
+			<if test="sku != null and sku != ''" >
+				`sku` = #{sku,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where `id` = #{id,jdbcType=INTEGER}
+	</update>
+
+</mapper>
