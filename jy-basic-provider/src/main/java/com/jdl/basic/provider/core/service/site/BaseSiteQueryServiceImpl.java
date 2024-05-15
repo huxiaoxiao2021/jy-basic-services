@@ -246,7 +246,12 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         if(StringUtils.isNotEmpty(siteQueryCondition.getSearchStr())){
             if(NumberHelper.isNumber(siteQueryCondition.getSearchStr())){
                 // 数字，则根据站点id查询
-                siteQuery.setSiteCode(Integer.valueOf(siteQueryCondition.getSearchStr()));
+                final Integer siteCodeQuery = NumberHelper.getIntegerValue(siteQueryCondition.getSearchStr());
+                if (siteCodeQuery != null) {
+                    siteQuery.setSiteCode(siteCodeQuery);
+                } else {
+                    siteQuery.setSiteName(siteQueryCondition.getSearchStr());
+                }
             }else {
                 // 非数字则根据站点名称模糊查询
                 siteQuery.setSiteName(siteQueryCondition.getSearchStr());
@@ -415,8 +420,8 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
                     .should(QueryBuilders.wildcardQuery(BasicSiteEsDto.SITE_NAME_PYM,
                             Constants.CONSTANT_SPECIAL_MARK_ASTERISK + subOverLength(siteQueryCondition.getSearchStr()) + Constants.CONSTANT_SPECIAL_MARK_ASTERISK));
             if(NumberUtils.isNumber(siteQueryCondition.getSearchStr())){
-                final Long siteCodeQuery = NumberUtils.createLong(siteQueryCondition.getSearchStr());
-                if(siteCodeQuery >= Integer.MIN_VALUE && siteCodeQuery <= Integer.MAX_VALUE){
+                final Integer siteCodeQuery = NumberHelper.getIntegerValue(siteQueryCondition.getSearchStr());
+                if (siteCodeQuery != null) {
                     searchShouldBuilder.should(QueryBuilders.termQuery(BasicSiteEsDto.SITE_CODE, siteCodeQuery));
                 }
             }
@@ -561,7 +566,12 @@ public class BaseSiteQueryServiceImpl implements SiteQueryService {
         if(StringUtils.isNotEmpty(siteQueryCondition.getSearchStr())){
             if(NumberHelper.isNumber(siteQueryCondition.getSearchStr())){
                 // 数字，则根据站点id查询
-                psStoreInfoRequest.setDmsSiteId(Integer.valueOf(siteQueryCondition.getSearchStr()));
+                final Integer siteCodeQuery = NumberHelper.getIntegerValue(siteQueryCondition.getSearchStr());
+                if (siteCodeQuery != null) {
+                    psStoreInfoRequest.setDmsSiteId(siteCodeQuery);
+                } else {
+                    psStoreInfoRequest.setSiteNamePym(siteQueryCondition.getSearchStr());
+                }
             }else {
                 // 非数字则根据站点名称模糊查询
                 psStoreInfoRequest.setSiteNamePym(siteQueryCondition.getSearchStr());
