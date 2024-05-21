@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,12 +50,12 @@ public class WorkAbnormalGridBindingJsfServiceImpl implements WorkAbnormalGridBi
 
     @Override
     public Result<Boolean> insert(List<WorkStationBinding> insertData) {
-        // 网格防重校验
-        if (!gridDuplicateCheck(insertData)) {
-            return Result.fail("异常网格绑定关系已更新，请重新打开绑定功能!");
-        }
-        for (WorkStationBinding data : insertData) {
-            workAbnormalGridBindingService.insert(data);
+        // 网格防重
+        List<WorkStationBinding> insertDataNew = gridDuplicateCheck(insertData);
+        if (CollectionUtils.isNotEmpty(insertDataNew)) {
+            for (WorkStationBinding data : insertData) {
+                workAbnormalGridBindingService.insert(data);
+            }
         }
         return Result.success();
     }
@@ -64,18 +65,19 @@ public class WorkAbnormalGridBindingJsfServiceImpl implements WorkAbnormalGridBi
      * @param insertData
      * @return
      */
-    private boolean gridDuplicateCheck(List<WorkStationBinding> insertData) {
+    private List<WorkStationBinding> gridDuplicateCheck(List<WorkStationBinding> insertData) {
+        List<WorkStationBinding> insertDataNew = new ArrayList<>();
         for (WorkStationBinding insertDatum : insertData) {
             WorkStationFloorGridQuery query = new WorkStationFloorGridQuery();
             query.setGridCode(insertDatum.getGridCode());
             query.setFloor(insertDatum.getFloor());
             query.setSiteCode(insertDatum.getSiteCode());
             List<WorkStationBinding> workStationBindings = workAbnormalGridDao.queryBindingList(query);
-            if (CollectionUtils.isNotEmpty(workStationBindings)) {
-                return false;
+            if (CollectionUtils.isEmpty(workStationBindings)) {
+                insertDataNew.add(insertDatum);
             }
         }
-        return true;
+        return insertDataNew;
     }
 
     @Override
