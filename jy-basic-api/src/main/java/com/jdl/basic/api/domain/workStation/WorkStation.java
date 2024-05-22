@@ -111,4 +111,8 @@ public class WorkStation implements Serializable {
 	 * 工种类型集合
 	 */
 	private List<Integer> jobTypes;
+	/**
+	 * 编制人数
+	 */
+	private Integer standardNum;
 }

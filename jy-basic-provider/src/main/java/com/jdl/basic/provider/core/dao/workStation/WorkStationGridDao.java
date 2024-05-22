@@ -278,4 +278,18 @@ public interface WorkStationGridDao {
 	 * @return
 	 */
 	List<WorkStationGrid> queryListForRefWorkGridKeyList(WorkStationGridQuery query);
+
+    /**
+     * 根据参考站点键查询工作站点网格列表
+     * @param refStationKey 参考站点的键，用于查询与之关联的工作站点网格
+     * @return 返回与参考站点键相关联的工作站点网格列表
+     */
+	List<WorkStationGrid> queryListByRefStationKey(String refStationKey);
+
+    /**
+     * 根据ID批量更新标准数量
+     * @param updateRequest 更新请求，包含工作站网格的列表和需要更新的标准数量
+     * @return 更新的记录数，表示成功更新的工作站网格数量
+     */
+	int updateStandardNumByIds(UpdateRequest<WorkStationGrid> updateRequest);
 }

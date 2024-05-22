@@ -67,7 +67,29 @@ public class CheckHelper {
 			return result.toFail(preStr.concat("只能是["+min+"~"+max+"]的值！"));
 		}
 		return result;
-	}	
+	}
+    /**
+     * 对整数进行检查，如果为空则返回失败结果
+     * @param name 字段名称
+     * @param value 待检查的整数值
+     * @param checkResult 检查结果
+     * @return 检查结果
+     * @throws 可能抛出的异常说明
+     */
+	public static <T> Result<T> checkInteger(String name,Integer value,Result<T> checkResult) {
+		Result<T> result = checkResult;
+		if(result == null) {
+			result = Result.success();
+		}
+		String preStr = name;
+		if(preStr == null || preStr.trim().length() == 0) {
+			preStr = "字段值";
+		}
+		if(value == null) {
+			return result.toFail(preStr.concat("为空！"));
+		}
+		return result;
+	}
 	/**
 	 * 网格号校验
 	 * @param <T>
