@@ -467,22 +467,6 @@ public class VideoTraceCameraJsfServiceImpl implements VideoTraceCameraJsfServic
     @Override
     public Result<List<VideoTraceCameraVo>> queryCameraInfoForBinding(VideoTraceCameraQuery query) {
         Result<List<VideoTraceCameraVo>> result = Result.success();
-        List<String> cameraCodeList = query.getCameraCodeList();
-        List<String> nationalChannelCodeList = query.getNationalChannelCodeList();
-        List<VideoTraceCamera> list = new ArrayList<>();
-        if (cameraCodeList.size() > 10){
-            return Result.fail("一个最多查询10个摄像头");
-        }
-        if (cameraCodeList.size() != nationalChannelCodeList.size()){
-            return Result.fail("输入的设备编号和通道编号数量不一致");
-        }
-        for (int i = 0; i < cameraCodeList.size(); i++) {
-            VideoTraceCamera videoTraceCamera = new VideoTraceCamera();
-            videoTraceCamera.setCameraCode(cameraCodeList.get(i));
-            videoTraceCamera.setNationalChannelCode(nationalChannelCodeList.get(i));
-            list.add(videoTraceCamera);
-        }
-        query.setVideoTraceCameras(list);
         return result.setData(videoTraceCameraService.queryCameraInfoForBinding(query));
 
     }
