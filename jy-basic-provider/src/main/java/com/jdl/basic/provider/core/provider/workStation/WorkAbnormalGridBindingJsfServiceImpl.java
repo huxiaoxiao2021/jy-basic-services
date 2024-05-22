@@ -5,21 +5,17 @@ import com.jdl.basic.api.service.workStation.WorkAbnormalGridBindingJsfService;
 import com.jdl.basic.common.utils.PageDto;
 import com.jdl.basic.common.utils.Result;
 import com.jdl.basic.common.utils.StringUtils;
-import com.jdl.basic.provider.core.dao.workStation.WorkAbnormalGridDao;
 import com.jdl.basic.provider.core.service.workStation.WorkAbnormalGridBindingService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author liwenji
- * @description
+ * @description TODO
  * @date 2022-08-10 18:49
  */
 @Slf4j
@@ -29,9 +25,6 @@ public class WorkAbnormalGridBindingJsfServiceImpl implements WorkAbnormalGridBi
     @Autowired
     @Qualifier("workAbnormalGridBindingService")
     private WorkAbnormalGridBindingService workAbnormalGridBindingService;
-
-    @Resource
-    private WorkAbnormalGridDao workAbnormalGridDao;
 
     @Override
     public Result<PageDto<WorkStationFloorGridVo>> queryListDistinct(WorkStationFloorGridQuery query) {
@@ -50,34 +43,10 @@ public class WorkAbnormalGridBindingJsfServiceImpl implements WorkAbnormalGridBi
 
     @Override
     public Result<Boolean> insert(List<WorkStationBinding> insertData) {
-        // 网格防重
-        List<WorkStationBinding> insertDataNew = gridDuplicateCheck(insertData);
-        if (CollectionUtils.isNotEmpty(insertDataNew)) {
-            for (WorkStationBinding data : insertData) {
-                workAbnormalGridBindingService.insert(data);
-            }
+        for (WorkStationBinding data : insertData) {
+            workAbnormalGridBindingService.insert(data);
         }
         return Result.success();
-    }
-
-    /**
-     * 网格校验
-     * @param insertData
-     * @return
-     */
-    private List<WorkStationBinding> gridDuplicateCheck(List<WorkStationBinding> insertData) {
-        List<WorkStationBinding> insertDataNew = new ArrayList<>();
-        for (WorkStationBinding insertDatum : insertData) {
-            WorkStationFloorGridQuery query = new WorkStationFloorGridQuery();
-            query.setGridCode(insertDatum.getGridCode());
-            query.setFloor(insertDatum.getFloor());
-            query.setSiteCode(insertDatum.getSiteCode());
-            List<WorkStationBinding> workStationBindings = workAbnormalGridDao.queryBindingList(query);
-            if (CollectionUtils.isEmpty(workStationBindings)) {
-                insertDataNew.add(insertDatum);
-            }
-        }
-        return insertDataNew;
     }
 
     @Override

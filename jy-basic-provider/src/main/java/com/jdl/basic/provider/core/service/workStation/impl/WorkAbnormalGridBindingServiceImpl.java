@@ -182,6 +182,16 @@ public class WorkAbnormalGridBindingServiceImpl implements WorkAbnormalGridBindi
                 result.toFail("操作太快，正在处理中");
                 return result;
             }
+            // 防重校验
+            WorkStationFloorGridQuery query = new WorkStationFloorGridQuery();
+            query.setGridCode(insertData.getGridCode());
+            query.setFloor(insertData.getFloor());
+            query.setSiteCode(insertData.getSiteCode());
+            List<WorkStationBinding> workStationBindings = workAbnormalGridDao.queryBindingList(query);
+            if (!CollectionUtils.isEmpty(workStationBindings)) {
+                return Result.success(Boolean.TRUE);
+            }
+
             long count = workAbnormalGridDao.queryCount(insertData);
             if (count > 0) {
                 workAbnormalGridDao.update(insertData);
