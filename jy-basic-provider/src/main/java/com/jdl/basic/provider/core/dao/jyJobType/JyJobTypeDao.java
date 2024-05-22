@@ -78,5 +78,7 @@ public interface JyJobTypeDao {
      * 查询所有可用的职位类型列表
      * @return 可用的职位类型列表
      */
+    @Cache(key = "JyJobTypeDao.queryAllAvailableList", memoryEnable = true, memoryExpiredTime = 5 * 60 * 1000
+        ,redisEnable = true, redisExpiredTime = 10 * 60 * 1000)
     List<JyJobType> queryAllAvailableList();
 }
