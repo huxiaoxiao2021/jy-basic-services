@@ -15,12 +15,17 @@
     <result column="update_erp" jdbcType="VARCHAR" property="updateErp" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="start_effective_time" jdbcType="TIMESTAMP" property="startEffectiveTime" />
+    <result column="end_effective_time" jdbcType="TIMESTAMP" property="endEffectiveTime" />
     <result column="yn" jdbcType="TINYINT" property="yn" />
     <result column="ts" jdbcType="TIMESTAMP" property="ts" />
+    <result column="camera_code" jdbcType="VARCHAR" property="cameraCode" />
+    <result column="national_channel_code" jdbcType="VARCHAR" property="nationalChannelCode" />
+    <result column="national_channel_name" jdbcType="VARCHAR" property="nationalChannelName" />
   </resultMap>
   <sql id="Base_Column_List">
     id, camera_id, ref_work_grid_key, ref_work_station_key, machine_code, chute_code, supply_dws_code,
-    master_camera, create_erp, create_time, update_erp, update_time, status, yn, ts
+    master_camera, create_erp, create_time, update_erp, update_time, status, yn, ts,start_effective_time,end_effective_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -92,8 +97,8 @@
       <foreach collection="cameraIds" item="cameraId" open="(" separator="," close=")">
         #{cameraId,jdbcType=INTEGER}
       </foreach>
-      and create_time <![CDATA[ <= ]]>  #{operateTime}
-      and ((update_time <![CDATA[ >= ]]>  #{operateTime} and yn =0)
+      and start_effective_time <![CDATA[ <= ]]>  #{operateTime}
+      and ((end_effective_time <![CDATA[ >= ]]>  #{operateTime} and yn =0)
       or yn=1)
   </select>
 
@@ -123,7 +128,51 @@
     </if>
   </select>
 
-    <update id="deleteById">
+  <select id="queryByGridKeys" resultType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig" resultMap="BaseResultMap">
+    select
+    c.id, c.camera_id, c.ref_work_grid_key, c.ref_work_station_key, c.machine_code, c.chute_code, c.supply_dws_code,
+    c.master_camera, c.create_erp, c.create_time, c.update_erp, c.update_time, c.status, c.yn, c.ts,
+    c.start_effective_time,c.end_effective_time,v.camera_code,v.national_channel_code, v.national_channel_name
+    from video_trace_camera_config c left  join video_trace_camera v on c.camera_id = v.id
+    where
+    c.yn = 1
+    and c.ref_work_grid_key in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item,jdbcType=VARCHAR}
+    </foreach>
+  </select>
+  <select id="queryValidByCameraIds" resultType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from video_trace_camera_config
+    where
+    yn = 1
+    and camera_id in
+    <foreach collection="cameraIds" item="cameraId" open="(" separator="," close=")">
+      #{cameraId,jdbcType=INTEGER}
+    </foreach>
+  </select>
+  <select id="queryByGridNoYn" resultType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from video_trace_camera_config
+    where yn = 0
+    and ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
+    and (machine_code is null or machine_code = '')
+    and (ref_work_station_key is null or ref_work_station_key = '')
+  </select>
+
+  <select id="queryByDeviceNoYn" resultType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCameraConfig" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from video_trace_camera_config
+    where yn = 0
+    and ref_work_grid_key = #{refWorkGridKey,jdbcType=VARCHAR}
+    and machine_code = #{machineCode,jdbcType=VARCHAR}
+    and (chute_code is null or chute_code = '')
+    and (supply_dws_code is null or supply_dws_code = '')
+  </select>
+  <update id="deleteById">
     update
     video_trace_camera_config
     set
@@ -131,6 +180,7 @@
       update_erp = #{updateErp,jdbcType=VARCHAR},
     </if>
       update_time = now(),
+      start_effective_time = now(),
       yn=0
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -230,12 +280,12 @@
     insert into video_trace_camera_config (camera_id, ref_work_grid_key,
     ref_work_station_key, machine_code, chute_code,
     supply_dws_code, master_camera, create_erp,
-    create_time, yn,status)
+    create_time, yn,status,start_effective_time)
     values
     <foreach collection="list" separator="," item="item">
     (#{item.cameraId,jdbcType=INTEGER}, #{item.refWorkGridKey,jdbcType=VARCHAR},
     #{item.refWorkStationKey,jdbcType=VARCHAR}, #{item.machineCode,jdbcType=VARCHAR}, #{item.chuteCode,jdbcType=VARCHAR},
-    #{item.supplyDwsCode,jdbcType=VARCHAR}, #{item.masterCamera,jdbcType=TINYINT}, #{item.createErp,jdbcType=VARCHAR}, now(), 1,#{item.status,jdbcType=TINYINT})
+    #{item.supplyDwsCode,jdbcType=VARCHAR}, #{item.masterCamera,jdbcType=TINYINT}, #{item.createErp,jdbcType=VARCHAR}, now(), 1,#{item.status,jdbcType=TINYINT}, now())
     </foreach>
   </insert>
   <update id="batchDelete">
@@ -243,6 +293,7 @@
     set
       update_erp = #{updateErp,jdbcType=VARCHAR},
       update_time = now(),
+      end_effective_time = now(),
       yn=0
     where
     id in

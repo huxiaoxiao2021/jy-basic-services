@@ -95,6 +95,9 @@ public class VideoTraceCameraServiceTest {
     @Test
     public void queryVideoTraceCameraConfigTest() {
         VideoTraceCameraQuery videoTraceCameraQuery = new VideoTraceCameraQuery();
+        videoTraceCameraQuery.setCameraCode("51011318471180800001");
+        videoTraceCameraQuery.setNationalChannelCode("12000000001310045829");
+        videoTraceCameraQuery.setOperateTimeStr("2024-04-28 11:11:1");
         Result<List<VideoTraceCameraConfig>> result = videoTraceCameraService.queryVideoTraceCameraConfig(videoTraceCameraQuery);
         System.out.println(result.getData());
     }

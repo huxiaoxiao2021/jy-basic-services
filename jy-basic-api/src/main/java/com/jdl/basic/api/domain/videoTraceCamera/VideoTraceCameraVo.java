@@ -16,4 +16,9 @@ public class VideoTraceCameraVo extends VideoTraceCamera{
      * 主摄像头 1是 0否
      */
     private Byte masterCamera;
+
+    /**
+     *
+     */
+    private List<String> workGridNames;
 }

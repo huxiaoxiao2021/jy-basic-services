@@ -171,7 +171,7 @@
       <if test="nationalChannelCode != null and nationalChannelCode != ''" >
         and national_channel_code = #{nationalChannelCode,jdbcType=VARCHAR}
       </if>
-      <if test="siteCode != null and siteCode != ''" >
+      <if test="siteCode != null" >
         and site_code = #{siteCode,jdbcType=INTEGER}
       </if>
       <if test="provinceAgencyCode != null and provinceAgencyCode != ''" >
@@ -180,15 +180,24 @@
       <if test="areaHubCode != null and areaHubCode != ''" >
         and area_hub_code = #{areaHubCode,jdbcType=VARCHAR}
       </if>
-      <if test="cameraCode != null and cameraCode != ''" >
-        and camera_code = #{cameraCode,jdbcType=VARCHAR}
-      </if>
       <if test="configStatus != null" >
         and config_status = #{configStatus,jdbcType=TINYINT}
       </if>
     </where>
   </select>
-  <update id="deleteById">
+  <select id="queryCameraInfoForBinding" resultType="com.jdl.basic.api.domain.videoTraceCamera.VideoTraceCamera" resultMap="BaseResultMap">
+    <!-- 使用UNION组合多个查询 -->
+    <foreach item="item" index="index" collection="videoTraceCameras" separator="UNION" open="" close="">
+      select
+      <include refid="Base_Column_List"/>
+      from video_trace_camera
+      where yn=1
+      and camera_code = #{item.cameraCode}
+      and national_channel_code = #{item.nationalChannelCode}
+    </foreach>
+  </select>
+
+    <update id="deleteById">
     update
     video_trace_camera
     set
@@ -409,4 +418,18 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <update id="updateCameraConfigStatusBatch">
+      update
+      video_trace_camera
+      set
+      update_time = now(),
+      config_status = #{configStatus,jdbcType=TINYINT}
+      where  yn =1
+      and id in
+      <foreach collection="ids" item="id" open="(" separator="," close=")">
+        #{id,jdbcType=INTEGER}
+      </foreach>
+  </update>
+
+
 </mapper>

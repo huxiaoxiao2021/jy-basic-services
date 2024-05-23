@@ -7,9 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class VideoTraceCameraConfig implements Serializable {
-    private Integer id;
-
+public class VideoTraceCameraConfigVo  implements Serializable {
     /**
      * 关联摄像头ref:video_trace_camera物理主键
      */
@@ -26,14 +24,23 @@ public class VideoTraceCameraConfig implements Serializable {
      * 自动化设备编码
      */
     private String machineCode;
+
     /**
      * 分拣机格口编码
      */
     private String chuteCode;
+
     /**
      * 分拣机供包台DWS编码
      */
     private String supplyDwsCode;
+
+    /**
+     * 更新人
+     */
+    private String updateUserErp;
+    private String updateErp;
+
     /**
      * 主摄像头 1是 0否
      */
@@ -43,24 +50,7 @@ public class VideoTraceCameraConfig implements Serializable {
 
     private Date createTime;
 
-    private String updateErp;
-
     private Date updateTime;
-
-    private Byte yn;
-
-    private Date ts;
-
-    private List<Integer> cameraIds;
-
-    private Byte status;
-
-    private Date operateTime;
-
-    /**
-     * 网格业务主键
-     */
-    private List<String> workGridKeys;
 
     /**
      * 配置生效开始时间
@@ -82,4 +72,6 @@ public class VideoTraceCameraConfig implements Serializable {
      * 通道名称
      */
     private String nationalChannelName;
+
+    private List<VideoTraceCameraConfig> videoTraceCameraConfigs;
 }
