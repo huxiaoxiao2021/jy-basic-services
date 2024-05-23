@@ -102,4 +102,9 @@ public interface VideoTraceCameraService {
      *
      */
     List<VideoTraceCameraConfigVo> getHisBoundCameraInfo(VideoTraceCameraConfigQuery query);
+
+    /**
+     * 保存摄像头配置信息、更新配置状态
+     */
+    void saveConfigAndUpdateConfigStatus(VideoTraceCameraConfigVo save, List<VideoTraceCameraConfig> addList, List<VideoTraceCameraConfig> delList);
 }

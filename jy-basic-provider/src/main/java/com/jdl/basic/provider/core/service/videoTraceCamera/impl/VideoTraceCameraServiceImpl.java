@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import javax.annotation.Resource;
@@ -72,6 +73,9 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
 
     @Value("${whether_syn_video_trace_camera:false}")
     private boolean syncChannelState;
+
+    @Autowired
+    private VideoTraceCameraService videoTraceCameraService;
 
     @Override
     public Result<PageDto<VideoTraceCamera>> queryPageList(VideoTraceCameraQuery query) {
@@ -805,6 +809,19 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             }
         }
 
+        videoTraceCameraService.saveConfigAndUpdateConfigStatus(save, addList, delList);
+
+
+        // 清理缓存
+        cacheService.del(getKey(save.getRefWorkGridKey()));
+
+        return Result.success();
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void saveConfigAndUpdateConfigStatus(VideoTraceCameraConfigVo save, List<VideoTraceCameraConfig> addList, List<VideoTraceCameraConfig> delList) {
         // 新增配置 更新摄像头配置状态
         List<Integer> cameraIds = addList.stream().map(VideoTraceCameraConfig::getCameraId).collect(Collectors.toList());
         if (!cameraIds.isEmpty()) {
@@ -821,11 +838,6 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             //删除配置时更新摄像头配置状态
             updateCameraConfigStatusWithDelConfig(delList);
         }
-
-        // 清理缓存
-        cacheService.del(getKey(save.getRefWorkGridKey()));
-
-        return Result.success();
     }
 
     /**
