@@ -69,4 +69,8 @@ public class JyJobType implements Serializable {
      * 数据库时间
      */
     private Date ts;
+    /**
+     * 工种类型
+     * */
+    private String type;
 }
