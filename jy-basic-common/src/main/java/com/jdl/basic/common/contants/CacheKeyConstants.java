@@ -309,4 +309,8 @@ public class CacheKeyConstants {
      * %s对应网格
      */
     public static final String CACHE_KEY_ALL_VALID_WORK_GRID_SCHEDULE_IGNORE_YN = "all_valid_work_grid_schedule:%s";
+    /**
+     * 网格工序操作-key
+     */
+    public static final String CACHE_KEY_WORK_STATION_GRID_UPATE = "k_work_station_grid_update";
 }

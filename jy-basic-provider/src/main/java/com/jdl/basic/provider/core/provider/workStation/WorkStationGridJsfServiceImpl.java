@@ -470,4 +470,5 @@ public class WorkStationGridJsfServiceImpl implements WorkStationGridJsfService 
 		});
 		return result;
 	}
+
 }
