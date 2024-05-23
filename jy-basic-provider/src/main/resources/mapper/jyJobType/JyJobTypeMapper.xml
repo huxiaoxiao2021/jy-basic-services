@@ -17,11 +17,12 @@
         <result column="update_time" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
         <result column="yn" property="yn" javaType="java.lang.Integer" jdbcType="TINYINT"/>
         <result column="ts" property="ts" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        <result column="type" property="type" javaType="java.lang.String" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,name,code,status,belong,photo_support,
-        auto_sign_out_hour,sort,create_user,update_user,create_time,update_time,yn,ts
+        auto_sign_out_hour,sort,create_user,update_user,create_time,update_time,yn,ts,type
     </sql>
 
     <insert id="insert" parameterType="com.jdl.basic.api.domain.jyJobType.JyJobType" useGeneratedKeys="true"
@@ -71,6 +72,9 @@
             <if test="ts != null">
                 ts,
             </if>
+            <if test="type != null">
+                type,
+            </if>
         </trim>
         )
         values
@@ -118,6 +122,9 @@
             <if test="ts != null">
                 #{ts,jdbcType=TIMESTAMP},
             </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
         </trim>
         )
     </insert>
@@ -163,6 +170,9 @@
             </if>
             <if test="ts != null">
                 ts = #{ts,jdbcType=TIMESTAMP},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
