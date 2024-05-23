@@ -664,35 +664,44 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
             return result.toFail("查询时间不能大于一天！");
         }
 
-        List<WorkGridSchedule> validList;
+        List<WorkGridSchedule> validList = Collections.emptyList();
         String cacheKey = String.format(CacheKeyConstants.CACHE_KEY_ALL_VALID_WORK_GRID_SCHEDULE_IGNORE_YN, request.getWorkGridKey());
         String json = jimdbCacheService.get(cacheKey);
-        log.info("listValidWorkGridScheduleByTime 缓存key={}", cacheKey);
+        log.info("{} listValidWorkGridScheduleByTime 缓存key={}",request.getRequestId(), cacheKey);
         if (StringUtils.isNotEmpty(json)) {
             validList = JSON.parseObject(json, new TypeReference<List<WorkGridSchedule>>(){});
+            log.info("{} listValidWorkGridScheduleByTime 网格key={} 缓存结果={}",request.getRequestId(), cacheKey, JsonHelper.toJSONString(validList));
         } else {
             Date now = new Date();
-            List<WorkGridSchedule> gridAllSchedule = workGridScheduleDao.listAllScheduleIgnoreYn(request);
-            validList = gridAllSchedule.stream().filter(item -> {
-                if (item.getValidTime() == null || item.getInvalidTime() == null) {
+            List<WorkGridSchedule> gridAllSchedule = null;
+            try {
+                gridAllSchedule = workGridScheduleDao.listAllScheduleIgnoreYn(request);
+            } catch (Exception e) {
+               log.info("workGridScheduleDao.listAllScheduleIgnoreYn e:{}",e);
+            }
+            if (CollectionUtils.isNotEmpty(gridAllSchedule)){
+                validList = gridAllSchedule.stream().filter(item -> {
+                    if (item.getValidTime() == null || item.getInvalidTime() == null) {
+                        return false;
+                    }
+
+                    // 开始过滤生效过的班次
+                    // yn = 1的且当前时间在生效时间之后是有效的
+                    if (item.getYn().intValue() == Constants.CONSTANT_NUMBER_ONE && !now.before(item.getValidTime())) {
+                        return true;
+                    }
+
+                    // 以下yn = 0的
+                    // 删除时间不在班次有效开始时间之前  证明该班次生效过
+                    if (item.getYn().intValue() != Constants.CONSTANT_NUMBER_ONE &&!item.getUpdateTime().before(item.getValidTime())) {
+                        return true;
+                    }
                     return false;
-                }
+                }).collect(Collectors.toList());
+                log.info("listValidWorkGridScheduleByTime 网格key={} mysql查询结果={}", cacheKey, JsonHelper.toJSONString(validList));
 
-                // 开始过滤生效过的班次
-                // yn = 1的且当前时间在生效时间之后是有效的
-                if (item.getYn().intValue() == Constants.CONSTANT_NUMBER_ONE && !now.before(item.getValidTime())) {
-                    return true;
-                }
-
-                // 以下yn = 0的
-                // 删除时间不在班次有效开始时间之前  证明该班次生效过
-                if (item.getYn().intValue() != Constants.CONSTANT_NUMBER_ONE &&!item.getUpdateTime().before(item.getValidTime())) {
-                    return true;
-                }
-                return false;
-            }).collect(Collectors.toList());
-
-            jimdbCacheService.setEx(cacheKey, validList, 30L, TimeUnit.MINUTES);
+                jimdbCacheService.setEx(cacheKey, validList, 30L, TimeUnit.MINUTES);
+            }
         }
 
         List<ScheduleValidTimeDto> retList = new ArrayList<>();

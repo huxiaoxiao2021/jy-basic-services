@@ -3,13 +3,16 @@ package com.jdl.basic.provider.core.provider.schedule;
 import com.jd.dms.java.utils.sdk.base.Result;
 import com.jdl.basic.api.domain.schedule.*;
 import com.jdl.basic.api.service.schedule.WorkGridScheduleJsfService;
+import com.jdl.basic.common.utils.JsonHelper;
 import com.jdl.basic.provider.core.service.schedule.WorkGridScheduleService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service("workGridScheduleJsfServiceImpl")
+@Slf4j
 public class WorkGridScheduleJsfServiceImpl implements WorkGridScheduleJsfService {
 
     @Autowired
@@ -68,6 +71,14 @@ public class WorkGridScheduleJsfServiceImpl implements WorkGridScheduleJsfServic
 
     @Override
     public Result<List<ScheduleValidTimeDto>> listValidCutWorkGridScheduleByTime(ValidWorkGridScheduleRequest request) {
-        return workGridScheduleService.listValidCutWorkGridScheduleByTime(request);
+        log.info("{} listValidCutWorkGridScheduleByTime req:{}",request.getRequestId(),JsonHelper.toJSONString(request));
+        try {
+            Result<List<ScheduleValidTimeDto>> rs =workGridScheduleService.listValidCutWorkGridScheduleByTime(request);
+            log.info("{} listValidCutWorkGridScheduleByTime resp:{}",request.getRequestId(),JsonHelper.toJSONString(rs));
+            return rs;
+        } catch (Exception e) {
+            log.error("{} listValidCutWorkGridScheduleByTime error:{}", request.getRequestId(),JsonHelper.toJSONString(request),e);
+        }
+        return Result.fail("获取班次数据失败！");
     }
 }

@@ -30,7 +30,7 @@ public class DuccPropertyConfiguration {
     @Value("${jyOrganizationCodeStr:}")
     private String jyOrganizationCodeStr;
 
-    @Value("${updateWorkGridScheduleSwitch:910}")
+    @Value("${updateWorkGridScheduleSwitch:*}")
     private String updateWorkGridScheduleSwitch;
 
     public String getUpdateWorkGridScheduleSwitch() {
