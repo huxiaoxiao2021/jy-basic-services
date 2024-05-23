@@ -9,7 +9,10 @@ import com.jdl.basic.api.domain.schedule.*;
 import com.jdl.basic.common.contants.CacheKeyConstants;
 import com.jdl.basic.common.contants.Constants;
 import com.jdl.basic.common.utils.DateHelper;
+import com.jdl.basic.common.utils.JsonHelper;
+import com.jdl.basic.common.utils.ObjectHelper;
 import com.jdl.basic.provider.config.cache.CacheService;
+import com.jdl.basic.provider.config.ducc.DuccPropertyConfiguration;
 import com.jdl.basic.provider.core.dao.schedule.WorkGridScheduleDao;
 import com.jdl.basic.provider.core.service.schedule.WorkGridScheduleService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +24,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static com.jdl.basic.common.contants.Constants.CONSTANT_SPECIAL_MARK_ASTERISK;
 
 @Slf4j
 @Service
@@ -37,6 +48,12 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
 
     @Autowired
     CacheService jimdbCacheService;
+
+    @Autowired
+    private DuccPropertyConfiguration ducc;
+
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+
 
 
     @Override
@@ -135,9 +152,13 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {Exception.class})
     @JProfiler(jKey = Constants.UMP_APP_NAME + ".WorkGridScheduleServiceImpl.batchUpdateWorkGridSchedule", jAppName=Constants.UMP_APP_NAME, mState={JProEnum.TP,JProEnum.FunctionError})
     public Result<Boolean> batchUpdateWorkGridSchedule(WorkGridScheduleBatchUpdateRequest request) {
+        if (checkUpdateWorkGridScheduleSwitchV2(request)){
+            log.info("batchUpdateWorkGridSchedule 切流量：{}",JsonHelper.toJSONString(request));
+            return batchUpdateWorkGridScheduleV2(request);
+        }
         Result<Boolean> result = Result.success();
 
         if (StringUtils.isEmpty(request.getUpdateUserErp())) {
@@ -169,6 +190,232 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
             }
         }
         return result.setData(Boolean.TRUE);
+    }
+
+    private boolean checkUpdateWorkGridScheduleSwitchV2(WorkGridScheduleBatchUpdateRequest request) {
+        log.info("checkUpdateWorkGridScheduleSwitchV2:{}",ducc.getUpdateWorkGridScheduleSwitch());
+        if (CONSTANT_SPECIAL_MARK_ASTERISK.equals(ducc.getUpdateWorkGridScheduleSwitch())){
+            return true;
+        }
+        try {
+            List<String>  siteList  =Arrays.asList(ducc.getUpdateWorkGridScheduleSwitch().split(Constants.SEPARATOR_COMMA));
+            if (CollectionUtils.isNotEmpty(siteList) && ObjectHelper.isNotEmpty(request.getSiteCode()) && siteList.contains(String.valueOf(request.getSiteCode()))){
+                return true;
+            }
+        } catch (Exception e) {
+            log.error("checkUpdateWorkGridScheduleSwitchV2 err request:{},",JsonHelper.toJSONString(request),e);
+        }
+        return false;
+    }
+
+    public Result<Boolean> batchUpdateWorkGridScheduleV2(WorkGridScheduleBatchUpdateRequest request) {
+        Result<Boolean> result = Result.success();
+
+        if (StringUtils.isEmpty(request.getUpdateUserErp())) {
+            return result.toFail("updateUserErp不能为空！");
+        }
+        if (StringUtils.isEmpty(request.getUpdateUserName())) {
+            return result.toFail("updateUserName不能为空！");
+        }
+        if (request.getUpdateTime() == null) {
+            return result.toFail("修改时间不能为空！");
+        }
+
+        /**
+         * 计算生效和失效时间
+         */
+        processValidateTimeAndInvalidTime(request);
+
+        if (CollectionUtils.isNotEmpty(request.getDeleteWorkGridSchedule())) {
+            log.info("班次变更-删除班次数据:{}", JsonHelper.toJSONString(request.getDeleteWorkGridSchedule()));
+            WorkGridScheduleBatchRequest deleteRequest = buildScheduleBatchRequest(request, request.getDeleteWorkGridSchedule());
+            Result<Boolean> deleteResult = batchDeleteByScheduleKeyV2(deleteRequest);
+            if (deleteResult.isFail()) {
+                log.warn("batchUpdateWorkGridSchedule 批量删除失败！" + deleteResult.getMessage());
+            }
+        }
+
+        if (CollectionUtils.isNotEmpty(request.getAddWorkGridSchedule())) {
+            log.info("班次变更-新增班次数据:{}", JsonHelper.toJSONString(request.getAddWorkGridSchedule()));
+            WorkGridScheduleBatchRequest insertRequest = buildScheduleBatchRequest(request, request.getAddWorkGridSchedule());
+            Result<Boolean> insertResult = batchInsert(insertRequest);
+            if (insertResult.isFail()) {
+                log.warn("batchUpdateWorkGridSchedule 批量插入失败！" + insertResult.getMessage());
+                throw new RuntimeException(insertResult.getMessage());
+            }
+        }
+        return result.setData(Boolean.TRUE);
+    }
+
+    private void processValidateTimeAndInvalidTime(WorkGridScheduleBatchUpdateRequest request) {
+        boolean hasAddSchedules = CollectionUtils.isNotEmpty(request.getAddWorkGridSchedule());
+        boolean hasDeleteSchedules = CollectionUtils.isNotEmpty(request.getDeleteWorkGridSchedule());
+
+        if (!hasAddSchedules && !hasDeleteSchedules) {
+            return;
+        }
+
+        if (hasDeleteSchedules) {
+            processSchedules(request.getDeleteWorkGridSchedule(), request.getAddWorkGridSchedule(), true);
+        }
+
+        if (hasAddSchedules) {
+            processSchedules(request.getAddWorkGridSchedule(), request.getDeleteWorkGridSchedule(), false);
+        }
+    }
+
+    private void processSchedules(List<WorkGridSchedule> primarySchedules, List<WorkGridSchedule> secondarySchedules, boolean isDelete) {
+        for (WorkGridSchedule primarySchedule : primarySchedules) {
+            WorkGridSchedule secondarySchedule =  checkIfExitsIntersection(primarySchedule, secondarySchedules);
+
+            if (ObjectHelper.isNotNull(secondarySchedule)) {
+                if (isDelete) {
+                    caculInvalidateTime(primarySchedule, secondarySchedule);
+                } else {
+                    caculValidateTime(primarySchedule, secondarySchedule);
+                }
+            } else {
+                if (isDelete) {
+                    caculInvalidateTime(primarySchedule);
+                } else {
+                    caculValidateTime(primarySchedule);
+                }
+            }
+        }
+    }
+
+
+
+    /**
+     * 计算新网格的生效时间--变更场景
+     * @param insert 待插入的工作网格计划
+     * @param delete 待删除的工作网格计划
+     */
+    private void caculValidateTime(WorkGridSchedule insert, WorkGridSchedule delete) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalTime insertStartTime = LocalTime.parse(insert.getStartTime(), TIME_FORMATTER);
+        LocalTime deleteStartTime = LocalTime.parse(delete.getStartTime(), TIME_FORMATTER);
+        LocalTime deleteEndTime = LocalTime.parse(delete.getEndTime(), TIME_FORMATTER);
+        LocalDateTime oneHourLater = now.plusHours(1);
+
+        // 旧班次立即失效
+        if (oneHourLater.toLocalTime().isBefore(deleteStartTime)) {
+            //新班次立即生效
+            if (oneHourLater.toLocalTime().isBefore(insertStartTime)){
+                insert.setValidTime(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()));
+            }else {
+                LocalDateTime validTime = LocalDateTime.of(now.toLocalDate().plusDays(1), insertStartTime);
+                insert.setValidTime(Date.from(validTime.atZone(ZoneId.systemDefault()).toInstant()));
+            }
+        } else {
+            LocalDateTime validTime;
+            if (deleteEndTime.isAfter(insertStartTime)) {
+                if (deleteEndTime.isBefore(deleteStartTime)){
+                    // 若有交叉 且跨夜（旧班次结束时间 在新班次开始时间之后） 新班次的生效时间是第三天班次的开始时间
+                    validTime = LocalDateTime.of(now.toLocalDate().plusDays(2), insertStartTime);
+                }else {
+                    // 若有交叉 不跨夜（旧班次结束时间 在新班次开始时间之后） 新班次的生效时间是第二天班次的开始时间
+                    validTime = LocalDateTime.of(now.toLocalDate().plusDays(1), insertStartTime);
+                }
+            } else {
+                // 若无交叉 则新班次的生效时间是第二天班次的开始时间
+                validTime = LocalDateTime.of(now.toLocalDate().plusDays(1), insertStartTime);
+            }
+            insert.setValidTime(Date.from(validTime.atZone(ZoneId.systemDefault()).toInstant()));
+        }
+    }
+    /**
+     * 计算新网格的生效时间--新增场景
+     * @param insert 待插入的工作网格计划
+     */
+    private void caculValidateTime(WorkGridSchedule insert) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalTime insertStartTime = LocalTime.parse(insert.getStartTime(), TIME_FORMATTER);
+        LocalDateTime oneHourLater = now.plusHours(1);
+
+        if (oneHourLater.toLocalTime().isBefore(insertStartTime)) {
+            // 立即生效
+            insert.setValidTime(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()));
+        } else {
+            // 第二天班次开始时间
+            LocalDateTime validTime = LocalDateTime.of(now.toLocalDate().plusDays(1), insertStartTime);
+            insert.setValidTime(Date.from(validTime.atZone(ZoneId.systemDefault()).toInstant()));
+        }
+    }
+
+    public static void main(String[] args) {
+        WorkGridSchedule insert =new WorkGridSchedule();
+        insert.setStartTime("15:00");
+        insert.setEndTime("18:00");
+        //caculValidateTime(insert);
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        System.out.println(format.format((insert.getValidTime())));
+
+    }
+
+
+
+    /**
+     * 计算旧网格的失效时间-变更场景
+     * @param delete 需要删除的工作网格计划
+     * @param insert 需要插入的工作网格计划
+     */
+    private void caculInvalidateTime(WorkGridSchedule delete, WorkGridSchedule insert) {
+        caculInvalidateTime(delete);
+    }
+
+    /**
+     * 计算旧网格的失效时间-删除场景
+     * @param delete 需要删除的工作网格计划
+     */
+    private void caculInvalidateTime(WorkGridSchedule delete) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime oneHourLater = now.plusHours(1);
+        LocalTime startTime = LocalTime.parse(delete.getStartTime(), TIME_FORMATTER);
+        LocalTime endTime = LocalTime.parse(delete.getEndTime(), TIME_FORMATTER);
+
+        LocalDateTime invalidateTime;
+        if (oneHourLater.toLocalTime().isBefore(startTime)) {
+            // 班次的失效时间就是当前时间
+            invalidateTime = now;
+        } else {
+            // 判断班次是否跨夜
+            if (endTime.isBefore(startTime)) {
+                // 跨夜，失效时间就是第二天的班次结束时间
+                invalidateTime = LocalDateTime.of(now.toLocalDate().plusDays(1), endTime);
+            } else {
+                // 不跨夜，失效时间就是当天的班次结束时间
+                invalidateTime = LocalDateTime.of(now.toLocalDate(), endTime);
+            }
+        }
+        delete.setInvalidTime(Date.from(invalidateTime.atZone(ZoneId.systemDefault()).toInstant()));
+    }
+
+    /**
+     * 校验是否存在交集
+     * @param target
+     * @param workGridScheduleList
+     * @return
+     */
+    private static WorkGridSchedule checkIfExitsIntersection(WorkGridSchedule target ,List<WorkGridSchedule> workGridScheduleList) {
+        if (CollectionUtils.isNotEmpty(workGridScheduleList)){
+            for (WorkGridSchedule workGridSchedule : workGridScheduleList){
+                if (workGridSchedule.getScheduleKey().equals(target.getScheduleKey())){
+                    return workGridSchedule;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static WorkGridSchedule checkDeleteScheduleIfExitsInsertScheduleList(WorkGridSchedule delete ,List<WorkGridSchedule> addWorkGridSchedule) {
+        for (WorkGridSchedule insert : addWorkGridSchedule){
+            if (delete.getScheduleKey().equals(insert.getScheduleKey())){
+                return insert;
+            }
+        }
+        return null;
     }
 
     private WorkGridScheduleBatchRequest buildScheduleBatchRequest(WorkGridScheduleBatchUpdateRequest inputRequest, List<WorkGridSchedule> workGridSchedules) {
@@ -255,6 +502,28 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         }
 
         setInvalidTime(request.getWorkGridSchedules());
+
+        Boolean deleteResult = workGridScheduleDao.batchDeleteByScheduleKey(request);
+        if (!deleteResult) {
+            log.warn("WorkGridScheduleServiceImpl batchDeleteByScheduleKey 执行失败！");
+        }
+        List<String> workGridKeys = request.getWorkGridSchedules().stream().map(WorkGridSchedule::getWorkGridKey).distinct().collect(Collectors.toList());
+        delWorkGridScheduleCache(workGridKeys);
+        return result.setData(deleteResult);
+    }
+
+    public Result<Boolean> batchDeleteByScheduleKeyV2(WorkGridScheduleBatchRequest request) {
+        Result<Boolean> result = Result.success();
+        if (CollectionUtils.isEmpty(request.getWorkGridSchedules())) {
+            return result.toFail("班次key不能为空！");
+        }
+        if (StringUtils.isEmpty(request.getUpdateUserErp())) {
+            return result.toFail("修改人erp不能为空！");
+        }
+        if (request.getUpdateTime() == null) {
+            return result.toFail("修改时间不能为空！");
+        }
+
 
         Boolean deleteResult = workGridScheduleDao.batchDeleteByScheduleKey(request);
         if (!deleteResult) {
