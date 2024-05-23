@@ -224,7 +224,11 @@ public class WorkGridScheduleServiceImpl implements WorkGridScheduleService {
         /**
          * 计算生效和失效时间
          */
-        processValidateTimeAndInvalidTime(request);
+        try {
+            processValidateTimeAndInvalidTime(request);
+        } catch (Exception e) {
+           log.error("processValidateTimeAndInvalidTime request:{} err",JsonHelper.toJSONString(request),e);
+        }
 
         if (CollectionUtils.isNotEmpty(request.getDeleteWorkGridSchedule())) {
             log.info("班次变更-删除班次数据:{}", JsonHelper.toJSONString(request.getDeleteWorkGridSchedule()));
