@@ -226,12 +226,12 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
      * 补全省区，枢纽信息
      */
     private void fillSiteInfo(VideoTraceCamera record, BaseStaffSiteOrgDto siteInfo) {
-        record.setSiteName(siteInfo.getSiteName());
-        record.setSiteCode(siteInfo.getSiteCode());
-        record.setProvinceAgencyCode(siteInfo.getProvinceAgencyCode());
-        record.setProvinceAgencyName(siteInfo.getProvinceAgencyName());
-        record.setAreaHubCode(siteInfo.getAreaCode());
-        record.setAreaHubName(siteInfo.getAreaName());
+        record.setSiteName(siteInfo == null ? " " : siteInfo.getSiteName());
+        record.setSiteCode(siteInfo == null ? 0 : siteInfo.getSiteCode());
+        record.setProvinceAgencyCode(siteInfo == null ? " " : siteInfo.getProvinceAgencyCode());
+        record.setProvinceAgencyName(siteInfo == null ? " " :siteInfo.getProvinceAgencyName());
+        record.setAreaHubCode(siteInfo == null ? " " :siteInfo.getAreaCode());
+        record.setAreaHubName(siteInfo == null ? " " :siteInfo.getAreaName());
     }
 
     @Override
@@ -270,10 +270,10 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         condition.setNationalChannelCode(videoTraceCamera.getNationalChannelCode());
         condition.setCameraCode(videoTraceCamera.getCameraCode());
         List<VideoTraceCamera> videoTraceCameras = videoTraceCameraDao.queryByCondition(condition);
+        BaseStaffSiteOrgDto siteInfo = null;
         if (CollectionUtils.isEmpty(videoTraceCameras)) {
-            BaseStaffSiteOrgDto siteInfo = baseMajorManager.getBaseSiteBySiteId(videoTraceCamera.getSiteCode());
-            if (siteInfo == null) {
-                throw new RuntimeException("所属站点在基础资料中不存在！");
+            if (videoTraceCamera.getSiteCode() != null){
+                siteInfo = baseMajorManager.getBaseSiteBySiteId(videoTraceCamera.getSiteCode());
             }
             fillSiteInfo(videoTraceCamera, siteInfo);
             return videoTraceCameraDao.insert(videoTraceCamera);
@@ -551,11 +551,11 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         }
         Map<String, List<VideoTraceCameraConfig>> configMapByGrid = videoTraceCameraConfigs
                 .stream().filter(x -> StringUtils.isNotBlank(x.getMachineCode()))
-                .collect(Collectors.groupingBy(x -> x.getMachineCode() + x.getChuteCode() + x.getSupplyDwsCode()));
+                .collect(Collectors.groupingBy(x -> getExportDeviceKey(x.getMachineCode() ,x.getChuteCode(),x.getSupplyDwsCode())));
 
         // 处理设备格数据
         for (DeviceGridDto deviceGridDto : deviceGrids) {
-            String key = deviceGridDto.getMachineCode() + deviceGridDto.getChuteCode() + deviceGridDto.getSupplyNo();
+            String key = getExportDeviceKey (deviceGridDto.getMachineCode() , deviceGridDto.getChuteCode(), deviceGridDto.getSupplyNo());
             List<VideoTraceCameraConfig> configsForDevice = configMapByGrid.getOrDefault(key, Collections.emptyList());
             configMapByGrid.remove(key);
             cameraConfigExportVos.add(createExportVo(workGrid, deviceGridDto.getMachineCode(), deviceGridDto.getChuteCode(), deviceGridDto.getSupplyNo(), configsForDevice));
@@ -570,6 +570,13 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         });
 
         return cameraConfigExportVos;
+    }
+
+    /**
+     * 生成设备网格供包台的key,用于匹配设备绑定的摄像头数据
+     */
+    private static String getExportDeviceKey(String machineCode,String chuteCode, String supplyDwsCode ) {
+        return machineCode + (StringUtils.isBlank(chuteCode) ? "" : chuteCode) + (StringUtils.isBlank(supplyDwsCode) ? "" : supplyDwsCode) ;
     }
 
     /**
@@ -967,8 +974,8 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
             }
             // 过滤格口，供包台上绑定数据
             List<VideoTraceCameraConfig> childrenConfigs = allConfigs.stream()
-                    .filter(config -> datum.getMachineCode().equals(config.getMachineCode())
-                            && Objects.equals(config.getChuteCode(), datum.getChuteCode()) && Objects.equals(config.getSupplyDwsCode(), datum.getSupplyNo()))
+                    .filter(config -> isEquals(datum.getMachineCode(), config.getMachineCode())
+                            && isEquals(datum.getChuteCode(), config.getChuteCode()) && isEquals(config.getSupplyDwsCode(), datum.getSupplyNo()))
                     .collect(Collectors.toList());
             GridCameraBindingVo children = getGridCameraBindingVo(workGrid, childrenConfigs);
             children.setMachineCode(datum.getMachineCode());
@@ -982,6 +989,15 @@ public class VideoTraceCameraServiceImpl implements VideoTraceCameraService {
         }
         return new ArrayList<>(deviceCameraMap.values());
     }
+
+    private static boolean isEquals(String str1, String str2) {
+        if (StringUtils.isBlank(str1) && StringUtils.isBlank(str2)){
+            return true;
+        }
+        return Objects.equals(str1, str2);
+    }
+
+    
 
     /**
      * 构建工序对应摄像头绑定列表,页面列表页展示
